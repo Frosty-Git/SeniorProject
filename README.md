@@ -6,6 +6,4 @@ James was here :)
 Jacelynn, too o/
 Alex is here too
 Tucker's first commit.
-
-
 Katie's chilling
