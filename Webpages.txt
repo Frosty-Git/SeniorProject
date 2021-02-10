@@ -1,0 +1,36 @@
+1. Main                                                               Tucker
+    Search                  <--- Search Bar that leads to 9
+    Top Playlists           <--- Top User Playlists
+    This Week's Top Songs   <--- Top New Songs for this Week 10
+    Survey                  <--- 3
+    Login                   <--- 2
+    Sign Up                 <--- 4
+    Constact Us             <--- 14
+    User Profile            <--- 6
+2. Login                                                              Kevin
+3. Survey                                                             Alex
+4. Sign Up                                                            Kevin
+5. ~~~Link Spotify                                                    Alex
+6. My Profile                                                         Katie
+    My Playlists            <--- 8
+        Listening History   <--- 8 (Special History Playlist - 11)
+    Create New Playlist     <--- 7
+    Users I'm Following     <--- 15
+    Social Feed             <--- 12
+    Settings                <--- 16
+    Link Spotify            <--- 5
+7. Create New Playlist   (could be popup like Spotify)                Katie
+8. Playlists                                                          Joe
+9. Search Results                                                     Marc
+10. This Week's Top Songs                                             James
+11. User's Listening History                                          Joe
+12. User's I am following social feed                                 Marc
+13. Find Other Users                                                  Marc
+14. Contact Us                                                        Marc
+15. Users I'm Following                                               Jacelynn
+16. Settings                                                          Jacelynn
+
+Navbar
+Footer  <-- Link to Contact Us
+
+Note:   Every Page should have a link to Main  1
