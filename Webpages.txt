@@ -29,8 +29,10 @@
 14. Contact Us                                                        Marc
 15. Users I'm Following                                               Jacelynn
 16. Settings                                                          Jacelynn
+17. Top Playlists                                                     ??
+18. General User Profile  (looking at other profiles)                 Katie/Marc
 
-Navbar
+Navbar (connected to 1)
 Footer  <-- Link to Contact Us
 
 Note:   Every Page should have a link to Main  1
