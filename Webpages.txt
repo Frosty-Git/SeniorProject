@@ -1,4 +1,5 @@
-1. Main                                                               Tucker
+                                                                      CreatedWireFrame      WebpageHW
+1. Main                                                               Tucker                  Tucker
     Search                  <--- Search Bar that leads to 9
     Top Playlists           <--- Top User Playlists
     This Week's Top Songs   <--- Top New Songs for this Week 10
@@ -7,11 +8,11 @@
     Sign Up                 <--- 4
     Constact Us             <--- 14
     User Profile            <--- 6
-2. Login                                                              Kevin
-3. Survey                                                             Alex
-4. Sign Up                                                            Kevin
-5. ~~~Link Spotify                                                    Alex
-6. My Profile                                                         Katie
+2. Login                                                              Kevin                  Kevin
+3. Survey                                                             Alex                   Alex
+4. Sign Up                                                            Kevin                  Kevin
+5. ~~~Link Spotify                                                    Alex                   James
+6. My Profile                                                         Katie                  Katie
     My Playlists            <--- 8
         Listening History   <--- 8 (Special History Playlist - 11)
     Create New Playlist     <--- 7
@@ -19,16 +20,16 @@
     Social Feed             <--- 12
     Settings                <--- 16
     Link Spotify            <--- 5
-7. Create New Playlist   (could be popup like Spotify)                Katie
+7. Create New Playlist   (could be popup like Spotify)                Katie                   Joe
 8. Playlists                                                          Joe
 9. Search Results                                                     Marc
-10. This Week's Top Songs                                             James
+10. This Week's Top Songs                                             James                   Joe
 11. User's Listening History                                          Joe
 12. User's I am following social feed                                 Marc
 13. Find Other Users                                                  Marc
-14. Contact Us                                                        Marc
-15. Users I'm Following                                               Jacelynn
-16. Settings                                                          Jacelynn
+14. Contact Us                                                        Marc                    Marc
+15. Users I'm Following                                               Jacelynn               Jacelynn
+16. Settings                                                          Jacelynn               Jacelynn
 17. Top Playlists                                                     Joe
 18. General User Profile  (looking at other profiles)                 Katie/Marc
 
