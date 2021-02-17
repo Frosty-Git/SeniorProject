@@ -31,7 +31,7 @@
 15. Users I'm Following                                               Jacelynn               Jacelynn
 16. Settings                                                          Jacelynn               Jacelynn
 17. Top Playlists                                                     Joe
-18. General User Profile  (looking at other profiles)                 Katie/Marc
+18. General User Profile  (looking at other profiles)                 Katie
 
 Navbar (connected to 1)
 Footer  <-- Link to Contact Us
