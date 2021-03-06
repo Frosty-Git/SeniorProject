@@ -26,6 +26,7 @@ Jacelynn's main change
     django
     spotipy
     django-crispy-forms
+    Pillow
   
   The .gitignore does not include the database. You may need to repeat Baliga's
   instructions on how to get the Kaggle music data into your local database.
