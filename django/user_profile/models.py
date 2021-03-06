@@ -38,11 +38,14 @@ class Settings(models.Model):
     def __str__(self):
         return "Setting"
 
-# Preferences
-# Kevin Magill 03/06/2020 12:00 P.M.
-# creates model for the database
-# relationship is defined in UserProfile
+
 class Preferences(models.Model):
+"""
+Preferences
+Kevin Magill 03/06/2020 12:00 P.M.
+creates model for the database
+relationship is defined in UserProfile
+"""
     accousticness = models.TextField(blank = True, null = True)
     danceability = models.TextField(blank = True, null = True)
     energy = models.TextField(blank = True, null = True)
