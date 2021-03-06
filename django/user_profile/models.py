@@ -56,14 +56,14 @@ class Preferences(models.Model):
     creates model for the database
     relationship is defined in UserProfile
     """
-    accousticness = models.TextField(blank = True, null = True)
-    danceability = models.TextField(blank = True, null = True)
-    energy = models.TextField(blank = True, null = True)
-    instrumentalness = models.TextField(blank = True, null = True)
-    speechiness = models.TextField(blank = True, null = True)
-    loudness = models.TextField(blank = True, null = True)
-    tempo = models.TextField(blank = True, null = True)
-    valence = models.TextField(blank = True, null = True)
+    accousticness = models.TextField(blank=True, null=True)
+    danceability = models.TextField(blank=True, null=True)
+    energy = models.TextField(blank=True, null=True)
+    instrumentalness = models.TextField(blank=True, null=True)
+    speechiness = models.TextField(blank=True, null=True)
+    loudness = models.TextField(blank=True, null=True)
+    tempo = models.TextField(blank=True, null=True)
+    valence = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return "Preferences"
