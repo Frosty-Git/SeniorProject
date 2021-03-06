@@ -54,11 +54,18 @@ class Preferences(models.Model):
 
     def __str__(self):
         return self.accousticness
+        
 # Playlist
+class Playlist(models.Model):
+    """
+    Model for playlists created by users on the site. Songs can be added or
+    deleted to the playlists, and playlists can be liked or disliked by other
+    users.
+    """
     user_profile_fk = models.ForeignKey(UserProfile) # Who created the playlist
-    music_data_fk = models.ForeignKey(MusicData, null=True) # Songs in the playlist
+    music_data_fk = models.ManyToManyField(MusicData, null=True, on_delete=models.CASCADE) # Songs in the playlist
     name = models.CharField(max_length=30)
-    image = models.ImageField(null=True) # Pillow, add upload_to attribute
+    image = models.ImageField(upload_to='images/', null=True) # Pillow
     upvotes = models.IntegerField(default=0) 
     date_created = models.DateTimeField(auto_now_add=True)
     date_last_updated = models.DateTimeField(auto_now_add=True)
@@ -68,3 +75,5 @@ class Preferences(models.Model):
     # num_songs = # Derived
     # num_followers = # Derived
     objects = models.Manager()
+    def __str__(self):
+        return self.name
