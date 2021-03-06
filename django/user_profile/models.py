@@ -14,10 +14,10 @@ class UserProfile(models.Model):
     profilepic = models.ImageField(upload_to='images/', null=True, verbose_name="")
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    following = models.ManyToManyField(UserProfile)
-    playlists_followed = models.ManyToManyField(Playlist)
-    preferences = models.OneToOneField(Preferences, on_delete=models.CASCADE)
-    settings = models.OneToOneField(Settings, on_delete=models.CASCADE)
+    following_fk = models.ManyToManyField(UserProfile)
+    playlists_followed_fk = models.ManyToManyField(Playlist)
+    preferences_fk = models.OneToOneField(Preferences, on_delete=models.CASCADE)
+    settings_fk = models.OneToOneField(Settings, on_delete=models.CASCADE)
 
     #spotify_id
     #linked_to_spotify = models.BooleanField() maybe not needed
