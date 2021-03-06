@@ -11,7 +11,7 @@ class UserProfile(models.Model):
     description = models.TextField(blank=True, null=True, max_length=100)
     likes = models.TextField(blank=True, null=True, max_length=50)
     dislikes = models.TextField(blank=True, null=True, max_length=50)
-    profilepic = models.ImageField(upload_to='images/', null=True, verbose_name="")
+    profilepic = models.ImageField(upload_to='images/', null=True)
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
     following_fk = models.ManyToManyField(UserProfile)
