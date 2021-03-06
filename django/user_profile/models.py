@@ -2,13 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # UserProfile
-"""
-UserProfile
-Katie Lee and Marc Colin 03/06/2021 12:00PM
-creates a user profile,
-extends existing Django User
-"""
 class UserProfile(models.Model):
+    """
+    UserProfile
+    Katie Lee and Marc Colin 03/06/2021 12:00PM
+    creates a user profile,
+    extends existing Django User
+    """
     user = models.OneToOneField(User, 
                                 on_delete=models.CASCADE,
                                 primary_key=True,
@@ -49,14 +49,23 @@ class Settings(models.Model):
     def __str__(self):
         return "Setting"
 
-
+# Preferences
 class Preferences(models.Model):
+<<<<<<< HEAD
+    """
+    Preferences
+    Kevin Magill 03/06/2020 12:00 P.M.
+    creates model for the database
+    relationship is defined in UserProfile
+    """
+=======
 """
 Preferences
 Kevin Magill 03/06/2021 12:00 P.M.
 creates model for the database
 relationship is defined in UserProfile
 """
+>>>>>>> bdd04b0a96a18a121bb8e4be5ec33c375f3eff47
     accousticness = models.TextField(blank = True, null = True)
     danceability = models.TextField(blank = True, null = True)
     energy = models.TextField(blank = True, null = True)
