@@ -17,11 +17,11 @@ Jacelynn's main change
 
 
 
-Important Set Up Instructions:
+# Important Set Up Instructions:
   Make sure you name your virtual environment virt_env so that the .gitignore doesn't 
   add it to the repository.
   
-  Virtual Environment pip installs:
+ # Virtual Environment pip installs:
     numpy
     django
     spotipy
