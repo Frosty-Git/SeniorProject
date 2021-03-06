@@ -8,7 +8,7 @@ class Post(models.Model):
     """
     Author:  Joseph Frost
     Created: 2021.03.06
-    Creates the Post model for the DB.
+    Creates the Post model for the DB. These are posts made by users.
     """
     date_created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
@@ -30,13 +30,15 @@ class Comment(models.Model):
     """
     Author:  Joseph Frost
     Created: 2021.03.06
-    Creates the Comment model for the DB.
+    Creates the Comment model for the DB. These are the comments users
+    make for the posts.
     """
     date_created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     date_last_updated = models.DateTimeField(auto_now_add=True)
     upvotes = models.IntegerField(default=0)
     post_fk = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.text
