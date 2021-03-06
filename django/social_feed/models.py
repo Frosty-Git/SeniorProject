@@ -28,14 +28,14 @@ class SongPost(Post):
     Created models for Posts including a song or a playlist
     SongPost and PlaylistPost models inherit from Post
     """
-    song = models.ForeignKey(Musicdata)
+    song = models.ForeignKey(Musicdata, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.song
 
 # PlaylistPost
 class PlaylistPost(Post):
-    playlist = models.ForeignKey(Playlist)
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.playlist

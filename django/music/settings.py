@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'social_feed.apps.SocialFeedConfig',
     'user_profile.apps.UserProfileConfig',
-    'crispy_forms',
+    #'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -123,4 +123,4 @@ USE_TZ = True
 
 STATIC_URL = '/recommender/static/'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+#CRISPY_TEMPLATE_PACK = 'bootstrap4'

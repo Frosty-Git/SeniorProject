@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from recommender.models import Musicdata
 
 # UserProfile
 class UserProfile(models.Model):
@@ -20,9 +21,9 @@ class UserProfile(models.Model):
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
     following_fk = models.ManyToManyField("UserProfile")
-    playlists_followed_fk = models.ManyToManyField(Playlist)
-    preferences_fk = models.OneToOneField(Preferences, on_delete=models.CASCADE)
-    settings_fk = models.OneToOneField(Settings, on_delete=models.CASCADE)
+    playlists_followed_fk = models.ManyToManyField("Playlist")
+    preferences_fk = models.OneToOneField("Preferences", on_delete=models.CASCADE)
+    settings_fk = models.OneToOneField("Settings", on_delete=models.CASCADE)
 
     #spotify_id
     #linked_to_spotify = models.BooleanField() maybe not needed
@@ -37,7 +38,7 @@ class Settings(models.Model):
     will affect the functionality of the website.
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
-    user_id = models.ForeignKey(UserProfile)
+    user_profile_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     private_profile = models.BooleanField(default=False)
     private_playlists = models.BooleanField(default=False)
     light_mode = models.BooleanField(default=False)
@@ -76,9 +77,8 @@ class Playlist(models.Model):
     users.
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
-    user_profile_fk = models.ForeignKey(UserProfile) # Who created the playlist
-    music_data_fk = models.ManyToManyField(MusicData, null=True,
-                                            on_delete=models.CASCADE)
+    user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL) # Who created the playlist
+    music_data_fk = models.ManyToManyField(Musicdata)
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True) # Pillow
     upvotes = models.IntegerField(default=0) 
