@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # UserProfile
+"""
+UserProfile
+Katie Lee and Marc Colin 03/06/2021 12:00PM
+creates a user profile,
+extends existing Django User
+"""
 class UserProfile(models.Model):
     user = models.OneToOneField(User, 
                                 on_delete=models.CASCADE,
@@ -11,7 +17,7 @@ class UserProfile(models.Model):
     description = models.TextField(blank=True, null=True, max_length=100)
     likes = models.TextField(blank=True, null=True, max_length=50)
     dislikes = models.TextField(blank=True, null=True, max_length=50)
-    profilepic = models.ImageField(upload_to='images/', null=True, verbose_name="")
+    profilepic = models.ImageField(upload_to='images/', null=True)
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
     following_fk = models.ManyToManyField(UserProfile)
@@ -27,6 +33,11 @@ class UserProfile(models.Model):
 
 # Settings
 class Settings(models.Model):
+    """
+    Model for Settings. Each user can turn his or her settings on or off, which
+    will affect the functionality of the website.
+    Last updated: 3/6/21 by Jacelynn Duranceau
+    """
     user_id = models.ForeignKey(UserProfile)
     private_profile = models.BooleanField(default=False)
     private_playlists = models.BooleanField(default=False)
@@ -38,11 +49,14 @@ class Settings(models.Model):
     def __str__(self):
         return "Setting"
 
-# Preferences
-# Kevin Magill 03/06/2020 12:00 P.M.
-# creates model for the database
-# relationship is defined in UserProfile
+
 class Preferences(models.Model):
+"""
+Preferences
+Kevin Magill 03/06/2021 12:00 P.M.
+creates model for the database
+relationship is defined in UserProfile
+"""
     accousticness = models.TextField(blank = True, null = True)
     danceability = models.TextField(blank = True, null = True)
     energy = models.TextField(blank = True, null = True)
@@ -53,14 +67,15 @@ class Preferences(models.Model):
     valence = models.TextField(blank = True, null = True)
 
     def __str__(self):
-        return self.accousticness
-        
+        return "Preferences"
+
 # Playlist
 class Playlist(models.Model):
     """
     Model for playlists created by users on the site. Songs can be added or
     deleted to the playlists, and playlists can be liked or disliked by other
     users.
+    Last updated: 3/6/21 by Jacelynn Duranceau
     """
     user_profile_fk = models.ForeignKey(UserProfile) # Who created the playlist
     music_data_fk = models.ManyToManyField(MusicData, null=True, on_delete=models.CASCADE) # Songs in the playlist
