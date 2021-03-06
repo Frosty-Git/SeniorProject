@@ -13,3 +13,19 @@ Kevin was here
 Why am I not a contributor - Marc
 
 Jacelynn's main change
+
+
+
+
+Important Set Up Instructions:
+  Make sure you name your virtual environment virt_env so that the .gitignore doesn't 
+  add it to the repository.
+  
+  Virtual Environment pip installs:
+    numpy
+    django
+    spotipy
+  
+  The .gitignore does not include the database. You may need to repeat Baliga's
+  instructions on how to get the Kaggle music data into your local database.
+  All of the files for Window's are included in the git repository.
