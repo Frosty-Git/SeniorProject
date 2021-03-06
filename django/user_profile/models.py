@@ -33,6 +33,11 @@ class UserProfile(models.Model):
 
 # Settings
 class Settings(models.Model):
+    """
+    Model for Settings. Each user can turn his or her settings on or off, which
+    will affect the functionality of the website.
+    Last updated: 3/6/21 by Jacelynn Duranceau
+    """
     user_id = models.ForeignKey(UserProfile)
     private_profile = models.BooleanField(default=False)
     private_playlists = models.BooleanField(default=False)
@@ -46,12 +51,21 @@ class Settings(models.Model):
 
 # Preferences
 class Preferences(models.Model):
+<<<<<<< HEAD
+    """
+    Preferences
+    Kevin Magill 03/06/2020 12:00 P.M.
+    creates model for the database
+    relationship is defined in UserProfile
+    """
+=======
 """
 Preferences
 Kevin Magill 03/06/2021 12:00 P.M.
 creates model for the database
 relationship is defined in UserProfile
 """
+>>>>>>> bdd04b0a96a18a121bb8e4be5ec33c375f3eff47
     accousticness = models.TextField(blank = True, null = True)
     danceability = models.TextField(blank = True, null = True)
     energy = models.TextField(blank = True, null = True)
@@ -65,4 +79,25 @@ relationship is defined in UserProfile
         return "Preferences"
 
 # Playlist
-
+class Playlist(models.Model):
+    """
+    Model for playlists created by users on the site. Songs can be added or
+    deleted to the playlists, and playlists can be liked or disliked by other
+    users.
+    Last updated: 3/6/21 by Jacelynn Duranceau
+    """
+    user_profile_fk = models.ForeignKey(UserProfile) # Who created the playlist
+    music_data_fk = models.ManyToManyField(MusicData, null=True, on_delete=models.CASCADE) # Songs in the playlist
+    name = models.CharField(max_length=30)
+    image = models.ImageField(upload_to='images/', null=True) # Pillow
+    upvotes = models.IntegerField(default=0) 
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_last_updated = models.DateTimeField(auto_now_add=True)
+    theme = models.TextField()  # Genres
+    # this_weeks_upvotes = models.IntegerField()
+    # length = # Derived
+    # num_songs = # Derived
+    # num_followers = # Derived
+    objects = models.Manager()
+    def __str__(self):
+        return self.name
