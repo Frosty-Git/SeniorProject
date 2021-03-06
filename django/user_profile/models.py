@@ -20,7 +20,7 @@ class UserProfile(models.Model):
     profilepic = models.ImageField(upload_to='images/', null=True)
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    following_fk = models.ManyToManyField(UserProfile)
+    following_fk = models.ManyToManyField("UserProfile")
     playlists_followed_fk = models.ManyToManyField(Playlist)
     preferences_fk = models.OneToOneField(Preferences, on_delete=models.CASCADE)
     settings_fk = models.OneToOneField(Settings, on_delete=models.CASCADE)
