@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # UserProfile
+"""
+UserProfile
+Katie Lee and Marc Colin 03/06/2021 12:00PM
+creates a user profile,
+extends existing Django User
+"""
 class UserProfile(models.Model):
     user = models.OneToOneField(User, 
                                 on_delete=models.CASCADE,
@@ -42,7 +48,7 @@ class Settings(models.Model):
 class Preferences(models.Model):
 """
 Preferences
-Kevin Magill 03/06/2020 12:00 P.M.
+Kevin Magill 03/06/2021 12:00 P.M.
 creates model for the database
 relationship is defined in UserProfile
 """
@@ -57,5 +63,6 @@ relationship is defined in UserProfile
 
     def __str__(self):
         return "Preferences"
+
 # Playlist
 
