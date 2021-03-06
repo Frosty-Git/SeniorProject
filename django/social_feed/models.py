@@ -13,8 +13,15 @@ class Post(models.Model):
     def __str__(self):
         return self.text
 
+
 # SongPost
 class SongPost(Post):
+    """
+    SongPost PlaylistPost
+    Tucker Elliott 3/6/2021
+    Created models for Posts including a song or a playlist
+    SongPost and PlaylistPost models inherit from Post
+    """
     song = models.ForeignKey(Musicdata)
 
     def __str__(self):
