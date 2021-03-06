@@ -1,4 +1,3 @@
-from django.user_profile.models import UserProfile
 from typing import Text
 from django.db import models
 from user_profile.models import *
@@ -17,6 +16,7 @@ class Post(models.Model):
 # SongPost
 class SongPost(Post):
     song = models.ForeignKey(Musicdata)
+
     def __str__(self):
         return self.song
 
