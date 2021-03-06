@@ -78,7 +78,8 @@ class Playlist(models.Model):
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
     user_profile_fk = models.ForeignKey(UserProfile) # Who created the playlist
-    music_data_fk = models.ManyToManyField(MusicData, null=True, on_delete=models.CASCADE) # Songs in the playlist
+    music_data_fk = models.ManyToManyField(MusicData, null=True,
+                                            on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True) # Pillow
     upvotes = models.IntegerField(default=0) 
