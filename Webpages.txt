@@ -25,9 +25,9 @@
 9. Search Results                                                     Marc
 10. This Week's Top Songs                                             James                   Joe
 11. User's Listening History                                          Joe
-12. User's I am following social feed                                 Marc
+12. User's I am following social feed                                 Marc                    Marc
 13. Find Other Users                                                  Marc
-14. Contact Us                                                        Marc                    Marc
+14. About Us                                                          Marc                    
 15. Users I'm Following                                               Jacelynn               Jacelynn
 16. Settings                                                          Jacelynn               Jacelynn
 17. Top Playlists                                                     Joe
