@@ -51,21 +51,12 @@ class Settings(models.Model):
 
 # Preferences
 class Preferences(models.Model):
-<<<<<<< HEAD
     """
     Preferences
     Kevin Magill 03/06/2020 12:00 P.M.
     creates model for the database
     relationship is defined in UserProfile
     """
-=======
-"""
-Preferences
-Kevin Magill 03/06/2021 12:00 P.M.
-creates model for the database
-relationship is defined in UserProfile
-"""
->>>>>>> bdd04b0a96a18a121bb8e4be5ec33c375f3eff47
     accousticness = models.TextField(blank = True, null = True)
     danceability = models.TextField(blank = True, null = True)
     energy = models.TextField(blank = True, null = True)
