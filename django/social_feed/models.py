@@ -5,6 +5,11 @@ from user_profile.models import *
 
 # Post
 class Post(models.Model):
+    """
+    Author:  Joseph Frost
+    Created: 2021.03.06
+    Creates the Post model for the DB.
+    """
     date_created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     date_last_updated = models.DateTimeField(auto_now_add=True)
@@ -22,6 +27,11 @@ class Post(models.Model):
 
 # Comment
 class Comment(models.Model):
+    """
+    Author:  Joseph Frost
+    Created: 2021.03.06
+    Creates the Comment model for the DB.
+    """
     date_created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     date_last_updated = models.DateTimeField(auto_now_add=True)
