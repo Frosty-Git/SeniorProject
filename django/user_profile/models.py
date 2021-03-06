@@ -53,6 +53,6 @@ class Preferences(models.Model):
     valence = models.TextField(blank = True, null = True)
 
     def __str__(self):
-        return self.accousticness
+        return "Preferences"
 # Playlist
 
