@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class = "container">
+<center>
+    <h1>Sign Up</h1>
+  </center>
+
+    <form method="POST" action="/user/signup/">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Join Today</legend>
+                {{ form }}
+                {{ profile_form }}
+            </fieldset>
+            <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Sign Up</button>
+            </div>
+    </form>
+</div>
+
+  <!-- <div class = "row">
+<div class="col-sm-6">
+    <div class="form-group">
+ 
+              <label for="form-group" >First Name</label>
+
+              {{ form.first_name }}
+          
+    </div>
+    <div class="form-group">
+
+            <label for = "password" >Date of Birth</label>
+       
+              {{ profile_form.birthdate }}
+
+
+    </div>
+    <div class="form-group">
+ 
+            <label for="password" >Password</label>
+  
+            {{ form.password1 }}
+            Confirm Password
+            {{ form.password2 }}
+
+
+    </div>
+    <div class="form-group">
+ 
+      <label for="email" >Email</label>
+
+      {{ form.email }}
+
+
+</div>
+<div class="form-group">
+ 
+  <label for="phone" >Phone Number</label>
+
+    {{ profile_form.phone_number }}
+
+
+</div>
+<div class="form-group">
+ 
+  <label for="description" >Description</label>
+
+    {{ profile_form.description }}
+
+|crispy
+</div>
+<div class="form-group">
+ 
+  <label for="likes" >Likes</label>
+
+    {{ profile_form.likes }}
+
+
+</div>
+<div class="form-group">
+ 
+    <label for="dislikes" >Dislikes</label>
+  
+      {{ profile_form.dislikes }}
+  
+  
+  </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="form-group">
+ 
+            <label for="shrink-to-fit" >Last Name</label>
+           
+            {{ form.last_name}}
+
+ 
+    </div>
+    <div class="form-group">
+
+            <label for="shrink-to-fit">Username</label>
+       
+            
+            {{ form.username }}
+
+    </div> -->
+<!-- {% comment %} <center>
+<button type="submit" class="btn btn-success">Submit</button>
+</center>
+</form> {% endcomment %} -->
+
+
+
+
+
+
+{% endblock %}
