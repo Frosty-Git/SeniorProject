@@ -42,3 +42,8 @@ def searchform_post(request):
 def searchform_get(request):
     form = SearchForm()
     return render(request, 'recommender/searchform.html', {'form': form})
+
+
+def home(request):
+    context={'name': 'Pengbeats'}
+    return render(request, 'home.html', context)
