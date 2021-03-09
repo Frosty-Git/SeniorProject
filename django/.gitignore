@@ -42,3 +42,6 @@ temp/*
 
 # Virtual Environment
 virt_env/*
+
+# Spotipy Authentication
+authentication.py
