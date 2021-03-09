@@ -44,4 +44,4 @@ temp/*
 virt_env/*
 
 # Spotipy Authentication
-authentication.py
+client_credentials.py
