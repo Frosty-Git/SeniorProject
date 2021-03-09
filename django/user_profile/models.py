@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from recommender.models import Musicdata
-from phonenumber_field.modelfields import PhoneNumberField
+#from phonenumber_field.modelfields import PhoneNumberField
 
 # UserProfile
 class UserProfile(models.Model):
@@ -22,10 +22,10 @@ class UserProfile(models.Model):
     #phone_number = PhoneNumberField(blank=True)
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    following_fk = models.ManyToManyField("UserProfile")
-    playlists_followed_fk = models.ManyToManyField("Playlist")
-    preferences_fk = models.OneToOneField("Preferences", on_delete=models.CASCADE)
-    settings_fk = models.OneToOneField("Settings", on_delete=models.CASCADE)
+    following_fk = models.ManyToManyField("UserProfile", blank=True)
+    playlists_followed_fk = models.ManyToManyField("Playlist", blank=True)
+    preferences_fk = models.OneToOneField("Preferences", null=True, on_delete=models.CASCADE)
+    settings_fk = models.OneToOneField("Settings", null=True, on_delete=models.CASCADE)
 
     #spotify_id
     #linked_to_spotify = models.BooleanField() maybe not needed
@@ -40,7 +40,7 @@ class Settings(models.Model):
     will affect the functionality of the website.
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
-    user_profile_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
     private_profile = models.BooleanField(default=False)
     private_playlists = models.BooleanField(default=False)
     light_mode = models.BooleanField(default=False)
