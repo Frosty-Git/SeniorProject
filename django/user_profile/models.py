@@ -24,8 +24,6 @@ class UserProfile(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     following_fk = models.ManyToManyField("UserProfile", blank=True)
     playlists_followed_fk = models.ManyToManyField("Playlist", blank=True)
-    preferences_fk = models.OneToOneField("Preferences", null=True, on_delete=models.CASCADE)
-    settings_fk = models.OneToOneField("Settings", null=True, on_delete=models.CASCADE)
 
     #spotify_id
     #linked_to_spotify = models.BooleanField() maybe not needed
@@ -40,7 +38,7 @@ class Settings(models.Model):
     will affect the functionality of the website.
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
-    user_profile_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
+    user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
     private_profile = models.BooleanField(default=False)
     private_playlists = models.BooleanField(default=False)
     light_mode = models.BooleanField(default=False)
@@ -59,6 +57,7 @@ class Preferences(models.Model):
     creates model for the database
     relationship is defined in UserProfile
     """
+    user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
     accousticness = models.FloatField(blank=True, default=0.0)
     danceability = models.FloatField(blank=True, default=0.0)
     energy = models.FloatField(blank=True, default=0.0)
@@ -79,7 +78,7 @@ class Playlist(models.Model):
     users.
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
-    user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL) # Who created the playlist
+    user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, default=None) # Who created the playlist
     music_data_fk = models.ManyToManyField(Musicdata)
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True) # Pillow

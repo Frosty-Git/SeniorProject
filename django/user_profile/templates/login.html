@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+<div class="container" style="width:300px; background-color:rgb(49, 50, 88); padding:20px">
+    <h1><center>Login</center></h1>
+    <small><small><center>Please log in so we can recommend you better music!</center></small></small>
+    <br>
+    <div class="form-group">
+        <form method="POST" action='/user/login/'>
+            {% csrf_token %}
+            <div class="form-floating mb-3" style="color:black">
+                {{ form.username }}
+                <label for="username">Username</label>
+            </div>
+            <div class="form-floating" style="color:black">
+                {{ form.password }}
+                <label for="password">Password</label>
+            </div>
+
+
+            <br>
+            <center><button class="btn btn-primary" type="submit">Login</button>
+            <br><br>
+        </form>
+        Don't have an account? <a href="{% url 'user:signup' %}" target="blank"><br><strong>Register Here</strong></a>!</center>
+    </div>
+{% endblock %}

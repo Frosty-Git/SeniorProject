@@ -69,9 +69,9 @@
                 </ul>
                 {% if user.is_authenticated %}
                   <a class="nav-link link-light" href="#">Profile</a>
-                  <a class="btn btn-light" href="#" role="button">Log Out</a>
+                  <a class="btn btn-light" href="{% url 'user:logout' %}" role="button">Log Out</a>
                 {% else %}
-                  <a class="btn btn-light" href="#" role="button">Login</a> &nbsp;&nbsp;
+                  <a class="btn btn-light" href="{% url 'user:login' %}" role="button">Login</a> &nbsp;&nbsp;
                   <a class="btn btn-success" href="{% url 'user:signup' %}" role="button">Sign Up</a>
                 {% endif %}
                 <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">

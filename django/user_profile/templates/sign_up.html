@@ -11,8 +11,23 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Join Today</legend>
-                {{ form }}
-                {{ profile_form }}
+                {{ form.as_p }}
+                </br>
+                <p>Birthdate: </p>
+                {{ profile_form.birthdate }}
+                </br>
+                <p>Profile Picture: </p>
+                {{ profile_form.profilepic }}
+                </br>
+                <p>Description: </p>
+                {{ profile_form.description }}
+                </br>
+                <p>Likes: </p>
+                {{ profile_form.likes }}
+                </br>
+                <p>Dislikes: </p>
+                {{ profile_form.dislikes }}
+                </br>
             </fieldset>
             <div class="form-group">
                     <button class="btn btn-outline-info" type="submit">Sign Up</button>
