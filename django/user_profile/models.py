@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from recommender.models import Musicdata
+#from phonenumber_field.modelfields import PhoneNumberField
 
 # UserProfile
 class UserProfile(models.Model):
     """
     UserProfile
     creates a user profile, extends existing Django User
-    last updated: 3/6/2021 by Katie Lee and Marc Colin
+    last updated: 3/8/2021 by Katie Lee and Marc Colin
     """
     user = models.OneToOneField(User, 
                                 on_delete=models.CASCADE,
@@ -18,12 +19,13 @@ class UserProfile(models.Model):
     likes = models.TextField(blank=True, null=True, max_length=50)
     dislikes = models.TextField(blank=True, null=True, max_length=50)
     profilepic = models.ImageField(upload_to='images/', null=True)
+    #phone_number = PhoneNumberField(blank=True)
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    following_fk = models.ManyToManyField("UserProfile")
-    playlists_followed_fk = models.ManyToManyField("Playlist")
-    preferences_fk = models.OneToOneField("Preferences", on_delete=models.CASCADE)
-    settings_fk = models.OneToOneField("Settings", on_delete=models.CASCADE)
+    following_fk = models.ManyToManyField("UserProfile", blank=True)
+    playlists_followed_fk = models.ManyToManyField("Playlist", blank=True)
+    preferences_fk = models.OneToOneField("Preferences", null=True, on_delete=models.CASCADE)
+    settings_fk = models.OneToOneField("Settings", null=True, on_delete=models.CASCADE)
 
     #spotify_id
     #linked_to_spotify = models.BooleanField() maybe not needed
@@ -38,7 +40,7 @@ class Settings(models.Model):
     will affect the functionality of the website.
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
-    user_profile_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
     private_profile = models.BooleanField(default=False)
     private_playlists = models.BooleanField(default=False)
     light_mode = models.BooleanField(default=False)
@@ -57,14 +59,14 @@ class Preferences(models.Model):
     creates model for the database
     relationship is defined in UserProfile
     """
-    accousticness = models.TextField(blank=True, null=True)
-    danceability = models.TextField(blank=True, null=True)
-    energy = models.TextField(blank=True, null=True)
-    instrumentalness = models.TextField(blank=True, null=True)
-    speechiness = models.TextField(blank=True, null=True)
-    loudness = models.TextField(blank=True, null=True)
-    tempo = models.TextField(blank=True, null=True)
-    valence = models.TextField(blank=True, null=True)
+    accousticness = models.FloatField(blank=True, default=0.0)
+    danceability = models.FloatField(blank=True, default=0.0)
+    energy = models.FloatField(blank=True, default=0.0)
+    instrumentalness = models.FloatField(blank=True, default=0.0)
+    speechiness = models.FloatField(blank=True, default=0.0)
+    loudness = models.FloatField(blank=True, default=0.0)
+    tempo = models.FloatField(blank=True, default=0.0)
+    valence = models.FloatField(blank=True, default=0.0)
 
     def __str__(self):
         return "Preferences"

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class = "container">
+<center>
+    <h1>Sign Up</h1>
+  </center>
+
+    <form method="POST" action="/user/signup/">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Join Today</legend>
+                {{ form }}
+                {{ profile_form }}
+            </fieldset>
+            <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Sign Up</button>
+            </div>
+    </form>
+</div>
+
+
+
+
+
+{% endblock %}
