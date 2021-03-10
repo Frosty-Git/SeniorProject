@@ -1,8 +1,9 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
+import client_credentials as client_cred
 
 scope = "playlist-modify-public"
-
+client_cred.setup()
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
 #results = sp.current_user_saved_tracks()
@@ -22,4 +23,4 @@ print(playlist_items)
 playlist_id = playlist_items[0]
 print(playlist_id['id'])
 
-sp.user_playlist_add_tracks(username, playlist_id['id'], tracks=['spotify:track:65OVbaJR5O1RmwOQx0875b'], position=1)
+sp.user_playlist_add_tracks(username, playlist_id['id'], tracks=['spotify:track:65OVbaJR5O1RmwOQx0875b'])
