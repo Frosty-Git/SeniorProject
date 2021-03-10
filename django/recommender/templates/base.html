@@ -68,7 +68,7 @@
                   </li>
                 </ul>
                 {% if user.is_authenticated %}
-                  <a class="nav-link link-light" href="#">Profile</a>
+                  <a class="nav-link link-light" href="{% url 'user:profile' user.id %}">Profile</a>
                   <a class="btn btn-light" href="{% url 'user:logout' %}" role="button">Log Out</a>
                 {% else %}
                   <a class="btn btn-light" href="{% url 'user:login' %}" role="button">Login</a> &nbsp;&nbsp;

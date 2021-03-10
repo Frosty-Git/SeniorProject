@@ -31,7 +31,6 @@ class ExtendedUserCreationForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     profilepic = forms.ImageField(required=False)
     birthdate = forms.DateField()
-    # phone_number = PhoneNumberField()
     description = forms.CharField(widget=forms.Textarea, required=False)
     likes = forms.CharField(widget=forms.Textarea, required=False)
     dislikes = forms.CharField(widget=forms.Textarea, required=False)

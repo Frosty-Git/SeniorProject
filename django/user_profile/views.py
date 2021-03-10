@@ -4,10 +4,16 @@ from user_profile.models import UserProfile, Preferences, Settings, Playlist
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 def sign_up(request):
+    """
+    Allows a client to sign up as user for our site. Creates a user and a
+    user profile for the client.
+    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    """
     if request.method == 'POST':
         form = ExtendedUserCreationForm(request.POST)
         profile_form = UserProfileForm(request.POST, request.FILES)
@@ -40,12 +46,20 @@ def sign_up(request):
     return render(request, 'sign_up.html', {'form': form, 'profile_form': profile_form})
 
 def logout_request(request):
+    """
+    Allows a user to logout from the site
+    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    """
     logout(request)
     messages.info(request, ('Logged out successfully!'))
     return redirect("/recommender/")
 
 
 def login_request(request):
+    """
+    Allows a user to log in to the site.
+    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    """
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -62,3 +76,13 @@ def login_request(request):
             messages.error(request, ('Invalid username or password.'))
     form = AuthenticationForm()
     return render(request, 'login.html', {"form":form})
+
+
+@login_required
+def profile(request, user_id):
+    """
+    Used to display a user's information on their profile
+    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    """
+    profile = UserProfile.objects.get(pk=user_id)
+    return render(request, 'my_profile.html', {'profile': profile})

@@ -1,14 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 from recommender.models import Musicdata
-#from phonenumber_field.modelfields import PhoneNumberField
 
 # UserProfile
 class UserProfile(models.Model):
     """
     UserProfile
     creates a user profile, extends existing Django User
-    last updated: 3/8/2021 by Katie Lee and Marc Colin
+    last updated: 3/10/2021 by Katie Lee and Marc Colin and Jacelynn Duranceau
     """
     user = models.OneToOneField(User, 
                                 on_delete=models.CASCADE,
@@ -19,14 +18,16 @@ class UserProfile(models.Model):
     likes = models.TextField(blank=True, null=True, max_length=50)
     dislikes = models.TextField(blank=True, null=True, max_length=50)
     profilepic = models.ImageField(upload_to='images/', null=True)
-    #phone_number = PhoneNumberField(blank=True)
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    following_fk = models.ManyToManyField("UserProfile", blank=True)
-    playlists_followed_fk = models.ManyToManyField("Playlist", blank=True)
-
-    #spotify_id
-    #linked_to_spotify = models.BooleanField() maybe not needed
+    linked_to_spotify = models.BooleanField(default=False)
+    users_followed = models.ManyToManyField('self', through="FollowedUser",
+                                        related_name='followers',
+                                        symmetrical=False)
+    playlists_followed = models.ManyToManyField('Playlist',
+                                        through="FollowedPlaylist",
+                                        related_name='playlists_followed',
+                                        symmetrical=False)
 
     def __str__(self):
         return self.user.username
@@ -79,7 +80,9 @@ class Playlist(models.Model):
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
     user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, default=None) # Who created the playlist
-    music_data_fk = models.ManyToManyField(Musicdata)
+    music_data_fk = models.ManyToManyField(Musicdata, through="Song_On_Playlist",
+                                        related_name='playlist_songs',
+                                        symmetrical=False)
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True) # Pillow
     upvotes = models.IntegerField(default=0) 
@@ -93,3 +96,56 @@ class Playlist(models.Model):
     objects = models.Manager()
     def __str__(self):
         return self.name
+
+
+# Followed User
+class FollowedUser(models.Model):
+    """
+    Model representing a bridging table that contains foreign keys for a 
+    who a user follows.
+    Last updated: 3/10/21 by Katie Lee, Jacelynn Duranceau, Marc Colin, Kevin Magill
+    """
+    user_from = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_from_u')
+    user_to = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='user_to')
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-date_created',)
+    
+    def __str__(self):
+        return "Followed User"
+    
+
+
+# Followed Playlist
+class FollowedPlaylist(models.Model):
+    """
+    Model representing a bridging table that contains playlists followed by
+    a user.
+    Last updated: 3/10/21 by Marc Colin, Katie Lee, Kevin Magill, Jacelynn Duranceau
+    """
+    user_from = models.ForeignKey(UserProfile, related_name='user_from_p', on_delete=models.CASCADE)
+    playlist_to = models.ForeignKey(Playlist, related_name='playlist_to', on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('-date_created',)
+    
+    def __str__(self):
+        return "Followed Playlist"
+
+
+
+# Song On Playlist
+class Song_On_Playlist(models.Model):
+    """
+    Model representing a bridging tbale between a song and a playlist.
+    Last updated: 3/10/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, 
+    Kevin Magill
+    """
+    playlist_from = models.ForeignKey(Playlist, related_name='playlist_from', on_delete=models.CASCADE)
+    song_to = models.ForeignKey(Musicdata, related_name='song_to', on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return "Song"

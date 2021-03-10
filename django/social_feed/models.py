@@ -39,6 +39,7 @@ class PlaylistPost(Post):
 
     def __str__(self):
         return self.playlist
+
 # Comment
 class Comment(models.Model):
     """
@@ -56,3 +57,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
