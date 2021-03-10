@@ -23,4 +23,4 @@ print(playlist_items)
 playlist_id = playlist_items[0]
 print(playlist_id['id'])
 
-sp.user_playlist_add_tracks(username, playlist_id['id'], tracks=['spotify:track:65OVbaJR5O1RmwOQx0875b'])
+sp.user_playlist_add_tracks(username, playlist_id['id'], tracks=['spotify:track:0EUNw5Uk0xEcYuCAJmZXhL'])
