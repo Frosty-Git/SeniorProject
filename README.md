@@ -27,7 +27,6 @@ Jacelynn's main change
     spotipy
     django-crispy-forms
     Pillow
-    django-phonenumber-field[phonenumbers]
   
   The .gitignore does not include the database. You may need to repeat Baliga's
   instructions on how to get the Kaggle music data into your local database.
