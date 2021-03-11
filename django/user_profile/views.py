@@ -135,12 +135,12 @@ def unfollow(request, user_id, who):
     url = '/user/following/' + user_id
     return redirect(url)
 
-def other_profile(request, user_id):
-    """
-    """
-    profile = UserProfile.objects.get(pk=user_id)
-    return render(request, 'other_profile.html', {'other_profile': other_profile})
+# def other_profile(request, user_id):
+#     """
+#     """
+#     profile = UserProfile.objects.get(pk=user_id)
+#     return render(request, 'other_profile.html', {'other_profile': other_profile})
 
-def num_followers(user_id):
-    followers = FollowedUser.objects.get(user_to = user_id).len()
-    return {'followers': followers}
+# def num_followers(user_id):
+#     followers = FollowedUser.objects.get(user_to = user_id).len()
+#     return {'followers': followers}
