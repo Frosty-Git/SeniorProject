@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from user_profile.forms import ExtendedUserCreationForm, UserProfileForm
-from user_profile.models import UserProfile, Preferences, Settings, Playlist
+from user_profile.models import *
+from .forms import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST, require_GET
 
 # Create your views here.
 
@@ -86,3 +88,59 @@ def profile(request, user_id):
     """
     profile = UserProfile.objects.get(pk=user_id)
     return render(request, 'my_profile.html', {'profile': profile})
+
+@require_GET
+def display_settings(request, user_id):
+    """
+    """
+    settings = Settings.objects.get(user_profile_fk=user_id)
+    settings_form = SettingsForm(instance=settings)
+    return render(request, 'settings.html', {'settings_form': settings_form})
+
+@require_POST
+def settings_save(request, user_id):
+    """
+    """
+    setting = Settings.objects.get(user_profile_fk=user_id)
+    settings_form = SettingsForm(request.POST, instance=setting)
+    if settings_form.is_valid():
+        setting.private_profile = settings_form.cleaned_data.get('private_profile')
+        setting.private_playlists = settings_form.cleaned_data.get('private_playlists')
+        setting.light_mode = settings_form.cleaned_data.get('light_mode')
+        setting.explicit_music = settings_form.cleaned_data.get('explicit_music')
+        setting.live_music = settings_form.cleaned_data.get('live_music')
+        setting.save()
+        url = '/user/settings/' + user_id
+        return redirect(url)
+    else:
+        raise Http404('Form not valid')
+
+@require_GET
+def display_following(request, user_id):
+    """
+    """
+    you = UserProfile.objects.get(pk=user_id)
+    following = you.users_followed.all()
+    # following = FollowedUser.objects.filter(user_from=user_id)
+    # get_list = FollowedUser.objects.get(user_from=user_id)
+    #following = get_list.user_to
+    return render(request, 'following.html', {'following': following})
+
+def unfollow(request, user_id, who):
+    """
+    """
+    user_to_unfollow = FollowedUser.objects.get(user_from = user_id, user_to = who)
+    user_to_unfollow.delete()
+    #who.followers -= 1
+    url = '/user/following/' + user_id
+    return redirect(url)
+
+def other_profile(request, user_id):
+    """
+    """
+    profile = UserProfile.objects.get(pk=user_id)
+    return render(request, 'other_profile.html', {'other_profile': other_profile})
+
+def num_followers(user_id):
+    followers = FollowedUser.objects.get(user_to = user_id).len()
+    return {'followers': followers}

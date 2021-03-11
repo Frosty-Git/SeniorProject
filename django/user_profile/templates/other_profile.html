@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}My Profile{% endblock %}
+{% block title %}User Profile{% endblock %}
 
 {% block content %}
 <center>
@@ -64,14 +64,10 @@
                 </ul>
             </div>
         {% endif %}
-
-        <br>
-        {% comment %} {% if profile.user.id = currently logged in user%} {% endcomment %}
-        <a class="btn btn-secondary" href="#" role="button">Edit Profile</a>
-        {% comment %} {% endif %} {% endcomment %}
-        <br>
-        <br>
     </div>
+
+    <!-- Pasted this over I didn't actually test anything -->
+    <button type="button" class="unfollowBtn" onclick="location.href='{% url 'user:unfollow' user.id profile.id%}'">
 
 </center>
 <br>

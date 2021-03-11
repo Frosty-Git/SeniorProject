@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user_profile.apps.UserProfileConfig',
     'phonenumber_field',
     'crispy_forms',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

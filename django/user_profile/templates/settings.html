@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %} Settings {% endblock %}
+
+{% block content %}
+
+<style>
+    body { margin:0; padding:0; }
+    form { width: 100%; margin: 0;}
+    th { padding-bottom: 1%; position: relative;}
+    td { padding-bottom: 10%; width: 25%;}
+    .help.tip { position: absolute;}
+</style>
+<h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+    Settings
+</h1>
+<form method='post' action="{% url 'user:settings_save' user.id %}">
+    {% csrf_token %}
+    <div style="text-align: center;">
+    <table style="width:100%; margin-top: 2%;">
+        <tr>
+            <th>
+                Private Profile
+                <div class="help-tip" style="z-index: 999;">
+                    <p>If selected, your profile will not be visible for searching by other users.</p>
+                </div>
+            </th>
+            <th>
+                Private Playlists
+                <div class="help-tip" style="z-index: 999;">
+                    <p>If selected, your playlists will be private, even to those who follow you.</p>
+                </div>
+            </th>
+            <th>
+                Light Mode
+                <div class="help-tip" style="z-index: 999;">
+                    <p>If selected, the website's theme will be light, rather than dark.</p>
+                </div>
+            </th>
+            <th>
+                Explicit Music
+                <div class="help-tip" style="z-index: 999;">
+                    <p>If selected, the website will recommend and play music that includes explicit lyrics.</p>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <label class="switch">
+                    {{ settings_form.private_profile }}
+                    <span class="slider round"></span>
+                </label>
+            </td>
+            <td>
+                    <label class="switch">
+                        {{ settings_form.private_playlists }}
+                        <span class="slider round"></span>
+                    </label>
+            </td>
+            <td> 
+                    <label class="switch">
+                        {{ settings_form.light_mode }}
+                        <span class="slider round"></span>
+                    </label>
+            </td>
+            <td>
+                    <label class="switch">
+                        {{ settings_form.explicit_music }}
+                        <span class="slider round"></span>
+                    </label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Live Music
+                 <div class="help-tip" style="z-index: 999;">
+                     <p>If selected, the website will recommend and play music that includes explicit lyrics.</p>
+                 </div>
+             </th>
+            <th>
+                Setting
+                <div class="help-tip" style="z-index: 999;">
+                    <p>Hello!</p>
+                </div>
+            </th>
+            <th>
+                Setting
+                <div class="help-tip" style="z-index: 999;">
+                    <p>Hello!</p>
+                </div>
+            </th>
+            <th>
+                Setting
+                <div class="help-tip" style="z-index: 999;">
+                    <p>Hello!</p>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <label class="switch">
+                    {{ settings_form.live_music }}
+                    <span class="slider round"></span>
+                </label>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Setting
+                <div class="help-tip" style="z-index: 999;">
+                    <p>Hello!</p>
+                </div>
+            </th>
+            <th>
+                Setting
+                <div class="help-tip" style="z-index: 999;">
+                    <p>Hello!</p>
+                </div>
+            </th>
+            <th>
+                Setting
+                <div class="help-tip" style="z-index: 999;">
+                    <p>Hello!</p>
+                </div>
+            </th>
+            <th>
+                Setting
+                <div class="help-tip" style="z-index: 999;">
+                    <p>Hello!</p>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                </label>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                </label>
+            </td>
+        </tr>
+    </table> 
+    <button class="btn btn-outline-dark" type="submit">Save</button>
+</div>
+</form>
+<br>
+</tbody>
+</table>
+
+{% endblock %}

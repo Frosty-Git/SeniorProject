@@ -47,4 +47,7 @@ def searchform_get(request):
 def home(request):
     context={'name': 'Pengbeats'}
     return render(request, 'home.html', context)
+
+
+
     
