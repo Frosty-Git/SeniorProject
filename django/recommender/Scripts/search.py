@@ -12,7 +12,7 @@ def search_tracks(query):
 
 def search_albums(query):
     album_ids=[]
-    result = sp.search(q='abbey%20road', limit=RESULTS_RETURNED, offset=0, type='album', market=None)
+    result = sp.search(q=query, limit=RESULTS_RETURNED, offset=0, type='album', market=None)
     for y in range(RESULTS_RETURNED):
         if y+1 > len(result['albums']['items']):
             break
@@ -20,7 +20,7 @@ def search_albums(query):
 
 def search_artists(query):
     artist_ids=[]
-    result = sp.search(q='dog', limit=RESULTS_RETURNED, offset=0, type='artist', market=None)
+    result = sp.search(q=query, limit=RESULTS_RETURNED, offset=0, type='artist', market=None)
     for z in range(RESULTS_RETURNED):
         if z+1 > len(result['artists']['items']):
             break
