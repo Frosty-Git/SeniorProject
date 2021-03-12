@@ -23,7 +23,6 @@
         <tr>
             <td style="text-align: right;">
                 <a href="{% url 'user:profile' user_to.user.id %}">
-                <!-- <a href="{% url 'user:other_profile' user_to.user.id %}"> -->
                     {% if user_to.profilepic %}
                         <img src="{{ user_to.profilepic.url }}" alt="" width="80" height="80" class="d-inline-block align-top">
                     {% else %}
@@ -33,7 +32,6 @@
             </td>
             <td>
                 <a href="{% url 'user:profile' user_to.user.id %}">
-                <!-- <a href="{% url 'user:other_profile' user_to.user.id %}"> -->
                     <div class="user">
                         {{ user_to }} 
                     </div>
