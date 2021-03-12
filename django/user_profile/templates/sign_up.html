@@ -1,42 +1,115 @@
 {% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Sign Up{% endblock %}
+
 {% block content %}
-{% load static %}
+<br>
+<div class="container" style="width:600px; background-color:rgb(49, 50, 88); padding:20px">
+    <h1><center>Sign Up</center></h1>
+    <small><small><center>Thank you for signing up! You won't regret this amazing decision &#128522;</center></small></small>
 
-<div class = "container">
-<center>
-    <h1>Sign Up</h1>
-  </center>
-
-    <form method="POST" action="/user/signup/">
+    <br>
+    <div class="form-group">
+        <form method="POST" action="/user/signup/" enctype="multipart/form-data">
             {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Join Today</legend>
-                {{ form.as_p }}
-                </br>
-                <p>Birthdate: </p>
-                {{ profile_form.birthdate }}
-                </br>
-                <p>Profile Picture: </p>
-                {{ profile_form.profilepic }}
-                </br>
-                <p>Description: </p>
-                {{ profile_form.description }}
-                </br>
-                <p>Likes: </p>
-                {{ profile_form.likes }}
-                </br>
-                <p>Dislikes: </p>
-                {{ profile_form.dislikes }}
-                </br>
-            </fieldset>
-            <div class="form-group">
-                    <button class="btn btn-outline-info" type="submit">Sign Up</button>
+            <div class="input-group flex-nowrap small">
+                <span class="input-group-text" id="basic-addon1">@</span>
+                {{ form.username|add_class:"form-control"|attr:"placeholder:Username"|add_required_class:"is-required"|attr:"aria-describedby:username" }}
+                <span id="username" class="form-text" style="padding-left: 10px">
+                    150 characters or fewer.<br>Letters, digits and @/./+/-/_ only.
+                </span>
             </div>
-    </form>
+            
+            <br>
+            <div class="row">
+                <div class="col">
+                    {{ form.first_name|add_class:"form-control"|attr:"placeholder:First Name"|add_required_class:"is-required" }}
+                </div>
+                <div class="col">
+                    {{ form.last_name|add_class:"form-control"|attr:"placeholder:Last Name"|add_required_class:"is-required" }}
+                </div>
+            </div>
+
+            <br>
+            {{ form.email|add_class:"form-control"|attr:"placeholder:Email Address"|add_required_class:"is-required" }}
+            <div id="email" class="form-text" style="font-style: italic;">e.g. JohnDoe@example.com</div>
+
+            <br>
+            <div class="row">
+                <div class="col">
+                    <div class="form-text">
+                        <ul>
+                            Your password <strong>MUST:</strong>
+                            <small>
+                            <li>Not be too similar to your other personal information.</li> 
+                            <li>Contain at least 8 characters.</li>
+                            <li>Not be a commonly used password.</li>
+                            <li>Not be entirely numeric.</li>
+                            </small>
+                        </ul>
+                    </div>
+                    
+                </div>
+                    <div class="col" style="padding-top:10px">
+                        {{ form.password1|add_class:"form-control"|attr:"placeholder:Password"|add_required_class:"is-required" }}
+                        <br>
+                        {{ form.password2|add_class:"form-control"|attr:"placeholder:Confirm password"|add_required_class:"is-required" }}                
+                    </div>
+                </div>
+
+
+            <div class="row">
+                <div class="col">
+                    <span id="birthdateinline" class="form-text">
+                        Please enter your date of birth:
+                    </span>
+                    <div class="input-group mb-3">
+                        {{ profile_form.birthdate|add_class:"form-control"|add_required_class:"is-required"|attr:"id:birthdate"|attr:"type:date"|attr:"style:max-width:200px"|attr:"aria-describedby:birthdateinline" }}
+                        <label class="input-group-text" for="birthdate">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16">
+                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                            </svg>
+                        </label>
+                    </div>
+                </div>
+                <div class="col">
+                    <span id="image" class="form-text">
+                        (Optional) Upload a profile picture
+                    </span>
+                    {% render_field profile_form.profilepic class="form-control" type="file" id="image" style="min-width:250px" %}
+                </div>
+            </div>
+
+            <span id="birthdate" class="form-text">
+                Tell us a little bit about yourself!
+            </span>
+            {% render_field profile_form.description class="form-control" id="description" rows="3" placeholder="e.g. I am a Mongolian Rap enthusiast!" %}
+
+            <br>
+            <div class="row">
+                <div class="col">
+                    <span id="likes" class="form-text">
+                        What bands/genres do you like?
+                    </span>
+                    {% render_field profile_form.likes class="form-control" id="likes" rows="2" placeholder="e.g. I like The HU" %}
+                </div>
+                <div class="col">
+                    <span id="dislikes" class="form-text">
+                        What bands/genres are you not fond of?
+                    </span>
+                    {% render_field profile_form.dislikes class="form-control" id="dislikes" rows="2" placeholder="e.g. Not a fan of Alabama Disco" %}
+                </div>
+            </div>
+
+            <br>
+            <button class="btn btn-primary" type="submit">Submit</button>&nbsp;&nbsp;
+            <input class="btn btn-danger" type="reset" value="Reset">
+        </form>
+    </div>
 </div>
-
-
-
-
+<br>
 
 {% endblock %}

@@ -8,9 +8,9 @@
 <center>
     <br>
     <div class="container my_profile" style="max-width: 400px;  box-shadow: 5px 10px 8px slategray">
-        {% if profile.image %}
+        {% if profile.profilepic %}
             <div class="text-center" style="padding-top: 20px; height: 100%; width: 300px">
-                <img src="{{ profile.image.url }}" class="img-thumbnail" alt="...">
+                <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="...">
             </div>
         {% else %}
         <div class="text-center" style="padding-top: 20px; height: 100%; width: 300px">

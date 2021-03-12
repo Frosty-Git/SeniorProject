@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load widget_tweaks %}
+
 {% block content %}
 <br>
     {% if messages %}
@@ -20,11 +22,11 @@
         <form method="POST" action='/user/login/'>
             {% csrf_token %}
             <div class="form-floating mb-3" style="color:black">
-                {{ form.username }}
+                {% render_field form.username class="form-control" type="text" id="username" %}
                 <label for="username">Username</label>
             </div>
             <div class="form-floating" style="color:black">
-                {{ form.password }}
+                {% render_field form.password class="form-control" type="password" id="password" %}
                 <label for="password">Password</label>
             </div>
 

@@ -7,6 +7,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_GET
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -30,10 +31,6 @@ def sign_up(request):
             pref.save()
             sett = Settings(user_profile_fk = profile, private_profile=False, private_playlists=False, light_mode=False, explicit_music=False, live_music=False)
             sett.save()
-            # profile.settings_fk = sett
-            #profile.following_fk = UserProfile.objects.none()
-            #profile.playlists_followed_fk = Playlist.objects.none()
-            #profile.settings_fk.user_profile_id = profile.id
 
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')

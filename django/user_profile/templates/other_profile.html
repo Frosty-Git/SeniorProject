@@ -67,7 +67,7 @@
     </div>
 
     <!-- Pasted this over I didn't actually test anything -->
-    <button type="button" class="unfollowBtn" onclick="location.href='{% url 'user:unfollow' user.id profile.id%}'">
+    <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.id%}" role="button"></a>
 
 </center>
 <br>

@@ -17,7 +17,7 @@ class UserProfile(models.Model):
     description = models.TextField(blank=True, null=True, max_length=100)
     likes = models.TextField(blank=True, null=True, max_length=50)
     dislikes = models.TextField(blank=True, null=True, max_length=50)
-    profilepic = models.ImageField(upload_to='images/', null=True)
+    profilepic = models.ImageField(upload_to='images/', null=True, verbose_name="")
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
     linked_to_spotify = models.BooleanField(default=False)

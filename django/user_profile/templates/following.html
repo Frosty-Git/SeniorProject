@@ -26,7 +26,7 @@
                     {% if user_to.profilepic %}
                         <img src="{{ user_to.profilepic.url }}" alt="" width="80" height="80" class="d-inline-block align-top">
                     {% else %}
-                        <img src="{% static 'propic.png' %}" alt="" width="80" height="80" class="d-inline-block align-top">
+                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" alt="" width="80" height="80" class="d-inline-block align-top">
                     {% endif %}
                 </a>
             </td>
@@ -42,8 +42,7 @@
                 # Followers Here
             </td>
             <td>
-                <button type="button" class="unfollowBtn" onclick="location.href='{% url 'user:unfollow' user.id user_to.user.id%}'">
-                </button>
+                <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id user_to.user.id%}" role="button"></a>
             </td>
         </tr>
         {% endfor %}

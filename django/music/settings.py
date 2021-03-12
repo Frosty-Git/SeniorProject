@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'social_feed.apps.SocialFeedConfig',
     'user_profile.apps.UserProfileConfig',
-    'phonenumber_field',
     'crispy_forms',
     'django.contrib.humanize',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

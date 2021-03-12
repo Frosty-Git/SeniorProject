@@ -1,0 +1,14 @@
+.theme_background {
+    background-color:#343a40;
+    color: ghostwhite;
+}
+
+.my_profile {
+    background-color: darkslateblue; 
+    display: inline-block; 
+}
+
+.profile_header {
+    padding-top: 20px;
+    font-family:'Courier New', Courier, monospace;
+}
