@@ -9,6 +9,7 @@ def search_tracks(query):
         if x+1 > len(result['tracks']['items']):
             break
         track_ids.append(result['tracks']['items'][x]['id'])
+    return track_ids
 
 def search_albums(query):
     album_ids=[]
@@ -17,6 +18,7 @@ def search_albums(query):
         if y+1 > len(result['albums']['items']):
             break
         album_ids.append(result['albums']['items'][y]['id'])
+    return album_ids
 
 def search_artists(query):
     artist_ids=[]
@@ -25,3 +27,4 @@ def search_artists(query):
         if z+1 > len(result['artists']['items']):
             break
         artist_ids.append(result['artists']['items'][z]['id'])
+    return artist_ids
