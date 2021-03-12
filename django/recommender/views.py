@@ -69,3 +69,7 @@ def results(request):
                 'priority': request.POST.get('priority'),
             }
     return render(request, 'results.html', context)
+
+#About Page
+def about(request):
+    return render(request, 'about.html', {})
