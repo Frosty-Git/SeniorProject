@@ -66,7 +66,6 @@ def results(request):
         if form.is_valid():
             context = {
                 'term': request.POST.get('term'),
-                'priority': request.POST.get('priority'),
             }
     return render(request, 'results.html', context)
 

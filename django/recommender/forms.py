@@ -7,11 +7,3 @@ class SearchForm(forms.Form):
 
 class OurSearchForm(forms.Form):
     term = forms.CharField(widget=forms.TextInput(attrs={'size':'50'}))
-    
-    priorities = (
-        ('Default','Select A Priority'),
-        ('Song','Song'),
-        ('Artist','Artist'),
-        ('Album','Album'),
-    )
-    priority = forms.MultipleChoiceField(choices=priorities)

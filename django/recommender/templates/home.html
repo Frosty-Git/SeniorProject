@@ -20,7 +20,7 @@
         <h1>{{ name }} Homepage</h1>
     </center>
     <br>
-    <form class='ourSearchForm' method='POST' action='results'>
+    <form class='ourSearchForm' method='POST' action='results/'>
         {% csrf_token %}
         {{ ourSearchForm }}
         <input type='submit' value='Search' class='ourSearchForm'>
