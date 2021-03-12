@@ -1,6 +1,12 @@
-RESULTS_RETURNED = 10
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
+import recommender.Scripts.client_credentials as client_cred
+
+client_cred.setup()
 auth_manager = SpotifyClientCredentials()
 sp = spotipy.Spotify(auth_manager=auth_manager)
+
+RESULTS_RETURNED = 5
 
 def search_tracks(query):
     track_ids=[]

@@ -5,7 +5,7 @@ from .models import *
 from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
-
+from recommender.Scripts.search import search_albums, search_artists, search_tracks
 
 #----Dr Baliga's Code----
 
@@ -64,8 +64,15 @@ def results(request):
     if request.method == "POST":
         form = OurSearchForm(request.POST)
         if form.is_valid():
+            term = request.POST.get('term')
+            track_ids = search_tracks(term)
+            album_ids = search_albums(term)
+            artist_ids = search_artists(term)
             context = {
-                'term': request.POST.get('term'),
+                'term' : term,
+                'tracks' : track_ids,
+                'albums' : album_ids,
+                'artists' : artist_ids
             }
     return render(request, 'results.html', context)
 
