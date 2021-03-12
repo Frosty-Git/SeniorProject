@@ -44,3 +44,4 @@ virt_env/*
 
 # Spotipy Authentication
 **/client_credentials.py
+.cache
