@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('best/', views.searchform_get, name='best'),
     path('bestp/', views.searchform_post, name='bestp'),
+    path('results', views.results, name='results'),
 ]
  

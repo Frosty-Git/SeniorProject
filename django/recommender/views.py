@@ -7,6 +7,8 @@ from django.views.decorators.http import require_POST, require_GET
 import numpy as np
 
 
+#----Dr Baliga's Code----
+
 def find_albums(artist, from_year = None, to_year = None):
     query = Musicdata.objects.filter(artists__contains = artist)
     if from_year is not None:
@@ -44,6 +46,26 @@ def searchform_get(request):
     return render(request, 'recommender/searchform.html', {'form': form})
 
 
+#----End Dr Baliga's Code----
+
+# Home Page
 def home(request):
-    context={'name': 'Pengbeats'}
+    ourSearchForm = OurSearchForm()
+
+    context={
+        'name': 'Pengbeats',
+        'ourSearchForm': ourSearchForm,
+    }
     return render(request, 'home.html', context)
+
+# Search Results Page
+def results(request):
+
+    if request.method == "POST":
+        form = OurSearchForm(request.POST)
+        if form.is_valid():
+            context = {
+                'term': request.POST.get('term'),
+                'priority': request.POST.get('priority'),
+            }
+    return render(request, 'results.html', context)
