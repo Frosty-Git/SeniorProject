@@ -90,9 +90,10 @@ def profile(request, user_id):
 def display_settings(request, user_id):
     """
     """
+    userobj = User.objects.get(id=user_id)
     settings = Settings.objects.get(user_profile_fk=user_id)
     settings_form = SettingsForm(instance=settings)
-    return render(request, 'settings.html', {'settings_form': settings_form})
+    return render(request, 'settings.html', {'settings_form': settings_form, 'userobj': userobj})
 
 @require_POST
 def settings_save(request, user_id):

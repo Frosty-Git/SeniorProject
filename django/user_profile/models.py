@@ -80,7 +80,7 @@ class Playlist(models.Model):
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
     user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, default=None) # Who created the playlist
-    music_data_fk = models.ManyToManyField(Musicdata, through="Song_On_Playlist",
+    music_data_fk = models.ManyToManyField(Musicdata, through="SongOnPlaylist",
                                         related_name='playlist_songs',
                                         symmetrical=False)
     name = models.CharField(max_length=30)
@@ -137,7 +137,7 @@ class FollowedPlaylist(models.Model):
 
 
 # Song On Playlist
-class Song_On_Playlist(models.Model):
+class SongOnPlaylist(models.Model):
     """
     Model representing a bridging tbale between a song and a playlist.
     Last updated: 3/10/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, 
