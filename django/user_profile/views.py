@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
-from user_profile.forms import ExtendedUserCreationForm, UserProfileForm
 from user_profile.models import *
-from .forms import *
+from user_profile.forms import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -142,3 +141,24 @@ def unfollow(request, user_id, who):
 # def num_followers(user_id):
 #     followers = FollowedUser.objects.get(user_to = user_id).len()
 #     return {'followers': followers}
+
+@login_required
+def update_profile(request):
+    obj = UserProfile.objects.get(pk=request.user.id)
+
+    if request.method == 'POST':
+        form = ExtendedUserChangeForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if form.is_valid() and profile_form.is_valid():
+            user = form.save()
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            profile.save()
+            return redirect('/user/profile/' + str(request.user.id))
+    else:
+        form = ExtendedUserChangeForm(instance=obj.user)
+        profile_form = UserProfileForm(instance=obj)
+    return render(request, 'update_profile.html', {'form': form, 'profile_form': profile_form})

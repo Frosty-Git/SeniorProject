@@ -66,9 +66,7 @@
         {% endif %}
 
         <br>
-        {% comment %} {% if profile.user.id = currently logged in user%} {% endcomment %}
-        <a class="btn btn-secondary" href="#" role="button">Edit Profile</a>
-        {% comment %} {% endif %} {% endcomment %}
+        <a class="btn btn-secondary" href="{% url 'user:update_profile' %}" role="button">Edit Profile</a>
         <br>
         <br>
     </div>

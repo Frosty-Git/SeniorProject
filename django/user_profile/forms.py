@@ -3,7 +3,6 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from user_profile.models import UserProfile, Settings
 from django.forms import ModelForm
-#from phonenumber_field.modelfields import PhoneNumberField
 
 
 class ExtendedUserCreationForm(UserCreationForm):
@@ -47,3 +46,13 @@ class SettingsForm(forms.ModelForm):
         widgets = {'private_profile': forms.CheckboxInput(attrs={'id': 'i_private_profile'})}
         fields = ['private_profile', 'private_playlists', 'light_mode', 'explicit_music', 'live_music']
 
+
+class ExtendedUserChangeForm(UserChangeForm):
+    email = forms.EmailField(required=False)
+    first_name = forms.CharField(max_length=50, required=False)
+    last_name = forms.CharField(max_length=150, required=False)
+    password = None
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email',)
