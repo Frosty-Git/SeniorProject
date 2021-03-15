@@ -87,7 +87,7 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
                     <li><a class="dropdown-item" href="{% url 'user:profile' user.id %}">My Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'user:settings' user.id %}">Settings</a></li>
+                    <li><a class="dropdown-item" href="{% url 'user:update_profile' %}">Settings</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:following' user.id %}">Following</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{% url 'user:logout' %}">Log Out</a></li>

@@ -161,4 +161,5 @@ def update_profile(request):
     else:
         form = ExtendedUserChangeForm(instance=obj.user)
         profile_form = UserProfileForm(instance=obj)
-    return render(request, 'update_profile.html', {'form': form, 'profile_form': profile_form})
+        pic = obj.profilepic
+    return render(request, 'update_profile.html', {'form': form, 'profile_form': profile_form, 'pic': pic})

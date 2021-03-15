@@ -1,15 +1,18 @@
-{% extends 'base.html' %}
+{% extends 'base_settings.html' %}
 
+{% load static %}
 {% block title %}Edit Profile{% endblock %}
 
-{% block content %}
+{% block setting %}
+    <center><h1 style="margin-top: 2%">Edit Profile</h1></center>
+    <form method="POST" enctype="multipart/form-data" action="/user/update_profile/">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ profile_form.as_p }}
 
-<br>
-<form method="POST" enctype="multipart/form-data" action="/user/update_profile/">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ profile_form.as_p }}
-    <input class="btn btn-primary" type="submit" value="Submit">
-<br>
+        <img src="{{ pic.url }}" class="img-thumbnail" alt="..."><br>
 
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+    <br>
 {% endblock %}
