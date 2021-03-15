@@ -14,7 +14,7 @@
 }
 
 .sidenav {
-    width: 170px;
+    width: 160px;
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
     top: 50;
@@ -29,6 +29,6 @@
 }
 
 .main {
-    margin-left: 170px; /* Same as the width of the sidebar */
+    margin-left: 160px; /* Same as the width of the sidebar */
     padding: 0px 10px;
 }
