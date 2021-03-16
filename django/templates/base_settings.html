@@ -13,13 +13,28 @@
             </div>
         {% endfor %}
     {% endif %}
+<br>
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
 
     <div class="sidenav">
         <ul class="list-group list-group-flush">
             <li class="list-group-item disabled" aria-disabled="true"><b>Settings</b></li>
             <li class="list-group-item" aria-current="true"><a href="{% url 'user:update_profile' %}">Profile</a></li>
             <li class="list-group-item"><a href="{% url 'user:settings' user.id %}">Privacy</a></li>
-            <li class="list-group-item"><a href="#">Account</a></li>
+            <li class="list-group-item"><a href="{% url 'user:account_setting' %}">Account</a></li>
         </ul>
     </div>
 
