@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Settings {% endblock %}
+
+{% block content %}
+<br>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="sidenav">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item disabled" aria-disabled="true"><b>Settings</b></li>
+            <li class="list-group-item" aria-current="true"><a href="{% url 'user:update_profile' %}">Profile</a></li>
+            <li class="list-group-item"><a href="{% url 'user:settings' user.id %}">Privacy</a></li>
+            <li class="list-group-item"><a href="#">Account</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        {% block setting %}
+        {% endblock %}
+    </div>
+
+
+{% endblock %}

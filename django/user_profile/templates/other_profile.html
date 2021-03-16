@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<center>
+    <br>
+    <div class="container my_profile" style="max-width: 400px;  box-shadow: 5px 10px 8px slategray">
+        {% if profile.image %}
+            <div class="text-center" style="padding-top: 20px; height: 100%; width: 300px">
+                <img src="{{ profile.image.url }}" class="img-thumbnail" alt="...">
+            </div>
+        {% else %}
+        <div class="text-center" style="padding-top: 20px; height: 100%; width: 300px">
+            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="...">
+        </div>
+        {% endif %}
+
+        <div>
+            <h2 class="profile_header">
+                <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
+            </h2>
+            <p style="margin-top: -10px; color:lightgray">
+                @{{ profile.user.username }}
+            <p>
+        </div>
+
+
+        {% if profile.description %}
+            <h5 style="font-size: 20px;">
+                {{ profile.description }}
+            </h5>
+        {% endif %}
+
+        <h6 style="padding-bottom:20px; font-size: 13px;">
+            DOB: {{ profile.birthdate }}
+        </h6>
+
+        {% if profile.likes or profile.dislikes %}
+            <div class="container" style="max-width:500px; margin-left:auto; margin-right:auto">
+                <ul class="list-group list-group-flush">
+                    <div class="row">
+                        {% if profile.likes %}
+                            <div class="col-xs">
+                                <strong>Likes: </strong>
+                            </div>
+                            <div class="col-md" style="text-align: left;">
+                                <li class="list-group-item list-group-item-light" aria-current="true">{{ profile.likes }}</li>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        {% if profile.dislikes %}
+                            <div class="col-xs">
+                                <strong>Dislikes: </strong>
+                            </div>
+                            <div class="col-md" style="text-align: left;">
+                                <li class="list-group-item list-group-item-light" aria-current="true">{{ profile.dislikes }}</li>
+                            </div>
+                        {% endif %}
+                    </div>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Pasted this over I didn't actually test anything -->
+    <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.id%}" role="button"></a>
+
+</center>
+<br>
+{% endblock %}

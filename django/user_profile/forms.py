@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
-from user_profile.models import UserProfile
-#from phonenumber_field.modelfields import PhoneNumberField
+from user_profile.models import UserProfile, Settings
+from django.forms import ModelForm
 
 
 class ExtendedUserCreationForm(UserCreationForm):
@@ -31,7 +31,6 @@ class ExtendedUserCreationForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     profilepic = forms.ImageField(required=False)
     birthdate = forms.DateField()
-    # phone_number = PhoneNumberField()
     description = forms.CharField(widget=forms.Textarea, required=False)
     likes = forms.CharField(widget=forms.Textarea, required=False)
     dislikes = forms.CharField(widget=forms.Textarea, required=False)
@@ -41,4 +40,19 @@ class UserProfileForm(forms.ModelForm):
         fields = ('birthdate', 'description', 'likes', 'dislikes', 'profilepic')
 
 
+class SettingsForm(forms.ModelForm):
+    class Meta:
+        model = Settings
+        widgets = {'private_profile': forms.CheckboxInput(attrs={'id': 'i_private_profile'})}
+        fields = ['private_profile', 'private_playlists', 'light_mode', 'explicit_music', 'live_music']
 
+
+class ExtendedUserChangeForm(UserChangeForm):
+    email = forms.EmailField(required=False)
+    first_name = forms.CharField(max_length=50, required=False)
+    last_name = forms.CharField(max_length=150, required=False)
+    password = None
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email',)
