@@ -36,7 +36,7 @@ def sign_up(request):
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             messages.success(request, ('Successfully signed up!'))
-            return redirect('/recommender/')
+            return redirect('/')
 
     else:
         form = ExtendedUserCreationForm()
@@ -50,7 +50,7 @@ def logout_request(request):
     """
     logout(request)
     messages.info(request, ('Logged out successfully!'))
-    return redirect("/recommender/")
+    return redirect("/")
 
 
 def login_request(request):
@@ -67,7 +67,7 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f"You are now logged in as {username}")
-                return redirect('/recommender/')
+                return redirect('/')
             else:
                 messages.error(request, ('Invalid username or password.'))
         else:
