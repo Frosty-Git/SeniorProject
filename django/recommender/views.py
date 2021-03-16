@@ -5,7 +5,9 @@ from .models import *
 from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
+from recommender.Scripts.search import search_albums, search_artists, search_tracks
 
+#----Dr Baliga's Code----
 
 def find_albums(artist, from_year = None, to_year = None):
     query = Musicdata.objects.filter(artists__contains = artist)
@@ -44,10 +46,36 @@ def searchform_get(request):
     return render(request, 'recommender/searchform.html', {'form': form})
 
 
+#----End Dr Baliga's Code----
+
+# Home Page
 def home(request):
-    context={'name': 'Pengbeats'}
+    ourSearchForm = OurSearchForm()
+
+    context={
+        'name': 'Pengbeats',
+        'ourSearchForm': ourSearchForm,
+    }
     return render(request, 'home.html', context)
 
+# Search Results Page
+def results(request):
 
+    if request.method == "POST":
+        form = OurSearchForm(request.POST)
+        if form.is_valid():
+            term = request.POST.get('term')
+            track_ids = search_tracks(term)
+            album_ids = search_albums(term)
+            artist_ids = search_artists(term)
+            context = {
+                'term' : term,
+                'tracks' : track_ids,
+                'albums' : album_ids,
+                'artists' : artist_ids
+            }
+    return render(request, 'results.html', context)
 
-    
+#About Page
+def about(request):
+    return render(request, 'about.html', {})

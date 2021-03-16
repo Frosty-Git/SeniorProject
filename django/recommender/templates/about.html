@@ -16,17 +16,13 @@
     {% endif %}
 
     <center>
-        <img src="{% static 'images/pengbeats.png' type='image/png' %}" class="img-fluid" alt="..." width="200" height="200">
-        <h1>{{ name }} Homepage</h1>
+        <!-- <img src="{% static 'images/pengbeats.png' type='image/png' %}" class="img-fluid" alt="..." width="200" height="200"> -->
+        <h1>{{ name }} About Us</h1>
     </center>
     <br>
-    <form class='ourSearchForm' method='POST' action='results/'>
-        {% csrf_token %}
-        {{ ourSearchForm }}
-        <input type='submit' value='Search' class='ourSearchForm'>
-    </form>
-    <br>
-    <p>We have not created anything yet. We will have a search feature and stuff on it.</p>
+    
+    <p>We have not created anything yet! This page will tell you all about us.
+    </p>
     <br>
 <br>
 {% endblock %}

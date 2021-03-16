@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'social_feed.apps.SocialFeedConfig',
     'user_profile.apps.UserProfileConfig',
-    'crispy_forms',
     'django.contrib.humanize',
     'widget_tweaks',
 ]

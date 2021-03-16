@@ -27,8 +27,8 @@ Jacelynn's main change
     spotipy
     django-crispy-forms
     Pillow
-    django-phonenumber-field[phonenumbers]
+    django-widget-tweaks
   
   The .gitignore does not include the database. You may need to repeat Baliga's
   instructions on how to get the Kaggle music data into your local database.
-  All of the files for Window's are included in the git repository.
+  All of the files for Window's are included in the git repository.  
