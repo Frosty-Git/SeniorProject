@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}PengBeats | Results{% endblock %}
+
+{% block content %}
+
+    <p>Search Term: {{ term }}</p>
+    
+{% if tracks %}
+    <table class="table">
+        <tbody>
+            <tr>
+            {% for track in tracks %}
+
+                <td>
+                    <iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="380" 
+                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                </td>
+
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+{% endif %}
+
+{% if albums %}
+    <table class="table">
+        <tbody>
+            <tr>
+            {% for album in albums %}
+
+                <td>
+                    <iframe src="https://open.spotify.com/embed/album/{{ album }}" width="300" height="380" 
+                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                </td>
+
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+{% endif %}
+
+{% if artists %}
+    <table class="table">
+        <tbody>
+            <tr>
+            {% for artist in artists %}
+
+                <td>
+                    <iframe src="https://open.spotify.com/embed/artist/{{ artist }}" width="300" height="380" 
+                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                </td>
+
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+{% endif %}
+{% endblock %}

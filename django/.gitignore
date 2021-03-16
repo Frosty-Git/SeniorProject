@@ -36,9 +36,12 @@ temp/*
 # !.vscode/extensions.json 
 .history
 
-
 # Mac
 .DS_Store
 
 # Virtual Environment
 virt_env/*
+
+# Spotipy Authentication
+**/client_credentials.py
+.cache
