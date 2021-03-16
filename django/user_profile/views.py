@@ -14,7 +14,7 @@ def sign_up(request):
     """
     Allows a client to sign up as user for our site. Creates a user and a
     user profile for the client.
-    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    Last updated: 3/16/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     if request.method == 'POST':
         form = ExtendedUserCreationForm(request.POST)
@@ -46,7 +46,7 @@ def sign_up(request):
 def logout_request(request):
     """
     Allows a user to logout from the site
-    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    Last updated: 3/16/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     logout(request)
     messages.info(request, ('Logged out successfully!'))
@@ -56,7 +56,7 @@ def logout_request(request):
 def login_request(request):
     """
     Allows a user to log in to the site.
-    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    Last updated: 3/16/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
@@ -88,6 +88,9 @@ def profile(request, user_id):
 @require_GET
 def display_settings(request, user_id):
     """
+    Used to display the settings for a particular user. Loads in the current state
+    of each field from the database.
+    Last updated: 3/11/21 by Jacelynn Duranceau
     """
     userobj = User.objects.get(id=user_id)
     settings = Settings.objects.get(user_profile_fk=user_id)
@@ -97,6 +100,8 @@ def display_settings(request, user_id):
 @require_POST
 def settings_save(request, user_id):
     """
+    Alters a user's settings.
+    Last updated: 3/11/21 by Jacelynn Duranceau 
     """
     setting = Settings.objects.get(user_profile_fk=user_id)
     settings_form = SettingsForm(request.POST, instance=setting)
@@ -116,6 +121,10 @@ def settings_save(request, user_id):
 @require_GET
 def display_following(request, user_id):
     """
+    Used to display each user followed by a particular user. It uses said user as
+    the primary key into the following bridging table and returns every foreign
+    key, which represents the users followed.
+    Last updated: 3/11/21 by Jacelynn Duranceau
     """
     you = UserProfile.objects.get(pk=user_id)
     following = you.users_followed.all()
@@ -126,6 +135,9 @@ def display_following(request, user_id):
 
 def unfollow(request, user_id, who):
     """
+    Deletes the link in the bridging table between yourself and the person you
+    want to unfollow.
+    Last updated: 3/11/21 by Jacelynn Duranceau
     """
     user_to_unfollow = FollowedUser.objects.get(user_from = user_id, user_to = who)
     user_to_unfollow.delete()
@@ -145,6 +157,11 @@ def unfollow(request, user_id, who):
 
 @login_required
 def update_profile(request):
+    """
+    Used to make a change to what is currently displayed on a user's profile.
+    Note: These attributes are initially set upon signing up.   
+    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    """
     obj = UserProfile.objects.get(pk=request.user.id)
 
     if request.method == 'POST':
