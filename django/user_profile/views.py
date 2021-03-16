@@ -107,6 +107,7 @@ def settings_save(request, user_id):
         setting.explicit_music = settings_form.cleaned_data.get('explicit_music')
         setting.live_music = settings_form.cleaned_data.get('live_music')
         setting.save()
+        messages.success(request, ('Settings have been updated!'))
         url = '/user/settings/' + user_id
         return redirect(url)
     else:
@@ -157,7 +158,8 @@ def update_profile(request):
             profile.user = user
 
             profile.save()
-            return redirect('/user/profile/' + str(request.user.id))
+            messages.success(request, ('Profile has been updated!'))
+            return redirect('/user/update_profile/')
     else:
         form = ExtendedUserChangeForm(instance=obj.user)
         profile_form = UserProfileForm(instance=obj)
