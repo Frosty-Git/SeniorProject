@@ -37,11 +37,10 @@ def sign_up(request):
             login(request, user)
             messages.success(request, ('Successfully signed up!'))
             return redirect('/')
-
     else:
         form = ExtendedUserCreationForm()
         profile_form = UserProfileForm()
-    return render(request, 'sign_up.html', {'form': form, 'profile_form': profile_form})
+    return render(request, 'registration/sign_up.html', {'form': form, 'profile_form': profile_form})
 
 def logout_request(request):
     """
@@ -68,12 +67,9 @@ def login_request(request):
                 login(request, user)
                 messages.success(request, f"You are now logged in as {username}")
                 return redirect('/')
-            else:
-                messages.error(request, ('Invalid username or password.'))
-        else:
-            messages.error(request, ('Invalid username or password.'))
-    form = AuthenticationForm()
-    return render(request, 'login.html', {"form":form})
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {"form": form})
 
 
 @login_required
@@ -83,7 +79,7 @@ def profile(request, user_id):
     Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     profile = UserProfile.objects.get(pk=user_id)
-    return render(request, 'my_profile.html', {'profile': profile})
+    return render(request, 'profile/my_profile.html', {'profile': profile})
 
 @require_GET
 def display_settings(request, user_id):
@@ -95,7 +91,7 @@ def display_settings(request, user_id):
     userobj = User.objects.get(id=user_id)
     settings = Settings.objects.get(user_profile_fk=user_id)
     settings_form = SettingsForm(instance=settings)
-    return render(request, 'settings.html', {'settings_form': settings_form, 'userobj': userobj})
+    return render(request, 'settings/settings.html', {'settings_form': settings_form, 'userobj': userobj})
 
 @require_POST
 def settings_save(request, user_id):
@@ -131,7 +127,7 @@ def display_following(request, user_id):
     # following = FollowedUser.objects.filter(user_from=user_id)
     # get_list = FollowedUser.objects.get(user_from=user_id)
     #following = get_list.user_to
-    return render(request, 'following.html', {'following': following})
+    return render(request, 'profile/following.html', {'following': following})
 
 def unfollow(request, user_id, who):
     """
@@ -180,4 +176,4 @@ def update_profile(request):
     else:
         form = ExtendedUserChangeForm(instance=obj.user)
         profile_form = UserProfileForm(instance=obj)
-    return render(request, 'update_profile.html', {'form': form, 'profile_form': profile_form})
+    return render(request, 'settings/update_profile.html', {'form': form, 'profile_form': profile_form})
