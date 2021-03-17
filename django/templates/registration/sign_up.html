@@ -6,6 +6,21 @@
 
 {% block content %}
 <br>
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="container" style="width:600px; background-color:rgb(49, 50, 88); padding:20px">
     <h1><center>Sign Up</center></h1>
     <small><small><center>Thank you for signing up! You won't regret this amazing decision &#128522;</center></small></small>

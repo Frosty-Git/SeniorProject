@@ -74,7 +74,7 @@ def results(request):
                 'albums' : album_ids,
                 'artists' : artist_ids
             }
-    return render(request, 'results.html', context)
+    return render(request, 'recommender/results.html', context)
 
 #About Page
 def about(request):

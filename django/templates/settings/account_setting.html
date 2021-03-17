@@ -1,0 +1,15 @@
+{% extends 'base_settings.html' %}
+
+{% block title %} Settings | Account {% endblock %}
+
+{% block setting %}
+
+    <h2>Change Password</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{% url 'user:profile' user.id %}">Back</a>
+        <button type="submit">Submit</button>
+    </form>
+
+{% endblock %}

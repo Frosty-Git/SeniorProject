@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from django.contrib.auth import views as auth_views
 
 app_name = 'user'
 
@@ -15,4 +16,11 @@ urlpatterns = [
     path('update_profile/', views.update_profile, name='update_profile'),
     # path('userprofile/<user_id>', views.other_profile, name='other_profile'),
     # path('num_followers/<user_id>', views.num_followers, name='num_followers')
+
+    # Password related URLs
+    path('account_setting/', auth_views.PasswordChangeView.as_view(
+            template_name='settings/account_setting.html',
+            success_url='/user/password_change_done/'), name='account_setting'),
+    path('password_change_done/', auth_views.PasswordChangeDoneView.as_view(
+            template_name='settings/password_change_done.html',), name='password_change_done'),
 ]
