@@ -15,6 +15,10 @@
     /* box-shadow: 5px 10px 8px slategray */
 }
 
+.my_profile th {
+    padding-right: 10px;
+}
+
 .profile_header {
     padding-top: 20px;
     font-family:'Courier New', Courier, monospace;
@@ -41,11 +45,9 @@
     padding: 0px 10px;
 }
 
-.my_profile th {
-    padding-right: 10px;
-}
-
 .profile_sf {
     background-color: purple;
     margin-right:200px;
+    margin-left: 400px;
+    padding:10px;
 }

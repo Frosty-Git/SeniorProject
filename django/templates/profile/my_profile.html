@@ -63,24 +63,25 @@
     </div>
 
     <div class="profile_sf">
+        <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
         <table>
             {% for post in post_list %}
                 <tr>
                     <td>
                         {% if post.user_profile_fk.profilepic %}
-                            <img src="{{ post.user_profile_fk.profilepic.url }}" width="60" height="60" class="d-inline-block align-top">
+                            <img src="{{ post.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
                         {% else %}
-                            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="60" height="60" class="d-inline-block align-top" alt="...">
+                            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
                         {% endif %}
                     </td>
                     <td>
                         @{{ post.user_profile_fk.user.username }}
                     </td>
-                    <td>
+                    <td style="padding-left:20px">
                         {{ post.text }}
                     </td>
-                    <td>
-                        {{ post.date_created}}
+                    <td style="padding-left:20px">
+                        <small>{{ post.date_created}}</small>
                     </td>
                 </tr>
             {% endfor %}
