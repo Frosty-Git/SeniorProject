@@ -13,7 +13,7 @@ python manage.py makemigrations social_feed && python manage.py migrate social_f
 
 
 # Now load data from csv file
-sqlite3 db.sqlite3 -cmd ".mode csv" ".import data.csv recommender_musicdata"
+./sqlite3 db.sqlite3 -cmd ".mode csv" ".import data.csv recommender_musicdata"
 
 echo "*********************************************"
 echo "If needed, now create super user and insert data into database"

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %} Post {% endblock %}
 
 {% block content %}
@@ -16,6 +18,13 @@
     <!-- Looping through one post is a really dumb way to do it -->
     {% for post in post_list %}
         <p>{{ post.text }}</p>
+        <p>@{{ post.user_profile_fk.user.username }}</p>
+        <p>{{ post.date_created}}</p>
+        {% if post.user_profile_fk.profilepic %}
+            <img src="{{ post.user_profile_fk.profilepic.url }}" width="80" height="80" class="d-inline-block align-top"/>
+        {% else %}
+            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="80" height="80" class="d-inline-block align-top" alt="..."/>
+        {% endif %}
     {% endfor %}
 
 {% endblock %}
