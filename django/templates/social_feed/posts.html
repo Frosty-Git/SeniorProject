@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Post {% endblock %}
+
+{% block content %}
+    <h1>Here Resides the Details of the Post</h1>
+
+    <form class='post_form' method='POST' action='/feed/create_post/'>
+        {% csrf_token %}
+        {{ postform }}
+        <input type='submit' value='Create Post' class='post_form'>
+    </form>
+
+    <h4>Post {{ post_id }}</h4>
+
+    <!-- Looping through one post is a really dumb way to do it -->
+    {% for post in post_list %}
+        <p>{{ post.text }}</p>
+    {% endfor %}
+
+{% endblock %}

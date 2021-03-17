@@ -65,6 +65,11 @@
                       <li><a class="dropdown-item" href="#">Top Playlists</a></li>
                     </ul>
                   </li>
+                  {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
+                    </li>
+                  {% endif %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'recommender:about' %}">About</a>
                   </li>

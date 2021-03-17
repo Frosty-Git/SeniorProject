@@ -39,6 +39,7 @@
 <td>
 <iframe src="https://open.spotify.com/embed/track/{{ album.id }}" width="300" height="380" 
 frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+<button type="button" class="btn btn-secondary" href="{% url '' album.id %}">Share Song</button>
 </td>
 
 {% endfor %}
