@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from user_profile.models import *
 from user_profile.forms import *
+from social_feed.models import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -79,7 +80,10 @@ def profile(request, user_id):
     Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     profile = UserProfile.objects.get(pk=user_id)
-    return render(request, 'profile/my_profile.html', {'profile': profile})
+    post_list = Post.objects.filter(user_profile_fk=profile)
+
+    return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list})
+
 
 @require_GET
 def display_settings(request, user_id):

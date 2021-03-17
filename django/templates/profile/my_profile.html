@@ -5,17 +5,16 @@
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
-<center>
     <br>
-    <div class="container my_profile" style="max-width: 400px;  box-shadow: 5px 10px 8px slategray">
+    <div class="my_profile" style="position: absolute;right:10px;top:10">
         {% if profile.profilepic %}
-            <div class="text-center" style="padding-top: 20px; height: 100%; width: 300px">
-                <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="...">
+            <div class="text-center" style="padding-top: 20px">
+                <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="..." width="200" height="200">
             </div>
         {% else %}
-        <div class="text-center" style="padding-top: 20px; height: 100%; width: 300px">
-            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="...">
-        </div>
+            <div class="text-center" style="padding-top: 20px">
+                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="...">
+            </div>
         {% endif %}
 
         <div>
@@ -39,29 +38,21 @@
         </h6>
 
         {% if profile.likes or profile.dislikes %}
-            <div class="container" style="max-width:500px; margin-left:auto; margin-right:auto">
-                <ul class="list-group list-group-flush">
-                    <div class="row">
+            <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
+                <table style="margin-left:auto; margin-right:auto;">
+                    <tr>
                         {% if profile.likes %}
-                            <div class="col-xs">
-                                <strong>Likes: </strong>
-                            </div>
-                            <div class="col-md" style="text-align: left;">
-                                <li class="list-group-item list-group-item-light" aria-current="true">{{ profile.likes }}</li>
-                            </div>
+                            <th>Likes: </th>
+                            <td>{{ profile.likes }}</td>
                         {% endif %}
-                    </div>
-                    <div class="row">
+                    </tr>
+                    <tr>
                         {% if profile.dislikes %}
-                            <div class="col-xs">
-                                <strong>Dislikes: </strong>
-                            </div>
-                            <div class="col-md" style="text-align: left;">
-                                <li class="list-group-item list-group-item-light" aria-current="true">{{ profile.dislikes }}</li>
-                            </div>
+                            <th>Dislikes: </th>
+                            <td>{{ profile.dislikes }}</td>
                         {% endif %}
-                    </div>
-                </ul>
+                    </tr>
+                </table>
             </div>
         {% endif %}
 
@@ -71,6 +62,31 @@
         <br>
     </div>
 
-</center>
+    <div class="profile_sf">
+        <table>
+            {% for post in post_list %}
+                <tr>
+                    <td>
+                        {% if post.user_profile_fk.profilepic %}
+                            <img src="{{ post.user_profile_fk.profilepic.url }}" width="60" height="60" class="d-inline-block align-top">
+                        {% else %}
+                            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="60" height="60" class="d-inline-block align-top" alt="...">
+                        {% endif %}
+                    </td>
+                    <td>
+                        @{{ post.user_profile_fk.user.username }}
+                    </td>
+                    <td>
+                        {{ post.text }}
+                    </td>
+                    <td>
+                        {{ post.date_created}}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+
+    </div>
 <br>
 {% endblock %}
