@@ -5,91 +5,105 @@
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
-    <br>
-    <div class="my_profile" style="position: absolute;right:10px;top:10">
-        {% if profile.profilepic %}
-            <div class="text-center" style="padding-top: 20px">
-                <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="..." width="200" height="200">
+<table class="profile_table">
+    <tr>
+        <td>
+            <div class="profile_following">
+                <p>This is where following and playlist will be</p>
             </div>
-        {% else %}
-            <div class="text-center" style="padding-top: 20px">
-                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="...">
+        </td>
+        <td>
+            <div class="profile_sf">
+                <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
+                {% if post_list %}
+                    <table>
+                        {% for post in post_list %}
+                            <tr>
+                                <td>
+                                    {% if post.user_profile_fk.profilepic %}
+                                        <img src="{{ post.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
+                                    {% else %}
+                                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    @{{ post.user_profile_fk.user.username }}
+                                </td>
+                                <td style="padding-left:20px;">
+                                    <div style="word-break: break-all;">{{ post.text }}</div>
+                                </td>
+                                <td style="padding-left:20px; font-size: x-small;">
+                                    {{ post.date_created}}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No Posts to show... Create some in Feed!</p>
+                {% endif %}
             </div>
-        {% endif %}
-
-        <div>
-            <h2 class="profile_header">
-                <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
-            </h2>
-            <p style="margin-top: -10px; color:lightgray">
-                @{{ profile.user.username }}
-            <p>
-        </div>
-
-
-        {% if profile.description %}
-            <h5 style="font-size: 20px;">
-                {{ profile.description }}
-            </h5>
-        {% endif %}
-
-        <h6 style="padding-bottom:20px; font-size: 13px;">
-            DOB: {{ profile.birthdate }}
-        </h6>
-
-        {% if profile.likes or profile.dislikes %}
-            <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
-                <table style="margin-left:auto; margin-right:auto;">
-                    <tr>
-                        {% if profile.likes %}
-                            <th>Likes: </th>
-                            <td>{{ profile.likes }}</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if profile.dislikes %}
-                            <th>Dislikes: </th>
-                            <td>{{ profile.dislikes }}</td>
-                        {% endif %}
-                    </tr>
-                </table>
-            </div>
-        {% endif %}
-
-        <br>
-        <a class="btn btn-secondary" href="{% url 'user:update_profile' %}" role="button">Edit Profile</a>
-        <br>
-        <a class="btn btn-primary" href="{% url 'user:user_list' %}" role="button">User List</a>
-        <br>
-        <br>
-    </div>
-
-    <div class="profile_sf">
-        <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
-        <table>
-            {% for post in post_list %}
-                <tr>
-                    <td>
-                        {% if post.user_profile_fk.profilepic %}
-                            <img src="{{ post.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                        {% else %}
-                            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                        {% endif %}
-                    </td>
-                    <td>
-                        @{{ post.user_profile_fk.user.username }}
-                    </td>
-                    <td style="padding-left:20px">
-                        {{ post.text }}
-                    </td>
-                    <td style="padding-left:20px">
-                        <small>{{ post.date_created}}</small>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        </td>
+        <td>
+            <div class="my_profile">
+                {% if profile.profilepic %}
+                    <div class="text-center" style="padding-top: 20px">
+                        <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="..." width="200" height="200">
+                    </div>
+                {% else %}
+                    <div class="text-center" style="padding-top: 20px">
+                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="..." width="200" height="200">
+                    </div>
+                {% endif %}
         
+                <div>
+                    <h2 class="profile_header">
+                        <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
+                    </h2>
+                    <p style="margin-top: -10px; color:lightgray">
+                        @{{ profile.user.username }}
+                    <p>
+                </div>
+        
+        
+                {% if profile.description %}
+                    <h5 style="font-size: 20px;">
+                        {{ profile.description }}
+                    </h5>
+                {% endif %}
+        
+                <h6 style="padding-bottom:20px; font-size: 13px;">
+                    DOB: {{ profile.birthdate }}
+                </h6>
+        
+                {% if profile.likes or profile.dislikes %}
+                    <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
+                        <table style="margin-left:auto; margin-right:auto;">
+                            <tr>
+                                {% if profile.likes %}
+                                    <th>Likes: </th>
+                                    <td>{{ profile.likes }}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if profile.dislikes %}
+                                    <th>Dislikes: </th>
+                                    <td>{{ profile.dislikes }}</td>
+                                {% endif %}
+                            </tr>
+                        </table>
+                    </div>
+                {% endif %}
+        
+                <br>
+                <a class="btn btn-secondary" href="{% url 'user:update_profile' %}" role="button">Edit Profile</a>
+                <br>
+                <br>
+            </div>
+        </td>
+    </tr>
+    <tr>
 
-    </div>
+    </tr>
+</table>
 <br>
 {% endblock %}

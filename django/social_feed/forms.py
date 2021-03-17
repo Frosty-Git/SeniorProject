@@ -7,7 +7,7 @@ import datetime
 class PostForm(forms.ModelForm):
     """
     """
-    text = forms.Textarea()
+    text = forms.CharField(widget=forms.Textarea(), max_length=100)
     date_created = datetime.datetime.now()
     
     class Meta:
@@ -22,9 +22,9 @@ class PostForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     """
     """
-    text = forms.Textarea()
+    text = forms.CharField(widget=forms.Textarea(), max_length=100)
     date_created = datetime.datetime.now()
-    
+
     class Meta:
         model = Comment
         fields = ('text',)

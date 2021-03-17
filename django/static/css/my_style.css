@@ -5,15 +5,16 @@
 
 .my_profile {
     /* background-color: darkslateblue;  */
+    /* box-shadow: 5px 10px 8px slategray */
     display: inline-block; 
     text-align: center;
-    margin-left: 70%;
     border: 5px;
     border-style: solid;
     border-color: black;
     padding: 20px;
-    /* box-shadow: 5px 10px 8px slategray */
-}
+    right:10px;
+    top:10;
+} 
 
 .my_profile th {
     padding-right: 10px;
@@ -47,7 +48,18 @@
 
 .profile_sf {
     background-color: purple;
-    margin-right:200px;
-    margin-left: 400px;
+    padding:10px;
+}
+
+.profile_following {
+    background-color: rgb(56, 72, 139);
+    padding:10px;
+}
+
+.profile_table {
+    width:100%;
+}
+
+.profile_table td {
     padding:10px;
 }

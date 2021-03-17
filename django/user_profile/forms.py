@@ -7,8 +7,8 @@ from django.forms import ModelForm
 
 class ExtendedUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    first_name = forms.CharField(max_length=50)
-    last_name = forms.CharField(max_length=150)
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=50)
 
     class Meta:
         model = User
@@ -31,9 +31,9 @@ class ExtendedUserCreationForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     profilepic = forms.ImageField(required=False)
     birthdate = forms.DateField()
-    description = forms.CharField(widget=forms.Textarea, required=False)
-    likes = forms.CharField(widget=forms.Textarea, required=False)
-    dislikes = forms.CharField(widget=forms.Textarea, required=False)
+    description = forms.CharField(widget=forms.Textarea, required=False, max_length=30)
+    likes = forms.CharField(widget=forms.Textarea, required=False, max_length=30)
+    dislikes = forms.CharField(widget=forms.Textarea, required=False, max_length=30)
 
     class Meta:
         model = UserProfile

@@ -147,6 +147,11 @@ def unfollow(request, user_id, who):
     return redirect(url)
 
 def follow(request, user_id, who):
+    """
+    Creates the link in the bridging table between yourself and the person you
+    want to follow.
+    Last updated: 3/17/21 by Katie Lee
+    """
     loggedin = UserProfile.objects.get(pk=user_id)
     follower = UserProfile.objects.get(pk=who)
     user_to_follow = FollowedUser(user_from=loggedin, user_to=follower)
@@ -156,6 +161,8 @@ def follow(request, user_id, who):
 
 def other_profile(request, user_id):
     """
+    Used for profiles that are not the logged in user's profile.
+    Last updated: 3/17/21 by Katie Lee
     """
     profile = UserProfile.objects.get(pk=user_id)
     follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
@@ -196,5 +203,8 @@ def update_profile(request):
 
 
 def user_list(request):
-    user_list = UserProfile.objects.all()
+    """
+    TEMPORARY just to see what users are in the system 
+    """
+    user_list = UserProfile.objects.exclude(pk=request.user.id)
     return render(request, 'profile/user_list.html', {'user_list': user_list})
