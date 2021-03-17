@@ -199,3 +199,15 @@ body {
     text-decoration: none;
     color:black;
   }
+
+  .followBtn {
+    color: black;
+    background-color:darkgrey;
+    width: 55%;
+    border: 1px solid black;
+    border-radius: 4px;
+  }
+
+  .followBtn::after {
+    content: "Follow"
+  }

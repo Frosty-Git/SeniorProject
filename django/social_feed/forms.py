@@ -19,9 +19,12 @@ class PostForm(forms.ModelForm):
 #     """
     
 
-# class CommentForm(forms.ModelForm):
-#     """
-#     """
-#     class Meta:
-#         model = Comment
-#         fields = ('comment_text',)
+class CommentForm(forms.ModelForm):
+    """
+    """
+    text = forms.Textarea()
+    date_created = datetime.datetime.now()
+    
+    class Meta:
+        model = Comment
+        fields = ('text',)

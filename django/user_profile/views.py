@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your views here.
 
@@ -145,11 +146,21 @@ def unfollow(request, user_id, who):
     url = '/user/following/' + user_id
     return redirect(url)
 
-# def other_profile(request, user_id):
-#     """
-#     """
-#     profile = UserProfile.objects.get(pk=user_id)
-#     return render(request, 'other_profile.html', {'other_profile': other_profile})
+def follow(request, user_id, who):
+    loggedin = UserProfile.objects.get(pk=user_id)
+    follower = UserProfile.objects.get(pk=who)
+    user_to_follow = FollowedUser(user_from=loggedin, user_to=follower)
+    user_to_follow.save()
+    url = '/user/following/' + user_id
+    return redirect(url)
+
+def other_profile(request, user_id):
+    """
+    """
+    profile = UserProfile.objects.get(pk=user_id)
+    follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
+    is_following = False if follower is None else True
+    return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following})
 
 # def num_followers(user_id):
 #     followers = FollowedUser.objects.get(user_to = user_id).len()
@@ -173,6 +184,7 @@ def update_profile(request):
 
             profile = profile_form.save(commit=False)
             profile.user = user
+            profile.date_last_update = timezone.now()
 
             profile.save()
             messages.success(request, ('Profile has been updated!'))
@@ -181,3 +193,8 @@ def update_profile(request):
         form = ExtendedUserChangeForm(instance=obj.user)
         profile_form = UserProfileForm(instance=obj)
     return render(request, 'settings/update_profile.html', {'form': form, 'profile_form': profile_form})
+
+
+def user_list(request):
+    user_list = UserProfile.objects.all()
+    return render(request, 'profile/user_list.html', {'user_list': user_list})

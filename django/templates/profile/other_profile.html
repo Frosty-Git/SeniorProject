@@ -2,20 +2,20 @@
 
 {% load static %}
 
-{% block title %}User Profile{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block content %}
 <center>
     <br>
-    <div class="container my_profile" style="max-width: 400px;  box-shadow: 5px 10px 8px slategray">
-        {% if profile.image %}
-            <div class="text-center" style="padding-top: 20px; height: 100%; width: 300px">
-                <img src="{{ profile.image.url }}" class="img-thumbnail" alt="...">
+    <div class="my_profile" style="position: absolute;right:10px;top:10">
+        {% if profile.profilepic %}
+            <div class="text-center" style="padding-top: 20px">
+                <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="..." width="200" height="200">
             </div>
         {% else %}
-        <div class="text-center" style="padding-top: 20px; height: 100%; width: 300px">
-            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="...">
-        </div>
+            <div class="text-center" style="padding-top: 20px">
+                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="...">
+            </div>
         {% endif %}
 
         <div>
@@ -39,35 +39,34 @@
         </h6>
 
         {% if profile.likes or profile.dislikes %}
-            <div class="container" style="max-width:500px; margin-left:auto; margin-right:auto">
-                <ul class="list-group list-group-flush">
-                    <div class="row">
+            <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
+                <table style="margin-left:auto; margin-right:auto;">
+                    <tr>
                         {% if profile.likes %}
-                            <div class="col-xs">
-                                <strong>Likes: </strong>
-                            </div>
-                            <div class="col-md" style="text-align: left;">
-                                <li class="list-group-item list-group-item-light" aria-current="true">{{ profile.likes }}</li>
-                            </div>
+                            <th>Likes: </th>
+                            <td>{{ profile.likes }}</td>
                         {% endif %}
-                    </div>
-                    <div class="row">
+                    </tr>
+                    <tr>
                         {% if profile.dislikes %}
-                            <div class="col-xs">
-                                <strong>Dislikes: </strong>
-                            </div>
-                            <div class="col-md" style="text-align: left;">
-                                <li class="list-group-item list-group-item-light" aria-current="true">{{ profile.dislikes }}</li>
-                            </div>
+                            <th>Dislikes: </th>
+                            <td>{{ profile.dislikes }}</td>
                         {% endif %}
-                    </div>
-                </ul>
+                    </tr>
+                </table>
             </div>
+        {% endif %}
+        <br>
+
+        {% if is_following %}
+            <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
+        {% else %}
+            <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
         {% endif %}
     </div>
 
+    
     <!-- Pasted this over I didn't actually test anything -->
-    <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.id%}" role="button"></a>
 
 </center>
 <br>
