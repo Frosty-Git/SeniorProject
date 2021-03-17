@@ -177,3 +177,5 @@ def update_profile(request):
         form = ExtendedUserChangeForm(instance=obj.user)
         profile_form = UserProfileForm(instance=obj)
     return render(request, 'settings/update_profile.html', {'form': form, 'profile_form': profile_form})
+def dynamic_profile(rquest):
+    
