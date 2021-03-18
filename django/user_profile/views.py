@@ -167,7 +167,9 @@ def other_profile(request, user_id):
     profile = UserProfile.objects.get(pk=user_id)
     follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
     is_following = False if follower is None else True
-    return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following})
+    post_list = Post.objects.filter(user_profile_fk=profile)
+    follower_list = profile.users_followed.all()[:5]
+    return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following, 'post_list': post_list, 'follower_list': follower_list})
 
 # def num_followers(user_id):
 #     followers = FollowedUser.objects.get(user_to = user_id).len()
