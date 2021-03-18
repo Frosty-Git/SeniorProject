@@ -9,6 +9,9 @@ from social_feed.forms import *
 
 def display_posts(request):
     """
+    Displays all posts in the database. Will be updated to be based on the users
+    the logged in user follows only.
+    Last updated: 3/17/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
     post_list = Post.objects.order_by('-date_created')
     #comment_list = Comment.objects.order_by('date_created')
@@ -23,6 +26,8 @@ def display_posts(request):
 
 def create_post(request):
     """
+    Creates a post. Redirects to the feed, which is where it will show up.
+    Last updated: 3/17/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
     if request.method == "POST":
         form = PostForm(request.POST)
