@@ -69,28 +69,29 @@
     <div class="w3-col m6 w3-center">
         <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
         {% if post_list %}
-            <table class="feed_table">
+            <div class="container feed_table">
                 {% for post in post_list %}
-                    <tr>
-                        <td>
+                    <div class="row feed_row" >
+                        <div class="col-2 post_image">
                             {% if post.user_profile_fk.profilepic %}
-                                <img src="{{ post.user_profile_fk.profilepic.url }}" width="30" height="30" class="d-inline-block align-top">
+                                <img src="{{ post.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
                             {% else %}
-                                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="...">
+                                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
                             {% endif %}
-                        </td>
-                        <td>
-                            @{{ post.user_profile_fk.user.username }}
-                        </td>
-                        <td>
-                            <div style="word-break: break-all; text-align: left;">{{ post.text }}</div>
-                        </td>
-                        <td style="font-size: x-small; width:90px">
-                            {{ post.date_created|naturaltime }}
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="col-9">
+                            <p style="text-align: left; font-size: medium;">{{ post.user_profile_fk.user.first_name }} {{ post.user_profile_fk.user.last_name }} 
+                                <span style="font-size: small;">@{{ post.user_profile_fk.user.username }}</span>
+                            </p>
+                            <p style="word-break: break-all; text-align: left; font-size: 13px;">{{ post.text }}</p>
+                            <p style="font-size: x-small; text-align: right; margin-top:-10px">{{ post.date_created|naturaltime }}</p>
+                        </div>
+                        <div class="col-1">
+                            
+                        </div>
+                    </div>
                 {% endfor %}
-            </table>
+            </div>
         {% else %}
             <p>They have no posts yet.</p>
         {% endif %}

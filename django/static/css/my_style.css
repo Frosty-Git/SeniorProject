@@ -61,11 +61,21 @@
 }
 
 .feed_table {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    margin: auto;
+    justify-content: center;
+    display:run-in;
 }
 
 .feed_table td {
     padding-left:20px;
+}
+
+.post_image {
+    justify-content: flex-end;
+    display:flex;
+}
+
+.feed_row {
+    border-bottom: 1px solid white;
+    padding-top: 10px;
 }

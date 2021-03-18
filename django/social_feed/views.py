@@ -50,3 +50,10 @@ def create_post(request):
             post.user_profile_fk = UserProfile.objects.get(pk=request.user.id)
             post.save()
     return redirect('/feed/')
+
+
+def delete_post(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    post.delete()
+    # messages.success(request, ('Post successfully deleted!'))
+    return redirect('/user/profile/' + str(request.user.id))
