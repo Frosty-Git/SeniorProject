@@ -100,7 +100,11 @@
             {% else %}
                 <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="...">
             {% endif %}
-            <a href="{% url 'user:other_profile' follower.user.id %}">{{ follower.user.username }}</a>
+            {% if user.id == follower.user.id %}
+                <a href="{% url 'user:profile' user.id %}">{{ follower.user.username }}</a>
+            {% else %}
+                <a href="{% url 'user:other_profile' follower.user.id %}">{{ follower.user.username }}</a>
+            {% endif %}
             <br>
         {% endfor %}
     </div>
