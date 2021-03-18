@@ -79,3 +79,13 @@ def results(request):
 #About Page
 def about(request):
     return render(request, 'about.html', {})
+
+# This Week's Top Tracks
+def top_tracks(request):
+    """
+    The view for This Week's Top Songs Page
+    Author:  Joseph Frost
+    Version: 2021.03.18
+    """
+    context = {}
+    return render(request, 'recommender/top-tracks.html', context)
