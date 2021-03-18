@@ -9,11 +9,25 @@ from social_feed.forms import *
 
 def display_posts(request):
     """
-    Displays all posts in the database. Will be updated to be based on the users
-    the logged in user follows only.
+    Displays all posts in the database. Based only on users your follow and
+    yourself.
     Last updated: 3/17/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
-    post_list = Post.objects.order_by('-date_created')
+    all_post_list = Post.objects.order_by('-date_created')
+
+    your_id = request.user.id
+    you = UserProfile.objects.get(pk=your_id)
+    following = you.users_followed.all()
+
+    post_list = []
+
+    for post in all_post_list:
+        if post.user_profile_fk == your_id:
+            post_list.append(post)
+        for user in following:
+            if post.user_profile_fk == user:
+                post_list.append(post)
+
     #comment_list = Comment.objects.order_by('date_created')
     postform = PostForm()
 
