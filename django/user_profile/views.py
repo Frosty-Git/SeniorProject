@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.models import User
 from django.utils import timezone
+import json
+from datetime import datetime
 
 # Create your views here.
 
@@ -81,7 +83,7 @@ def profile(request, user_id):
     Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     profile = UserProfile.objects.get(pk=user_id)
-    post_list = Post.objects.filter(user_profile_fk=profile)
+    post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_created')
     follower_list = profile.users_followed.all()[:5]
     return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
 
