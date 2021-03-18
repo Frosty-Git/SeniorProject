@@ -65,9 +65,10 @@ def results(request):
         form = OurSearchForm(request.POST)
         if form.is_valid():
             term = request.POST.get('term')
-            track_ids = search_tracks(term)
-            album_ids = search_albums(term)
-            artist_ids = search_artists(term)
+            track_ids = search_tracks(term, 5, 0)
+            album_ids = search_albums(term, 5, 0)
+            artist_ids = search_artists(term, 5, 0)
+            
             context = {
                 'term' : term,
                 'tracks' : track_ids,
