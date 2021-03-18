@@ -15,14 +15,13 @@ def display_posts(request):
     """
     all_post_list = Post.objects.order_by('-date_created')
 
-    your_id = request.user.id
-    you = UserProfile.objects.get(pk=your_id)
+    you = UserProfile.objects.get(pk=request.user.id)
     following = you.users_followed.all()
 
     post_list = []
 
     for post in all_post_list:
-        if post.user_profile_fk == your_id:
+        if post.user_profile_fk == you:
             post_list.append(post)
         for user in following:
             if post.user_profile_fk == user:
