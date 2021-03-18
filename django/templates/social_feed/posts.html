@@ -26,14 +26,14 @@
                 <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" href="{% url 'user:profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top" alt="...">
             {% endif %}
         {% else %}
-        <p>{{ post.text }}</p>
-        <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
-        <p>{{ post.date_created}}</p>
-        {% if post.user_profile_fk.profilepic %}
-            <img src="{{ post.user_profile_fk.profilepic.url }}" href="{% url 'user:other_profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top">
-        {% else %}
-            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" href="{% url 'user:other_profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top" alt="...">
-        {% endif %}
+            <p>{{ post.text }}</p>
+            <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+            <p>{{ post.date_created}}</p>
+            {% if post.user_profile_fk.profilepic %}
+                <img src="{{ post.user_profile_fk.profilepic.url }}" href="{% url 'user:other_profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top">
+            {% else %}
+                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" href="{% url 'user:other_profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top" alt="...">
+            {% endif %}
         {% endif %}
     {% endfor %}
 
