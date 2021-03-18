@@ -82,8 +82,8 @@ def profile(request, user_id):
     """
     profile = UserProfile.objects.get(pk=user_id)
     post_list = Post.objects.filter(user_profile_fk=profile)
-
-    return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list})
+    follower_list = profile.users_followed.all()[:5]
+    return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
 
 
 @require_GET

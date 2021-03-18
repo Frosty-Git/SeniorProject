@@ -5,109 +5,106 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
+<div class="w3-row-padding" style="margin-top:2%">
+    <div class="w3-col m4 w3-center my_profile">
+        {% if profile.profilepic %}
+            <div class="text-center" style="padding-top: 20px">
+                <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="..." width="200" height="200">
+            </div>
+        {% else %}
+            <div class="text-center" style="padding-top: 20px">
+                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="..." width="200" height="200">
+            </div>
+        {% endif %}
+    
+        <div>
+            <h2 class="profile_header">
+                <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
+            </h2>
+            <p style="margin-top: -10px; color:lightgray">
+                @{{ profile.user.username }}
+            <p>
+        </div>
 
-<table class="profile_table">
-    <tr>
-        <td>
-            <div class="profile_following">
-                <p>This is where following and playlist will be</p>
-            </div>
-        </td>
-        <td>
-            <div class="profile_sf">
-                <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
-                {% if post_list %}
-                    <table>
-                        {% for post in post_list %}
-                            <tr>
-                                <td>
-                                    {% if post.user_profile_fk.profilepic %}
-                                        <img src="{{ post.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                                    {% else %}
-                                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    @{{ post.user_profile_fk.user.username }}
-                                </td>
-                                <td style="padding-left:20px;">
-                                    <div style="word-break: break-all;">{{ post.text }}</div>
-                                </td>
-                                <td style="padding-left:20px; font-size: x-small;">
-                                    {{ post.date_created}}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <p>No Posts to show... Create some in Feed!</p>
-                {% endif %}
-            </div>
-        </td>
-        <td>
-            <div class="my_profile">
-                {% if profile.profilepic %}
-                    <div class="text-center" style="padding-top: 20px">
-                        <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="..." width="200" height="200">
-                    </div>
-                {% else %}
-                    <div class="text-center" style="padding-top: 20px">
-                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="..." width="200" height="200">
-                    </div>
-                {% endif %}
-        
-                <div>
-                    <h2 class="profile_header">
-                        <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
-                    </h2>
-                    <p style="margin-top: -10px; color:lightgray">
-                        @{{ profile.user.username }}
-                    <p>
-                </div>
-        
-        
-                {% if profile.description %}
-                    <h5 style="font-size: 20px;">
-                        {{ profile.description }}
-                    </h5>
-                {% endif %}
-        
-                <h6 style="padding-bottom:20px; font-size: 13px;">
-                    DOB: {{ profile.birthdate }}
-                </h6>
-        
-                {% if profile.likes or profile.dislikes %}
-                    <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
-                        <table style="margin-left:auto; margin-right:auto;">
-                            <tr>
-                                {% if profile.likes %}
-                                    <th>Likes: </th>
-                                    <td>{{ profile.likes }}</td>
-                                {% endif %}
-                            </tr>
-                            <tr>
-                                {% if profile.dislikes %}
-                                    <th>Dislikes: </th>
-                                    <td>{{ profile.dislikes }}</td>
-                                {% endif %}
-                            </tr>
-                        </table>
-                    </div>
-                {% endif %}
-        
-                {% if is_following %}
-                    <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
-                {% else %}
-                    <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
-                {% endif %}
-                <br>
-            </div>
-        </td>
-    </tr>
-    <tr>
 
-    </tr>
-</table>
+        {% if profile.description %}
+            <h5 style="font-size: 20px;">
+                {{ profile.description }}
+            </h5>
+        {% endif %}
+
+        <h6 style="padding-bottom:20px; font-size: 13px;">
+            DOB: {{ profile.birthdate }}
+        </h6>
+
+        {% if profile.likes or profile.dislikes %}
+            <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
+                <table style="margin-left:auto; margin-right:auto;">
+                    <tr>
+                        {% if profile.likes %}
+                            <th>Likes: </th>
+                            <td style="word-break: break-all;">{{ profile.likes }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        {% if profile.dislikes %}
+                            <th>Dislikes: </th>
+                            <td style="word-break: break-all;">{{ profile.dislikes }}</td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+        <br>
+        {% if is_following %}
+            <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
+        {% else %}
+            <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
+        {% endif %}
+        <br><br>
+    </div>
+    <div class="w3-col m6 w3-center">
+        <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
+        {% if post_list %}
+            <table class="feed_table">
+                {% for post in post_list %}
+                    <tr>
+                        <td>
+                            {% if post.user_profile_fk.profilepic %}
+                                <img src="{{ post.user_profile_fk.profilepic.url }}" width="30" height="30" class="d-inline-block align-top">
+                            {% else %}
+                                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="...">
+                            {% endif %}
+                        </td>
+                        <td>
+                            @{{ post.user_profile_fk.user.username }}
+                        </td>
+                        <td>
+                            <div style="word-break: break-all; text-align: left;">{{ post.text }}</div>
+                        </td>
+                        <td style="font-size: x-small; width:90px">
+                            {{ post.date_created|date:"Y M d" }}<br>{{ post.date_created|time }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>They have no posts yet.</p>
+        {% endif %}
+    </div>
+    <div class="w3-col m2 w3-center">
+        <h2><a href="{% url 'user:following' user.id %}">Following</a></h2>
+        {% for follower in follower_list %}
+            {% if post.user_profile_fk.profilepic %}
+                <img src="{{ follower.user_profile_fk.profilepic.url }}" width="30" height="30" class="d-inline-block align-top">
+            {% else %}
+                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="...">
+            {% endif %}
+            <a href="{% url 'user:other_profile' follower.user.id %}">{{ follower.user.username }}</a>
+            <br>
+        {% endfor %}
+    </div>
+</div> 
 <br>
 
 {% endblock %}
