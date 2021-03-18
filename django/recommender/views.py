@@ -65,15 +65,30 @@ def results(request):
         form = OurSearchForm(request.POST)
         if form.is_valid():
             term = request.POST.get('term')
-            track_ids = search_tracks(term, 5, 0)
-            album_ids = search_albums(term, 5, 0)
-            artist_ids = search_artists(term, 5, 0)
+            track1_ids = search_tracks(term, 5, 0)
+            track2_ids = search_tracks(term, 5, 4)
+            track3_ids = search_tracks(term, 5, 9)
+            
+            album1_ids = search_albums(term, 5, 0)
+            album2_ids = search_albums(term, 5, 4)
+            album3_ids = search_albums(term, 5, 9)
+
+            artist1_ids = search_artists(term, 5, 0)
+            artist2_ids = search_artists(term, 5, 4)
+            artist3_ids = search_artists(term, 5, 9)
+            
             
             context = {
                 'term' : term,
-                'tracks' : track_ids,
-                'albums' : album_ids,
-                'artists' : artist_ids
+                'tracks1' : track1_ids,
+                'tracks2' : track2_ids,
+                'tracks3' : track3_ids,
+                'albums1' : album1_ids,
+                'albums2' : album2_ids,
+                'albums3' : album3_ids,
+                'artists1' : artist1_ids,
+                'artists2' : artist2_ids,
+                'artists3' : artist3_ids
             }
     return render(request, 'recommender/results.html', context)
 

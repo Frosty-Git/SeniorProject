@@ -24,17 +24,17 @@
     
     <p>Search Term: {{ term }}</p>
     
-{% if tracks %}
+{% if tracks1 and tracks2 and tracks3 %}
       
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride=false>
+    <div id="trackCarousel" class="carousel slide" data-bs-interval="false">
         <div class="carousel-inner">
-          <div class="carousel-item active" data-bs-interval=false>
+          <div class="carousel-item active" data-bs-interval="false">
             <!-- <img src="..." class="d-block w-100" alt="..."> -->
             <div class="table">
                 <table class="table">
                     <tbody>
                         <tr>
-                        {% for track in tracks %}
+                        {% for track in tracks1 %}
             
                             <td>
                                 <div class='embed-container'>
@@ -49,17 +49,49 @@
             </div>
           </div>
           <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="...">
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                        {% for track in tracks2 %}
+            
+                            <td>
+                                <div class='embed-container'>
+                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                                </div>
+                            </td>
+            
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
           </div>
           <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="...">
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                        {% for track in tracks3 %}
+            
+                            <td>
+                                <div class='embed-container'>
+                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                                </div>
+                            </td>
+            
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
           </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#trackCarousel"  data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#trackCarousel"  data-bs-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Next</span>
         </button>
@@ -67,16 +99,35 @@
 
 {% endif %}
 
-{% if albums %}
-<div id="carouselExampleControls" class="carousel slide" data-bs-ride=false>
+{% if albums1 %}
+<div id="albumCarousel" class="carousel slide" data-bs-interval="false">
     <div class="carousel-inner">
-      <div class="carousel-item active" data-bs-interval=false>
+      <div class="carousel-item active" data-bs-interval="false">
         <!-- <img src="..." class="d-block w-100" alt="..."> -->
         <div class="table">
             <table class="table">
                 <tbody>
                     <tr>
-                    {% for album in albums %}
+                    {% for album in albums1 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/album/{{ album }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="carousel-item" >
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for album in albums2 %}
         
                         <td>
                             <div class='embed-container'>
@@ -91,17 +142,30 @@
         </div>
       </div>
       <div class="carousel-item">
-        <img src="..." class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="..." class="d-block w-100" alt="...">
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for album in albums3 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/album/{{ album }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#albumCarousel"  data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#albumCarousel"  data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
@@ -110,16 +174,15 @@
 
 {% endif %}
 
-{% if artists %}
-<div id="carouselExampleControls" class="carousel slide" data-bs-ride=false>
+{% if artists1 %}
+<div id="artistCarousel" class="carousel slide" data-bs-interval="false">
     <div class="carousel-inner">
-      <div class="carousel-item active" data-bs-interval=false>
-        <!-- <img src="..." class="d-block w-100" alt="..."> -->
+      <div class="carousel-item active">
         <div class="table">
             <table class="table">
                 <tbody>
                     <tr>
-                    {% for artist in artists %}
+                    {% for artist in artists1 %}
         
                         <td>
                             <div class='embed-container'>
@@ -134,17 +197,49 @@
         </div>
       </div>
       <div class="carousel-item">
-        <img src="..." class="d-block w-100" alt="...">
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for artist in artists2 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
       </div>
       <div class="carousel-item">
-        <img src="..." class="d-block w-100" alt="...">
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for artist in artists3 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#artistCarousel"  data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#artistCarousel"  data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
