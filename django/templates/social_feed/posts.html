@@ -5,7 +5,7 @@
 {% block title %} Post {% endblock %}
 
 {% block content %}
-    <h1>Here Resides the Details of the Post</h1>
+    <h1>Social Feed</h1>
 
     <form class='post_form' method='POST' action='/feed/create_post/'>
         {% csrf_token %}
@@ -15,15 +15,25 @@
 
     <h4>Post {{ post_id }}</h4>
 
-    <!-- Looping through one post is a really dumb way to do it -->
     {% for post in post_list %}
+        {% if post.user_profile_fk.user.id == user.id %}
+            <p>{{ post.text }}</p>
+            <a href="{% url 'user:profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+            <p>{{ post.date_created}}</p>
+            {% if post.user_profile_fk.profilepic %}
+                <img src="{{ post.user_profile_fk.profilepic.url }}" href="{% url 'user:profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top">
+            {% else %}
+                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" href="{% url 'user:profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top" alt="...">
+            {% endif %}
+        {% else %}
         <p>{{ post.text }}</p>
-        <a href="{% url 'user:profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+        <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
         <p>{{ post.date_created}}</p>
         {% if post.user_profile_fk.profilepic %}
-            <img src="{{ post.user_profile_fk.profilepic.url }}" href="{% url 'user:profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top">
+            <img src="{{ post.user_profile_fk.profilepic.url }}" href="{% url 'user:other_profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top">
         {% else %}
-            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" href="{% url 'user:profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top" alt="...">
+            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" href="{% url 'user:other_profile' post.user_profile_fk.user.id %}" width="80" height="80" class="d-inline-block align-top" alt="...">
+        {% endif %}
         {% endif %}
     {% endfor %}
 
