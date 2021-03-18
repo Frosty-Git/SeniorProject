@@ -1,128 +1,120 @@
 body {
     background-color: darkgrey;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
-  
-  .btn.btn-outline-dark {
+}
+
+
+
+/* Begin changing default Bootstrap CSS */
+.btn.btn-outline-dark {
     color: white;
     background-color: #343a40;
     border-color: darkgrey;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
-  
-  .form-control.me-2 { 
-    color:darkgrey;
-  }
-  
-  .btn.btn-outline-success { 
-    color:darkgrey; 
+}
+.form-control.me-2 {
+    color: darkgrey;
+}
+.btn.btn-outline-success {
+    color: darkgrey;
     border-color: darkgrey;
-  }
-  
-  .btn.btn-outline-success:hover { 
+}
+.btn.btn-outline-success:hover {
     background-color: #343a40;
-  }
-  
-  .unfollowBtn {
-    background-color: #343a40;
-    border-radius: 5px;
-  }
-  
-  /* The switch - the box around the slider */
-  .switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-    }
-    
+}
+/* End changing default Boostrap CSS */
+
+
+
+/* Begin Settings page toggle on/off switch
+     Source: https://www.w3schools.com/howto/howto_css_switch.asp
+*/
+    /* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
     /* Hide default HTML checkbox */
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
     /* The slider */
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      -webkit-transition: .4s;
-      transition: .4s;
-    }
-    
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      -webkit-transition: .4s;
-      transition: .4s;
-    }
-    
-    input:checked + .slider {
-      background-color: #343a40;
-    }
-    
-    input:focus + .slider {
-      box-shadow: 0 0 1px #2196F3;
-    }
-    
-    input:checked + .slider:before {
-      -webkit-transform: translateX(26px);
-      -ms-transform: translateX(26px);
-      transform: translateX(26px);
-    }
-    
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+input:checked+.slider {
+    background-color: #343a40;
+}
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
     /* Rounded sliders */
-    .slider.round {
-      border-radius: 34px;
-    }
-    
-    .slider.round:before {
-      border-radius: 50%;
-    }
-  
-  
-    /* Tooltip css */
-    .help-tip{
-      position: absolute;
-      top: 0px;
-      right: 17%;
-      text-align: center;
-      background-color: #343a40;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      font-size: 14px;
-      line-height: 26px;
-      cursor: default;
-  }
-  
-  .help-tip:before{
-      content:'?';
-      font-weight: bold;
-      color:#fff;
-  }
-  
-  .help-tip:hover p{
-      display:block;
-      transform-origin: 100% 0%;
-  
-      -webkit-animation: fadeIn 0.3s ease-in-out;
-      animation: fadeIn 0.3s ease-in-out;
-  
-  }
-  
-  .help-tip p{ 
+.slider.round {
+    border-radius: 34px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
+/* End Settings page toggle switch */
+
+
+
+/* Begin tooltip ((?) on Settings page)
+   Source: https://tutorialzine.com/2014/07/css-inline-help-tips
+*/
+.help-tip {
+    position: absolute;
+    top: 0px;
+    right: 17%;
+    text-align: center;
+    background-color: #343a40;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 26px;
+    cursor: default;
+}
+.help-tip:before {
+    content: '?';
+    font-weight: bold;
+    color: #fff;
+}
+.help-tip:hover p {
+    display: block;
+    transform-origin: 100% 0%;
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+}
+.help-tip p {
     display: none;
     text-align: left;
     background-color: #1E2021;
@@ -135,97 +127,108 @@ body {
     color: #FFF;
     font-size: 13px;
     line-height: 1.4;
-  }
-  
-  .help-tip p:before{ /* The pointer of the tooltip */
+}
+.help-tip p:before {
+    /* The pointer of the tooltip */
     position: absolute;
     content: '';
-    width:0;
+    width: 0;
     height: 0;
-    border:6px solid transparent;
-    border-bottom-color:#1E2021;
-    right:10px;
-    top:-12px;
-  }
-  
-  .help-tip p:after{ /* Prevents the tooltip from being hidden */
-    width:100%;
-    height:40px;
-    content:'';
+    border: 6px solid transparent;
+    border-bottom-color: #1E2021;
+    right: 10px;
+    top: -12px;
+}
+
+.help-tip p:after {
+    /* Prevents the tooltip from being hidden */
+    width: 100%;
+    height: 40px;
+    content: '';
     position: absolute;
-    top:-40px;
-    left:0;
-  }
-  
-  /* CSS animation */
-  
-  @-webkit-keyframes fadeIn {
-    0% { 
-        opacity:0; 
+    top: -40px;
+    left: 0;
+}
+/* End tooltip ((?) on settings page) */
+
+
+
+/* CSS animation */
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
         transform: scale(0.6);
     }
-  
     100% {
-        opacity:100%;
+        opacity: 100%;
         transform: scale(1);
     }
-  }
-  
-  @keyframes fadeIn {
-    0% { opacity:0; }
-    100% { opacity:100%; }
-  }
-  
-  .unfollowBtn{
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
+/* End CSS Animation */
+
+
+
+/* Start Following page follow/unfollow buttons
+   Source: https://stackoverflow.com/questions/54241934/changing-button-text-on-hover
+*/
+.unfollowBtn {
     width: 55%;
     color: white;
     background-color: #343a40;
     border: 1px solid black;
     border-radius: 4px;
-  }
-  .unfollowBtn::after {
+}
+.unfollowBtn::after {
     content: "Following"
-  }
-  
-  .unfollowBtn:hover:after {
+}
+.unfollowBtn:hover:after {
     content: "Unfollow";
-  }
-  .unfollowBtn:hover{
-  
+}
+.unfollowBtn:hover {
     color: black;
-    background-color:darkgrey;
-  }
-  .user{
+    background-color: darkgrey;
+}
+.user {
     text-decoration: none;
-    color:black;
-  }
-
-  .followBtn {
     color: black;
-    background-color:darkgrey;
+}
+.followBtn {
+    color: black;
+    background-color: darkgrey;
     width: 55%;
     border: 1px solid black;
     border-radius: 4px;
-  }
-
-  .followBtn::after {
+}
+.followBtn::after {
     content: "Follow"
-  }
+}
+/* End Following page follow/unfollow buttons */
 
+
+
+/* Start Custom Scrollbar 
+   Source: https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp
+*/
 ::-webkit-scrollbar {
     width: 1.5vh;
-    }
-    
+}
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey; 
+    box-shadow: inset 0 0 5px grey;
     border-radius: 4px;
 }
-    
 ::-webkit-scrollbar-thumb {
-    background:#a3a3a3; 
+    background: #a3a3a3;
     border-radius: 10px;
 }
-    
 ::-webkit-scrollbar-thumb:hover {
-    background:#727272; 
+    background: #727272;
 }
+/* End Custom Scrollbar */
