@@ -39,7 +39,7 @@
 
         <h6 style="padding-bottom:20px; font-size: 13px;">
             DOB: {{ profile.birthdate }}
-            (<i id="age"></i>)
+            (<span id="age"></span>)
         </h6>
 
         {% if profile.likes or profile.dislikes %}
@@ -64,7 +64,7 @@
     </div>
 
 
-    <div class="w3-col m6 w3-center" style="overflow-y: scroll; height: 500px">
+    <div class="w3-col m6 w3-center" style="overflow-y: scroll; height: 690px">
         <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
         {% if post_list %}
             <div class="container feed_table">
@@ -79,7 +79,7 @@
                         </div>
                         <div class="col-9">
                             <p style="text-align: left; font-size: medium;">{{ post.user_profile_fk.user.first_name }} {{ post.user_profile_fk.user.last_name }} 
-                                <span style="font-size: small;">@{{ post.user_profile_fk.user.username }}</span>
+                                <span style="font-size: small; color:lightgray">@{{ post.user_profile_fk.user.username }}</span>
                             </p>
                             <p style="word-break: break-all; text-align: left; font-size: 13px;">{{ post.text }}</p>
                             <p style="font-size: x-small; text-align: right; margin-top:-10px">{{ post.date_last_updated|naturaltime }}</p>
@@ -109,7 +109,7 @@
         {% for follower in follower_list %}
             <tr>
                 <td>
-                    {% if post.user_profile_fk.profilepic %}
+                    {% if follower.user_profile_fk.profilepic %}
                         <img src="{{ follower.user_profile_fk.profilepic.url }}" width="30" height="30" class="d-inline-block align-top">
                     {% else %}
                         <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="...">

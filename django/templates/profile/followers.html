@@ -23,7 +23,7 @@
         <tr>
             <td style="text-align: right;">
                 <a href="{% url 'user:profile' user_f.user.id %}">
-                    {% if user.profilepic %}
+                    {% if user_f.profilepic %}
                         <img src="{{ user_f.profilepic.url }}" alt="" width="80" height="80" class="d-inline-block align-top">
                     {% else %}
                         <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" alt="" width="80" height="80" class="d-inline-block align-top">
