@@ -63,6 +63,10 @@ def delete_post(request, post_id):
     return redirect('/user/profile/' + str(request.user.id))
 
 def create_comment(request, post_id):
+    """
+    Creates a comment on a particular post.
+    Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
+    """
     if request.method == "POST":
         form = CommentForm(request.POST)
         post = get_object_or_404(Post, id=post_id)
@@ -77,10 +81,14 @@ def create_comment(request, post_id):
             url = '/feed/' + post_id
             return redirect(url)
     else:
-        context = create_post_detail_context(post_id)
+        context = get_comments(post_id)
     return render(request, 'social_feed/comment_post.html', context)
 
-def create_post_detail_context(post_id):
+def get_comments(post_id):
+    """
+    Gets all the comments on a particular post.
+    Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
+    """
     post = Post.objects.get(id=post_id)
     comment_list = Comment.objects.filter(post_fk=post)
     comment_form = CommentForm()
