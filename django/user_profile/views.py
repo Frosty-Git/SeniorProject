@@ -80,7 +80,7 @@ def login_request(request):
 def profile(request, user_id):
     """
     Used to display a user's information on their profile
-    Last updated: 3/19/21 by Katie Lee, Jacelynn Duranceau
+    Last updated: 3/19/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     if request.user == User.objects.get(pk=user_id):
         profile = UserProfile.objects.get(pk=user_id)
