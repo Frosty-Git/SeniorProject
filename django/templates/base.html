@@ -13,6 +13,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
         <link rel="stylesheet" href="{% static 'css/my_style.css' %}">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
 
         <link rel="shortcut icon" href="{% static 'images/favicon.ico' type='image/x-icon' %}">
 
@@ -56,6 +57,11 @@
                   <li class="nav-item">
                     <a class="nav-link" href="#">Survey</a>
                   </li>
+                  {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
+                    </li>
+                  {% endif %}
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Top
@@ -69,7 +75,7 @@
                     <a class="nav-link" href="{% url 'recommender:about' %}">About</a>
                   </li>
                 </ul>
-                <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link link-light" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                   </svg>
@@ -88,6 +94,7 @@
                   <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
                     <li><a class="dropdown-item" href="{% url 'user:profile' user.id %}">Profile</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:following' user.id %}">Following</a></li>
+                    <li><a class="dropdown-item" href="{% url 'user:followers' user.id %}">Followers</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:update_profile' %}">Settings</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{% url 'user:logout' %}">Log Out</a></li>

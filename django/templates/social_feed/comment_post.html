@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Post {% endblock %}
+
+{% block content %}
+    <h1>Here Resides the Details of the Post</h1>
+
+    <p>{{ post.text }}</p>
+    {% if user.id == post.user_profile_fk.user.id %}
+        by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+    {% else %}
+        by <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+    {% endif %}
+    <p>at {{ post.date_last_updated }}</p>
+    
+    <h4>Comments</h4>
+
+    {% if comment_list %}
+        <ul>
+            {% for comment in comment_list %}
+            <br>
+                <li>{{ comment.text }} at {{ comment.date_last_updated }} 
+                    {% if user.id == comment.user_profile_fk.user.id %}
+                        by <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
+                            {% if post.user_profile_fk.profilepic %}
+                                <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
+                            {% else %}
+                                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
+                            {% endif %}
+                        </a>
+                        <a href="{% url 'user:profile' user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                    {% else %}
+                        by <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">
+                            {% if comment.user_profile_fk.profilepic %}
+                                <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
+                            {% else %}
+                                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
+                            {% endif %}
+                        </a>
+                        <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                    {% endif %}
+                </li>
+                <br>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no comments.</p>
+    {% endif %}
+
+    
+    <form class='comment_form' method='POST' action='/feed/{{ post_id }}'>
+        {% csrf_token %}
+        {{ comment_form }}
+        <input type='submit' value='Create Comment' class='comment_form'>
+    </form>
+{% endblock %}

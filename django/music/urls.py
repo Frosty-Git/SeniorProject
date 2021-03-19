@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('recommender.urls')),
     path('user/', include('user_profile.urls')),
+    path('feed/', include('social_feed.urls')),
 ]
 
 

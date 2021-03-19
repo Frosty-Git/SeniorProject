@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
 from user_profile.models import *
 from user_profile.forms import *
+from social_feed.models import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.models import User
+from django.utils import timezone
+import json
+from datetime import datetime
 
 # Create your views here.
 
@@ -79,7 +83,10 @@ def profile(request, user_id):
     Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     profile = UserProfile.objects.get(pk=user_id)
-    return render(request, 'profile/my_profile.html', {'profile': profile})
+    post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_created')
+    follower_list = profile.users_followed.all()[:5]
+    return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
+
 
 @require_GET
 def display_settings(request, user_id):
@@ -117,9 +124,9 @@ def settings_save(request, user_id):
 @require_GET
 def display_following(request, user_id):
     """
-    Used to display each user followed by a particular user. It uses said user as
-    the primary key into the following bridging table and returns every foreign
-    key, which represents the users followed.
+    Used to display each user a particular user follows. It uses said user
+    as the primary key into the following bridging table and returns every
+    foreign key, which represents the users followed.
     Last updated: 3/11/21 by Jacelynn Duranceau
     """
     you = UserProfile.objects.get(pk=user_id)
@@ -128,6 +135,22 @@ def display_following(request, user_id):
     # get_list = FollowedUser.objects.get(user_from=user_id)
     #following = get_list.user_to
     return render(request, 'profile/following.html', {'following': following})
+
+@require_GET
+def display_followers(request, user_id):
+    """
+    Used to display the followers of a particular user. It uses said user as
+    the primary key into the following bridging table and returns every user
+    that is the user_from match in said table.
+    Last updated: 3/11/21 by Jacelynn Duranceau
+    """
+    user = UserProfile.objects.get(pk=user_id)
+    follower_ids = FollowedUser.objects.filter(user_to=user).values('user_from') # Returns dictionary of ids
+    followers = []
+    for user in follower_ids:
+        for id in user.values():
+            followers.append(UserProfile.objects.get(pk=id))
+    return render(request, 'profile/followers.html', {'followers': followers})
 
 def unfollow(request, user_id, who):
     """
@@ -141,11 +164,30 @@ def unfollow(request, user_id, who):
     url = '/user/following/' + user_id
     return redirect(url)
 
-# def other_profile(request, user_id):
-#     """
-#     """
-#     profile = UserProfile.objects.get(pk=user_id)
-#     return render(request, 'other_profile.html', {'other_profile': other_profile})
+def follow(request, user_id, who):
+    """
+    Creates the link in the bridging table between yourself and the person you
+    want to follow.
+    Last updated: 3/17/21 by Katie Lee
+    """
+    loggedin = UserProfile.objects.get(pk=user_id)
+    follower = UserProfile.objects.get(pk=who)
+    user_to_follow = FollowedUser(user_from=loggedin, user_to=follower)
+    user_to_follow.save()
+    url = '/user/following/' + user_id
+    return redirect(url)
+
+def other_profile(request, user_id):
+    """
+    Used for profiles that are not the logged in user's profile.
+    Last updated: 3/17/21 by Katie Lee
+    """
+    profile = UserProfile.objects.get(pk=user_id)
+    follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
+    is_following = False if follower is None else True
+    post_list = Post.objects.filter(user_profile_fk=profile)
+    follower_list = profile.users_followed.all()[:5]
+    return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following, 'post_list': post_list, 'follower_list': follower_list})
 
 # def num_followers(user_id):
 #     followers = FollowedUser.objects.get(user_to = user_id).len()
@@ -169,6 +211,7 @@ def update_profile(request):
 
             profile = profile_form.save(commit=False)
             profile.user = user
+            profile.date_last_update = timezone.now()
 
             profile.save()
             messages.success(request, ('Profile has been updated!'))
@@ -177,3 +220,27 @@ def update_profile(request):
         form = ExtendedUserChangeForm(instance=obj.user)
         profile_form = UserProfileForm(instance=obj)
     return render(request, 'settings/update_profile.html', {'form': form, 'profile_form': profile_form})
+
+
+def user_list(request):
+    """
+    TEMPORARY just to see what users are in the system 
+    """
+    user_list = UserProfile.objects.exclude(pk=request.user.id)
+    return render(request, 'profile/user_list.html', {'user_list': user_list})
+
+# def get_followers(request, user_id):
+#     """
+#     Gets the number of followers a particular user has
+#     Last updated: 3/18/21 by Jacelynn Duranceau
+#     """
+#     user = UserProfile.objects.get(pk=user_id)
+#     num_followers = FollowedUser.objects.filter(user_to=user).count()
+
+# def get_following(request, user_id):
+#     """
+#     Gets the number of users a particular user follows
+#     Last updated: 3/18/21 by Jacelynn Duranceau
+#     """
+#     user = UserProfile.objects.get(pk=user_id)
+#     num_followed = user.users_followed.all.len()
