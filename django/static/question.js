@@ -12,25 +12,44 @@ function Quiz(questions){
     this.tempo = 0;
     this.valence = 0;
 }
-Quiz.prototype.return_index = function() {
+Quiz.prototype.return_value_of_question = function() {
     return this.questions[this.questionIndex];
     
 }
+
+Quiz.prototype.return_question_index = function() {
+    return this.questionIndex;
+}
+
 function Question(question, choices) {
     this.question = question;
     this.choices = choices;
 };
 
-var questions = [
-    new Question("Which of the following genres do you prefer?",["Rock", "Country", "Pop","Sea-Shanties","Tibetan Throat Singing"])
+function input_answer() {
+    var selected = document.getElementById("submit_the_question")
+    selected.onclick = function() {
+        this.questionIndex = this.questionIndex + 1
+    }
 
+
+}
+
+var questions = [
+    new Question("Which of the following genres do you prefer?",["Rock", "Country", "Pop","Sea-Shanties","Tibetan Throat Singing"]),
+    new Question("Which of the following artists do you prefer?",["The Beatles", "Metallica", "The Grateful Dead","Electric Lights Orchestra","Simon and Garfunkel"]),
+    new Question("Which of the following artists do you prefer?",["Carrie Underwood", "Dan + Shay", "Morgan Wallen","Luke Combs","Kane Brown"]),
+    new Question("Which of the following artists do you prefer?",["Justin Beiber", "Nikki Minaj", "Katy Perry","Billy Eilish", "Ariana Grande"]),
+    new Question("Which of the following artists do you prefer?",["The Irish Sailors", "", "Pop","Sea-Shanties","Tibetan Throat Singing"]),
+    new Question("Which of the following artists do you prefer?",["Deva Premal", "Tibetan Monks", "The Gyuto Monks of Tibet","Tradidional","Shu-de"]),
+ 
 
 ];
-function Create_Quiz(){
+function Get_Question(){
 
     var element = document.getElementById("question");
-    element.innerHTML = quiz.return_index().question;
-    var options  = quiz.return_index().choices;
+    element.innerHTML = quiz.return_value_of_question().question;
+    var options  = quiz.return_value_of_question().choices;
     for(var i = 0; i < options.length; i++){
         var element  = document.getElementById("option"+i); 
        element.innerHTML = options[i];
@@ -40,4 +59,9 @@ function Create_Quiz(){
 
 
 var quiz = new Quiz(questions);
-Create_Quiz();
+Get_Question();
+while(true){
+input_answer()
+
+
+}
