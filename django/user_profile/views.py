@@ -82,10 +82,29 @@ def profile(request, user_id):
     Used to display a user's information on their profile
     Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
-    profile = UserProfile.objects.get(pk=user_id)
-    post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_created')
-    follower_list = profile.users_followed.all()[:5]
-    return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
+    if request.user == User.objects.get(pk=user_id):
+        profile = UserProfile.objects.get(pk=user_id)
+        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_created')
+        follower_list = profile.users_followed.all()[:5]
+        return render(request, 'profile/my_profile.html', {'id': request.user.id, 'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
+    else:
+        return redirect('/user/userprofile/' + str(user_id))
+
+
+def other_profile(request, user_id):
+    """
+    Used for profiles that are not the logged in user's profile.
+    Last updated: 3/17/21 by Katie Lee
+    """
+    if request.user != User.objects.get(pk=user_id):
+        profile = UserProfile.objects.get(pk=user_id)
+        follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
+        is_following = False if follower is None else True
+        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_created')
+        follower_list = profile.users_followed.all()[:5]
+        return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following, 'post_list': post_list, 'follower_list': follower_list})
+    else:
+        return redirect('/user/profile/' + str(user_id))
 
 
 @require_GET
@@ -186,17 +205,6 @@ def follow(request, user_id, who):
     url = '/user/following/' + user_id
     return redirect(url)
 
-def other_profile(request, user_id):
-    """
-    Used for profiles that are not the logged in user's profile.
-    Last updated: 3/17/21 by Katie Lee
-    """
-    profile = UserProfile.objects.get(pk=user_id)
-    follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
-    is_following = False if follower is None else True
-    post_list = Post.objects.filter(user_profile_fk=profile)
-    follower_list = profile.users_followed.all()[:5]
-    return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following, 'post_list': post_list, 'follower_list': follower_list})
 
 # def num_followers(user_id):
 #     followers = FollowedUser.objects.get(user_to = user_id).len()
