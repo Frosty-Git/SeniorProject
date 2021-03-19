@@ -26,14 +26,6 @@ function Question(question, choices) {
     this.choices = choices;
 };
 
-function input_answer() {
-    var selected = document.getElementById("submit_the_question")
-    selected.onclick = function() {
-        this.questionIndex = this.questionIndex + 1
-    }
-
-
-}
 
 var questions = [
     new Question("Which of the following genres do you prefer?",["Rock", "Country", "Pop","Sea-Shanties","Tibetan Throat Singing"]),
@@ -41,7 +33,7 @@ var questions = [
     new Question("Which of the following artists do you prefer?",["Carrie Underwood", "Dan + Shay", "Morgan Wallen","Luke Combs","Kane Brown"]),
     new Question("Which of the following artists do you prefer?",["Justin Beiber", "Nikki Minaj", "Katy Perry","Billy Eilish", "Ariana Grande"]),
     new Question("Which of the following artists do you prefer?",["The Irish Sailors", "", "Pop","Sea-Shanties","Tibetan Throat Singing"]),
-    new Question("Which of the following artists do you prefer?",["Deva Premal", "Tibetan Monks", "The Gyuto Monks of Tibet","Tradidional","Shu-de"]),
+    new Question("Which of the following artists do you prefer?",["Deva Premal", "Tibetan Monks", "The Gyuto Monks of Tibet","Tradidional","Shu-de"])
  
 
 ];
@@ -59,12 +51,6 @@ function Get_Question(){
 
 
 var quiz = new Quiz(questions);
-<<<<<<< HEAD:django/static/js/question.js
-Create_Quiz();
 Get_Question();
-while(true){
-input_answer()
 
 
-}
->>>>>>> 2cf8e08651991d9ca984fef8b0b241eb72a11a75:django/static/question.js
