@@ -73,11 +73,18 @@
 .post_image {
     justify-content: flex-end;
     display:flex;
+    overflow: auto;
 }
 
 .feed_row {
     border-bottom: 1px solid white;
     padding-top: 10px;
+}
+
+.buttons_profile {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    padding: 5px;
 }
 
 

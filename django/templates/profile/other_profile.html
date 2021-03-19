@@ -6,7 +6,7 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<div class="w3-row-padding" style="margin-top:2%">
+<div class="w3-row-padding" style="margin-top:2%;">
     <div class="w3-col m4 w3-center my_profile">
         {% if profile.profilepic %}
             <div class="text-center" style="padding-top: 20px">
@@ -39,7 +39,7 @@
 
         <h6 style="padding-bottom:20px; font-size: 13px;">
             DOB: {{ profile.birthdate }}
-            (<i id="age"></i>)
+            (<span id="age"></span>)
         </h6>
 
         {% if profile.likes or profile.dislikes %}
@@ -73,7 +73,7 @@
     <div class="w3-col m6 w3-center">
         <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
         {% if post_list %}
-            <div class="container feed_table">
+            <div class="container feed_table" style="overflow-y: scroll; height: 600px">
                 {% for post in post_list %}
                     <div class="row feed_row" >
                         <div class="col-2 post_image">
