@@ -25,7 +25,10 @@
             <p style="margin-top: -10px; color:lightgray">
                 @{{ profile.user.username }}
             <p>
-            <p>Followers Following</p>
+                <p>
+                    <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">Followers</a>
+                    <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">Following</a>
+                </p>
         </div>
 
         {% if profile.description %}
