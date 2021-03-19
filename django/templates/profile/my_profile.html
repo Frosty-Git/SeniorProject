@@ -24,7 +24,7 @@
             </h2>
             <p style="margin-top: -10px; color:lightgray">
                 @{{ profile.user.username }}
-            <p>
+            </p>
         </div>
 
         {% if profile.description %}
@@ -60,7 +60,7 @@
     </div>
 
 
-    <div class="w3-col m6 w3-center">
+    <div class="w3-col m6 w3-center" style="overflow-y: scroll; height: 500px">
         <h2><a href="{% url 'feed:feed' %}">Feed</a></h2>
         {% if post_list %}
             <div class="container feed_table">

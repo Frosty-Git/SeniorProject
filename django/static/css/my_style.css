@@ -79,3 +79,25 @@
     border-bottom: 1px solid white;
     padding-top: 10px;
 }
+
+
+
+/* Start Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 1.5vh;
+    }
+    
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 4px;
+}
+    
+::-webkit-scrollbar-thumb {
+    background:#a3a3a3; 
+    border-radius: 10px;
+}
+    
+::-webkit-scrollbar-thumb:hover {
+    background:#727272; 
+}
+/* End Custom Scrollbar */

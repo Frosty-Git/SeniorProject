@@ -124,9 +124,9 @@ def settings_save(request, user_id):
 @require_GET
 def display_following(request, user_id):
     """
-    Used to display each user followed by a particular user. It uses said user as
-    the primary key into the following bridging table and returns every foreign
-    key, which represents the users followed.
+    Used to display each user a particular user follows. It uses said user
+    as the primary key into the following bridging table and returns every
+    foreign key, which represents the users followed.
     Last updated: 3/11/21 by Jacelynn Duranceau
     """
     you = UserProfile.objects.get(pk=user_id)
@@ -135,6 +135,22 @@ def display_following(request, user_id):
     # get_list = FollowedUser.objects.get(user_from=user_id)
     #following = get_list.user_to
     return render(request, 'profile/following.html', {'following': following})
+
+@require_GET
+def display_followers(request, user_id):
+    """
+    Used to display the followers of a particular user. It uses said user as
+    the primary key into the following bridging table and returns every user
+    that is the user_from match in said table.
+    Last updated: 3/11/21 by Jacelynn Duranceau
+    """
+    user = UserProfile.objects.get(pk=user_id)
+    follower_ids = FollowedUser.objects.filter(user_to=user).values('user_from') # Returns dictionary of ids
+    followers = []
+    for user in follower_ids:
+        for id in user.values():
+            followers.append(UserProfile.objects.get(pk=id))
+    return render(request, 'profile/followers.html', {'followers': followers})
 
 def unfollow(request, user_id, who):
     """
@@ -212,3 +228,19 @@ def user_list(request):
     """
     user_list = UserProfile.objects.exclude(pk=request.user.id)
     return render(request, 'profile/user_list.html', {'user_list': user_list})
+
+# def get_followers(request, user_id):
+#     """
+#     Gets the number of followers a particular user has
+#     Last updated: 3/18/21 by Jacelynn Duranceau
+#     """
+#     user = UserProfile.objects.get(pk=user_id)
+#     num_followers = FollowedUser.objects.filter(user_to=user).count()
+
+# def get_following(request, user_id):
+#     """
+#     Gets the number of users a particular user follows
+#     Last updated: 3/18/21 by Jacelynn Duranceau
+#     """
+#     user = UserProfile.objects.get(pk=user_id)
+#     num_followed = user.users_followed.all.len()
