@@ -53,7 +53,11 @@ def create_post(request):
 
 
 def delete_post(request, post_id):
+    """
+    Deletes a post and redirects back to profile.
+    This will only show up for the logged in user's profile.
+    Last updated: 3/18/21 by Katie Lee
+    """
     post = Post.objects.get(pk=post_id)
     post.delete()
-    # messages.success(request, ('Post successfully deleted!'))
     return redirect('/user/profile/' + str(request.user.id))
