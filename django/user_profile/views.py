@@ -80,7 +80,7 @@ def login_request(request):
 def profile(request, user_id):
     """
     Used to display a user's information on their profile
-    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    Last updated: 3/19/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
     if request.user == User.objects.get(pk=user_id):
         profile = UserProfile.objects.get(pk=user_id)
@@ -175,7 +175,7 @@ def unfollow(request, user_id, who):
     """
     Deletes the link in the bridging table between yourself and the person you
     want to unfollow.
-    Last updated: 3/11/21 by Jacelynn Duranceau
+    Last updated: 3/19/21 by Jacelynn Duranceau
     """
     loggedin = UserProfile.objects.get(pk=user_id)
     loggedin.num_following -= 1
@@ -192,7 +192,7 @@ def follow(request, user_id, who):
     """
     Creates the link in the bridging table between yourself and the person you
     want to follow.
-    Last updated: 3/17/21 by Katie Lee
+    Last updated: 3/19/21 by Katie Lee, Jacelynn Duranceau
     """
     loggedin = UserProfile.objects.get(pk=user_id)
     loggedin.num_following += 1
