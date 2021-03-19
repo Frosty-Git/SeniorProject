@@ -5,8 +5,6 @@
 {% block title %} Post {% endblock %}
 
 {% block content %}
-    <h1>Here Resides the Details of the Post</h1>
-
     <p>{{ post.text }}</p>
     {% if user.id == post.user_profile_fk.user.id %}
         by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>

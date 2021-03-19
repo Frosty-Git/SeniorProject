@@ -6,6 +6,7 @@
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
+{% if user.id == profile.user.id %}
 <div class="w3-row-padding" style="margin-top:2%">
     <div class="w3-col m4 w3-center my_profile">
         {% if profile.profilepic %}
@@ -154,6 +155,9 @@
     </div>
 </div> 
 <br>
+{% else %}
+    <p>no</p>
+{% endif %}
 
 <script type="text/javascript" src="{% static 'js/profile.js' %}"></script>
 <script>
