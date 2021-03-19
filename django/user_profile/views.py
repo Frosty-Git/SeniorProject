@@ -158,9 +158,14 @@ def unfollow(request, user_id, who):
     want to unfollow.
     Last updated: 3/11/21 by Jacelynn Duranceau
     """
+    loggedin = UserProfile.objects.get(pk=user_id)
+    loggedin.num_following -= 1
+    loggedin.save()
+    to_unfollow = UserProfile.objects.get(pk=who)
+    to_unfollow.num_followers -= 1
+    to_unfollow.save()
     user_to_unfollow = FollowedUser.objects.get(user_from = user_id, user_to = who)
     user_to_unfollow.delete()
-    #who.followers -= 1
     url = '/user/following/' + user_id
     return redirect(url)
 
@@ -171,8 +176,12 @@ def follow(request, user_id, who):
     Last updated: 3/17/21 by Katie Lee
     """
     loggedin = UserProfile.objects.get(pk=user_id)
-    follower = UserProfile.objects.get(pk=who)
-    user_to_follow = FollowedUser(user_from=loggedin, user_to=follower)
+    loggedin.num_following += 1
+    loggedin.save()
+    to_follow = UserProfile.objects.get(pk=who)
+    to_follow.num_followers += 1
+    to_follow.save()
+    user_to_follow = FollowedUser(user_from=loggedin, user_to=to_follow)
     user_to_follow.save()
     url = '/user/following/' + user_id
     return redirect(url)

@@ -26,8 +26,8 @@
                 @{{ profile.user.username }}
             <p>
                 <p>
-                    <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">Followers</a>
-                    <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">Following</a>
+                    <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
+                    <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
                 </p>
         </div>
 
