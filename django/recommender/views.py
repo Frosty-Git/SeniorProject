@@ -81,6 +81,5 @@ def about(request):
     return render(request, 'about.html', {})
 
 #Survey Page
-def survey(request):
-    
+def survey(request):   
     return render(request, 'Survey/survey.html', {})
