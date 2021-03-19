@@ -98,8 +98,7 @@ def get_comments(post_id):
         'post': post,
         'comment_list': comment_list,
         'comment_form': comment_form, 
-    }
-    
+    }  
     return context
 
 def create_songpost(request, track_id):
@@ -115,9 +114,14 @@ def create_songpost(request, track_id):
             form = postform.save(commit=False)
             songpost.text = form.cleaned_data.get('text')
             songpost.user_profile_fk = UserProfile.objects.get(pk=request.user.id)
-            
             songpost.save()
             return redirect('/')
     else:
         postform = PostForm()
         return render(request, '', {'postform': postform})
+
+def popup_post(request, post_id):
+    """
+    """
+    context = get_comments(post_id)
+    return render(request, 'social_feed/popup_post.html', context)
