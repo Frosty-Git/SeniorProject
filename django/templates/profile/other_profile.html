@@ -105,8 +105,8 @@
     <div class="w3-col m2 w3-center">
         <h2><a href="{% url 'user:following' profile.user.id %}">Following</a></h2>
         {% for follower in follower_list %}
-            {% if follower.user_profile_fk.profilepic %}
-                <img src="{{ follower.user_profile_fk.profilepic.url }}" width="30" height="30" class="d-inline-block align-top">
+            {% if follower.profilepic %}
+                <img src="{{ follower.profilepic.url }}" width="30" height="30" class="d-inline-block align-top">
             {% else %}
                 <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="...">
             {% endif %}
