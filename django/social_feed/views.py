@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from social_feed.models import *
 from social_feed.forms import *
 
@@ -27,14 +27,14 @@ def display_posts(request):
             if post.user_profile_fk == user:
                 post_list.append(post)
 
-    #comment_list = Comment.objects.order_by('date_created')
+    comment_list = Comment.objects.order_by('date_created')
     postform = PostForm()
 
     context = {
         'post_list': post_list,
-        #'comment_list': comment_list,
+        'comment_list': comment_list,
         'postform': postform, 
-        }  
+    }  
     return render(request, 'social_feed/posts.html', context)
 
 def create_post(request):
@@ -61,3 +61,35 @@ def delete_post(request, post_id):
     post = Post.objects.get(pk=post_id)
     post.delete()
     return redirect('/user/profile/' + str(request.user.id))
+
+def create_comment(request, post_id):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        post = get_object_or_404(Post, id=post_id)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.text = form.cleaned_data.get('text')
+            comment.post_fk = post
+            user = UserProfile.objects.get(pk=request.user.id)
+            comment.user_profile_fk = user
+            comment.save()
+            url = '/feed/' + post_id
+            return redirect(url)
+    else:
+        context = create_post_detail_context(post_id)
+    return render(request, 'social_feed/comment_post.html', context)
+
+def create_post_detail_context(post_id):
+    post = Post.objects.get(id=post_id)
+    comment_list = Comment.objects.filter(post_fk=post)
+    comment_form = CommentForm()
+
+    context = {
+        'post_id': post_id,
+        'post': post,
+        'comment_list': comment_list,
+        'comment_form': comment_form, 
+    }
+    
+    return context
