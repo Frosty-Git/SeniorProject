@@ -12,6 +12,7 @@ urlpatterns = [
     path('settings/<user_id>', views.display_settings, name='settings'),
     path('settings_save/<user_id>', views.settings_save, name='settings_save'),
     path('following/<user_id>', views.display_following, name='following'),
+    path('followers/<user_id>', views.display_followers, name='followers'),
     path('unfollow/<user_id>/<who>', views.unfollow, name='unfollow'),
     path('follow/<user_id>/<who>', views.follow, name='follow'),
     path('update_profile/', views.update_profile, name='update_profile'),
