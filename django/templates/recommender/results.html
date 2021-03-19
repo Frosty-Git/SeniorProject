@@ -5,60 +5,263 @@
 {% block title %}PengBeats | Results{% endblock %}
 
 {% block content %}
-
+    <style>
+        .carousel {
+            margin: 10vh 0vh 10vh 0vh;
+            /* background-color: yellow; */
+            width: 110%;
+        }
+        .carousel-control-prev {
+            /* background-color: red; */
+            width: 5%;
+        }
+        .carousel-control-next {
+            /* background-color: green; */
+            width: 5%;
+        }
+        .table {
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .embed-container { 
+            position: relative;
+            padding-bottom: 120%;
+            height: 0; 
+            overflow: hidden; 
+            max-width: 100%; 
+        } 
+        .embed-container iframe, .embed-container object, .embed-container embed { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+        }
+    </style>
+    
     <p>Search Term: {{ term }}</p>
     
-{% if tracks %}
-    <table class="table">
-        <tbody>
-            <tr>
-            {% for track in tracks %}
-
-                <td>
-                    <iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="380" 
-                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                </td>
-
-            {% endfor %}
-            </tr>
-        </tbody>
-    </table>
+{% if tracks1 and tracks2 and tracks3 %}
+      
+    <div id="trackCarousel" class="carousel slide" data-bs-interval="false">
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="false">
+            <!-- <img src="..." class="d-block w-100" alt="..."> -->
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                        {% for track in tracks1 %}
+            
+                            <td>
+                                <div class='embed-container'>
+                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                                </div>
+                            </td>
+            
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                        {% for track in tracks2 %}
+            
+                            <td>
+                                <div class='embed-container'>
+                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                                </div>
+                            </td>
+            
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                        {% for track in tracks3 %}
+            
+                            <td>
+                                <div class='embed-container'>
+                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                                </div>
+                            </td>
+            
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#trackCarousel"  data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#trackCarousel"  data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
 
 {% endif %}
 
-{% if albums %}
-    <table class="table">
-        <tbody>
-            <tr>
-            {% for album in albums %}
-
-                <td>
-                    <iframe src="https://open.spotify.com/embed/album/{{ album }}" width="300" height="380" 
-                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                </td>
-
-            {% endfor %}
-            </tr>
-        </tbody>
-    </table>
+{% if albums1 %}
+<div id="albumCarousel" class="carousel slide" data-bs-interval="false">
+    <div class="carousel-inner">
+      <div class="carousel-item active" data-bs-interval="false">
+        <!-- <img src="..." class="d-block w-100" alt="..."> -->
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for album in albums1 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/album/{{ album }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="carousel-item" >
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for album in albums2 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/album/{{ album }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for album in albums3 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/album/{{ album }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#albumCarousel"  data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#albumCarousel"  data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+    
 
 {% endif %}
 
-{% if artists %}
-    <table class="table">
-        <tbody>
-            <tr>
-            {% for artist in artists %}
-
-                <td>
-                    <iframe src="https://open.spotify.com/embed/artist/{{ artist }}" width="300" height="380" 
-                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                </td>
-
-            {% endfor %}
-            </tr>
-        </tbody>
-    </table>
+{% if artists1 %}
+<div id="artistCarousel" class="carousel slide" data-bs-interval="false">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for artist in artists1 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for artist in artists2 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for artist in artists3 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#artistCarousel"  data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#artistCarousel"  data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+    
 
 {% endif %}
 {% endblock %}
