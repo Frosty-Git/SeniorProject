@@ -21,7 +21,7 @@
         <ul>
             {% for comment in comment_list %}
             <br>
-                <li>{{ comment.text }} at {{ comment.date_last_updated }} 
+                <li class="post">{{ comment.text }} 
                     {% if user.id == comment.user_profile_fk.user.id %}
                         by <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
                             {% if post.user_profile_fk.profilepic %}
@@ -41,6 +41,7 @@
                         </a>
                         <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
                     {% endif %}
+                    at {{ comment.date_last_updated }}
                 </li>
                 <br>
             {% endfor %}
