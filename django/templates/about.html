@@ -28,14 +28,48 @@
     </p>
     <br>
     <br>
-    <table>
-        <tr>
+    <table style="text-align: center;">
+        <tr style="height: 60px;">
+            <td>
+                <label>
+                    <a href="{% url 'recommender:home' %}"><b>Home</b></a>
+                </label>
+            </td>
+        </tr>
+        <tr style="height: 60px;">
+            <td>
+                <label>
+                    <a href="{% url 'recommender:survey' %}"><b>Survey</b></a>
+                </label>
+            </td>
+        </tr>
+        <tr style="height: 60px;">
             <td>
                 <label>
                     <a href="{% url 'user:profile' user.id %}"><b>Profile</b></a>
                 </label>
             </td>
-
+        </tr>
+        <tr style="height: 60px;">
+            <td>
+                <label>
+                    <a href="{% url 'feed:feed' %}"><b>Social Feed</b></a>
+                </label>
+            </td>
+        </tr>
+        <tr style="height: 60px;">
+            <td>
+                <label>
+                    <a href="{% url 'user:update_profile' %}"><b>Settings</b></a>
+                </label>
+            </td>
+        </tr>
+        <tr style="height: 60px;">
+            <td>
+                <label>
+                    <a href="{% url 'recommender:top-tracks' %}"><b>Top Songs</b></a>
+                </label>
+            </td>
         </tr>
     </table>
     </center>
