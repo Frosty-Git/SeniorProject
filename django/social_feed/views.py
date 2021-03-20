@@ -119,9 +119,3 @@ def create_songpost(request, track_id):
     else:
         postform = PostForm()
         return render(request, '', {'postform': postform})
-
-def popup_post(request, post_id):
-    """
-    """
-    context = get_comments(post_id)
-    return render(request, 'social_feed/popup_post.html', context)
