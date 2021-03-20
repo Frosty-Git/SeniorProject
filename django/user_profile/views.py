@@ -238,26 +238,9 @@ def update_profile(request):
         profile_form = UserProfileForm(instance=obj)
     return render(request, 'settings/update_profile.html', {'form': form, 'profile_form': profile_form})
 
-
 def user_list(request):
     """
     TEMPORARY just to see what users are in the system 
     """
     user_list = UserProfile.objects.exclude(pk=request.user.id)
     return render(request, 'profile/user_list.html', {'user_list': user_list})
-
-# def get_followers(request, user_id):
-#     """
-#     Gets the number of followers a particular user has
-#     Last updated: 3/18/21 by Jacelynn Duranceau
-#     """
-#     user = UserProfile.objects.get(pk=user_id)
-#     num_followers = FollowedUser.objects.filter(user_to=user).count()
-
-# def get_following(request, user_id):
-#     """
-#     Gets the number of users a particular user follows
-#     Last updated: 3/18/21 by Jacelynn Duranceau
-#     """
-#     user = UserProfile.objects.get(pk=user_id)
-#     num_followed = user.users_followed.all.len()

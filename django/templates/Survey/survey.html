@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}PengBeats | Survey{% endblock %}
+
+{% block content %}
+<center>
+<h3>Survey</h3>
+</center>
+<br>
+<!-- Survey Created by James, Kevin and Alex -->
+<div>
+  <p id="question"></p>
+  <form>
+  <div class = "form-check">
+    <input class="form-check-input" type="radio" name="Form1"  checked>
+    <label class="form-check-label" for="option0" id="option0"></label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="Form1"  >
+    <label class="form-check-label" for="option1" id ="option1"></label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="Form1"  >
+    <label class="form-check-label" for="option2" id="option2"></label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="Form1"  >
+    <label class="form-check-label" for="option3" id="option3"></label>
+  </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="Form1"  >
+      <label class="form-check-label" for="option4" id="option4">
+</label>
+  </div>
+</div>
+</form>
+</div>
+<script type ="text/javascript" src="{% static  'js/question.js' %}"></script>
+{% endblock %}

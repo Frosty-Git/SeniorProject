@@ -55,7 +55,7 @@
                     <a class="nav-link" href="{% url 'recommender:best' %}">Browse</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Survey</a>
+                    <a class="nav-link" href="{% url 'recommender:survey' %}">Survey</a>
                   </li>
                   {% if user.is_authenticated %}
                     <li class="nav-item">

@@ -96,6 +96,10 @@ def results(request):
 def about(request):
     return render(request, 'about.html', {})
 
+#Survey Page
+def survey(request):   
+    return render(request, 'Survey/survey.html', {})
+
 # This Week's Top Tracks
 def top_tracks(request):
     """

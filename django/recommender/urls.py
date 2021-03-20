@@ -9,6 +9,6 @@ urlpatterns = [
     path('bestp/', views.searchform_post, name='bestp'),
     path('results/', views.results, name='results'),
     path('about/', views.about, name='about'),
+    path('survey/', views.survey, name='survey'),
     path('top-tracks/', views.top_tracks, name='top-tracks'),
 ]
- 
