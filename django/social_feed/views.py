@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from social_feed.models import *
 from social_feed.forms import *
+from django.utils import timezone
 
 # Create your views here.
 # def share_song(request, id):
@@ -131,7 +132,7 @@ def update_post(request):
         text = request.POST.get('new_text')
         if text is not None:
             post.text = text
-            post.date_last_updated = datetime.datetime.now()
+            post.date_last_updated = timezone.now()
             post.save()
         return redirect('/user/profile/' + str(request.user.id))
     else:
