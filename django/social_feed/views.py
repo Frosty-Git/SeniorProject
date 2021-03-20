@@ -141,6 +141,8 @@ def update_post(request):
 
 def popup_post(request):
     """
+    Creates a popup post for the profile and user profile.
+    Last updated: 3/20/21 by Katie Lee
     """
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
@@ -151,6 +153,9 @@ def popup_post(request):
         if text is not None:
             comment = Comment(text=text, post_fk = post, user_profile_fk=user)
             comment.save()
-        return redirect('/user/profile/' + str(request.user.id))
+        if post.user_profile_fk.user.id == user_id:
+            return redirect('/user/profile/' + str(request.user.id))
+        else:
+            return redirect('/user/userprofile/' + str(post.user_profile_fk.user.id))
     else:
         return render(request, 'social_feed/popup_post.html')
