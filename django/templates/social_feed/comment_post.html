@@ -5,8 +5,6 @@
 {% block title %} Post {% endblock %}
 
 {% block content %}
-    <h1>Here Resides the Details of the Post</h1>
-
     <p>{{ post.text }}</p>
     {% if user.id == post.user_profile_fk.user.id %}
         by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>
@@ -21,26 +19,34 @@
         <ul>
             {% for comment in comment_list %}
             <br>
-                <li>{{ comment.text }} at {{ comment.date_last_updated }} 
+                <li class="post">
                     {% if user.id == comment.user_profile_fk.user.id %}
-                        by <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
+                        <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
                             {% if post.user_profile_fk.profilepic %}
                                 <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
                             {% else %}
                                 <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
                             {% endif %}
                         </a>
+                        <br>
                         <a href="{% url 'user:profile' user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                        <br>
+                        {{ comment.text }} 
                     {% else %}
-                        by <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">
+                        <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">
                             {% if comment.user_profile_fk.profilepic %}
                                 <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
                             {% else %}
                                 <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
                             {% endif %}
                         </a>
+                        <br>
                         <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                        <br>
+                        {{ comment.text }}
                     {% endif %}
+                    <br>
+                    at {{ comment.date_last_updated }}
                 </li>
                 <br>
             {% endfor %}

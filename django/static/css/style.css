@@ -3,7 +3,9 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-
+.post {
+    list-style-type: none;
+}
 
 /* Begin changing default Bootstrap CSS */
 .btn.btn-outline-dark {

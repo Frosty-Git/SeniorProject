@@ -80,12 +80,31 @@ def login_request(request):
 def profile(request, user_id):
     """
     Used to display a user's information on their profile
-    Last updated: 3/8/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
+    Last updated: 3/19/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
-    profile = UserProfile.objects.get(pk=user_id)
-    post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_created')
-    follower_list = profile.users_followed.all()[:5]
-    return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
+    if request.user == User.objects.get(pk=user_id):
+        profile = UserProfile.objects.get(pk=user_id)
+        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_created')
+        follower_list = profile.users_followed.all()[:5]
+        return render(request, 'profile/my_profile.html', {'id': request.user.id, 'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
+    else:
+        return redirect('/user/userprofile/' + str(user_id))
+
+
+def other_profile(request, user_id):
+    """
+    Used for profiles that are not the logged in user's profile.
+    Last updated: 3/19/21 by Katie Lee
+    """
+    if request.user != User.objects.get(pk=user_id):
+        profile = UserProfile.objects.get(pk=user_id)
+        follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
+        is_following = False if follower is None else True
+        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_created')
+        follower_list = profile.users_followed.all()[:5]
+        return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following, 'post_list': post_list, 'follower_list': follower_list})
+    else:
+        return redirect('/user/profile/' + str(user_id))
 
 
 @require_GET
@@ -156,11 +175,16 @@ def unfollow(request, user_id, who):
     """
     Deletes the link in the bridging table between yourself and the person you
     want to unfollow.
-    Last updated: 3/11/21 by Jacelynn Duranceau
+    Last updated: 3/19/21 by Jacelynn Duranceau
     """
+    loggedin = UserProfile.objects.get(pk=user_id)
+    loggedin.num_following -= 1
+    loggedin.save()
+    to_unfollow = UserProfile.objects.get(pk=who)
+    to_unfollow.num_followers -= 1
+    to_unfollow.save()
     user_to_unfollow = FollowedUser.objects.get(user_from = user_id, user_to = who)
     user_to_unfollow.delete()
-    #who.followers -= 1
     url = '/user/following/' + user_id
     return redirect(url)
 
@@ -168,26 +192,19 @@ def follow(request, user_id, who):
     """
     Creates the link in the bridging table between yourself and the person you
     want to follow.
-    Last updated: 3/17/21 by Katie Lee
+    Last updated: 3/19/21 by Katie Lee, Jacelynn Duranceau
     """
     loggedin = UserProfile.objects.get(pk=user_id)
-    follower = UserProfile.objects.get(pk=who)
-    user_to_follow = FollowedUser(user_from=loggedin, user_to=follower)
+    loggedin.num_following += 1
+    loggedin.save()
+    to_follow = UserProfile.objects.get(pk=who)
+    to_follow.num_followers += 1
+    to_follow.save()
+    user_to_follow = FollowedUser(user_from=loggedin, user_to=to_follow)
     user_to_follow.save()
     url = '/user/following/' + user_id
     return redirect(url)
 
-def other_profile(request, user_id):
-    """
-    Used for profiles that are not the logged in user's profile.
-    Last updated: 3/17/21 by Katie Lee
-    """
-    profile = UserProfile.objects.get(pk=user_id)
-    follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
-    is_following = False if follower is None else True
-    post_list = Post.objects.filter(user_profile_fk=profile)
-    follower_list = profile.users_followed.all()[:5]
-    return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following, 'post_list': post_list, 'follower_list': follower_list})
 
 # def num_followers(user_id):
 #     followers = FollowedUser.objects.get(user_to = user_id).len()

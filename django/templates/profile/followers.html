@@ -39,7 +39,7 @@
             </td>
             <td>
                 <!-- {{ follow.followers|intcomma }} followers -->
-                # Followers Here
+                {{ user_f.num_followers }} followers
             </td>
             <td>
                 <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id user_f.user.id%}" role="button"></a>

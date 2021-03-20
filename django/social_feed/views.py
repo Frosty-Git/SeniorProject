@@ -98,6 +98,24 @@ def get_comments(post_id):
         'post': post,
         'comment_list': comment_list,
         'comment_form': comment_form, 
-    }
-    
+    }  
     return context
+
+def create_songpost(request, track_id):
+    """
+    Called when a user clicks the share button on a song. Will create a song post
+    that the user can share to the feed.
+    Last updated: 3/19/21 by Katie Lee, Jacelynn Duranceau
+    """
+    if request.method == 'POST':
+        postform = PostForm(request.POST)
+        if form.is_valid():
+            songpost = SongPost(song=track_id)
+            form = postform.save(commit=False)
+            songpost.text = form.cleaned_data.get('text')
+            songpost.user_profile_fk = UserProfile.objects.get(pk=request.user.id)
+            songpost.save()
+            return redirect('/')
+    else:
+        postform = PostForm()
+        return render(request, '', {'postform': postform})
