@@ -53,7 +53,7 @@ def home(request):
     ourSearchForm = OurSearchForm()
 
     context={
-        'name': 'Pengbeats',
+        'name': 'PengBeats',
         'ourSearchForm': ourSearchForm,
     }
     return render(request, 'home.html', context)
