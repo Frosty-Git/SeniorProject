@@ -12,7 +12,7 @@
 <!-- Survey Created by James, Kevin and Alex -->
 <div>
   <p id="question"></p>
-  <form>
+<form action = "/survey/" method = "GET" >
   <div class = "form-check">
     <input class="form-check-input" type="radio" name="Form1"  checked>
     <label class="form-check-label" for="option0" id="option0"></label>
@@ -31,10 +31,15 @@
   </div>
     <div class="form-check">
       <input class="form-check-input" type="radio" name="Form1"  >
-      <label class="form-check-label" for="option4" id="option4"></label>
+      <label class="form-check-label" for="option4" id="option4">
+        
+</label>
+<script type ="text/javascript" src="{% static 'js/question.js' %}">
+</script>
   </div>
 </div>
+<button type="button" onclick ="increment_and_reload()" class="btn btn-success" >Submit</button>
 </form>
 </div>
-<script type ="text/javascript" src="{% static  'js/question.js' %}"></script>
+
 {% endblock %}
