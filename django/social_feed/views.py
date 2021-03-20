@@ -133,6 +133,23 @@ def update_post(request):
             post.text = text
             post.date_last_updated = datetime.datetime.now()
             post.save()
-            return redirect('/user/profile/' + str(request.user.id))
+        return redirect('/user/profile/' + str(request.user.id))
     else:
         return render(request, 'social_feed/edit_post.html')
+
+
+def popup_post(request):
+    """
+    """
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        post = Post.objects.get(pk=post_id)
+        user_id = request.user.id
+        user = UserProfile.objects.get(pk=user_id)
+        text = request.POST.get('comment_text')
+        if text is not None:
+            comment = Comment(text=text, post_fk = post, user_profile_fk=user)
+            comment.save()
+        return redirect('/user/profile/' + str(request.user.id))
+    else:
+        return render(request, 'social_feed/popup_post.html')

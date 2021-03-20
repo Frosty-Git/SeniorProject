@@ -1,6 +1,6 @@
 
 <!-- Included in Profile Feed -->
-<div class="modal" id="modal{{ post.id}}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"  style="color:black">
+<div class="modal" id="editmodal{{ post.id}}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"  style="color:black">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <form method="post" action="{% url 'feed:update_post' %}">

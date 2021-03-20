@@ -14,46 +14,43 @@
     <p>at {{ post.date_last_updated }}</p>
     
     <h4>Comments</h4>
-
-    {% if comment_list %}
-        <ul>
-            {% for comment in comment_list %}
-            <br>
-                <li class="post">
-                    {% if user.id == comment.user_profile_fk.user.id %}
-                        <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
-                            {% if post.user_profile_fk.profilepic %}
-                                <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                            {% else %}
-                                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                            {% endif %}
-                        </a>
-                        <br>
-                        <a href="{% url 'user:profile' user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
-                        <br>
-                        {{ comment.text }} 
-                    {% else %}
-                        <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">
-                            {% if comment.user_profile_fk.profilepic %}
-                                <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                            {% else %}
-                                <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                            {% endif %}
-                        </a>
-                        <br>
-                        <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
-                        <br>
-                        {{ comment.text }}
-                    {% endif %}
+    <ul>
+        {% for comment in comment_list %}
+        <br>
+            <li class="post">
+                {% if user.id == comment.user_profile_fk.user.id %}
+                    <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
+                        {% if post.user_profile_fk.profilepic %}
+                            <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
+                        {% else %}
+                            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
+                        {% endif %}
+                    </a>
                     <br>
-                    at {{ comment.date_last_updated }}
-                </li>
+                    <a href="{% url 'user:profile' user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                    <br>
+                    {{ comment.text }} 
+                {% else %}
+                    <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">
+                        {% if comment.user_profile_fk.profilepic %}
+                            <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
+                        {% else %}
+                            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
+                        {% endif %}
+                    </a>
+                    <br>
+                    <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                    <br>
+                    {{ comment.text }}
+                {% endif %}
                 <br>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>There are no comments.</p>
-    {% endif %}
+                at {{ comment.date_last_updated }}
+            </li>
+            <br>
+        {% empty %}
+            <p>There are no comments.</p>
+        {% endfor %}
+    </ul>
 
     
     <form class='comment_form' method='POST' action='/feed/{{ post_id }}'>

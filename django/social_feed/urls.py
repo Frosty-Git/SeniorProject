@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete_post/<post_id>', views.delete_post, name='delete_post'),
     path('<post_id>', views.create_comment, name='comment'),
     path('update_post/', views.update_post, name='update_post'),
+    path('popup_post/', views.popup_post, name='popup_post'),
 ]
