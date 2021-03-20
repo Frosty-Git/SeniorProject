@@ -122,6 +122,8 @@ def create_songpost(request, track_id):
 
 def update_post(request):
     """
+    Updates a post on the profile. 
+    Last updated: 3/20/21 by Katie Lee
     """
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
