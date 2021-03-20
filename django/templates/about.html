@@ -18,11 +18,26 @@
     <center>
         <!-- <img src="{% static 'images/pengbeats.png' type='image/png' %}" class="img-fluid" alt="..." width="200" height="200"> -->
         <h1>{{ name }} About Us</h1>
-    </center>
     <br>
-    
-    <p>We have not created anything yet! This page will tell you all about us.
+    <p>
+        Here at PengBeats, our mission is to provide you with the best possible listening experience.
     </p>
     <br>
+    <p>
+        Please use these resources to elevate your listening experience!
+    </p>
+    <br>
+    <br>
+    <table>
+        <tr>
+            <td>
+                <label>
+                    <a href="{% url 'user:profile' user.id %}"><b>Profile</b></a>
+                </label>
+            </td>
+
+        </tr>
+    </table>
+    </center>
 <br>
 {% endblock %}
