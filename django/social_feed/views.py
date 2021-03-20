@@ -119,3 +119,18 @@ def create_songpost(request, track_id):
     else:
         postform = PostForm()
         return render(request, '', {'postform': postform})
+
+def update_post(request):
+    """
+    """
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        post = Post.objects.get(pk=post_id)
+        text = request.POST.get('new_text')
+        if text is not None:
+            post.text = text
+            post.date_last_updated = datetime.datetime.now()
+            post.save()
+            return redirect('/user/profile/' + str(request.user.id))
+    else:
+        return render(request, 'social_feed/edit_post.html')
