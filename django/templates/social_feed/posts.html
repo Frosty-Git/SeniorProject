@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Post {% endblock %}
+
+{% block content %}
+    <h1>Social Feed</h1>
+
+    <form class='post_form' method='POST' action='/feed/create_post/'>
+        {% csrf_token %}
+        {{ postform }}
+        <input type='submit' value='Create Post' class='post_form'>
+    </form>
+
+    <h4>Posts</h4>
+
+    {% for post in post_list %}
+    <br>
+    <ul>
+        <li class="post">
+        {% if post.user_profile_fk.user.id == user.id %}
+            <a href="{% url 'user:profile' post.user_profile_fk.user.id %}">
+                {% if post.user_profile_fk.profilepic %}
+                    <img src="{{ post.user_profile_fk.profilepic.url }}" width="80" height="80" class="d-inline-block align-top">
+                {% else %}
+                    <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="80" height="80" class="d-inline-block align-top" alt="...">
+                {% endif %}
+            </a>
+            <br>
+            <a href="{% url 'user:profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+            <br>
+            <a href="{% url 'feed:comment' post.id %}">{{ post.text }}</a>
+            <br>
+            <p>{{ post.date_last_updated }}</p>
+            
+        {% else %}
+            <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">
+                {% if post.user_profile_fk.profilepic %}
+                    <img src="{{ post.user_profile_fk.profilepic.url }}" width="80" height="80" class="d-inline-block align-top">
+                {% else %}
+                    <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="80" height="80" class="d-inline-block align-top" alt="...">
+                {% endif %}
+            </a>
+            <br>
+            <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+            <br>
+            <a href="{% url 'feed:comment' post.id %}">{{ post.text }}</a>
+            <br>
+            <p>{{ post.date_last_updated }}</p>
+        {% endif %}
+    </li>
+    </ul>
+    <br>
+    {% endfor %}
+
+{% endblock %}

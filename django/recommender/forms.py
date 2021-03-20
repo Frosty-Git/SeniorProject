@@ -7,3 +7,4 @@ class SearchForm(forms.Form):
     
 class OurSearchForm(forms.Form):
     term = forms.CharField(widget=forms.TextInput(attrs={'size':'50'}))
+

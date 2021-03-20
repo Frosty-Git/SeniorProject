@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}User List{% endblock %}
+
+{% block content %}
+    {% for user in user_list %}
+        <a href="{% url 'user:other_profile' user.user.id %}">{{ user.user.username }}</a><br>
+    {% endfor %}
+
+
+
+{% endblock %}

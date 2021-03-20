@@ -4,14 +4,29 @@
 }
 
 .my_profile {
-    background-color: darkslateblue; 
+    /* background-color: darkslateblue;  */
+    /* box-shadow: 5px 10px 8px slategray */
     display: inline-block; 
+    text-align: center;
+    border: 5px;
+    border-style: solid;
+    border-color: black;
+    padding: 10px;
+    /* position:absolute;
+    margin-left:70%;
+    right:10px;
+    top:10; */
+} 
+
+.my_profile th {
+    padding-right: 10px;
 }
 
-.profile_header {
+/* .profile_header {
     padding-top: 20px;
     font-family:'Courier New', Courier, monospace;
-}
+    text-align: center;
+} */
 
 .sidenav {
     width: 160px;
@@ -26,9 +41,70 @@
 .sidenav a {
     text-decoration: none;
     display: block;
+    color:black;
 }
 
 .main {
     margin-left: 160px; /* Same as the width of the sidebar */
     padding: 0px 10px;
 }
+
+.profile_sf {
+    background-color: purple;
+    padding:10px;
+    width: 600px;
+}
+
+.profile_following {
+    background-color: rgb(56, 72, 139);
+    padding:10px;
+}
+
+.feed_table {
+    margin: auto;
+    justify-content: center;
+    display:run-in;
+}
+
+.feed_table td {
+    padding-left:20px;
+}
+
+.post_image {
+    justify-content: flex-end;
+    display:flex;
+    overflow: auto;
+}
+
+.feed_row {
+    border-bottom: 1px solid white;
+    padding-top: 10px;
+}
+
+.buttons_profile {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    padding: 5px;
+}
+
+
+
+/* Start Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 1.5vh;
+    }
+    
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 4px;
+}
+    
+::-webkit-scrollbar-thumb {
+    background:#a3a3a3; 
+    border-radius: 10px;
+}
+    
+::-webkit-scrollbar-thumb:hover {
+    background:#727272; 
+}
+/* End Custom Scrollbar */
