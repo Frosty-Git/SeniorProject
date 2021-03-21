@@ -14,7 +14,7 @@
           
             <div class="modal-body">
                 <input type="hidden" id="post_id" name="post_id" value="{{ post.id }}">
-                <p>{{ post.text }}</p>
+                <p style="word-break: break-all;">{{ post.text }}</p>
                 {% if user.id == post.user_profile_fk.user.id %}
                     by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>
                 {% else %}
@@ -68,8 +68,8 @@
         </form>
       </div>
     </div>
-  </div>
-  
+</div>
+
 <script>
-    document.getElementById("comment_text").reset(); 
+    document.getElementById("comment_text").value = "";
 </script>

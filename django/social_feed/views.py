@@ -159,3 +159,12 @@ def popup_post(request):
             return redirect('/user/userprofile/' + str(post.user_profile_fk.user.id))
     else:
         return render(request, 'social_feed/popup_post.html')
+
+
+def popup_songpost(request):
+    """
+    """
+    if request.method == 'POST':
+        user_id = request.user.id
+        user = UserProfile.objects.get(pk=user_id)
+        text = request.POST.get('post_text')
