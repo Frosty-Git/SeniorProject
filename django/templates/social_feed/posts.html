@@ -4,19 +4,7 @@
 {% block title %} Post {% endblock %}
 
 {% block content %}
-<script>
-    function vote(kind) {
-        $.getJSON("/feed/vote/", { pk:'{{ post.id }}', vote: kind }, function(json){
-            alert("Was successful?: " + json['success']);
-        });
-    }
-
-    function addClickHandlers() {
-        $("#upvote").click( function() { vote("up") });
-        $("#downvote").click( function() { vote("down") });
-    }
-    $(document).ready(addClickHandlers);
-</script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
     <h1>Social Feed</h1>
 
@@ -49,8 +37,12 @@
                 <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
             {% endif %}
             <br>
-                <button type="button" class="btn btn-secondary" id="upvote">Upvote</button> <button type="button" class="btn btn-secondary" id="downvote">Down Vote</button>
+
+            <button type="button" class="upvoteBtn btn btn-secondary" id="upvote" data-id='{{ post.id }}' data-action='like'>Upvote</button>
+            <span id='total_votes'>{{ post.upvotes }}</span>
+            <button type="button" class="downvoteBtn btn btn-secondary" id="downvote" data-id='{{ post.id }}' data-action='dislike'>Downvote</button>
             <br>
+
             <p>{{ post.date_last_updated }}</p>
             
         {% else %}
@@ -70,7 +62,9 @@
                 <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
             {% endif %}
             <br>
-               <button type="button" class="btn btn-secondary" id="upvote">Upvote</button> <button type="button" class="btn btn-secondary" id="downvote">Down Vote</button>
+            <button type="button" class="upvoteBtn btn btn-secondary" id="upvote" data-id='{{ post.id }}' data-action='like'>Upvote</button>
+            <span id='total_votes'>{{ post.upvotes }}</span>
+            <button type="button" class="downvoteBtn btn btn-secondary" id="downvote" data-id='{{ post.id }}' data-action='dislike'>Downvote</button>
             <br>
             <p>{{ post.date_last_updated }}</p>
         {% endif %}
@@ -79,4 +73,51 @@
     <br>
     {% endfor %}
 
+<script>
+$(document).ready(function () {
+    $('.upvoteBtn').click(function(e) {
+        var post_id = document.getElementById('upvote').getAttribute('data-id');
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "feed:vote" %}',
+            data: {
+                post_id: post_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'like',
+            },
+            success: function(json){
+                if (json['status'] == 'ok') {
+                    var previous_action = $('.upvoteBtn').data('action');
+                    var previous_likes = parseInt($('#total_votes').text());
+                    $('#total_votes').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+                }
+            },
+            error: function(xhr, errmsg, err) {}
+        })
+    })
+
+    $('.downvoteBtn').click(function(e) {
+        var post_id = document.getElementById('downvote').getAttribute('data-id');
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "feed:vote" %}',
+            data: {
+                post_id: post_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'dislike',
+            },
+            success: function(json){
+                if (json['status'] == 'ok') {
+                    var previous_action = $('.downvoteBtn').data('action');
+                    var previous_likes = parseInt($('#total_votes').text());
+                    $('#total_votes').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+                }
+            },
+            error: function(xhr, errmsg, err) {}
+        })
+    })
+})
+</script>
 {% endblock %}

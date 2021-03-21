@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.db.models.functions import Cast
 import json
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse
 
 # Create your views here.
 # def share_song(request, id):
@@ -18,17 +19,14 @@ def display_posts(request):
     Last updated: 3/17/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
     all_post_list = Post.objects.order_by('-date_last_updated')
-
     you = UserProfile.objects.get(pk=request.user.id)
     following = you.users_followed.all()
-
-    song_post_list = SongPost.objects.order_by('-date_last_updated')
     post_list = []
 
     for post in all_post_list:
         if post.user_profile_fk == you:
             new_post = cast_subclass(post)
-            post_list.append(new_post)
+            post_list.append(new_post) 
         for user in following:
             if post.user_profile_fk == user:
                 new_post = cast_subclass(post)
@@ -40,7 +38,7 @@ def display_posts(request):
     context = {
         'post_list': post_list,
         'comment_list': comment_list,
-        'postform': postform, 
+        'postform': postform,
     }  
     return render(request, 'social_feed/posts.html', context)
 
@@ -195,16 +193,19 @@ def popup_songpost(request):
 
 
 def vote(request):
-    results = {'success':False}
-    if request.method == 'GET':
-        if request.GET.has_key('pk') and request.GET.has_key('vote'):
-            pk = int(request.GET['pk'])
-            vote = request.GET['vote']
-            post = Post.objects.get(pk=pk)
-            if vote == "up":
-                post.upvote += 1
-            elif vote == "down":
-                post.downvote -= 1
-            results = {'success':True}
-    json = json.dumps(results)
-    return HttpResponse(json, mimetype='application/json')
+    """
+    Counts upvotes and downvotes for posts
+    Last updated: 3/21/21 by Marc Colin, Katie Lee
+    """
+    post_id = request.POST.get('post_id')
+    action = request.POST.get('action')
+    user = UserProfile.objects.get(pk=request.user.id)
+    if post_id and action:
+        post = Post.objects.get(pk=post_id)
+        if action == 'like':
+            post.upvotes += 1
+        else:
+            post.upvotes -= 1
+        post.save()
+        return JsonResponse({'status':'ok'})
+    return JsonResponse({'status':'ko'})

@@ -1,8 +1,8 @@
 {% load static %}
 
 <!-- Included in Profile Feed -->
-<div class="modal fade" id="postmodal{{ post.id}}" tabindex="-1" aria-labelledby="myPostModalLabel" aria-hidden="true"  style="color:black">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="postmodal{{ post.id}}" tabindex="-1" aria-labelledby="myPostModalLabel" aria-hidden="true"  style="color:black;">
+    <div class="modal-dialog modal-dialog-centered" >
       <div class="modal-content">
         <form method="post" action="{% url 'feed:popup_post' %}">
             {% csrf_token %}
@@ -59,6 +59,7 @@
                     <p>There are no comments.</p>
                 {% endfor %}
             </div>
+
             <div class="modal-footer">
                 <textarea id="comment_text" required class="form-control" aria-label="With textarea" name="comment_text"></textarea>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>

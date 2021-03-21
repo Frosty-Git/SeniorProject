@@ -21,7 +21,8 @@ class UserProfile(models.Model):
     date_last_update = models.DateTimeField(auto_now_add=True)
     date_created = models.DateTimeField(auto_now_add=True)
     linked_to_spotify = models.BooleanField(default=False)
-    users_followed = models.ManyToManyField('self', through="FollowedUser",
+    users_followed = models.ManyToManyField('self', 
+                                        through="FollowedUser",
                                         related_name='followers',
                                         symmetrical=False)
     playlists_followed = models.ManyToManyField('Playlist',
