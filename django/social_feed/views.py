@@ -3,6 +3,8 @@ from social_feed.models import *
 from social_feed.forms import *
 from django.utils import timezone
 from django.db.models.functions import Cast
+import json
+from django.http import HttpResponse, HttpResponseRedirect
 
 # Create your views here.
 # def share_song(request, id):
@@ -45,6 +47,8 @@ def display_posts(request):
 
 def cast_subclass(post):
     """
+    Gets the SongPost instead of Post.
+    Last updated: 3/21/21 by Marc Colin, Katie Lee
     """
     try:
         return SongPost.objects.get(id=post.id)
@@ -188,3 +192,19 @@ def popup_songpost(request):
             return redirect('/feed/')
     else:
         return render(request, 'social_feed/popup_songpost.html')
+
+
+def vote(request):
+    results = {'success':False}
+    if request.method == 'GET':
+        if request.GET.has_key('pk') and request.GET.has_key('vote'):
+            pk = int(request.GET['pk'])
+            vote = request.GET['vote']
+            post = Post.objects.get(pk=pk)
+            if vote == "up":
+                post.upvote += 1
+            elif vote == "down":
+                post.downvote -= 1
+            results = {'success':True}
+    json = json.dumps(results)
+    return HttpResponse(json, mimetype='application/json')

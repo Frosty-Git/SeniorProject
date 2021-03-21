@@ -4,6 +4,20 @@
 {% block title %} Post {% endblock %}
 
 {% block content %}
+<script>
+    function vote(kind) {
+        $.getJSON("/feed/vote/", { pk:'{{ post.id }}', vote: kind }, function(json){
+            alert("Was successful?: " + json['success']);
+        });
+    }
+
+    function addClickHandlers() {
+        $("#upvote").click( function() { vote("up") });
+        $("#downvote").click( function() { vote("down") });
+    }
+    $(document).ready(addClickHandlers);
+</script>
+
     <h1>Social Feed</h1>
 
     <form class='post_form' method='POST' action='/feed/create_post/'>
@@ -35,6 +49,8 @@
                 <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
             {% endif %}
             <br>
+                <button type="button" class="btn btn-secondary" id="upvote">Upvote</button> <button type="button" class="btn btn-secondary" id="downvote">Down Vote</button>
+            <br>
             <p>{{ post.date_last_updated }}</p>
             
         {% else %}
@@ -49,6 +65,12 @@
             <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
             <br>
             <a href="{% url 'feed:comment' post.id %}">{{ post.text }}</a>
+            <br>
+            {% if post.type_post == "SongPost" %}
+                <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            {% endif %}
+            <br>
+               <button type="button" class="btn btn-secondary" id="upvote">Upvote</button> <button type="button" class="btn btn-secondary" id="downvote">Down Vote</button>
             <br>
             <p>{{ post.date_last_updated }}</p>
         {% endif %}
