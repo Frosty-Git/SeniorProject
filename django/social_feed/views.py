@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from social_feed.models import *
 from social_feed.forms import *
 from django.utils import timezone
+from django.db.models.functions import Cast
 
 # Create your views here.
 # def share_song(request, id):
@@ -14,21 +15,24 @@ def display_posts(request):
     yourself.
     Last updated: 3/17/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
-    all_post_list = Post.objects.order_by('-date_created')
+    all_post_list = Post.objects.order_by('-date_last_updated')
 
     you = UserProfile.objects.get(pk=request.user.id)
     following = you.users_followed.all()
 
+    song_post_list = SongPost.objects.order_by('-date_last_updated')
     post_list = []
 
     for post in all_post_list:
         if post.user_profile_fk == you:
-            post_list.append(post)
+            new_post = cast_subclass(post)
+            post_list.append(new_post)
         for user in following:
             if post.user_profile_fk == user:
-                post_list.append(post)
+                new_post = cast_subclass(post)
+                post_list.append(new_post)
 
-    comment_list = Comment.objects.order_by('date_created')
+    comment_list = Comment.objects.order_by('date_last_updated')
     postform = PostForm()
 
     context = {
@@ -37,6 +41,15 @@ def display_posts(request):
         'postform': postform, 
     }  
     return render(request, 'social_feed/posts.html', context)
+
+
+def cast_subclass(post):
+    """
+    """
+    try:
+        return SongPost.objects.get(id=post.id)
+    except:
+        return post
 
 def create_post(request):
     """
@@ -168,3 +181,10 @@ def popup_songpost(request):
         user_id = request.user.id
         user = UserProfile.objects.get(pk=user_id)
         text = request.POST.get('post_text')
+        track = request.POST.get('track_id')
+        if text is not None:
+            song = SongPost(song=track, text=text, user_profile_fk=user, type_post="SongPost")
+            song.save()
+            return redirect('/feed/')
+    else:
+        return render(request, 'social_feed/popup_songpost.html')

@@ -15,6 +15,7 @@ class Post(models.Model):
     date_last_updated = models.DateTimeField(auto_now_add=True)
     upvotes = models.IntegerField(default=0)
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    type_post = models.TextField(default="Post")
 
     def __str__(self):
         return self.text

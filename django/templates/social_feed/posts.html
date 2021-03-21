@@ -31,6 +31,10 @@
             <br>
             <a href="{% url 'feed:comment' post.id %}">{{ post.text }}</a>
             <br>
+            {% if post.type_post == "SongPost" %}
+                <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            {% endif %}
+            <br>
             <p>{{ post.date_last_updated }}</p>
             
         {% else %}
