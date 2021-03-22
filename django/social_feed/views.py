@@ -174,6 +174,7 @@ def popup_post(request, post_id):
         return redirect('/user/userprofile/' + str(post.user_profile_fk.user.id))
     
 
+
 def popup_songpost(request):
     """
     """
