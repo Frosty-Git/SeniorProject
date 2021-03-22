@@ -38,11 +38,6 @@
             {% endif %}
             <br>
 
-            <button type="button" class="upvoteBtn btn btn-secondary" id="upvote" data-id='{{ post.id }}' data-action='like'>Upvote</button>
-            <span id='total_votes'>{{ post.upvotes }}</span>
-            <button type="button" class="downvoteBtn btn btn-secondary" id="downvote" data-id='{{ post.id }}' data-action='dislike'>Downvote</button>
-            <br>
-
             <p>{{ post.date_last_updated }}</p>
             
         {% else %}
@@ -62,65 +57,67 @@
                 <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
             {% endif %}
             <br>
-            <button type="button" class="upvoteBtn btn btn-secondary" id="upvote" data-id='{{ post.id }}' data-action='like'>Upvote</button>
-            <span id='total_votes'>{{ post.upvotes }}</span>
-            <button type="button" class="downvoteBtn btn btn-secondary" id="downvote" data-id='{{ post.id }}' data-action='dislike'>Downvote</button>
-            <br>
             <p>{{ post.date_last_updated }}</p>
         {% endif %}
+        <button type="button" class="upvoteBtn btn btn-secondary" id="upvote{{ post.id }}" data-id='{{ post.id }}' data-action='like'>Upvote</button>
+        <span id='total_votes{{ post.id }}'>{{ post.upvotes }}</span>
+        <button type="button" class="downvoteBtn btn btn-secondary" id="downvote{{ post.id }}" data-id='{{ post.id }}' data-action='dislike'>Downvote</button>
+        <br>
+        <script>
+            $('#upvote{{ post.id }}').click(function(e) {
+                var post_id = document.getElementById('upvote{{ post.id }}').getAttribute('data-id');
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "feed:upvote" %}',
+                    data: {
+                        post_id: post_id,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        action: 'like',
+                    },
+                    success: function(json){
+                        if (json['status'] == 'ok') {
+                            var previous_action = $('#upvote{{ post.id }}').data('action');
+                            var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
+                            $('#total_votes{{ post.id }}').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+                        }
+                        if (json['status'] =='upvote_error') {
+                            alert('up');
+                        }
+                    },
+                    error: function(xhr, errmsg, err) {}
+                })
+            })
+        
+            $('#downvote{{ post.id }}').click(function(e) {
+                var post_id = document.getElementById('downvote{{ post.id }}').getAttribute('data-id');
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "feed:downvote" %}',
+                    data: {
+                        post_id: post_id,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        action: 'dislike',
+                    },
+                    success: function(json){
+                        if (json['status'] == 'ok') {
+                            var previous_action = $('#downvote{{ post.id }}').data('action');
+                            var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
+                            $('#total_votes{{ post.id }}').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+                        }
+                        // if (json['status'] =='downvote_error') {
+                        //     alert('down');
+                        // }
+                    },
+                    error: function(xhr, errmsg, err) {}
+                })
+            })
+        </script>
     </li>
     </ul>
     <br>
     {% endfor %}
 
-<script>
-// $(document).ready(function () {
-    $('.upvoteBtn').click(function(e) {
-        var post_id = document.getElementById('upvote').getAttribute('data-id');
-        e.preventDefault();
-        $.ajax({
-            type: 'POST',
-            url: '{% url "feed:upvote" %}',
-            data: {
-                post_id: post_id,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                action: 'like',
-            },
-            success: function(json){
-                if (json['status'] == 'ok') {
-                    var previous_action = $('.upvoteBtn').data('action');
-                    var previous_likes = parseInt($('#total_votes').text());
-                    $('#total_votes').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
-                }
-                // if (json['status'] ='upvote_error') {
-                //     alert('idk');
-                // }
-            },
-            error: function(xhr, errmsg, err) {}
-        })
-    })
 
-    $('.downvoteBtn').click(function(e) {
-        var post_id = document.getElementById('downvote').getAttribute('data-id');
-        e.preventDefault();
-        $.ajax({
-            type: 'POST',
-            url: '{% url "feed:downvote" %}',
-            data: {
-                post_id: post_id,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                action: 'dislike',
-            },
-            success: function(json){
-                if (json['status'] == 'ok') {
-                    var previous_action = $('.downvoteBtn').data('action');
-                    var previous_likes = parseInt($('#total_votes').text());
-                    $('#total_votes').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
-                }
-            },
-            error: function(xhr, errmsg, err) {}
-        })
-    })
-// })
-</script>
 {% endblock %}

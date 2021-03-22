@@ -262,8 +262,8 @@ def downvote(request):
                 post.upvotes -= 1
                 if up_list is not None:
                     up_list.delete()
+                post.save()
+                return JsonResponse({'status':'ok'})
             else:
                 return JsonResponse({'status':'downvote_error'})
-        post.save()
-        return JsonResponse({'status':'ok'})
     return JsonResponse({'status':'ko'})
