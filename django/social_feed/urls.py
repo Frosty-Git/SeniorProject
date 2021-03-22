@@ -13,4 +13,6 @@ urlpatterns = [
     path('share_songpost/', views.popup_songpost, name='songpost'),
     path('upvote/', views.upvote, name='upvote'),
     path('downvote/', views.downvote, name='downvote'),
+    path('delete_comment/<comment_id>', views.delete_comment, name='delete_comment'),
+    path('update_comment/', views.update_comment, name='update_comment'),
 ]

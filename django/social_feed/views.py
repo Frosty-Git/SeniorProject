@@ -40,7 +40,7 @@ def display_posts(request):
         'comment_list': comment_list,
         'postform': postform,
     }  
-    return render(request, 'social_feed/posts.html', context)
+    return render(request, 'social_feed/feed.html', context)
 
 
 def cast_subclass(post):
@@ -98,7 +98,7 @@ def create_comment(request, post_id):
             return redirect(url)
     else:
         context = get_comments(post_id)
-    return render(request, 'social_feed/comment_post.html', context)
+    return render(request, 'social_feed/post_detail.html', context)
 
 def get_comments(post_id):
     """
@@ -116,6 +116,33 @@ def get_comments(post_id):
         'comment_form': comment_form, 
     }  
     return context
+ 
+
+def delete_comment(request, comment_id):
+    """
+    """
+    comment = Comment.objects.get(pk=comment_id)
+    comment.delete()
+    return redirect('/feed/')
+
+
+def update_comment(request):
+    """
+    Updates a comment on the feed.
+    Last updated: 3/20/21 by Katie Lee
+    """
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        comment_id = request.POST.get('comment_id')
+        comment = Comment.objects.get(pk=comment_id)
+        text = request.POST.get('new_text')
+        if text is not None:
+            comment.text = text
+            comment.date_last_updated = timezone.now()
+            comment.save()
+        return redirect('/feed/' + str(post_id))
+    else:
+        return render(request, 'social_feed/edit_post.html')
 
 def create_songpost(request, track_id):
     """
