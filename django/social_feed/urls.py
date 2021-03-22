@@ -11,5 +11,6 @@ urlpatterns = [
     path('update_post/', views.update_post, name='update_post'),
     path('popup_post/<post_id>', views.popup_post, name='popup_post'),
     path('share_songpost/', views.popup_songpost, name='songpost'),
-    path('vote/', views.vote, name='vote'),
+    path('upvote/', views.upvote, name='upvote'),
+    path('downvote/', views.downvote, name='downvote'),
 ]

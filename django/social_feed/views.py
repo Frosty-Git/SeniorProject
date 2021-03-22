@@ -191,7 +191,7 @@ def popup_songpost(request):
         return render(request, 'social_feed/popup_songpost.html')
 
 
-def vote(request):
+def upvote(request):
     """
     Counts upvotes and downvotes for posts
     Last updated: 3/21/21 by Marc Colin, Katie Lee
@@ -202,9 +202,41 @@ def vote(request):
     if post_id and action:
         post = Post.objects.get(pk=post_id)
         if action == 'like':
-            post.upvotes += 1
-        else:
-            post.upvotes -= 1
+            up_list = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
+            down_list = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
+            if up_list is None:
+                up = PostUserUpvote(user_from=user, post_to=post)
+                up.save()
+                post.upvotes += 1
+                if down_list is not None:
+                    down_list.delete()
+                post.save()
+                return JsonResponse({'status':'ok'})
+            else:
+                return JsonResponse({'status':'upvote_error'})
+    return JsonResponse({'status':'ko'})
+
+def downvote(request):
+    """
+    Counts upvotes and downvotes for posts
+    Last updated: 3/21/21 by Marc Colin, Katie Lee
+    """
+    post_id = request.POST.get('post_id')
+    action = request.POST.get('action')
+    user = UserProfile.objects.get(pk=request.user.id)
+    if post_id and action:
+        post = Post.objects.get(pk=post_id)
+        if action == 'dislike':
+            down_list = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
+            up_list = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
+            if down_list is None:
+                downvote = PostUserDownvote(user_from=user, post_to=post)
+                downvote.save()
+                post.upvotes -= 1
+                if up_list is not None:
+                    up_list.delete()
+            else:
+                return JsonResponse({'status':'downvote_error'})
         post.save()
         return JsonResponse({'status':'ok'})
     return JsonResponse({'status':'ko'})

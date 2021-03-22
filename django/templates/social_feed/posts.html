@@ -74,13 +74,13 @@
     {% endfor %}
 
 <script>
-$(document).ready(function () {
+// $(document).ready(function () {
     $('.upvoteBtn').click(function(e) {
         var post_id = document.getElementById('upvote').getAttribute('data-id');
         e.preventDefault();
         $.ajax({
             type: 'POST',
-            url: '{% url "feed:vote" %}',
+            url: '{% url "feed:upvote" %}',
             data: {
                 post_id: post_id,
                 csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -92,6 +92,9 @@ $(document).ready(function () {
                     var previous_likes = parseInt($('#total_votes').text());
                     $('#total_votes').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
                 }
+                // if (json['status'] ='upvote_error') {
+                //     alert('idk');
+                // }
             },
             error: function(xhr, errmsg, err) {}
         })
@@ -102,7 +105,7 @@ $(document).ready(function () {
         e.preventDefault();
         $.ajax({
             type: 'POST',
-            url: '{% url "feed:vote" %}',
+            url: '{% url "feed:downvote" %}',
             data: {
                 post_id: post_id,
                 csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -118,6 +121,6 @@ $(document).ready(function () {
             error: function(xhr, errmsg, err) {}
         })
     })
-})
+// })
 </script>
 {% endblock %}
