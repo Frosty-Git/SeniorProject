@@ -66,40 +66,8 @@
                 </tr>
             </table>
         </div>
-        <script>
-            var postModal = document.getElementById('postmodal{{ post.id }}');
-            function modalClick(id) {
-                window.history.pushState({},"", "/feed/popup_post/" + id );
-                postModal.show();
-            }  
-            postModal.addEventListener('hidden.bs.modal', function (event) {
-                window.history.replaceState({}, "", "{% url 'user:profile' user.id %}")
-            })
-        </script>
+        <script src="{% static 'js/popup.js' %}"></script>
     {% empty %}
         <p>No Posts to show... Create some in Feed!</p>
     {% endfor %}
 </div>
-<!-- 
-<script>
-    $(document).ready(function () {
-        $('#commentbtn').click(function(e) {
-            var post_id = document.getElementById('post_id').value;
-            var text = document.getElementById('comment_text').value;
-            e.preventDefault();
-            $.ajax({
-                type: 'GET',
-                url: '{% url "feed:popup_post" %}',
-                // data: {
-                //     post_id: post_id,
-                //     csrfmiddlewaretoken: '{{ csrf_token }}',
-                //     text: text,
-                // },
-                success: function(data){
-                    $(".modal-content").load()
-                },
-                error: function(xhr, errmsg, err) {}
-            })
-        })
-    })
-</script> -->
