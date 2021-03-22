@@ -22,6 +22,8 @@ def display_posts(request):
     you = UserProfile.objects.get(pk=request.user.id)
     following = you.users_followed.all()
     post_list = []
+    upvote_posts = PostUserUpvote.objects.filter(user_from=you)
+    downvote_posts = PostUserDownvote.objects.filter(user_from=you)
 
     for post in all_post_list:
         if post.user_profile_fk == you:
@@ -39,6 +41,8 @@ def display_posts(request):
         'post_list': post_list,
         'comment_list': comment_list,
         'postform': postform,
+        'upvote_posts': upvote_posts,
+        'downvote_posts': downvote_posts
     }  
     return render(request, 'social_feed/feed.html', context)
 
@@ -220,8 +224,8 @@ def popup_songpost(request):
 
 def upvote(request):
     """
-    Counts upvotes and downvotes for posts
-    Last updated: 3/21/21 by Marc Colin, Katie Lee
+    Counts upvotes for posts
+    Last updated: 3/22/21 by Marc Colin, Katie Lee
     """
     post_id = request.POST.get('post_id')
     action = request.POST.get('action')
@@ -234,19 +238,26 @@ def upvote(request):
             if up_list is None:
                 up = PostUserUpvote(user_from=user, post_to=post)
                 up.save()
-                post.upvotes += 1
                 if down_list is not None:
                     down_list.delete()
+                    post.upvotes += 2
+                    return JsonResponse({'status':'switch'})
+                else:
+                    post.upvotes += 1
                 post.save()
                 return JsonResponse({'status':'ok'})
             else:
-                return JsonResponse({'status':'upvote_error'})
+                if up_list is not None:
+                    up_list.delete()
+                    post.upvotes -= 1
+                    post.save()
+                return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
 
 def downvote(request):
     """
-    Counts upvotes and downvotes for posts
-    Last updated: 3/21/21 by Marc Colin, Katie Lee
+    Counts downvotes for posts
+    Last updated: 3/22/21 by Marc Colin, Katie Lee
     """
     post_id = request.POST.get('post_id')
     action = request.POST.get('action')
@@ -259,11 +270,19 @@ def downvote(request):
             if down_list is None:
                 downvote = PostUserDownvote(user_from=user, post_to=post)
                 downvote.save()
-                post.upvotes -= 1
                 if up_list is not None:
                     up_list.delete()
+                    post.upvotes -= 2
+                    return JsonResponse({'status':'switch'})
+                else:
+                    post.upvotes -= 1
                 post.save()
                 return JsonResponse({'status':'ok'})
             else:
-                return JsonResponse({'status':'downvote_error'})
+                if down_list is not None:
+                    down_list.delete()
+                    post.upvotes += 1
+                    post.save()
+                return JsonResponse({'status':'undo_downvote'})
     return JsonResponse({'status':'ko'})
+    

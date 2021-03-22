@@ -59,9 +59,12 @@
             <br>
             <p>{{ post.date_last_updated }}</p>
         {% endif %}
-        <button type="button" class="upvoteBtn btn btn-secondary" id="upvote{{ post.id }}" data-id='{{ post.id }}' data-action='like'>Upvote</button>
+
+        
+        <button type="button" class="upvoteBtn btn btn-secondary {% for upvote in upvote_posts %} {% if upvote.post_to.id == post.id %} active {% endif %} {% endfor %}" id="upvote{{ post.id }}" data-id='{{ post.id }}' data-action='like'>Upvote</button>
         <span id='total_votes{{ post.id }}'>{{ post.upvotes }}</span>
-        <button type="button" class="downvoteBtn btn btn-secondary" id="downvote{{ post.id }}" data-id='{{ post.id }}' data-action='dislike'>Downvote</button>
+        <button type="button" class="downvoteBtn btn btn-secondary {% for downvote in downvote_posts %} {% if downvote.post_to.id == post.id %} active {% endif %} {% endfor %}" id="downvote{{ post.id }}" data-id='{{ post.id }}' data-action='dislike'>Downvote</button>
+        
         <br>
         <script>
             $('#upvote{{ post.id }}').click(function(e) {
@@ -77,17 +80,29 @@
                     },
                     success: function(json){
                         if (json['status'] == 'ok') {
-                            var previous_action = $('#upvote{{ post.id }}').data('action');
                             var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
-                            $('#total_votes{{ post.id }}').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+                            var previous_action = $('#upvote{{ post.id }}').data('action');
+                            $('#total_votes{{ post.id }}').text(previous_likes + 1);
+                            $('#upvote{{ post.id }}').addClass("active");
                         }
-                        if (json['status'] =='upvote_error') {
-                            alert('up');
+                        if (json['status'] == 'undo_upvote') {
+                            var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
+                            var previous_action = $('#upvote{{ post.id }}').data('action');
+                            $('#total_votes{{ post.id }}').text(previous_likes - 1);
+                            $('#upvote{{ post.id }}').removeClass("active");           
+                        }
+                        if (json['status'] == 'switch') {
+                            var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
+                            var previous_action = $('#upvote{{ post.id }}').data('action');
+                            $('#total_votes{{ post.id }}').text(previous_likes + 2);
+                            $('#upvote{{ post.id }}').addClass("active");
+                            $('#downvote{{ post.id }}').removeClass("active");
                         }
                     },
                     error: function(xhr, errmsg, err) {}
                 })
             })
+          
         
             $('#downvote{{ post.id }}').click(function(e) {
                 var post_id = document.getElementById('downvote{{ post.id }}').getAttribute('data-id');
@@ -104,11 +119,22 @@
                         if (json['status'] == 'ok') {
                             var previous_action = $('#downvote{{ post.id }}').data('action');
                             var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
-                            $('#total_votes{{ post.id }}').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+                            $('#total_votes{{ post.id }}').text(previous_likes - 1);
+                            $('#downvote{{ post.id }}').addClass("active");
                         }
-                        // if (json['status'] =='downvote_error') {
-                        //     alert('down');
-                        // }
+                        if (json['status'] == 'undo_downvote') {
+                            var previous_action = $('#downvote{{ post.id }}').data('action');
+                            var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
+                            $('#total_votes{{ post.id }}').text(previous_likes + 1);
+                            $('#downvote{{ post.id }}').removeClass("active");
+                        }
+                        if (json['status'] == 'switch') {
+                            var previous_action = $('#downvote{{ post.id }}').data('action');
+                            var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
+                            $('#total_votes{{ post.id }}').text(previous_likes - 2);
+                            $('#downvote{{ post.id }}').addClass("active");
+                            $('#upvote{{ post.id }}').removeClass("active");
+                        }
                     },
                     error: function(xhr, errmsg, err) {}
                 })
