@@ -1,10 +1,11 @@
 {% load static %}
 
+
 <!-- Included in Profile Feed -->
-<div class="modal fade" id="postmodal{{ post.id}}" tabindex="-1" aria-labelledby="myPostModalLabel" aria-hidden="true"  style="color:black;">
+<div class="modal fade" id="postmodal{{ post.id }}" tabindex="-1" aria-labelledby="myPostModalLabel" aria-hidden="true"  style="color:black;">
     <div class="modal-dialog modal-dialog-centered" >
       <div class="modal-content">
-        <form method="post" action="{% url 'feed:popup_post' %}">
+        <form method="post" action='{% url "feed:popup_post" %}'>
             {% csrf_token %}
           
             <div class="modal-header">
@@ -27,7 +28,7 @@
                         <li class="post">
                             {% if user.id == comment.user_profile_fk.user.id %}
                                 <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
-                                    {% if post.user_profile_fk.profilepic %}
+                                    {% if comment.user_profile_fk.profilepic %}
                                         <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
                                     {% else %}
                                         <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
@@ -61,7 +62,7 @@
             </div>
 
             <div class="modal-footer">
-                <textarea id="comment_text" required class="form-control" aria-label="With textarea" name="comment_text"></textarea>
+                <textarea id="comment_text{{ post.id }}" required class="form-control" aria-label="With textarea" name="comment_text"></textarea>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Comment</button>
             </div>
@@ -72,5 +73,30 @@
 </div>
 
 <script>
-    document.getElementById("comment_text").value = "";
+    document.getElementById('comment_text{{ post.id }}').value = "";
 </script>
+<!-- <script>
+    $(document).ready(function () {
+        var post_id = document.getElementById('post_id').value;
+        var button = '#commentBtn' + post_id
+        $(button).click(function(e) {
+            var text = document.getElementById('comment_text').value;
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "feed:popup_post" %}',
+                data: {
+                    post_id: post_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    text: text,
+                },
+                success: function(data){
+                    if (data['status'] == 'ok') {
+                        $('.new_post').append(data['post'])
+                    }
+                },
+                error: function(xhr, errmsg, err) {}
+            })
+        })
+    })
+</script> -->
