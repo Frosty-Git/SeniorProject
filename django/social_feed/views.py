@@ -154,27 +154,25 @@ def update_post(request):
         return render(request, 'social_feed/edit_post.html')
 
 
-def popup_post(request):
+def popup_post(request, post_id):
     """
     Creates a popup post for the profile and user profile.
-    Last updated: 3/20/21 by Katie Lee
+    Last updated: 3/22/21 by Katie Lee
     """
+    post = Post.objects.get(pk=post_id)
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
     if request.method == 'POST':
-        post_id = request.POST.get('post_id')
-        post = Post.objects.get(pk=post_id)
-        user_id = request.user.id
-        user = UserProfile.objects.get(pk=user_id)
         text = request.POST.get('comment_text')
         if text is not None:
             comment = Comment(text=text, post_fk = post, user_profile_fk=user)
             comment.save()
-        if post.user_profile_fk.user.id == user_id:
-            return redirect('/user/profile/' + str(request.user.id))
-        else:
-            return redirect('/user/userprofile/' + str(post.user_profile_fk.user.id))
-    else:
-        return render(request, 'social_feed/popup_post.html')
 
+    if post.user_profile_fk.user.id == user_id:
+        return redirect('/user/profile/' + str(request.user.id))
+    else:
+        return redirect('/user/userprofile/' + str(post.user_profile_fk.user.id))
+    
 
 def popup_songpost(request):
     """
