@@ -43,6 +43,27 @@ let questions = [
  
 
 ];
+
+Quiz.prototype.get_currently_selected_answer = function(){
+    value = document.querySelector('input[name="Form1"]:checked').value
+    if (value == "1"){
+        return this.questions[this.questionIndex].choices[0];
+        }
+        else if (value == "2"){
+            return this.questions[this.questionIndex].choices[1];
+        }
+        else if (value == "3"){
+            return this.questions[this.questionIndex].choices[2];
+        }
+        else if (value == "4"){
+            return this.questions[this.questionIndex].choices[3];
+        }
+        else if (value == "5"){
+            return this.questions[this.questionIndex].choices[4];
+        }
+}
+
+
 function Get_Question(){
 
     let element = document.getElementById("question");
@@ -59,7 +80,7 @@ function Get_Question(){
 let quiz = new Quiz(questions);
 Get_Question();
 function increment_and_reload(value){
-    console.log(value)
+
     if (value == "1"){
     quiz.increment_question_index(1);
     }
