@@ -5,7 +5,7 @@ from .models import *
 from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
-from recommender.Scripts.search import search_albums, search_artists, search_tracks
+from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features
 
 #----Dr Baliga's Code----
 
@@ -77,7 +77,8 @@ def results(request):
             artist2_ids = search_artists(term, 5, 4)
             artist3_ids = search_artists(term, 5, 9)
             
-            
+            features = search_audio_features(term)
+
             context = {
                 'term' : term,
                 'tracks1' : track1_ids,
@@ -88,7 +89,8 @@ def results(request):
                 'albums3' : album3_ids,
                 'artists1' : artist1_ids,
                 'artists2' : artist2_ids,
-                'artists3' : artist3_ids
+                'artists3' : artist3_ids,
+                'features' : features,
             }
     return render(request, 'recommender/results.html', context)
 
