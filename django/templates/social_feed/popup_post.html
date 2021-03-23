@@ -1,9 +1,47 @@
 {% load static %}
+<script>
+    $('.commentbtn').click(function(e) {
+        $('#popup_form').on('submit', function(e) {
+            var pic_url = $('#user_profile').val();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "feed:popup_post" post.id %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    comment_text: $('#comment_text{{ comment.id }}').val(),
+                },
+                success: function(json){
+                    if (json['status'] == 'ok') {
+                        $('#comment_text{{ comment.id }}').val('');
+                        $('#comment_list').append('<li><b>Added</b></li>');
+
+                        // var previous_action = $('#downvote{{ post.id }}').data('action');
+                        // var previous_likes = parseInt($('#total_votes{{ post.id }}').text());
+                        // $('#total_votes{{ post.id }}').text(previous_likes - 1);
+                        // $('#downvote{{ post.id }}').addClass("active");
+                        // "<li><a href='{% url 'user:profile' user.id %}'>" + 
+                        //                             '<img src=' + pic_url + ' width="40" height="40" class="d-inline-block align-top" alt="...">' +
+                        //                             "</a><br>" +
+                        //                             '<a href="{% url "user:profile" user.id %}">@{{ comment.user_profile_fk.user.username }}</a><br>' +
+                        //                             comment_text + '</li>'
+                    }
+                    if (json['status'] == 'ko') {
+                        alert('ko')
+                    }
+                },
+                error: function(xhr, errmsg, err) {}
+            })
+        })
+        e.preventDefault();
+        return false;
+    })
+</script>
+
 <!-- Included in Profile Feed -->
     <div class="modal fade" id="postmodal{{ post.id }}" tabindex="-1" aria-labelledby="myPostModalLabel" aria-hidden="true"  style="color:black;">
         <div class="modal-dialog modal-lg modal-dialog-centered" >
           <div class="modal-content">
-            <form method="post" action='{% url "feed:popup_post" post.id %}'>
+            <form method="post" action='{% url "feed:popup_post" post.id %}' id="popup_form">
                 {% csrf_token %}
               
                 <div class="modal-header">
@@ -12,57 +50,70 @@
                 </div>
               
                 <div class="modal-body">
-                    <p style="word-break: break-all;">{{ post.text }}</p>
-                    {% if user.id == post.user_profile_fk.user.id %}
-                        by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>
-                    {% else %}
-                        by <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
-                    {% endif %}
-                    <p>at {{ post.date_last_updated }}</p>
-    
-                    <ul style="overflow-y: scroll; height: auto; max-height:400px">
-                        {% for comment in post.comment_set.all %}
-                            <li class="post">
-                                {% if user.id == comment.user_profile_fk.user.id %}
-                                    <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
-                                        {% if comment.user_profile_fk.profilepic %}
-                                            <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                                        {% else %}
-                                            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                                        {% endif %}
-                                    </a>
-                                    <br>
-                                    <a href="{% url 'user:profile' user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
-                                    <br>
-                                    {{ comment.text }} 
-                                {% else %}
-                                    <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">
-                                        {% if comment.user_profile_fk.profilepic %}
-                                            <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                                        {% else %}
-                                            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                                        {% endif %}
-                                    </a>
-                                    <br>
-                                    <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
-                                    <br>
-                                    {{ comment.text }}
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col" style="border-right: 1px gray solid">
+                                <p style="word-break: break-all;">{{ post.text }}</p>
+                                {% if post.type_post == "SongPost" %}
+                                    <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                                 {% endif %}
                                 <br>
-                                at {{ comment.date_last_updated }}
-                            </li>
-                            <br>
-                        {% empty %}
-                            <p>There are no comments.</p>
-                        {% endfor %}
-                    </ul>
-                </div>
-                
+                                {% if user.id == post.user_profile_fk.user.id %}
+                                    by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+                                {% else %}
+                                    by <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+                                {% endif %}
+                                <p>at {{ post.date_last_updated }}</p>
+    
+                            </div>
+                            <div class="col">
+                                <ul id="comment_list" style="overflow-y: scroll; height: auto; max-height:500px">
+                                    {% for comment in post.comment_set.all %}
+                                        <li class="post">
+                                            {% if user.id == comment.user_profile_fk.user.id %}
+                                                <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
+                                                    {% if comment.user_profile_fk.profilepic %}
+                                                        <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
+                                                        <input hidden id="user_profile" value="{{ comment.user_profile_fk.profilepic.url }}">
+                                                    {% else %}
+                                                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
+                                                        <input hidden id="user_profile" value="{% static 'images/noprofilepic.jpg' type='image/jpg' %}">
+                                                    {% endif %}
+                                                </a>
+                                                <br>
+                                                <a href="{% url 'user:profile' user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                                                <br>
+                                                {{ comment.text }} 
+                                            {% else %}
+                                                <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">
+                                                    {% if comment.user_profile_fk.profilepic %}
+                                                        <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
+                                                    {% else %}
+                                                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
+                                                    {% endif %}
+                                                </a>
+                                                <br>
+                                                <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                                                <br>
+                                                {{ comment.text }}
+                                            {% endif %}
+                                            <br>
+                                            at {{ comment.date_last_updated }}
+                                        </li>
+                                        <br>
+                                    {% empty %}
+                                        <p>There are no comments.</p>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
     
                 <div class="modal-footer">
-                    <textarea id="comment_text{{ post.id }}" required class="form-control" aria-label="With textarea" name="comment_text"></textarea>
+                    <textarea id="comment_text{{ comment.id }}" required class="form-control" aria-label="With textarea" name="comment_text"></textarea>
                     <button id="close" type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="commentbtn btn-primary">Comment</button>
+                    <button type="submit" class="commentbtn btn btn-primary">Comment</button>
                 </div>
               </div>
             </form>

@@ -198,6 +198,8 @@ def popup_post(request, post_id):
         if text is not None:
             comment = Comment(text=text, post_fk = post, user_profile_fk=user)
             comment.save()
+            return JsonResponse({'status': 'ok'})
+        return JsonResponse({'status': 'ko'})
 
     if post.user_profile_fk.user.id == user_id:
         return redirect('/user/profile/' + str(request.user.id))

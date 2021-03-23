@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from user_profile.models import *
 from user_profile.forms import *
 from social_feed.models import *
+from social_feed.views import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -84,8 +85,14 @@ def profile(request, user_id):
     """
     if request.user == User.objects.get(pk=user_id):
         profile = UserProfile.objects.get(pk=user_id)
-        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+        posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
         follower_list = profile.users_followed.all()[:5]
+        post_list = []
+        
+        for post in posts:
+            new_post = cast_subclass(post)
+            post_list.append(new_post)
+    
         return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
     else:
         return redirect('/user/userprofile/' + str(user_id))
