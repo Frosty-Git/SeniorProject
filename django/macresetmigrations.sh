@@ -22,3 +22,5 @@ echo "If needed, now create super user and insert data into database"
 
 echo "*********************************************"
 echo "Created superuser"
+
+./manage.py shell -c "from django.contrib.auth.models import User; u = User.objects.create(username='fannypack', first_name='Fanny', last_name='Pack', email='fannypack@gmail.com', password='garbage123'); from user_profile.models import UserProfile; UserProfile.objects.create(user=u, birthdate='1990-02-06', description='hi');"

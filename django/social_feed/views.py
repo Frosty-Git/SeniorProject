@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from social_feed.models import *
 from social_feed.forms import *
+from django.utils import timezone
+from django.db.models.functions import Cast
+import json
+from django.http import HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse
 
 # Create your views here.
 # def share_song(request, id):
@@ -13,29 +18,44 @@ def display_posts(request):
     yourself.
     Last updated: 3/17/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
-    all_post_list = Post.objects.order_by('-date_created')
-
+    all_post_list = Post.objects.order_by('-date_last_updated')
     you = UserProfile.objects.get(pk=request.user.id)
     following = you.users_followed.all()
-
     post_list = []
+    upvote_posts = PostUserUpvote.objects.filter(user_from=you)
+    downvote_posts = PostUserDownvote.objects.filter(user_from=you)
 
     for post in all_post_list:
         if post.user_profile_fk == you:
-            post_list.append(post)
+            new_post = cast_subclass(post)
+            post_list.append(new_post) 
         for user in following:
             if post.user_profile_fk == user:
-                post_list.append(post)
+                new_post = cast_subclass(post)
+                post_list.append(new_post)
 
-    comment_list = Comment.objects.order_by('date_created')
+    comment_list = Comment.objects.order_by('date_last_updated')
     postform = PostForm()
 
     context = {
         'post_list': post_list,
         'comment_list': comment_list,
-        'postform': postform, 
+        'postform': postform,
+        'upvote_posts': upvote_posts,
+        'downvote_posts': downvote_posts
     }  
-    return render(request, 'social_feed/posts.html', context)
+    return render(request, 'social_feed/feed.html', context)
+
+
+def cast_subclass(post):
+    """
+    Gets the SongPost instead of Post.
+    Last updated: 3/21/21 by Marc Colin, Katie Lee
+    """
+    try:
+        return SongPost.objects.get(id=post.id)
+    except:
+        return post
 
 def create_post(request):
     """
@@ -82,7 +102,7 @@ def create_comment(request, post_id):
             return redirect(url)
     else:
         context = get_comments(post_id)
-    return render(request, 'social_feed/comment_post.html', context)
+    return render(request, 'social_feed/post_detail.html', context)
 
 def get_comments(post_id):
     """
@@ -100,6 +120,33 @@ def get_comments(post_id):
         'comment_form': comment_form, 
     }  
     return context
+ 
+
+def delete_comment(request, comment_id):
+    """
+    """
+    comment = Comment.objects.get(pk=comment_id)
+    comment.delete()
+    return redirect('/feed/')
+
+
+def update_comment(request):
+    """
+    Updates a comment on the feed.
+    Last updated: 3/20/21 by Katie Lee
+    """
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        comment_id = request.POST.get('comment_id')
+        comment = Comment.objects.get(pk=comment_id)
+        text = request.POST.get('new_text')
+        if text is not None:
+            comment.text = text
+            comment.date_last_updated = timezone.now()
+            comment.save()
+        return redirect('/feed/' + str(post_id))
+    else:
+        return render(request, 'social_feed/edit_post.html')
 
 def create_songpost(request, track_id):
     """
@@ -119,3 +166,123 @@ def create_songpost(request, track_id):
     else:
         postform = PostForm()
         return render(request, '', {'postform': postform})
+
+def update_post(request):
+    """
+    Updates a post on the profile. 
+    Last updated: 3/20/21 by Katie Lee
+    """
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        post = Post.objects.get(pk=post_id)
+        text = request.POST.get('new_text')
+        if text is not None:
+            post.text = text
+            post.date_last_updated = timezone.now()
+            post.save()
+        return redirect('/user/profile/' + str(request.user.id))
+    else:
+        return render(request, 'social_feed/edit_post.html')
+
+
+def popup_post(request, post_id):
+    """
+    Creates a popup post for the profile and user profile.
+    Last updated: 3/22/21 by Katie Lee
+    """
+    post = Post.objects.get(pk=post_id)
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    if request.method == 'POST':
+        text = request.POST.get('comment_text')
+        if text is not None:
+            comment = Comment(text=text, post_fk = post, user_profile_fk=user)
+            comment.save()
+
+    if post.user_profile_fk.user.id == user_id:
+        return redirect('/user/profile/' + str(request.user.id))
+    else:
+        return redirect('/user/userprofile/' + str(post.user_profile_fk.user.id))
+    
+
+
+def popup_songpost(request):
+    """
+    """
+    if request.method == 'POST':
+        user_id = request.user.id
+        user = UserProfile.objects.get(pk=user_id)
+        text = request.POST.get('post_text')
+        track = request.POST.get('track_id')
+        if text is not None:
+            song = SongPost(song=track, text=text, user_profile_fk=user, type_post="SongPost")
+            song.save()
+            return redirect('/feed/')
+    else:
+        return render(request, 'social_feed/popup_songpost.html')
+
+
+def upvote(request):
+    """
+    Counts upvotes for posts
+    Last updated: 3/22/21 by Marc Colin, Katie Lee
+    """
+    post_id = request.POST.get('post_id')
+    action = request.POST.get('action')
+    user = UserProfile.objects.get(pk=request.user.id)
+    if post_id and action:
+        post = Post.objects.get(pk=post_id)
+        if action == 'like':
+            up_list = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
+            down_list = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
+            if up_list is None:
+                up = PostUserUpvote(user_from=user, post_to=post)
+                up.save()
+                if down_list is not None:
+                    down_list.delete()
+                    post.upvotes += 2
+                    return JsonResponse({'status':'switch'})
+                else:
+                    post.upvotes += 1
+                post.save()
+                return JsonResponse({'status':'ok'})
+            else:
+                if up_list is not None:
+                    up_list.delete()
+                    post.upvotes -= 1
+                    post.save()
+                return JsonResponse({'status':'undo_upvote'})
+    return JsonResponse({'status':'ko'})
+
+def downvote(request):
+    """
+    Counts downvotes for posts
+    Last updated: 3/22/21 by Marc Colin, Katie Lee
+    """
+    post_id = request.POST.get('post_id')
+    action = request.POST.get('action')
+    user = UserProfile.objects.get(pk=request.user.id)
+    if post_id and action:
+        post = Post.objects.get(pk=post_id)
+        if action == 'dislike':
+            down_list = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
+            up_list = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
+            if down_list is None:
+                downvote = PostUserDownvote(user_from=user, post_to=post)
+                downvote.save()
+                if up_list is not None:
+                    up_list.delete()
+                    post.upvotes -= 2
+                    return JsonResponse({'status':'switch'})
+                else:
+                    post.upvotes -= 1
+                post.save()
+                return JsonResponse({'status':'ok'})
+            else:
+                if down_list is not None:
+                    down_list.delete()
+                    post.upvotes += 1
+                    post.save()
+                return JsonResponse({'status':'undo_downvote'})
+    return JsonResponse({'status':'ko'})
+    

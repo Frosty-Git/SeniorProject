@@ -1,0 +1,27 @@
+
+<!-- Included in Profile Feed -->
+<div class="modal" id="editmodal{{ post.id}}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"  style="color:black">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{% url 'feed:update_post' %}">
+          {% csrf_token %}
+        
+          <div class="modal-header">
+            <h5 class="modal-title" id="myModalLabel">Edit Post</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        
+          <div class="modal-body">
+            <input type="hidden" id="post_id" name="post_id" value="{{ post.id }}">
+            <textarea required class="form-control" aria-label="With textarea" name="new_text">{{ post.text }}</textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

@@ -108,3 +108,10 @@
     background:#727272; 
 }
 /* End Custom Scrollbar */
+
+#comment_popup {
+    cursor: pointer; 
+    background-color: transparent;  
+    border: transparent;
+    color: white;
+}

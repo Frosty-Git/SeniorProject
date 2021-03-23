@@ -1,6 +1,6 @@
 from typing import Text
 from django.db import models
-from user_profile.models import *
+from user_profile.models import UserProfile, Playlist
 
 # Post
 class Post(models.Model):
@@ -15,6 +15,15 @@ class Post(models.Model):
     date_last_updated = models.DateTimeField(auto_now_add=True)
     upvotes = models.IntegerField(default=0)
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    type_post = models.TextField(default="Post")
+    users_upvoted = models.ManyToManyField(UserProfile, 
+                                        through="PostUserUpvote",
+                                        related_name='user_upvotes',
+                                        symmetrical=False)
+    users_downvoted = models.ManyToManyField(UserProfile, 
+                                        through="PostUserDownvote",
+                                        related_name='user_downvotes',
+                                        symmetrical=False)
 
     def __str__(self):
         return self.text
@@ -58,3 +67,34 @@ class Comment(models.Model):
     def __str__(self):
         return self.text
 
+
+class PostUserUpvote(models.Model):
+    """
+    Bridging table for Post and User. Keeps track of upvotes
+    Last updated: 3/22/21 by Marc Colin, Katie Lee
+    """
+    user_from = models.ForeignKey(UserProfile, related_name='user_from_up', on_delete=models.CASCADE)
+    post_to = models.ForeignKey(Post, related_name='post_to_up', on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('-date_created',)
+    
+    def __str__(self):
+        return "PostUserUpvote"
+
+
+class PostUserDownvote(models.Model):
+    """
+    Bridging table for Post and User. Keeps track of who downvotes
+    Last updated: 3/22/21 by Marc Colin, Katie Lee
+    """
+    user_from = models.ForeignKey(UserProfile, related_name='user_from_down', on_delete=models.CASCADE)
+    post_to = models.ForeignKey(Post, related_name='post_to_down', on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('-date_created',)
+    
+    def __str__(self):
+        return "PostUserDownvote"
