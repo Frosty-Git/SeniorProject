@@ -57,5 +57,5 @@ def search_audio_features(query):
     song. These are the same audio features for the Kaggle data.
     """
     track = search_tracks(query, 1, 0)
-    features = sp.audio_features(tracks=[track])
+    features = sp.audio_features(tracks=track)
     return features
