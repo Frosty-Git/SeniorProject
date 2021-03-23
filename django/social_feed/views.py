@@ -235,24 +235,24 @@ def upvote(request):
     if post_id and action:
         post = Post.objects.get(pk=post_id)
         if action == 'like':
-            up_list = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
-            down_list = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
-            if up_list is None:
+            upvote = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
+            downvote = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
+            if upvote is None:
                 up = PostUserUpvote(user_from=user, post_to=post)
                 up.save()
-                if down_list is not None:
-                    down_list.delete()
+                if downvote is not None:
+                    downvote.delete()
                     post.upvotes += 2
+                    post.save()
                     return JsonResponse({'status':'switch'})
                 else:
                     post.upvotes += 1
-                post.save()
-                return JsonResponse({'status':'ok'})
-            else:
-                if up_list is not None:
-                    up_list.delete()
-                    post.upvotes -= 1
                     post.save()
+                    return JsonResponse({'status':'ok'})
+            else:
+                upvote.delete()
+                post.upvotes -= 1
+                post.save()
                 return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
 
@@ -275,16 +275,16 @@ def downvote(request):
                 if up_list is not None:
                     up_list.delete()
                     post.upvotes -= 2
+                    post.save()
                     return JsonResponse({'status':'switch'})
                 else:
                     post.upvotes -= 1
-                post.save()
-                return JsonResponse({'status':'ok'})
-            else:
-                if down_list is not None:
-                    down_list.delete()
-                    post.upvotes += 1
                     post.save()
+                    return JsonResponse({'status':'ok'})
+            else:
+                down_list.delete()
+                post.upvotes += 1
+                post.save()
                 return JsonResponse({'status':'undo_downvote'})
     return JsonResponse({'status':'ko'})
     
