@@ -49,7 +49,7 @@ function Get_Question(){
     element.innerHTML = quiz.return_value_of_question().question;
     let options  = quiz.return_value_of_question().choices;
     for(let i = 0; i < options.length; i++){
-        let element  = document.getElementById("option"+i); 
+        let element  = document.getElementById("option" + i); 
        element.innerHTML = options[i];
     }
 
@@ -58,8 +58,23 @@ function Get_Question(){
 
 let quiz = new Quiz(questions);
 Get_Question();
-function increment_and_reload(){
+function increment_and_reload(value){
+    console.log(value)
+    if (value == "1"){
     quiz.increment_question_index(1);
+    }
+    else if (value == "2"){
+    quiz.increment_question_index(2);
+    }
+    else if (value == "3"){
+    quiz.increment_question_index(3);
+    }
+    else if (value == "4"){
+    quiz.increment_question_index(4);
+    }
+    else if (value == "5"){
+    quiz.increment_question_index(5);
+    }
     Get_Question();
  
 

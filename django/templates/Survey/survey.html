@@ -12,33 +12,43 @@
 <!-- Survey Created by James, Kevin and Alex -->
 <div>
   <p id="question"></p>
-<form action = "/survey/" method = "GET" >
+<form action id = "multiple_choice_form" >
   <div class = "form-check">
-    <input class="form-check-input" type="radio" name="Form1"  checked>
+    <input class="form-check-input" type="radio" name="Form1"  checked value = 1>
     <label class="form-check-label" for="option0" id="option0"></label>
   </div>
   <div class="form-check">
-    <input class="form-check-input" type="radio" name="Form1"  >
+    <input class="form-check-input" type="radio" name="Form1"  value = 2>
     <label class="form-check-label" for="option1" id ="option1"></label>
   </div>
   <div class="form-check">
-    <input class="form-check-input" type="radio" name="Form1"  >
+    <input class="form-check-input" type="radio" name="Form1" value = 3>
     <label class="form-check-label" for="option2" id="option2"></label>
   </div>
   <div class="form-check">
-    <input class="form-check-input" type="radio" name="Form1"  >
+    <input class="form-check-input" type="radio" name="Form1" value = 4>
     <label class="form-check-label" for="option3" id="option3"></label>
   </div>
     <div class="form-check">
-      <input class="form-check-input" type="radio" name="Form1"  >
+      <input class="form-check-input" type="radio" name="Form1" value = 5 >
       <label class="form-check-label" for="option4" id="option4">
         
 </label>
 <script type ="text/javascript" src="{% static 'js/question.js' %}">
 </script>
+<script>
+ $(document).ready(function() {
+   $("#submit").click(function(){
+      let value = document.querySelector('input[name="Form1"]:checked').value;
+      increment_and_reload(value);
+      
+   })
+ })
+
+</script>
   </div>
 </div>
-<button type="button" onclick ="increment_and_reload()" class="btn btn-success" >Submit</button>
+<button type="button"  id = "submit" class="btn btn-success" >Submit</button>
 </form>
 </div>
 
