@@ -83,9 +83,6 @@ class Playlist(models.Model):
     Last updated: 3/6/21 by Jacelynn Duranceau
     """
     user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, default=None) # Who created the playlist
-    music_data_fk = models.ManyToManyField(Musicdata, through="SongOnPlaylist",
-                                        related_name='playlist_songs',
-                                        symmetrical=False)
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True) # Pillow
     upvotes = models.IntegerField(default=0) 
@@ -142,12 +139,12 @@ class FollowedPlaylist(models.Model):
 # Song On Playlist
 class SongOnPlaylist(models.Model):
     """
-    Model representing a bridging tbale between a song and a playlist.
-    Last updated: 3/10/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, 
+    Model representing a table between a song and a playlist.
+    Last updated: 3/23/21 by Joe Frost, Marc Colin, Katie Lee, Jacelynn Duranceau, 
     Kevin Magill
     """
     playlist_from = models.ForeignKey(Playlist, related_name='playlist_from', on_delete=models.CASCADE)
-    song_to = models.ForeignKey(Musicdata, related_name='song_to', on_delete=models.CASCADE)
+    spotify_id = models.CharField(max_length=30)
     date_added = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
