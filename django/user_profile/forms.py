@@ -62,6 +62,6 @@ class PlaylistForm(forms.ModelForm):
     name = forms.CharField(max_length=30)
     
     class Meta:
-        model = User
+        model = Playlist
         fields = ('name')
 
