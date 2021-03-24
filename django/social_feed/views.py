@@ -71,6 +71,21 @@ def create_post(request):
             post.save()
     return redirect('/feed/')
 
+def create_post_profile(request):
+    """
+    Creates a post. Redirects to the profile.
+    Last updated: 3/23/21 by Katie Lee
+    """
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.text = form.cleaned_data.get('text')
+            post.user_profile_fk = UserProfile.objects.get(pk=request.user.id)
+            post.save()
+    return redirect('/user/profile/' + str(request.user.id))
+
+
 
 def delete_post(request, post_id):
     """
