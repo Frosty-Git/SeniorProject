@@ -265,15 +265,18 @@ def get_songs_playlist(request, playlist_id):
     Gets the songs on a playlist based on the playlist's id
     Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
     """
-    playlist = Playlist.objects.get(pk=playlist_id)
-    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values('spotify_id')
-    songs = []
+    you = UserProfile.objects.get(pk=request.user.id)
+    playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
+    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+    songs = {}
     for match in matches:
-        for spotify_id in match.values():
-            songs.append(spotify_id)
+        sop_id = match.get('id')
+        song_id = match.get('spotify_id')
+        songs[sop_id] = song_id
+
     context = {
         'songs': songs,
-        'playlist': playlist
+        'playlist': playlist,
     }
     return render(request, 'profile/single_playlist.html', context)
 
@@ -327,3 +330,17 @@ def edit_playlist_popup(request):
         return redirect('/user/playlist/' + str(playlist_id))
     else:
         return render(request, 'profile/editplaylist_popup.html')
+
+def delete_playlist(request, playlist_id):
+    """
+    """
+    playlist = Playlist.objects.get(pk=playlist_id)
+    playlist.delete()
+    return redirect('/user/playlists/' + str(request.user.id))
+
+def delete_song(request, playlist_id, sop_pk):
+    """
+    """
+    song = SongOnPlaylist.objects.get(pk=sop_pk)
+    song.delete()
+    return redirect('/user/playlist/' + str(playlist_id))

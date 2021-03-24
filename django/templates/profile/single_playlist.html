@@ -17,10 +17,13 @@
 {% include 'profile/editplaylist_popup.html' %}
 
 <table>
-    {% for song in songs %}
+    {% for id,song in songs.items %}
     <tr>
         <td>
             <iframe src='https://open.spotify.com/embed/track/{{ song }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+        <td>
+            <a class="btn btn-dark" href="{% url 'user:delete_song' playlist.id id %}" role="button">Delete Song</a>
         </td>
     </tr>
     {% endfor %}

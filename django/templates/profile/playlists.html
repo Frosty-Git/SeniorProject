@@ -14,7 +14,7 @@
 </button>
 {% include 'profile/popup_playlist.html' %}
 
-<table style="width:100%; margin-left:500px;">
+<table style="width:100%; margin-left:100px;">
     {% for playlist in playlists %}
     <tr>
         <td>
@@ -28,6 +28,9 @@
         </td>
         <td>
             {{ playlist.date_last_updated }}
+        </td>
+        <td>
+            <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
         </td>
     </tr>
     {% endfor %}

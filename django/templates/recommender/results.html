@@ -60,8 +60,10 @@
                                 </div>
                                 <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
                                 {% include 'social_feed/popup_songpost.html' with track=track %}
+                                {% if playlists %}
                                 <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track }}">Add to Playlist</button>
                                 {% include 'profile/addsong_popup.html' with term=term%}
+                                {% endif %}
                             </td>
             
                         {% endfor %}
