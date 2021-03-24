@@ -258,7 +258,7 @@ def get_playlists(request, user_id):
         'playlistform': playlistform
     }
 
-    return render(request, 'profile/playlists.html', context) 
+    return render(request, 'profile/playlists.html', context)
 
 def get_songs_playlist(request, playlist_id):
     """
@@ -280,7 +280,7 @@ def get_songs_playlist(request, playlist_id):
 def create_playlist_popup(request):
     """
     Creates a playlist
-    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    Last updated: 3/24/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
     """
     if request.method == 'POST':
         playlist_form = PlaylistForm(request.POST, instance=request.user)
@@ -291,8 +291,21 @@ def create_playlist_popup(request):
                 # playlist = playlist_form.save(commit=False)
                 return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
 
-def add_song_to_playlist(request, spotify_id):
+def add_song_to_playlist(request):
     """
     Adds a song to a playlist
-    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    Last updated: 3/24/21 by Jacelynn Duranceau
     """
+    if request.method == 'POST':
+        # user_id = request.user.id
+        # user = UserProfile.objects.get(pk=user_id)
+        track = request.POST.get('track_id')
+        playlist_id = request.POST.get('playlist_id')
+        playlist = Playlist.objects.get(pk=playlist_id)
+        new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=track)
+        new_song.save()
+        return redirect('/')
+        #return redirect('/results/')
+        #return redirect('/user/playlists/' + str(request.user.id))
+    else:
+        return render(request, 'profile/addsong_popup.html')

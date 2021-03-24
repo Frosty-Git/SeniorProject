@@ -6,6 +6,7 @@ from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
 from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features
+from user_profile.models import UserProfile, Playlist
 
 #----Dr Baliga's Code----
 
@@ -79,6 +80,10 @@ def results(request):
             
             features = search_audio_features(term)
 
+            user_id = request.user.id
+
+            playlists = get_user_playlists(user_id)
+
             context = {
                 'term' : term,
                 'tracks1' : track1_ids,
@@ -91,6 +96,7 @@ def results(request):
                 'artists2' : artist2_ids,
                 'artists3' : artist3_ids,
                 'features' : features,
+                'playlists' : playlists,
             }
     return render(request, 'recommender/results.html', context)
 
@@ -111,4 +117,14 @@ def top_tracks(request):
     """
     context = {}
     return render(request, 'recommender/top-tracks.html', context)
+
+def get_user_playlists(user_id):
+    """
+    Gets all playlists for a user. Used here so that a song can be added to
+    the playlists.
+    Last updated: 3/24/21 by Jacelynn Duranceau
+    """
+    you = UserProfile.objects.get(pk=user_id)
+    playlists = Playlist.objects.filter(user_profile_fk=you)
+    return playlists
 
