@@ -6,6 +6,18 @@
 {% block content %}
 
 
+<h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+    {{ playlist.name }}
+</h1>
+<table>
+    {% for song in songs %}
+    <tr>
+        <td>
+            <iframe src='https://open.spotify.com/embed/track/{{ song }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
 
 

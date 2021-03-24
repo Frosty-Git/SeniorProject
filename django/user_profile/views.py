@@ -258,7 +258,11 @@ def get_songs_playlist(request, playlist_id):
     for match in matches:
         for spotify_id in match.values():
             songs.append(spotify_id)
-    return render(request, 'profile/single_playlist', {'songs': songs})
+    context = {
+        'songs': songs,
+        'playlist': playlist
+    }
+    return render(request, 'profile/single_playlist.html', context)
 
 def create_playlist(request):
     """

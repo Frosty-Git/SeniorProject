@@ -61,6 +61,11 @@
                       <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
                     </li>
                   {% endif %}
+                  {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'user:get_playlists' user.id %}">Playlists</a>
+                    </li>
+                  {% endif %}
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Top

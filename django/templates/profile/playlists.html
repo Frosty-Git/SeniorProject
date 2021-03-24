@@ -13,12 +13,13 @@
     {% for playlist in playlists %}
     <tr>
         <td>
-
-
+            <a href="{% url 'user:get_songs_playlist' playlist.id%}">{{ playlist.name }}</a>
+        </td>
+        <td>
+            {{ playlist.date_created }}
         </td>
     </tr>
     {% endfor %}
-
 </table>
 
 
