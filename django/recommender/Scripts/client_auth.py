@@ -16,5 +16,3 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 # playlist = sp.current_user_playlists(limit=1)
 
 # sp.user_playlist_add_tracks(username, playlist_id['id'], tracks=['spotify:track:0EUNw5Uk0xEcYuCAJmZXhL'])
-
-print(search.search_audio_features("Hello Adele"))
