@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} Post {% endblock %}
+{% block title %} Feed {% endblock %}
 
 {% block content %}
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-    <h1>Social Feed</h1>
+    <h1 style="text-align: center;">Social Feed</h1>
 
     <form class='post_form' method='POST' action='/feed/create_post/'>
         {% csrf_token %}

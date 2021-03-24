@@ -28,7 +28,7 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col" style="border-right: 1px gray solid">
+                            <div class="col" style="border-right: 1px gray solid; margin-top: auto; margin-bottom: auto;">
                                 <p style="word-break: break-all;">{{ post.text }}</p>
                                 {% if post.type_post == "SongPost" %}
                                     <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
@@ -50,10 +50,8 @@
                                                 <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
                                                     {% if comment.user_profile_fk.profilepic %}
                                                         <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                                                        <input hidden id="user_profile{{ post.id }}" value="{{ comment.user_profile_fk.profilepic.url }}">
                                                     {% else %}
                                                         <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                                                        <input hidden id="user_profile{{ post.id }}" value="{% static 'images/noprofilepic.jpg' type='image/jpg' %}">
                                                     {% endif %}
                                                 </a>
                                                 <br>
@@ -103,7 +101,7 @@
                     e.preventDefault();
                     var comment_text = $('#comment_text{{ post.id }}').val();
                     if (checkText(comment_text)) {
-                        var pic_url = $('#user_profile{{ post.id }}').val();
+                        var pic_url = $('#user_profile').val();
                         $.ajax({
                             type: 'POST',
                             url: '{% url "feed:popup_post" post.id %}',
@@ -119,12 +117,11 @@
                                     setTimeout(function() {
                                         $('#load{{ post.id }}').hide();
                                         $('.commentbtn{{ post.id }}').show();
-                                        $('.commentbtn{{ post.id }}')
                                         if (previous_comment_count == 0) {
                                             $('#no_comment{{ post.id }}').remove();
                                         }
                                         $('#comment_list{{ post.id }}').append("<li class='post'><a href='{% url 'user:profile' user.id %}'>" + 
-                                                                '<img src=' + pic_url + ' width="40" height="40" class="d-inline-block align-top" alt="...">' +
+                                                                '<img src=' + pic_url + ' width="40" height="40" class="d-inline-block align-top" %}">' +
                                                                 "</a><br>" +
                                                                 '<a href="{% url "user:profile" user.id %}">@{{ user.username }}</a><br>' +
                                                                 comment_text + '<br>' +

@@ -14,10 +14,12 @@
             <div class="text-center" style="padding-top: 20px">
                 <img src="{{ profile.profilepic.url }}" class="img-thumbnail" alt="..." width="200" height="200">
             </div>
+            <input hidden id="user_profile" value="{{ profile.profilepic.url }}">
         {% else %}
             <div class="text-center" style="padding-top: 20px">
                 <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="..." width="200" height="200">
             </div>
+            <input hidden id="user_profile" value="{% static 'images/noprofilepic.jpg' type='image/jpg' %}">
         {% endif %}
     
         <div>

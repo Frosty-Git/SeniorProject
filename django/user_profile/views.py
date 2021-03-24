@@ -126,14 +126,14 @@ def other_profile(request, user_id):
     Last updated: 3/20/21 by Katie Lee
     """
     if request.user != User.objects.get(pk=user_id):
-        user = UserProfile.objects.get(pk=request.user.id)
+        loggedin = UserProfile.objects.get(pk=request.user.id)
         profile = UserProfile.objects.get(pk=user_id)
         follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
         is_following = False if follower is None else True
         posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
         follower_list = profile.users_followed.all()[:5]
-        upvotes = PostUserUpvote.objects.filter(user_from=user).values()
-        downvotes = PostUserDownvote.objects.filter(user_from=user).values()
+        upvotes = PostUserUpvote.objects.filter(user_from=loggedin).values()
+        downvotes = PostUserDownvote.objects.filter(user_from=loggedin).values()
 
         post_list = vote_dictionary(upvotes, downvotes, posts)
 
@@ -142,6 +142,7 @@ def other_profile(request, user_id):
             'post_list': post_list,
             'follower_list': follower_list,
             'is_following': is_following,
+            'loggedin': loggedin,
         }
         return render(request, 'profile/other_profile.html', context)
     else:

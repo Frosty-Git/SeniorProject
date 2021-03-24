@@ -17,6 +17,13 @@
                 <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" class="img-thumbnail" alt="..." width="200" height="200">
             </div>
         {% endif %}
+        {% if user.profilepic %}
+            <input hidden id="user_profile" value="{{ loggedin.profilepic.url }}">
+        {% else %}
+            <input hidden id="user_profile" value="{% static 'images/noprofilepic.jpg' type='image/jpg' %}">
+        {% endif %}
+
+
     
         <div>
             <h2 class="profile_header">
