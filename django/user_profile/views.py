@@ -291,7 +291,7 @@ def create_playlist_popup(request):
                 # playlist = playlist_form.save(commit=False)
                 return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
 
-def add_song_to_playlist(request):
+def add_song_to_playlist(request, query):
     """
     Adds a song to a playlist
     Last updated: 3/24/21 by Jacelynn Duranceau
@@ -305,7 +305,25 @@ def add_song_to_playlist(request):
         new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=track)
         new_song.save()
         return redirect('/')
-        #return redirect('/results/')
+        # return redirect('/results/')
         #return redirect('/user/playlists/' + str(request.user.id))
+        # return render(request, 'recommender/results.html')
     else:
         return render(request, 'profile/addsong_popup.html')
+
+def edit_playlist_popup(request):
+    """
+    Updates a user's playlist
+    Last updated: 3/24/21 by Jacelynn Duranceau
+    """
+    if request.method == 'POST':
+        playlist_id = request.POST.get('playlist_id')
+        playlist = Playlist.objects.get(pk=playlist_id)
+        name = request.POST.get('new_name')
+        if name is not None:
+            playlist.name = name
+            playlist.date_last_updated = timezone.now()
+            playlist.save()
+        return redirect('/user/playlist/' + str(playlist_id))
+    else:
+        return render(request, 'profile/editplaylist_popup.html')

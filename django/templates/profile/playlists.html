@@ -18,10 +18,16 @@
     {% for playlist in playlists %}
     <tr>
         <td>
+            {% if playlist.image %}
+                <img src="{{ playlist.image.url }}" width="80px" height="80px"></img>
+            {% else %}
+            {% endif %}
+        </td>
+        <td>
             <a href="{% url 'user:get_songs_playlist' playlist.id%}">{{ playlist.name }}</a>
         </td>
         <td>
-            {{ playlist.date_created }}
+            {{ playlist.date_last_updated }}
         </td>
     </tr>
     {% endfor %}

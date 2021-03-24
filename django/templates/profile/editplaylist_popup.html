@@ -1,0 +1,27 @@
+
+<!-- Included in Single Playlist -->
+<div class="modal" id="editplaylistmodal{{ playlist.id}}" tabindex="-1" aria-labelledby="myEditPlaylistModalLabel" aria-hidden="true"  style="color:black">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{% url 'user:edit_playlist_popup' %}">
+          {% csrf_token %}
+        
+          <div class="modal-header">
+            <h5 class="modal-title" id="myEditPlaylistModalLabel">Edit Playlist</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        
+          <div class="modal-body">
+            <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
+            <textarea required class="form-control" aria-label="With textarea" id="new_name" name="new_name">{{ playlist.name }}</textarea>
+            <!-- Edit image too -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

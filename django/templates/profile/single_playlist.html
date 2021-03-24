@@ -9,6 +9,13 @@
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
     {{ playlist.name }}
 </h1>
+
+
+<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
+    Edit Playlist
+</button>
+{% include 'profile/editplaylist_popup.html' %}
+
 <table>
     {% for song in songs %}
     <tr>
@@ -19,6 +26,18 @@
     {% endfor %}
 </table>
 
+
+<script>
+    var editPlaylistModal = document.getElementById('editplaylistmodal{{ playlist.id }}');
+    function modalClick() {
+        window.history.pushState({},"", "/profile/editplaylist_popup/" );
+        editPlaylistModal.show();
+    }  
+
+    editPlaylistModal.addEventListener('hidden.bs.modal', function (event) {
+        window.history.replaceState({}, "", "{% url 'user:get_songs_playlist' playlist.id %}")
+    })
+</script>
 
 
 {% endblock %}
