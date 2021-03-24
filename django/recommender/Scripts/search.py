@@ -60,7 +60,7 @@ def search_audio_features(query):
     features = sp.audio_features(tracks=track)
     return features
 
-def search_artist_features(query, feature):
+def search_artist_features(query, feature, high_or_low):
     """
     Enter in an artist name. Returns the audio features of that song.
     Make sure to be very specific with your query to get the correct
@@ -72,26 +72,28 @@ def search_artist_features(query, feature):
     high_song = None
     low_song = None
 
-    artist = search_artists(query, 1, 0)
-    songs = sp.search(q='artist:' + artist, type='track')
-    for song in songs:
-        song_feats = search_audio_features(song)
+    songs = sp.search(q='artist:' + query, type='track')['tracks']['items']
+    num_songs = len(songs)
+    for X in range(num_songs):
+        song_feats = sp.audio_features(songs[X]['id'])
         level = song_feats[0].get(feature)
 
         if current_min is None:
-            current_min = level
+             current_min = level
         if current_max is None:
-            current_max = level
+             current_max = level
         
         if current_min >= level:
-            low_song = song
+            low_song = songs[X]['id']
             current_min = level
         if current_max <= level:
-            high_song = song
+            high_song = songs[X]['id']
             current_max = level
     
-    results = [low_song, high_song]
-    return results
+    if high_or_low is True:
+        return high_song
+    else:
+        return low_song
         
 
         
