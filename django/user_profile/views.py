@@ -246,12 +246,20 @@ def user_list(request):
     return render(request, '/', {'user_list': user_list})
 
 def get_playlists(request, user_id):
+    """
+    Gets all playlists for a user.
+    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliott
+    """
     you = UserProfile.objects.get(pk=user_id)
     playlists = Playlist.objects.filter(user_profile_fk=you)
 
     return render(request, 'profile/playlists.html', {'playlists': playlists}) 
 
 def get_songs_playlist(request, playlist_id):
+    """
+    Gets the songs on a playlist based on the playlist's id
+    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    """
     playlist = Playlist.objects.get(pk=playlist_id)
     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values('spotify_id')
     songs = []
@@ -266,6 +274,8 @@ def get_songs_playlist(request, playlist_id):
 
 def create_playlist(request):
     """
+    Creates a playlist
+    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
     """
     if request.method == 'POST':
         playlist_form = PlaylistForm(request.POST, instance=request.user)
@@ -277,4 +287,6 @@ def create_playlist(request):
 
 def add_song_to_playlist(request, spotify_id):
     """
+    Adds a song to a playlist
+    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
     """
