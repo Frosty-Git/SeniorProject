@@ -91,19 +91,17 @@ def profile(request, user_id):
         downvotes = PostUserDownvote.objects.filter(user_from=profile)
         postform = PostForm()
         post_list = []
-        upvote_list = []
-        downvote_list = []
 
         for post in posts:
             new_post = cast_subclass(post)
             post_list.append(new_post)
-        # for up in upvotes:
-        #     for post in posts:
-        #         upvote_list.append(True if up.post_to == post else False)
-        # for down in downvotes:
-        #     downvote_list.append(True if down.post_to == post else False)
 
-        zip_list = zip(post_list, upvote_list, downvote_list)
+        # dict_list = {
+        #     'post_list': post_list, 
+        #     'upvotes': upvotes,
+        #     'downvotes': downvotes
+        # }
+
         context = {
             'postform': postform,
             'profile': profile,
@@ -111,7 +109,7 @@ def profile(request, user_id):
             'post_list': post_list,
             'upvote_list': upvote_list,
             'downvote_list': downvote_list
-            # 'zip_list': zip_list
+            # 'dict_list': dict_list
         }
         return render(request, 'profile/my_profile.html', context)
     else:
