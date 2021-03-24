@@ -21,19 +21,10 @@ def display_posts(request):
     all_post_list = Post.objects.order_by('-date_last_updated')
     you = UserProfile.objects.get(pk=request.user.id)
     following = you.users_followed.all()
-    post_list = []
-    upvote_posts = PostUserUpvote.objects.filter(user_from=you)
-    downvote_posts = PostUserDownvote.objects.filter(user_from=you)
+    upvotes = PostUserUpvote.objects.filter(user_from=you).values()
+    downvotes = PostUserDownvote.objects.filter(user_from=you).values()
 
-    for post in all_post_list:
-        if post.user_profile_fk == you:
-            new_post = cast_subclass(post)
-            post_list.append(new_post) 
-        for user in following:
-            if post.user_profile_fk == user:
-                new_post = cast_subclass(post)
-                post_list.append(new_post)
-
+    post_list = feed_vote_dictionary(upvotes, downvotes, all_post_list, you, following)
     comment_list = Comment.objects.order_by('date_last_updated')
     postform = PostForm()
 
@@ -41,10 +32,40 @@ def display_posts(request):
         'post_list': post_list,
         'comment_list': comment_list,
         'postform': postform,
-        'upvote_posts': upvote_posts,
-        'downvote_posts': downvote_posts
     }  
     return render(request, 'social_feed/feed.html', context)
+
+def feed_vote_dictionary(upvotes, downvotes, posts, you, following):
+    """
+    """
+    post_list = {}
+    for post in posts:
+        new_post = cast_subclass(post)
+        if post.user_profile_fk == you:
+            up = False
+            down = False
+            for upvote in upvotes:
+                if upvote.get('post_to_id') == post.id:
+                    up = True
+            
+            for downvote in downvotes:
+                if downvote.get('post_to_id') == post.id:
+                    down = True
+            post_list[new_post] = [up, down]
+
+        for user in following:
+            if post.user_profile_fk == user:
+                up = False
+                down = False
+                for upvote in upvotes:
+                    if upvote.get('post_to_id') == post.id:
+                        up = True
+                
+                for downvote in downvotes:
+                    if downvote.get('post_to_id') == post.id:
+                        down = True
+                post_list[new_post] = [up, down]
+    return post_list
 
 
 def cast_subclass(post):
@@ -211,7 +232,7 @@ def popup_post(request, post_id):
     if request.method == 'POST':
         text = request.POST.get('comment_text')
         if text is not None:
-            comment = Comment(text=text, post_fk = post, user_profile_fk=user)
+            comment = Comment(text=text, post_fk=post, user_profile_fk=user)
             comment.save()
             return JsonResponse({'status': 'ok'})
         return JsonResponse({'status': 'ko'})

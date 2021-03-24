@@ -50,10 +50,10 @@
                                                 <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
                                                     {% if comment.user_profile_fk.profilepic %}
                                                         <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                                                        <input hidden id="user_profile" value="{{ comment.user_profile_fk.profilepic.url }}">
+                                                        <input hidden id="user_profile{{ post.id }}" value="{{ comment.user_profile_fk.profilepic.url }}">
                                                     {% else %}
                                                         <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                                                        <input hidden id="user_profile" value="{% static 'images/noprofilepic.jpg' type='image/jpg' %}">
+                                                        <input hidden id="user_profile{{ post.id }}" value="{% static 'images/noprofilepic.jpg' type='image/jpg' %}">
                                                     {% endif %}
                                                 </a>
                                                 <br>
@@ -78,7 +78,7 @@
                                         </li>
                                         <br>
                                     {% empty %}
-                                        <li class="post" id="no_comment">There are no comments.</li>
+                                        <li class="post" id="no_comment{{ post.id }}">There are no comments.</li>
                                     {% endfor %}
                                 </ul>
                             </div>
@@ -90,7 +90,7 @@
                     <textarea id="comment_text{{ post.id }}" class="form-control" aria-label="With textarea" name="comment_text"></textarea>
                     <button id="close" type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="commentbtn{{ post.id }} btn btn-primary" style="display: block">Comment</button>
-                    <button id="load" class="btn btn-primary" type="button" disabled style="display: none">
+                    <button id="load{{ post.id }}" class="btn btn-primary" type="button" disabled style="display: none">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         <span class="visually-hidden">Loading...</span>
                     </button>
@@ -98,12 +98,12 @@
               </div>
               <script>
                 $('.commentbtn{{ post.id }}').click(function(e) {
-                    $('#load').show();
+                    $('#load{{ post.id }}').show();
                     $('.commentbtn{{ post.id }}').hide();
                     e.preventDefault();
                     var comment_text = $('#comment_text{{ post.id }}').val();
                     if (checkText(comment_text)) {
-                        var pic_url = $('#user_profile').val();
+                        var pic_url = $('#user_profile{{ post.id }}').val();
                         $.ajax({
                             type: 'POST',
                             url: '{% url "feed:popup_post" post.id %}',
@@ -117,11 +117,11 @@
                                     var previous_comment_count = parseInt($('#comment_count{{ post.id }}').text());
                                     $('#comment_text{{ post.id }}').val("");
                                     setTimeout(function() {
-                                        $('#load').hide();
+                                        $('#load{{ post.id }}').hide();
                                         $('.commentbtn{{ post.id }}').show();
                                         $('.commentbtn{{ post.id }}')
                                         if (previous_comment_count == 0) {
-                                            $('#no_comment').remove();
+                                            $('#no_comment{{ post.id }}').remove();
                                         }
                                         $('#comment_list{{ post.id }}').append("<li class='post'><a href='{% url 'user:profile' user.id %}'>" + 
                                                                 '<img src=' + pic_url + ' width="40" height="40" class="d-inline-block align-top" alt="...">' +
@@ -132,6 +132,7 @@
                                         $('#comment_count{{ post.id }}').text(previous_comment_count + 1);
                                     }, 2000);
                                 }
+
                             },
                             error: function(xhr, errmsg, err) {}
                         })
