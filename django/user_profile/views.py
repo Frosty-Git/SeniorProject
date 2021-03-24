@@ -252,8 +252,13 @@ def get_playlists(request, user_id):
     """
     you = UserProfile.objects.get(pk=user_id)
     playlists = Playlist.objects.filter(user_profile_fk=you)
+    playlistform = PlaylistForm()
+    context = {
+        'playlists': playlists,
+        'playlistform': playlistform
+    }
 
-    return render(request, 'profile/playlists.html', {'playlists': playlists}) 
+    return render(request, 'profile/playlists.html', context) 
 
 def get_songs_playlist(request, playlist_id):
     """
@@ -272,7 +277,7 @@ def get_songs_playlist(request, playlist_id):
     }
     return render(request, 'profile/single_playlist.html', context)
 
-def create_playlist(request):
+def create_playlist_popup(request):
     """
     Creates a playlist
     Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
@@ -282,8 +287,9 @@ def create_playlist(request):
         if playlist_form.is_valid():
                 you = UserProfile.objects.get(pk=request.user.id)
                 playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), image=playlist_form.cleaned_data.get('image'))
+                playlist.save()
                 # playlist = playlist_form.save(commit=False)
-                return redirect('/')    #redirect to the playlist
+                return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
 
 def add_song_to_playlist(request, spotify_id):
     """

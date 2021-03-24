@@ -20,6 +20,7 @@ urlpatterns = [
     path('userprofile/<user_id>', views.other_profile, name='other_profile'),
     path('playlists/<user_id>', views.get_playlists, name='get_playlists'),
     path('playlist/<playlist_id>', views.get_songs_playlist, name='get_songs_playlist'),
+    path('createplaylist/', views.create_playlist_popup, name='create_playlist_popup'),
     #path('playlist/<playlist_id>', views.create_playlist, name='create_playlist'),
     # path('num_followers/<user_id>', views.num_followers, name='num_followers')
 

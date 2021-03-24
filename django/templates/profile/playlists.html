@@ -9,7 +9,12 @@
     Playlists
 </h1>
 
-<table>
+<button type="button" class="btn btn-dark" onclick="modalClick()" data-bs-toggle="modal" data-bs-target="#createplaylistmodal">
+    Create Playlist
+</button>
+{% include 'profile/popup_playlist.html' %}
+
+<table style="width:100%; margin-left:500px;">
     {% for playlist in playlists %}
     <tr>
         <td>
@@ -21,6 +26,18 @@
     </tr>
     {% endfor %}
 </table>
+
+<script>
+    var playlistModal = document.getElementById('createplaylistmodal');
+    function modalClick(id) {
+        window.history.pushState({},"", "/profile/popup_playlist/" + id );
+        playlistModal.show();
+    }  
+
+    playlistModal.addEventListener('hidden.bs.modal', function (event) {
+        window.history.replaceState({}, "", "{% url 'user:get_playlists' user.id %}")
+    })
+</script>
 
 
 
