@@ -80,7 +80,8 @@
                                 <div class='embed-container'>
                                     <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                                 </div>
-                                <button type="button" class="btn btn-secondary">Share</button>
+                                <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
+                                {% include 'social_feed/popup_songpost.html' with track=track %}
                             </td>
             
                         {% endfor %}
@@ -100,7 +101,8 @@
                                 <div class='embed-container'>
                                     <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                                 </div>
-                                <button type="button" class="btn btn-secondary">Share</button>
+                                <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
+                                {% include 'social_feed/popup_songpost.html' with track=track %}
                             </td>
                         {% endfor %}
                         </tr>
