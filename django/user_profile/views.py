@@ -270,6 +270,8 @@ def get_songs_playlist(request, playlist_id):
     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
     songs = {}
     for match in matches:
+        # sop_id is the id for the primary key of the row into the SongOnPlaylist
+        # table that the matching songs to playlists come from
         sop_id = match.get('id')
         song_id = match.get('spotify_id')
         songs[sop_id] = song_id
@@ -333,6 +335,8 @@ def edit_playlist_popup(request):
 
 def delete_playlist(request, playlist_id):
     """
+    Deletes a user's playlist.
+    Last updated: 3/24/21 by Jacelynn Duranceau
     """
     playlist = Playlist.objects.get(pk=playlist_id)
     playlist.delete()
@@ -340,7 +344,12 @@ def delete_playlist(request, playlist_id):
 
 def delete_song(request, playlist_id, sop_pk):
     """
+    Deletes a song on a user's playlist. Takes into account duplicates, so it
+    will not delete every instance of the song you're deleting.
+    Last updated: 3/24/21 by Jacelynn Duranceau
     """
+    # sop_pk is the primary key into the row of the SongOnPlaylist object that
+    # the match comes from
     song = SongOnPlaylist.objects.get(pk=sop_pk)
     song.delete()
     return redirect('/user/playlist/' + str(playlist_id))
