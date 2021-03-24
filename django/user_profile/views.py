@@ -243,7 +243,22 @@ def user_list(request):
     TEMPORARY just to see what users are in the system 
     """
     user_list = UserProfile.objects.exclude(pk=request.user.id)
-    return render(request, 'profile/user_list.html', {'user_list': user_list})
+    return render(request, '/', {'user_list': user_list})
+
+def get_playlists(request, user_id):
+    you = UserProfile.objects.get(pk=user_id)
+    playlists = Playlist.objects.filter(user_profile_fk=you)
+
+    return render(request, 'profile/playlists.html', {'playlists': playlists}) 
+
+def get_songs_playlist(request, playlist_id):
+    playlist = Playlist.objects.get(pk=playlist_id)
+    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values('spotify_id')
+    songs = []
+    for match in matches:
+        for spotify_id in match.values():
+            songs.append(spotify_id)
+    return render(request, 'profile/single_playlist', {'songs': songs})
 
 def create_playlist(request):
     """
@@ -252,7 +267,9 @@ def create_playlist(request):
         playlist_form = PlaylistForm(request.POST, instance=request.user)
         if playlist_form.is_valid():
                 you = UserProfile.objects.get(pk=request.user.id)
-                playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'))
+                playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), image=playlist_form.cleaned_data.get('image'))
+                # playlist = playlist_form.save(commit=False)
+                return redirect('/')    #redirect to the playlist
 
 def add_song_to_playlist(request, spotify_id):
     """

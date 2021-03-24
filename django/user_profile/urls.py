@@ -18,6 +18,8 @@ urlpatterns = [
     path('update_profile/', views.update_profile, name='update_profile'),
     path('user_list/', views.user_list, name='user_list'),
     path('userprofile/<user_id>', views.other_profile, name='other_profile'),
+    path('playlists/<user_id>', views.get_playlist, name='get_playlist'),
+    path('playlists/<playlist_id>', views.create_playlist, name='create_playlist'),
     # path('num_followers/<user_id>', views.num_followers, name='num_followers')
 
     # Password related URLs
