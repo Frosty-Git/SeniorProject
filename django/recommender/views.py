@@ -135,6 +135,14 @@ def get_user_playlists(user_id):
 
 def search_users(term):
     """
+    Used to search for a user based on the term entered in the main search page.
+    This function is called by the results function above so that it can be 
+    passed into the context and returned for display in HTML. 
+    It uses a very basic regex that will match the term with any username that
+    contains the string of characters in it. If I search 'ace' then users by the
+    name of 'jacelynn', 'ace', 'racecar', 'aceofspades', etc. will be returned,
+    too.
+    Last updated: 3/25/21 by Jacelynn Duranceau
     """
     regex = '.*'+term+'.*'
     users = User.objects.filter(username__regex=regex)[:15]
