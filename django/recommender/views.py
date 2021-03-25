@@ -82,9 +82,11 @@ def results(request):
             
             features = search_audio_features(term)
 
-            user_id = request.user.id
+            playlists = []
+            if request.user.id is not None:
+                user_id = request.user.id
 
-            playlists = get_user_playlists(user_id)
+                playlists = get_user_playlists(user_id)
 
             users = search_users(term)
 
