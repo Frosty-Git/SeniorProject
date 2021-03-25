@@ -325,8 +325,10 @@ def edit_playlist_popup(request):
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
         name = request.POST.get('new_name')
+        img = request.POST.get('img')
         if name is not None:
             playlist.name = name
+            playlist.image = img
             playlist.date_last_updated = timezone.now()
             playlist.save()
         return redirect('/user/playlist/' + str(playlist_id))

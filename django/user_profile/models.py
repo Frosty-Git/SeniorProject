@@ -94,6 +94,9 @@ class Playlist(models.Model):
     # num_songs = # Derived
     # num_followers = # Derived
     objects = models.Manager()
+    class Meta:
+        ordering = ('-date_last_updated',)
+
     def __str__(self):
         return self.name
 

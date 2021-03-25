@@ -7,6 +7,9 @@
 
 
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+    {% if playlist.image %}
+        <img src="{{ playlist.image.url }}" width="50px" height="50px"></img>
+    {% endif %}
     {{ playlist.name }}
 </h1>
 

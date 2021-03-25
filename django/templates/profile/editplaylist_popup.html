@@ -3,7 +3,7 @@
 <div class="modal" id="editplaylistmodal{{ playlist.id}}" tabindex="-1" aria-labelledby="myEditPlaylistModalLabel" aria-hidden="true"  style="color:black">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form method="post" action="{% url 'user:edit_playlist_popup' %}">
+      <form method="post" action="{% url 'user:edit_playlist_popup' %}" enctype="multipart/form-data">
           {% csrf_token %}
         
           <div class="modal-header">
@@ -13,7 +13,11 @@
         
           <div class="modal-body">
             <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
-            <textarea required class="form-control" aria-label="With textarea" id="new_name" name="new_name">{{ playlist.name }}</textarea>
+            Playlist Name:
+            <input type="text" required class="form-control" aria-label="With textarea" id="new_name" name="new_name" value="{{ playlist.name }}">
+            Playlist Image:
+            <br>
+            <input type="file" id="img" name="img" accept="image/*">
             <!-- Edit image too -->
           </div>
           <div class="modal-footer">

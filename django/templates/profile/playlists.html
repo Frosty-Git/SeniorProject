@@ -14,13 +14,19 @@
 </button>
 {% include 'profile/popup_playlist.html' %}
 
-<table style="width:100%; margin-left:100px;">
+<table style="width:100%; margin-left:50px; padding-left: 0px; padding-right: 0px; padding-top: 0px; padding-bottom: 0px;">
+    <tr>        
+        <th></th>
+        <th>Title</th>
+        <th>Date Last Updated</th>
+    </tr>
     {% for playlist in playlists %}
     <tr>
         <td>
             {% if playlist.image %}
-                <img src="{{ playlist.image.url }}" width="80px" height="80px"></img>
+                <img src="{{ playlist.image.url }}" width="50px" height="50px"></img>
             {% else %}
+                nothing
             {% endif %}
         </td>
         <td>
@@ -32,8 +38,8 @@
         <td>
             <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
         </td>
-    </tr>
     {% endfor %}
+</tr>
 </table>
 
 <script>
