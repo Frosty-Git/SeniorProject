@@ -64,11 +64,37 @@
 <button type="button"  id = "submit" class="btn btn-success" >Submit</button>
 </form>
 {% if artist_id %}
-<table class="table">
-  <tbody>
-  <tr>
-<iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="380" 
-frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+<div id="artistCarousel" class="carousel slide" data-bs-interval="false">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <div class="table">
+          <table class="table">
+              <tbody>
+                  <tr>
+                  {% for artist in artists_id %}
+      
+                      <td>
+                          <div class='embed-container'>
+                              <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                          </div>
+                      </td>
+      
+                  {% endfor %}
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#artistCarousel"  data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#artistCarousel"  data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
 {% endif %}
 </div>
 
