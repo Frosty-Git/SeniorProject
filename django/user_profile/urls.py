@@ -25,8 +25,10 @@ urlpatterns = [
     path('editplaylist/', views.edit_playlist_popup, name='edit_playlist_popup'),
     path('deleteplaylist/<playlist_id>', views.delete_playlist, name='delete_playlist'),
     path('deletesong/<playlist_id>/<sop_pk>', views.delete_song, name='delete_song'),
+    path('',,),
     #path('playlist/<playlist_id>', views.create_playlist, name='create_playlist'),
     # path('num_followers/<user_id>', views.num_followers, name='num_followers')
+    
 
     # Password related URLs
     path('account_setting/', auth_views.PasswordChangeView.as_view(
