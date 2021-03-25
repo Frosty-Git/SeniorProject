@@ -43,7 +43,7 @@
     <p>Features: {{ features }}</p>
     
 {% if tracks1 and tracks2 and tracks3 %}
-      
+<h3>Tracks</h3>
     <div id="trackCarousel" class="carousel slide" data-bs-interval="false">
         <div class="carousel-inner">
           <div class="carousel-item active" data-bs-interval="false">
@@ -124,7 +124,9 @@
 
 {% endif %}
 
+
 {% if albums1 %}
+<h3>Albums</h3>
 <div id="albumCarousel" class="carousel slide" data-bs-interval="false">
     <div class="carousel-inner">
       <div class="carousel-item active" data-bs-interval="false">
@@ -200,6 +202,7 @@
 {% endif %}
 
 {% if artists1 %}
+<h3>Artists</h3>
 <div id="artistCarousel" class="carousel slide" data-bs-interval="false">
     <div class="carousel-inner">
       <div class="carousel-item active">
@@ -272,4 +275,41 @@
     
 
 {% endif %}
+
+{% if users %}
+<h3>Users</h3>
+<table class="center" style="width:50%">
+    <tr style="text-align: center;">
+        <th></th>
+        <th>Username</th>
+        <th>Num Followers</th>
+        <th>Num Following</th>
+    </tr>
+  {% for userprofile in users%}
+        <tr style="text-align: center;">
+            {% if userprofile.image%}
+            <td>
+                <a href="{% url 'user:other_profile' userprofile.user.id %}">
+                    <img src="{{ userprofile.profilepic.url }}" width="80" height="80" class="d-inline-block align-top">
+                </a>
+            </td>
+            {% else %}
+            <td>
+                <a href="{% url 'user:other_profile' userprofile.user.id %}">
+                    <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="80" height="80" class="d-inline-block align-top" alt="...">
+                </a>
+            </td>
+            {% endif%}
+            <td>
+                <a href="{% url 'user:other_profile' userprofile.user.id %}">
+                    {{ userprofile.user.username }}
+                </a>
+            </td>
+            <td>{{ userprofile.num_followers }} followers</td>
+            <td>{{ userprofile.num_following }} following</td>
+        </tr>
+    </table>
+  {% endfor %}
+{% endif %}
+
 {% endblock %}

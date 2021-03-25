@@ -6,7 +6,9 @@ from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
 from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features
-from user_profile.models import UserProfile, Playlist
+from django.contrib.auth.models import User
+from user_profile.models import *
+import re
 
 #----Dr Baliga's Code----
 
@@ -84,6 +86,8 @@ def results(request):
 
             playlists = get_user_playlists(user_id)
 
+            users = search_users(term)
+
             context = {
                 'term' : term,
                 'tracks1' : track1_ids,
@@ -97,6 +101,7 @@ def results(request):
                 'artists3' : artist3_ids,
                 'features' : features,
                 'playlists' : playlists,
+                'users' : users,
             }
     return render(request, 'recommender/results.html', context)
 
@@ -128,3 +133,12 @@ def get_user_playlists(user_id):
     playlists = Playlist.objects.filter(user_profile_fk=you)
     return playlists
 
+def search_users(term):
+    """
+    """
+    regex = '.*'+term+'.*'
+    users = User.objects.filter(username__regex=regex)[:15]
+    user_profiles = []
+    for user in users:
+        user_profiles.append(UserProfile.objects.get(user=user.id))
+    return user_profiles
