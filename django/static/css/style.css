@@ -7,6 +7,23 @@ body {
     list-style-type: none;
 }
 
+/* Styling for spotify widget to avoid extra space at bottom */
+.wp-block-embed-spotify {
+	max-height: 80px;
+	overflow: auto;
+}
+
+/* Used to center items on page */
+.center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+.centered-column {
+    text-align: center;
+    white-space: nowrap;
+}
+
 /* Begin changing default Bootstrap CSS */
 .btn.btn-outline-dark {
     color: white;

@@ -9,33 +9,33 @@
     Playlists
 </h1>
 
-<button type="button" class="btn btn-dark" onclick="modalClick()" data-bs-toggle="modal" data-bs-target="#createplaylistmodal">
-    Create Playlist
-</button>
-{% include 'profile/popup_playlist.html' %}
+<div class="center" style="width:150px; text-align:center;">
+    <button type="button" class="btn btn-dark" onclick="modalClick()" data-bs-toggle="modal" data-bs-target="#createplaylistmodal">
+        Create Playlist
+    </button>
+    {% include 'profile/popup_playlist.html' %}
+</div>
 
-<table style="width:100%; margin-left:50px; padding-left: 0px; padding-right: 0px; padding-top: 0px; padding-bottom: 0px;">
+<table class="center" style="width:60%;">
     <tr>        
         <th></th>
-        <th>Title</th>
-        <th>Date Last Updated</th>
+        <th style="text-align: center;">Title</th>
+        <th style="text-align: center;">Date Last Updated</th>
     </tr>
     {% for playlist in playlists %}
-    <tr>
-        <td>
+    <tr style="border-bottom: 1px solid black;">
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
             {% if playlist.image %}
                 <img src="{{ playlist.image.url }}" width="50px" height="50px"></img>
             {% else %}
                 nothing
             {% endif %}
         </td>
-        <td>
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
             <a href="{% url 'user:get_songs_playlist' playlist.id%}">{{ playlist.name }}</a>
         </td>
-        <td>
-            {{ playlist.date_last_updated }}
-        </td>
-        <td>
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">{{ playlist.date_last_updated }}</td>
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
             <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
         </td>
     {% endfor %}
@@ -53,7 +53,4 @@
         window.history.replaceState({}, "", "{% url 'user:get_playlists' user.id %}")
     })
 </script>
-
-
-
 {% endblock %}

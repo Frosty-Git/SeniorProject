@@ -10,22 +10,23 @@
     {% if playlist.image %}
         <img src="{{ playlist.image.url }}" width="50px" height="50px"></img>
     {% endif %}
-    {{ playlist.name }}
+    Playlist: {{ playlist.name }}
 </h1>
 
+<div class="center" style="width:150px; text-align:center;">
+    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
+        Edit Playlist
+    </button>
+    {% include 'profile/editplaylist_popup.html' %}
+</div>
 
-<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
-    Edit Playlist
-</button>
-{% include 'profile/editplaylist_popup.html' %}
-
-<table>
+<table class="center" style="width:40%;">
     {% for id,song in songs.items %}
-    <tr>
-        <td>
-            <iframe src='https://open.spotify.com/embed/track/{{ song }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+    <tr style="border-bottom: 1px solid black;">
+        <td class="centered-column" style="width:400px; padding-top:8px; padding-bottom: 8px;">
+            <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
         </td>
-        <td>
+        <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
             <a class="btn btn-dark" href="{% url 'user:delete_song' playlist.id id %}" role="button">Delete Song</a>
         </td>
     </tr>
