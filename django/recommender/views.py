@@ -217,5 +217,6 @@ def searchSong_get(request):
 @require_GET
 def get_artist_from_passed_value(request):
     artist = (request.GET['answer'])
-    Form = ArtistForm(artist)
-    return render(request, 'Survey/survey.html', {'form':form})
+    artist_id = search_artists(artist , 3, 0)
+    form = ArtistForm()
+    return render(request, 'Survey/survey.html', {'form':form, 'artist_id':artist_id})
