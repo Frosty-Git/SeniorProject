@@ -359,7 +359,6 @@ def delete_song(request, playlist_id, sop_pk):
     song.delete()
     return redirect('/user/playlist/' + str(playlist_id))
 
-
 def link_spotify(request):
     client_cred.setup()
     scope = ('user-read-recently-played user-top-read user-read-playback-position '
