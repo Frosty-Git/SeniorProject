@@ -213,3 +213,9 @@ def searchSong_post(request):
 def searchSong_get(request):
     form = SongForm()
     return render(request, 'recommender/song.html', {'form': form})
+    
+@require_GET
+def get_artist_from_passed_value(request):
+    artist = (request.GET['answer'])
+    Form = SongForm(artist)
+    return render(request, 'Survey/survey.html', {'form':form})

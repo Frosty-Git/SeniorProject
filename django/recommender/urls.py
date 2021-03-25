@@ -15,4 +15,5 @@ urlpatterns = [
     path('artistp/', views.searchArtist_post, name='artistp'),
     path('song/', views.searchSong_get, name='song'),
     path('songp/', views.searchSong_post, name='songp'),
+    path('get_artist/' , views.get_artist_from_passed_value, name ='get_artist')
 ]

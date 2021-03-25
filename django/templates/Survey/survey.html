@@ -36,7 +36,9 @@
 </label>
 <script type ="text/javascript" src="{% static 'js/question.js' %}">
 </script>
-<script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous">
  $(document).ready(function() {
    $("#submit").click(function(){
       let value = document.querySelector('input[name="Form1"]:checked').value;
@@ -46,15 +48,24 @@
  })
  $(document).ready(function() {
    $("#multiple_choice_form").click(function(){
-      console.log(quiz.get_currently_selected_answer());
-      
+      answer = quiz.get_currently_selected_answer();
+      console.log(answer);
+      $.ajax({
+        type : "GET",
+        url: "get_artist/",
+        data: {'answer': answer}
+      });
+        
+      })
    })
- })
+ 
 </script>
   </div>
 </div>
 <button type="button"  id = "submit" class="btn btn-success" >Submit</button>
 </form>
+<iframe src="https://open.spotify.com/embed/track/{{ track.id }}" width="300" height="380" 
+frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 </div>
 
 {% endblock %}
