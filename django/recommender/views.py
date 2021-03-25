@@ -9,7 +9,9 @@ from recommender.Scripts.search import search_albums, search_artists, search_tra
 from django.contrib.auth.models import User
 from user_profile.models import *
 import re
-
+from django.conf import settings
+from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.db import SessionStore
 #----Dr Baliga's Code----
 
 def find_albums(artist, from_year = None, to_year = None):
