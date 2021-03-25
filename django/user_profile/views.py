@@ -14,6 +14,7 @@ from datetime import datetime
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import recommender.Scripts.client_credentials as client_cred
+from recommender.Scripts.spotify_token import *
 
 # Create your views here.
 
@@ -366,5 +367,8 @@ def link_spotify(request):
         'playlist-read-collaborative user-library-modify user-library-read')
     spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
     authenticator = spotipy.oauth2.SpotifyOAuth(scope=scope)
-    
-    
+    spotify.me()
+    # This probably needs to go elsewhere. This will not save the token
+    # if it is right here.
+    #save_token(request, authenticator)
+    return redirect('/user/profile/' + str(request.user.id))    
