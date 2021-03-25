@@ -142,7 +142,7 @@ def search_users(term):
     contains the string of characters in it. If I search 'ace' then users by the
     name of 'jacelynn', 'ace', 'racecar', 'aceofspades', etc. will be returned,
     too.
-    Last updated: 3/25/21 by Jacelynn Duranceau
+    Last updated: 3/24/21 by Jacelynn Duranceau
     """
     regex = '.*'+term+'.*'
     users = User.objects.filter(username__regex=regex)[:15]
