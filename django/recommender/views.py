@@ -84,11 +84,12 @@ def results(request):
             
             features = search_audio_features(term)
 
+            playlists = []
             user_id = request.user.id
+            if user_id is not None:
+                playlists = get_user_playlists(user_id)
 
-            playlists = get_user_playlists(user_id)
-
-            users = search_users(term)
+            users = search_users(term, user_id)
 
             context = {
                 'term' : term,
@@ -135,7 +136,7 @@ def get_user_playlists(user_id):
     playlists = Playlist.objects.filter(user_profile_fk=you)
     return playlists
 
-def search_users(term):
+def search_users(term, requesting_user):
     """
     Used to search for a user based on the term entered in the main search page.
     This function is called by the results function above so that it can be 
@@ -150,5 +151,7 @@ def search_users(term):
     users = User.objects.filter(username__regex=regex)[:15]
     user_profiles = []
     for user in users:
-        user_profiles.append(UserProfile.objects.get(user=user.id))
+        # Makes it so that you don't show up in the search results
+        if user.id != requesting_user:
+            user_profiles.append(UserProfile.objects.get(user=user.id))
     return user_profiles
