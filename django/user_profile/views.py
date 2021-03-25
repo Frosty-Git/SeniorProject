@@ -288,13 +288,13 @@ def create_playlist_popup(request):
     Last updated: 3/24/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
     """
     if request.method == 'POST':
-        playlist_form = PlaylistForm(request.POST, instance=request.user)
+        playlist_form = PlaylistForm(request.POST, request.FILES)
         if playlist_form.is_valid():
-                you = UserProfile.objects.get(pk=request.user.id)
-                playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), image=playlist_form.cleaned_data.get('image'))
-                playlist.save()
-                # playlist = playlist_form.save(commit=False)
-                return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
+            you = UserProfile.objects.get(pk=request.user.id)
+            playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), image=playlist_form.cleaned_data.get('image'))
+            playlist.save()
+            # playlist = playlist_form.save(commit=False)
+            return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
 
 def add_song_to_playlist(request, query):
     """
@@ -325,7 +325,7 @@ def edit_playlist_popup(request):
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
         name = request.POST.get('new_name')
-        img = request.POST.get('img')
+        img = request.FILES.get('img')
         if name is not None:
             playlist.name = name
             playlist.image = img

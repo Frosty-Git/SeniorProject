@@ -84,11 +84,11 @@ class Playlist(models.Model):
     """
     user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, default=None) # Who created the playlist
     name = models.CharField(max_length=30)
-    image = models.ImageField(upload_to='images/', null=True) # Pillow
+    image = models.ImageField(upload_to='images/', null=True, verbose_name="", blank=True) # Pillow
     upvotes = models.IntegerField(default=0) 
     date_created = models.DateTimeField(auto_now_add=True)
     date_last_updated = models.DateTimeField(auto_now_add=True)
-    theme = models.TextField()  # Genres
+    theme = models.TextField(null=True, blank=True)  # Genres
     # this_weeks_upvotes = models.IntegerField()
     # length = # Derived
     # num_songs = # Derived
