@@ -11,6 +11,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import json
 from datetime import datetime
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
+import recommender.Scripts.client_credentials as client_cred
 
 # Create your views here.
 
@@ -355,3 +358,14 @@ def delete_song(request, playlist_id, sop_pk):
     song = SongOnPlaylist.objects.get(pk=sop_pk)
     song.delete()
     return redirect('/user/playlist/' + str(playlist_id))
+
+
+def link_spotify(request):
+    client_cred.setup()
+    scope = ('user-read-recently-played user-top-read user-read-playback-position '
+        'playlist-modify-public playlist-modify-private playlist-read-private '
+        'playlist-read-collaborative user-library-modify user-library-read')
+    spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+    authenticator = spotipy.oauth2.SpotifyOAuth(scope=scope)
+    
+    
