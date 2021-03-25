@@ -147,17 +147,17 @@ def searchArtist_post(request):
             id = cd['artist_name']
 
             # Get their songs with the highest/lowest Acousticness
-            highAcous = search_artist_features(id, 'acousticness')[1]
-            lowAcous = search_artist_features(id, 'acousticness')[0]
+            highAcous = search_artist_features(id, 'acousticness', True)
+            lowAcous = search_artist_features(id, 'acousticness', False)
             # Get their songs with the highest/lowest Variance
-            highVal = search_artist_features(id, 'valence')[1]
-            lowVal = search_artist_features(id, 'valence')[0]
+            highVal = search_artist_features(id, 'valence', True)
+            lowVal = search_artist_features(id, 'valence', False)
             # Get their songs with the highest/lowest Danceability
-            highDance = search_artist_features(id, 'danceability')[1]
-            lowDance = search_artist_features(id, 'danceability')[0]
-            # Get their songs with the highest/lowest Liveness
-            highLive = search_artist_features(id, 'liveness')[1]
-            lowLive = search_artist_features(id, 'liveness')[0]
+            highDance = search_artist_features(id, 'danceability', True)
+            lowDance = search_artist_features(id, 'danceability', False)
+            # Get their songs with the highest/lowest Energy
+            highLive = search_artist_features(id, 'energy', True)
+            lowLive = search_artist_features(id, 'energy', False)
             form = ArtistForm()
 
             highTracks = list([highAcous, highVal, highDance, highLive]) 
