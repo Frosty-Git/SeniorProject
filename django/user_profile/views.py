@@ -293,22 +293,44 @@ def user_list(request):
 
 def get_playlists(request, user_id):
     """
-    Gets all playlists for a user.
+    Gets all playlists for yourself.
     Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliott
     """
-    you = UserProfile.objects.get(pk=user_id)
-    playlists = Playlist.objects.filter(user_profile_fk=you)
-    playlistform = PlaylistForm()
-    context = {
-        'playlists': playlists,
-        'playlistform': playlistform
-    }
+    if request.user == User.objects.get(pk=user_id):
+        you = UserProfile.objects.get(pk=user_id)
+        playlists = Playlist.objects.filter(user_profile_fk=you)
+        playlistform = PlaylistForm()
+        context = {
+            'playlists': playlists,
+            'playlistform': playlistform
+        }
+        return render(request, 'profile/playlists.html', context)
+    else:
+        return redirect('/user/otherplaylists/' + str(user_id))
 
-    return render(request, 'profile/playlists.html', context)
+def other_playlists(request, user_id):
+    """
+    Gets all playlists for a user.
+    Last updated: 3/23/27 by Jacelynn Duranceau
+    """
+    if request.user != User.objects.get(pk=user_id):
+        user = UserProfile.objects.get(pk=user_id)
+        all_playlists = Playlist.objects.filter(user_profile_fk=user)
+        playlists = []
+        for playlist in all_playlists:
+            if playlist.is_private is False:
+                playlists.append(playlist)
+        # context = {
+        #     'playlists': playlists,
+        #     'user': user,
+        # }
+        return render(request, 'profile/other_playlists.html', {'playlists': playlists})
+    else:
+        return redirect('/user/playlists/' + str(user_id))
 
 def get_songs_playlist(request, playlist_id):
     """
-    Gets the songs on a playlist based on the playlist's id
+    Gets the songs on your playlist based on the playlist's id
     Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
     """
     you = UserProfile.objects.get(pk=request.user.id)
@@ -327,6 +349,28 @@ def get_songs_playlist(request, playlist_id):
         'playlist': playlist,
     }
     return render(request, 'profile/single_playlist.html', context)
+
+def get_other_songs_playlist(request, playlist_id, user_id):
+    """
+    Gets the songs on a user's playlist based on the playlist's id
+    Last updated: 3/27/21 by Jacelynn Duranceau
+    """
+    you = UserProfile.objects.get(pk=request.user.id)
+    playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
+    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+    songs = {}
+    for match in matches:
+        # sop_id is the id for the primary key of the row into the SongOnPlaylist
+        # table that the matching songs to playlists come from
+        sop_id = match.get('id')
+        song_id = match.get('spotify_id')
+        songs[sop_id] = song_id
+
+    context = {
+        'songs': songs,
+        'playlist': playlist,
+    }
+    return render(request, 'profile/other_single_playlist.html', context)
 
 def create_playlist_popup(request):
     """
