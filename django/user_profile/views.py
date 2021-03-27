@@ -289,7 +289,7 @@ def user_list(request):
     TEMPORARY just to see what users are in the system 
     """
     user_list = UserProfile.objects.exclude(pk=request.user.id)
-    return render(request, '/', {'user_list': user_list})
+    return render(request, 'profile/user_list.html', {'user_list': user_list})
 
 def get_playlists(request, user_id):
     """
@@ -324,7 +324,7 @@ def other_playlists(request, user_id):
         #     'playlists': playlists,
         #     'user': user,
         # }
-        return render(request, 'profile/other_playlists.html', {'playlists': playlists})
+        return render(request, 'profile/other_playlists.html', {'playlists': playlists, 'profile': user})
     else:
         return redirect('/user/playlists/' + str(user_id))
 
@@ -350,13 +350,13 @@ def get_songs_playlist(request, playlist_id):
     }
     return render(request, 'profile/single_playlist.html', context)
 
-def get_other_songs_playlist(request, playlist_id, user_id):
+def get_other_songs_playlist(request, user_id, playlist_id):
     """
     Gets the songs on a user's playlist based on the playlist's id
     Last updated: 3/27/21 by Jacelynn Duranceau
     """
-    you = UserProfile.objects.get(pk=request.user.id)
-    playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
+    user = UserProfile.objects.get(pk=user_id)
+    playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=user)
     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
     songs = {}
     for match in matches:

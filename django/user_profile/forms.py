@@ -63,7 +63,7 @@ class PlaylistForm(forms.ModelForm):
     name = forms.CharField(max_length=30)
     image = forms.ImageField(required=False)
     date_created = datetime.datetime.now()
-    is_private = forms.BooleanField()
+    is_private = forms.BooleanField(required=False)
 
     class Meta:
         model = Playlist

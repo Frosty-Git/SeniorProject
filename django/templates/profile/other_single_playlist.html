@@ -14,13 +14,13 @@
     {% endif %}
     Playlist: {{ playlist.name }}
 </h1>
-
+<!-- 
 <div class="center" style="width:150px; text-align:center;">
     <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
         Edit Playlist
     </button>
     {% include 'profile/editplaylist_popup.html' %}
-</div>
+</div> -->
 
 <table class="center" style="width:40%;">
     {% for id,song in songs.items %}
@@ -28,9 +28,9 @@
         <td class="centered-column" style="width:400px; padding-top:8px; padding-bottom: 8px;">
             <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
         </td>
-        <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
+        <!-- <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
             <a class="btn btn-dark" href="{% url 'user:delete_song' playlist.id id %}" role="button">Delete Song</a>
-        </td>
+        </td> -->
     </tr>
     {% endfor %}
 </table>
