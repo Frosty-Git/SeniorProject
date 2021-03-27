@@ -1,4 +1,4 @@
-
+{% load static %}
 <!-- Included in Single Playlist -->
 <div class="modal" id="editplaylistmodal{{ playlist.id}}" tabindex="-1" aria-labelledby="myEditPlaylistModalLabel" aria-hidden="true"  style="color:black">
   <div class="modal-dialog modal-dialog-centered">
@@ -18,7 +18,13 @@
             Playlist Image:
             <br>
             <input type="file" id="img" name="img" accept="image/*">
-            <!-- Edit image too -->
+            {% if playlist.is_private %}
+              <input type="checkbox" id="is_private_t" name="is_private_t" checked>
+              <label for="is_private_t">Private</label>
+            {% else %}
+              <input type="checkbox" id="is_private_f" name="is_private_f">
+              <label for="is_private_f">Private</label>
+            {% endif %}
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>

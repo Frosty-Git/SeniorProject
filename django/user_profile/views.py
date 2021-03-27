@@ -275,7 +275,7 @@ def update_profile(request):
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.date_last_update = timezone.now()
-
+            
             profile.save()
             messages.success(request, ('Profile has been updated!'))
             return redirect('/user/update_profile/')
@@ -337,7 +337,9 @@ def create_playlist_popup(request):
         playlist_form = PlaylistForm(request.POST, request.FILES)
         if playlist_form.is_valid():
             you = UserProfile.objects.get(pk=request.user.id)
-            playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), image=playlist_form.cleaned_data.get('image'))
+            playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), 
+                                image=playlist_form.cleaned_data.get('image'),
+                                is_private=playlist_form.cleaned_data.get('is_private'))
             playlist.save()
             # playlist = playlist_form.save(commit=False)
             return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
@@ -365,16 +367,25 @@ def add_song_to_playlist(request, query):
 def edit_playlist_popup(request):
     """
     Updates a user's playlist
-    Last updated: 3/24/21 by Jacelynn Duranceau
+    Last updated: 3/27/21 by Jacelynn Duranceau
     """
     if request.method == 'POST':
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
         name = request.POST.get('new_name')
         img = request.FILES.get('img')
+        if playlist.is_private is True:
+            is_private = request.POST.get('is_private_t')
+        elif playlist.is_private is False:
+            is_private = request.POST.get('is_private_f')
+        if is_private == 'on':
+            is_private = True
+        elif is_private == None:
+            is_private = False
         if name is not None:
             playlist.name = name
             playlist.image = img
+            playlist.is_private = is_private
             playlist.date_last_updated = timezone.now()
             playlist.save()
         return redirect('/user/playlist/' + str(playlist_id))
