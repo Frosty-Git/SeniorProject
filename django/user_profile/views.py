@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from user_profile.models import *
 from user_profile.forms import *
 from social_feed.models import *
+from social_feed.views import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -88,12 +89,40 @@ def profile(request, user_id):
     """
     if request.user == User.objects.get(pk=user_id):
         profile = UserProfile.objects.get(pk=user_id)
-        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+        posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
         follower_list = profile.users_followed.all()[:5]
-        return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
+        upvotes = PostUserUpvote.objects.filter(user_from=profile).values()
+        downvotes = PostUserDownvote.objects.filter(user_from=profile).values()
+        postform = PostForm()
+        post_list = vote_dictionary(upvotes, downvotes, posts)
+
+        context = {
+            'postform': postform,
+            'profile': profile,
+            'follower_list': follower_list,
+            'post_list': post_list,
+        }
+        return render(request, 'profile/my_profile.html', context)
     else:
         return redirect('/user/userprofile/' + str(user_id))
 
+def vote_dictionary(upvotes, downvotes, posts):
+    """
+    """
+    post_list = {}
+    for post in posts:
+        new_post = cast_subclass(post)
+        up = False
+        down = False
+        for upvote in upvotes:
+            if upvote.get('post_to_id') == post.id:
+                up = True
+        
+        for downvote in downvotes:
+            if downvote.get('post_to_id') == post.id:
+                down = True
+        post_list[new_post] = [up, down]
+    return post_list
 
 def other_profile(request, user_id):
     """
@@ -101,12 +130,25 @@ def other_profile(request, user_id):
     Last updated: 3/20/21 by Katie Lee
     """
     if request.user != User.objects.get(pk=user_id):
+        loggedin = UserProfile.objects.get(pk=request.user.id)
         profile = UserProfile.objects.get(pk=user_id)
         follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
         is_following = False if follower is None else True
-        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+        posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
         follower_list = profile.users_followed.all()[:5]
-        return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following, 'post_list': post_list, 'follower_list': follower_list})
+        upvotes = PostUserUpvote.objects.filter(user_from=loggedin).values()
+        downvotes = PostUserDownvote.objects.filter(user_from=loggedin).values()
+
+        post_list = vote_dictionary(upvotes, downvotes, posts)
+
+        context = {
+            'profile': profile,
+            'post_list': post_list,
+            'follower_list': follower_list,
+            'is_following': is_following,
+            'loggedin': loggedin,
+        }
+        return render(request, 'profile/other_profile.html', context)
     else:
         return redirect('/user/profile/' + str(user_id))
 

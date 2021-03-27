@@ -8,9 +8,9 @@
     /* box-shadow: 5px 10px 8px slategray */
     display: inline-block; 
     text-align: center;
-    border: 5px;
+    /* border: 5px;
     border-style: solid;
-    border-color: black;
+    border-color: black; */
     padding: 10px;
     /* position:absolute;
     margin-left:70%;
@@ -22,11 +22,18 @@
     padding-right: 10px;
 }
 
-/* .profile_header {
-    padding-top: 20px;
-    font-family:'Courier New', Courier, monospace;
-    text-align: center;
-} */
+#feedheader a {
+    text-decoration: none;
+    
+}
+
+#feedheader a:hover {
+    color:lightpink;
+}
+
+#followingheader a:hover {
+    color:lightpink;
+}
 
 .sidenav {
     width: 160px;
