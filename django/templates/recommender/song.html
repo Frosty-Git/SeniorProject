@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %} Song Search {% endblock %}
+
+{% block content %}
+<form method='post' action="/artistp/">
+    {% csrf_token %}
+    <br>
+    <center>
+        <h2>Song Search</h2>
+    </center>
+    <br>
+    <div>
+        Song Title: {{ form.song_title }}
+    </div>
+
+    <button class="btn btn-success btn-lg" type="submit">Analyze</button>
+</form>
+<br>
+
+
+{% if tracks %}
+<table class="table">
+<tbody>
+<tr>
+
+{% for track in tracks %}
+
+<td>
+<iframe src="https://open.spotify.com/embed/track/{{ track.id }}" width="300" height="380" 
+frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+</td>
+
+
+
+{% endfor %}
+
+</tr>
+</tbody>
+</table>
+
+{% endif %}
+
+{% endblock %}

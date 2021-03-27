@@ -5,13 +5,14 @@ from .models import *
 from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
-from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features
+from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features
 from django.contrib.auth.models import User
 from user_profile.models import *
 import re
 from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
+
 #----Dr Baliga's Code----
 
 def find_albums(artist, from_year = None, to_year = None):
@@ -155,3 +156,115 @@ def search_users(term, requesting_user):
         if user.id != requesting_user:
             user_profiles.append(UserProfile.objects.get(user=user.id))
     return user_profiles
+
+#The Analyzer
+
+def find_track(artist, attribute, high):
+    # query = Musicdata.objects.filter(artists__contains = artist)
+    # results = sp.artist_(artistID)
+    if high == True:
+        #album = list(results.order_by(-attribute)[0].values('id','name','year'))
+        #album = sp.search(q='artist:' + artist, limit=1, offset=0, type="track")
+
+        # album = sp.recommendations(seed_artists=artistID, limit=1, max=attribute) --- Use this one with Spotipy
+        album = Musicdata.objects.filter(
+            artists__contains=artist).order_by(attribute).last()
+    else:
+        #album = list(results.order_by(+attribute)[0].values('id','name','year'))
+        # album = sp.recommendations(seed_artists=artistID, limit=1, min=attribute) --- Use this one with Spotipy
+        album = Musicdata.objects.filter(
+            artists__contains=artist).order_by(attribute).first()
+    return album
+
+@require_POST
+def searchArtist_post(request):
+    # process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it
+        form = ArtistForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+
+            # Get the artist
+            #results = sp.search(cd, 1, 0, "artist")
+            #artist = results['artists']['items'][0]
+            #id = artist['name']
+            id = cd['artist_name']
+
+            # Get their songs with the highest/lowest Acousticness
+            highAcous = search_artist_features(id, 'acousticness', True)
+            lowAcous = search_artist_features(id, 'acousticness', False)
+            # Get their songs with the highest/lowest Variance
+            highVal = search_artist_features(id, 'valence', True)
+            lowVal = search_artist_features(id, 'valence', False)
+            # Get their songs with the highest/lowest Danceability
+            highDance = search_artist_features(id, 'danceability', True)
+            lowDance = search_artist_features(id, 'danceability', False)
+            # Get their songs with the highest/lowest Energy
+            highLive = search_artist_features(id, 'energy', True)
+            lowLive = search_artist_features(id, 'energy', False)
+            form = ArtistForm()
+
+            highTracks = list([highAcous, highVal, highDance, highLive]) 
+            lowTracks = list([lowAcous, lowVal, lowDance, lowLive])
+
+            return render(request, 'recommender/artist.html', {'form': form, 'highTracks': highTracks, 'lowTracks': lowTracks})
+        else:
+            raise Http404('Something went wrong')
+
+@require_GET
+def searchArtist_get(request):
+    form = ArtistForm()
+    return render(request, 'recommender/artist.html', {'form': form})
+
+@require_POST
+def searchSong_post(request):
+    # process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it
+        form = SongForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+
+            # Get the artist
+            #results = sp.search(cd, 1, 0, "artist")
+            #artist = results['artists']['items'][0]
+            #id = artist['name']
+            id = cd['artist_name']
+
+            # Get their songs with the highest/lowest Acousticness
+            #highAcous = find_track(id, 'acousticness', True)
+            highAcous = search_artist_features(id, 'acousticness')[1]
+            lowAcous = search_artist_features(id, 'acousticness')[0]
+            # Get their songs with the highest/lowest Variance
+            highVal = search_artist_features(id, 'valence')[1]
+            lowVal = search_artist_features(id, 'valence')[0]
+            # Get their songs with the highest/lowest Danceability
+            highDance = search_artist_features(id, 'danceability')[1]
+            lowDance = search_artist_features(id, 'danceability')[0]
+            # Get their songs with the highest/lowest Liveness
+            highLive = search_artist_features(id, 'liveness')[1]
+            lowLive = search_artist_features(id, 'liveness')[0]
+            form = ArtistForm()
+
+            tracks = list([highAcous, highVal, highDance,
+                           highLive, lowAcous, lowVal, lowDance, lowLive])
+
+            return render(request, 'recommender/song.html', {'form': form, 'tracks': tracks})
+        else:
+            raise Http404('Something went wrong')
+
+@require_GET
+def searchSong_get(request):
+    form = SongForm()
+    return render(request, 'recommender/song.html', {'form': form})
+    
+@require_GET
+def get_artist_from_passed_value(request):
+    artist = (request.GET['answer'])
+    artist_id = search_artists(artist , 3, 0)
+    form = ArtistForm()
+    return render(request, 'Survey/survey.html', {'form':form, 'artist_id':artist_id})
+
+
+
