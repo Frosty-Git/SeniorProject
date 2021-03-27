@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
-from user_profile.models import UserProfile, Settings
+from user_profile.models import *
 from django.forms import ModelForm
+import datetime
 
 
 class ExtendedUserCreationForm(UserCreationForm):
@@ -31,9 +32,9 @@ class ExtendedUserCreationForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     profilepic = forms.ImageField(required=False)
     birthdate = forms.DateField()
-    description = forms.CharField(widget=forms.Textarea, required=False, max_length=30)
-    likes = forms.CharField(widget=forms.Textarea, required=False, max_length=30)
-    dislikes = forms.CharField(widget=forms.Textarea, required=False, max_length=30)
+    description = forms.CharField(widget=forms.Textarea, required=False, max_length=100)
+    likes = forms.CharField(widget=forms.Textarea, required=False, max_length=50)
+    dislikes = forms.CharField(widget=forms.Textarea, required=False, max_length=50)
 
     class Meta:
         model = UserProfile
@@ -56,4 +57,14 @@ class ExtendedUserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email',)
+
+
+class PlaylistForm(forms.ModelForm):
+    name = forms.CharField(max_length=30)
+    image = forms.ImageField(required=False)
+    date_created = datetime.datetime.now()
+    
+    class Meta:
+        model = Playlist
+        fields = ('name', 'image')
 

@@ -6,6 +6,12 @@ from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
 from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features
+from django.contrib.auth.models import User
+from user_profile.models import *
+import re
+from django.conf import settings
+from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.db import SessionStore
 
 #----Dr Baliga's Code----
 
@@ -79,6 +85,13 @@ def results(request):
             
             features = search_audio_features(term)
 
+            playlists = []
+            user_id = request.user.id
+            if user_id is not None:
+                playlists = get_user_playlists(user_id)
+
+            users = search_users(term, user_id)
+
             context = {
                 'term' : term,
                 'tracks1' : track1_ids,
@@ -91,6 +104,8 @@ def results(request):
                 'artists2' : artist2_ids,
                 'artists3' : artist3_ids,
                 'features' : features,
+                'playlists' : playlists,
+                'users' : users,
             }
     return render(request, 'recommender/results.html', context)
 
@@ -111,6 +126,36 @@ def top_tracks(request):
     """
     context = {}
     return render(request, 'recommender/top-tracks.html', context)
+
+def get_user_playlists(user_id):
+    """
+    Gets all playlists for a user. Used here so that a song can be added to
+    the playlists.
+    Last updated: 3/24/21 by Jacelynn Duranceau
+    """
+    you = UserProfile.objects.get(pk=user_id)
+    playlists = Playlist.objects.filter(user_profile_fk=you)
+    return playlists
+
+def search_users(term, requesting_user):
+    """
+    Used to search for a user based on the term entered in the main search page.
+    This function is called by the results function above so that it can be 
+    passed into the context and returned for display in HTML. 
+    It uses a very basic regex that will match the term with any username that
+    contains the string of characters in it. If I search 'ace' then users by the
+    name of 'jacelynn', 'ace', 'racecar', 'aceofspades', etc. will be returned,
+    too.
+    Last updated: 3/24/21 by Jacelynn Duranceau
+    """
+    regex = '.*'+term+'.*'
+    users = User.objects.filter(username__regex=regex)[:15]
+    user_profiles = []
+    for user in users:
+        # Makes it so that you don't show up in the search results
+        if user.id != requesting_user:
+            user_profiles.append(UserProfile.objects.get(user=user.id))
+    return user_profiles
 
 #The Analyzer
 
@@ -220,3 +265,6 @@ def get_artist_from_passed_value(request):
     artist_id = search_artists(artist , 3, 0)
     form = ArtistForm()
     return render(request, 'Survey/survey.html', {'form':form, 'artist_id':artist_id})
+
+
+

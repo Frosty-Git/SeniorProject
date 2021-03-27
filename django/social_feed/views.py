@@ -11,6 +11,8 @@ from django.http import JsonResponse
 # def share_song(request, id):
 #     """
 #     """
+# comment to check if commit is working
+
 
 def display_posts(request):
     """
@@ -21,19 +23,10 @@ def display_posts(request):
     all_post_list = Post.objects.order_by('-date_last_updated')
     you = UserProfile.objects.get(pk=request.user.id)
     following = you.users_followed.all()
-    post_list = []
-    upvote_posts = PostUserUpvote.objects.filter(user_from=you)
-    downvote_posts = PostUserDownvote.objects.filter(user_from=you)
+    upvotes = PostUserUpvote.objects.filter(user_from=you).values()
+    downvotes = PostUserDownvote.objects.filter(user_from=you).values()
 
-    for post in all_post_list:
-        if post.user_profile_fk == you:
-            new_post = cast_subclass(post)
-            post_list.append(new_post) 
-        for user in following:
-            if post.user_profile_fk == user:
-                new_post = cast_subclass(post)
-                post_list.append(new_post)
-
+    post_list = feed_vote_dictionary(upvotes, downvotes, all_post_list, you, following)
     comment_list = Comment.objects.order_by('date_last_updated')
     postform = PostForm()
 
@@ -41,10 +34,40 @@ def display_posts(request):
         'post_list': post_list,
         'comment_list': comment_list,
         'postform': postform,
-        'upvote_posts': upvote_posts,
-        'downvote_posts': downvote_posts
     }  
     return render(request, 'social_feed/feed.html', context)
+
+def feed_vote_dictionary(upvotes, downvotes, posts, you, following):
+    """
+    """
+    post_list = {}
+    for post in posts:
+        new_post = cast_subclass(post)
+        if post.user_profile_fk == you:
+            up = False
+            down = False
+            for upvote in upvotes:
+                if upvote.get('post_to_id') == post.id:
+                    up = True
+            
+            for downvote in downvotes:
+                if downvote.get('post_to_id') == post.id:
+                    down = True
+            post_list[new_post] = [up, down]
+
+        for user in following:
+            if post.user_profile_fk == user:
+                up = False
+                down = False
+                for upvote in upvotes:
+                    if upvote.get('post_to_id') == post.id:
+                        up = True
+                
+                for downvote in downvotes:
+                    if downvote.get('post_to_id') == post.id:
+                        down = True
+                post_list[new_post] = [up, down]
+    return post_list
 
 
 def cast_subclass(post):
@@ -70,6 +93,21 @@ def create_post(request):
             post.user_profile_fk = UserProfile.objects.get(pk=request.user.id)
             post.save()
     return redirect('/feed/')
+
+def create_post_profile(request):
+    """
+    Creates a post. Redirects to the profile.
+    Last updated: 3/23/21 by Katie Lee
+    """
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.text = form.cleaned_data.get('text')
+            post.user_profile_fk = UserProfile.objects.get(pk=request.user.id)
+            post.save()
+    return redirect('/user/profile/' + str(request.user.id))
+
 
 
 def delete_post(request, post_id):
@@ -196,8 +234,10 @@ def popup_post(request, post_id):
     if request.method == 'POST':
         text = request.POST.get('comment_text')
         if text is not None:
-            comment = Comment(text=text, post_fk = post, user_profile_fk=user)
+            comment = Comment(text=text, post_fk=post, user_profile_fk=user)
             comment.save()
+            return JsonResponse({'status': 'ok'})
+        return JsonResponse({'status': 'ko'})
 
     if post.user_profile_fk.user.id == user_id:
         return redirect('/user/profile/' + str(request.user.id))
@@ -233,24 +273,24 @@ def upvote(request):
     if post_id and action:
         post = Post.objects.get(pk=post_id)
         if action == 'like':
-            up_list = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
-            down_list = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
-            if up_list is None:
+            upvote = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
+            downvote = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
+            if upvote is None:
                 up = PostUserUpvote(user_from=user, post_to=post)
                 up.save()
-                if down_list is not None:
-                    down_list.delete()
+                if downvote is not None:
+                    downvote.delete()
                     post.upvotes += 2
+                    post.save()
                     return JsonResponse({'status':'switch'})
                 else:
                     post.upvotes += 1
-                post.save()
-                return JsonResponse({'status':'ok'})
-            else:
-                if up_list is not None:
-                    up_list.delete()
-                    post.upvotes -= 1
                     post.save()
+                    return JsonResponse({'status':'ok'})
+            else:
+                upvote.delete()
+                post.upvotes -= 1
+                post.save()
                 return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
 
@@ -273,16 +313,16 @@ def downvote(request):
                 if up_list is not None:
                     up_list.delete()
                     post.upvotes -= 2
+                    post.save()
                     return JsonResponse({'status':'switch'})
                 else:
                     post.upvotes -= 1
-                post.save()
-                return JsonResponse({'status':'ok'})
-            else:
-                if down_list is not None:
-                    down_list.delete()
-                    post.upvotes += 1
                     post.save()
+                    return JsonResponse({'status':'ok'})
+            else:
+                down_list.delete()
+                post.upvotes += 1
+                post.save()
                 return JsonResponse({'status':'undo_downvote'})
     return JsonResponse({'status':'ko'})
     

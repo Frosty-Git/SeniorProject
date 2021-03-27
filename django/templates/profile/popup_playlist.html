@@ -1,0 +1,27 @@
+{% load static %}
+<!-- Included in Playlists.html -->
+    <div class="modal fade" id="createplaylistmodal" tabindex="-1" aria-labelledby="myPlaylistModalLabel" aria-hidden="true"  style="color:black;">
+        <div class="modal-dialog modal-lg modal-dialog-centered" >
+          <div class="modal-content">
+            <form method="post" action='{% url "user:create_playlist_popup" %}' enctype="multipart/form-data">
+                {% csrf_token %}
+              
+                <div class="modal-header">
+                  <h5 class="modal-title" id="myPlaylistModalLabel">Create New Playlist</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>           
+
+                <div class="modal-body">
+                  {{ playlistform.as_p }}
+                </div>
+                
+    
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+

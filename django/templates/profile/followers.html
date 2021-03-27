@@ -24,9 +24,9 @@
             <td style="text-align: right;">
                 <a href="{% url 'user:profile' user_f.user.id %}">
                     {% if user_f.profilepic %}
-                        <img src="{{ user_f.profilepic.url }}" alt="" width="80" height="80" class="d-inline-block align-top">
+                        <img src="{{ user_f.profilepic.url }}" alt="" width="80" height="80" class="d-inline-block align-top" style="border-radius: 50%;">
                     {% else %}
-                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" alt="" width="80" height="80" class="d-inline-block align-top">
+                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" alt="" width="80" height="80" class="d-inline-block align-top" style="border-radius: 50%;">
                     {% endif %}
                 </a>
             </td>

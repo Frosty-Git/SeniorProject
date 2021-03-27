@@ -1,0 +1,28 @@
+{% load widget_tweaks %}
+
+<!-- Included in Profile Feed -->
+<div class="modal fade" id="createmodal" tabindex="-1" aria-labelledby="myCreateModalLabel" aria-hidden="true"  style="color:black">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'feed:create_post_profile' %}">
+            {% csrf_token %}
+          
+            <div class="modal-header">
+              <h5 class="modal-title" id="myCreateModalLabel">Create Post</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+          
+            <div class="modal-body">
+                <div class="input-group" >
+                    {% render_field postform.text class="form-control" id="text" rows="3" placeholder="Create a post..." %}
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Post</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>

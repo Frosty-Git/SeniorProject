@@ -10,7 +10,7 @@ class PostForm(forms.ModelForm):
     Last updated: 3/17/21 by Katie Lee, Jacelynn Duranceau, Marc Colin, Joe
     Frost
     """
-    text = forms.CharField(widget=forms.Textarea(), max_length=100)
+    text = forms.CharField(widget=forms.Textarea())
     date_created = datetime.datetime.now()
     
     class Meta:
@@ -33,7 +33,7 @@ class CommentForm(forms.ModelForm):
     Form to make a comment on an a Post.
     Last updated: 3/17/21 by Katie Lee, Jacelynn Duranceau, Marc Colin, Joe Frost 
     """
-    text = forms.CharField(widget=forms.Textarea(), max_length=100)
+    text = forms.CharField(widget=forms.Textarea(), max_length=200)
     date_created = datetime.datetime.now()
 
     class Meta:
