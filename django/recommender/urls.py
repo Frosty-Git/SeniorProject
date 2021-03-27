@@ -11,4 +11,9 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('survey/', views.survey, name='survey'),
     path('top-tracks/', views.top_tracks, name='top-tracks'),
+    path('artist/', views.searchArtist_get, name='artist'),
+    path('artistp/', views.searchArtist_post, name='artistp'),
+    path('song/', views.searchSong_get, name='song'),
+    path('songp/', views.searchSong_post, name='songp'),
+    path('get_artist/' , views.get_artist_from_passed_value, name ='get_artist')
 ]

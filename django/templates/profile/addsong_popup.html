@@ -1,21 +1,23 @@
 {% load static %}
-
-<!-- Included in Results -->
-<div class="modal fade" id="songpostmodal{{ track }}" tabindex="-1" aria-labelledby="mySongPostModalLabel" aria-hidden="true"  style="color:black">
+<!-- Included in results.html -->   
+<div class="modal fade" id="addtoplaylistmodal{{ track }}" tabindex="-1" aria-labelledby="myAddSongModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="{% url 'feed:songpost' %}">
+            <form method="post" action="{% url 'user:add_song_popup' term%}">
                 {% csrf_token %}
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="mySongPostModalLabel">Create Post</h5>
+                    <h5 class="modal-title" id="myAddSongModalLabel">Add Song</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             
                 <div class="modal-body">
                     <input type="hidden" id="track_id" name="track_id" value="{{ track }}">
-                    <center><iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></center>
-                    <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
+                    <select name="playlist_id" id="playlist_id">
+                        {% for playlist in playlists %}
+                        <option value="{{ playlist.id }}">{{ playlist.name }}</option>
+                        {% endfor %}
+                      </select>    
                 </div>
 
                 <div class="modal-footer">

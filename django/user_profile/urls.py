@@ -18,7 +18,17 @@ urlpatterns = [
     path('update_profile/', views.update_profile, name='update_profile'),
     path('user_list/', views.user_list, name='user_list'),
     path('userprofile/<user_id>', views.other_profile, name='other_profile'),
+    path('playlists/<user_id>', views.get_playlists, name='get_playlists'),
+    path('playlist/<playlist_id>', views.get_songs_playlist, name='get_songs_playlist'),
+    path('createplaylist/', views.create_playlist_popup, name='create_playlist_popup'),
+    path('addsong/<query>', views.add_song_to_playlist, name='add_song_popup'),
+    path('editplaylist/', views.edit_playlist_popup, name='edit_playlist_popup'),
+    path('deleteplaylist/<playlist_id>', views.delete_playlist, name='delete_playlist'),
+    path('deletesong/<playlist_id>/<sop_pk>', views.delete_song, name='delete_song'),
+    path('link_spotify/', views.link_spotify, name='link_spotify'),
+    #path('playlist/<playlist_id>', views.create_playlist, name='create_playlist'),
     # path('num_followers/<user_id>', views.num_followers, name='num_followers')
+    
 
     # Password related URLs
     path('account_setting/', auth_views.PasswordChangeView.as_view(

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from user_profile.models import *
 from user_profile.forms import *
 from social_feed.models import *
+from social_feed.views import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -11,6 +12,10 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import json
 from datetime import datetime
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
+import recommender.Scripts.client_credentials as client_cred
+from recommender.Scripts.spotify_token import *
 
 # Create your views here.
 
@@ -84,12 +89,40 @@ def profile(request, user_id):
     """
     if request.user == User.objects.get(pk=user_id):
         profile = UserProfile.objects.get(pk=user_id)
-        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+        posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
         follower_list = profile.users_followed.all()[:5]
-        return render(request, 'profile/my_profile.html', {'profile': profile, 'post_list': post_list, 'follower_list': follower_list})
+        upvotes = PostUserUpvote.objects.filter(user_from=profile).values()
+        downvotes = PostUserDownvote.objects.filter(user_from=profile).values()
+        postform = PostForm()
+        post_list = vote_dictionary(upvotes, downvotes, posts)
+
+        context = {
+            'postform': postform,
+            'profile': profile,
+            'follower_list': follower_list,
+            'post_list': post_list,
+        }
+        return render(request, 'profile/my_profile.html', context)
     else:
         return redirect('/user/userprofile/' + str(user_id))
 
+def vote_dictionary(upvotes, downvotes, posts):
+    """
+    """
+    post_list = {}
+    for post in posts:
+        new_post = cast_subclass(post)
+        up = False
+        down = False
+        for upvote in upvotes:
+            if upvote.get('post_to_id') == post.id:
+                up = True
+        
+        for downvote in downvotes:
+            if downvote.get('post_to_id') == post.id:
+                down = True
+        post_list[new_post] = [up, down]
+    return post_list
 
 def other_profile(request, user_id):
     """
@@ -97,12 +130,25 @@ def other_profile(request, user_id):
     Last updated: 3/20/21 by Katie Lee
     """
     if request.user != User.objects.get(pk=user_id):
+        loggedin = UserProfile.objects.get(pk=request.user.id)
         profile = UserProfile.objects.get(pk=user_id)
         follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
         is_following = False if follower is None else True
-        post_list = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+        posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
         follower_list = profile.users_followed.all()[:5]
-        return render(request, 'profile/other_profile.html', {'profile': profile, 'is_following': is_following, 'post_list': post_list, 'follower_list': follower_list})
+        upvotes = PostUserUpvote.objects.filter(user_from=loggedin).values()
+        downvotes = PostUserDownvote.objects.filter(user_from=loggedin).values()
+
+        post_list = vote_dictionary(upvotes, downvotes, posts)
+
+        context = {
+            'profile': profile,
+            'post_list': post_list,
+            'follower_list': follower_list,
+            'is_following': is_following,
+            'loggedin': loggedin,
+        }
+        return render(request, 'profile/other_profile.html', context)
     else:
         return redirect('/user/profile/' + str(user_id))
 
@@ -243,4 +289,128 @@ def user_list(request):
     TEMPORARY just to see what users are in the system 
     """
     user_list = UserProfile.objects.exclude(pk=request.user.id)
-    return render(request, 'profile/user_list.html', {'user_list': user_list})
+    return render(request, '/', {'user_list': user_list})
+
+def get_playlists(request, user_id):
+    """
+    Gets all playlists for a user.
+    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliott
+    """
+    you = UserProfile.objects.get(pk=user_id)
+    playlists = Playlist.objects.filter(user_profile_fk=you)
+    playlistform = PlaylistForm()
+    context = {
+        'playlists': playlists,
+        'playlistform': playlistform
+    }
+
+    return render(request, 'profile/playlists.html', context)
+
+def get_songs_playlist(request, playlist_id):
+    """
+    Gets the songs on a playlist based on the playlist's id
+    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    """
+    you = UserProfile.objects.get(pk=request.user.id)
+    playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
+    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+    songs = {}
+    for match in matches:
+        # sop_id is the id for the primary key of the row into the SongOnPlaylist
+        # table that the matching songs to playlists come from
+        sop_id = match.get('id')
+        song_id = match.get('spotify_id')
+        songs[sop_id] = song_id
+
+    context = {
+        'songs': songs,
+        'playlist': playlist,
+    }
+    return render(request, 'profile/single_playlist.html', context)
+
+def create_playlist_popup(request):
+    """
+    Creates a playlist
+    Last updated: 3/24/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    """
+    if request.method == 'POST':
+        playlist_form = PlaylistForm(request.POST, request.FILES)
+        if playlist_form.is_valid():
+            you = UserProfile.objects.get(pk=request.user.id)
+            playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), image=playlist_form.cleaned_data.get('image'))
+            playlist.save()
+            # playlist = playlist_form.save(commit=False)
+            return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
+
+def add_song_to_playlist(request, query):
+    """
+    Adds a song to a playlist
+    Last updated: 3/24/21 by Jacelynn Duranceau
+    """
+    if request.method == 'POST':
+        # user_id = request.user.id
+        # user = UserProfile.objects.get(pk=user_id)
+        track = request.POST.get('track_id')
+        playlist_id = request.POST.get('playlist_id')
+        playlist = Playlist.objects.get(pk=playlist_id)
+        new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=track)
+        new_song.save()
+        return redirect('/')
+        # return redirect('/results/')
+        #return redirect('/user/playlists/' + str(request.user.id))
+        # return render(request, 'recommender/results.html')
+    else:
+        return render(request, 'profile/addsong_popup.html')
+
+def edit_playlist_popup(request):
+    """
+    Updates a user's playlist
+    Last updated: 3/24/21 by Jacelynn Duranceau
+    """
+    if request.method == 'POST':
+        playlist_id = request.POST.get('playlist_id')
+        playlist = Playlist.objects.get(pk=playlist_id)
+        name = request.POST.get('new_name')
+        img = request.FILES.get('img')
+        if name is not None:
+            playlist.name = name
+            playlist.image = img
+            playlist.date_last_updated = timezone.now()
+            playlist.save()
+        return redirect('/user/playlist/' + str(playlist_id))
+    else:
+        return render(request, 'profile/editplaylist_popup.html')
+
+def delete_playlist(request, playlist_id):
+    """
+    Deletes a user's playlist.
+    Last updated: 3/24/21 by Jacelynn Duranceau
+    """
+    playlist = Playlist.objects.get(pk=playlist_id)
+    playlist.delete()
+    return redirect('/user/playlists/' + str(request.user.id))
+
+def delete_song(request, playlist_id, sop_pk):
+    """
+    Deletes a song on a user's playlist. Takes into account duplicates, so it
+    will not delete every instance of the song you're deleting.
+    Last updated: 3/24/21 by Jacelynn Duranceau
+    """
+    # sop_pk is the primary key into the row of the SongOnPlaylist object that
+    # the match comes from
+    song = SongOnPlaylist.objects.get(pk=sop_pk)
+    song.delete()
+    return redirect('/user/playlist/' + str(playlist_id))
+
+def link_spotify(request):
+    client_cred.setup()
+    scope = ('user-read-recently-played user-top-read user-read-playback-position '
+        'playlist-modify-public playlist-modify-private playlist-read-private '
+        'playlist-read-collaborative user-library-modify user-library-read')
+    spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+    authenticator = spotipy.oauth2.SpotifyOAuth(scope=scope)
+    spotify.me()
+    # This probably needs to go elsewhere. This will not save the token
+    # if it is right here.
+    #save_token(request, authenticator)
+    return redirect('/user/profile/' + str(request.user.id))    

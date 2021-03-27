@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %} Artist Search {% endblock %}
+
+{% block content %}
+<form method='post' action="/artistp/">
+    {% csrf_token %}
+    <br>
+    <center>
+        <h2>Artist Search</h2>
+    </center>
+    <br>
+    <div>
+        Artist Name: {{ form.artist_name }}
+    </div>
+
+    <button class="btn btn-success btn-lg" type="submit">Analyze</button>
+</form>
+<br>
+
+
+{% if highTracks %}
+
+<p>
+    {{ highTracks }}
+</p>
+
+<p>
+    {{ lowTracks }}
+</p>
+
+<table class="table">
+<tbody>
+<tr>
+    
+{% for track in highTracks %}
+
+<td>
+<iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="380" 
+frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+</td>
+
+
+{% endfor %}
+
+</tr>
+
+<tr>
+{% for track in lowTracks %}
+
+<td>
+  <iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="380" 
+  frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+  </td>
+  
+  
+{% endfor %}
+</tr>
+
+{% endif %}
+
+{% endblock %}

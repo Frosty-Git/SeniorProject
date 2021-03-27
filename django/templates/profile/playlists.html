@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Playlists{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+    Playlists
+</h1>
+
+<div class="center" style="width:150px; text-align:center;">
+    <button type="button" class="btn btn-dark" onclick="modalClick()" data-bs-toggle="modal" data-bs-target="#createplaylistmodal">
+        Create Playlist
+    </button>
+    {% include 'profile/popup_playlist.html' %}
+</div>
+
+<table class="center" style="width:60%;">
+    <tr>        
+        <th></th>
+        <th style="text-align: center;">Title</th>
+        <th style="text-align: center;">Date Last Updated</th>
+    </tr>
+    {% for playlist in playlists %}
+    <tr style="border-bottom: 1px solid black;">
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+            {% if playlist.image %}
+                <a href="{% url 'user:get_songs_playlist' playlist.id%}">
+                    <img src="{{ playlist.image.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                </a>
+            {% else %}
+                <a href="{% url 'user:get_songs_playlist' playlist.id%}">
+                    <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                </a>
+            {% endif %}
+        </td>
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+            <a href="{% url 'user:get_songs_playlist' playlist.id%}">{{ playlist.name }}</a>
+        </td>
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">{{ playlist.date_last_updated }}</td>
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+            <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
+        </td>
+    {% endfor %}
+</tr>
+</table>
+
+<script>
+    var playlistModal = document.getElementById('createplaylistmodal');
+    function modalClick() {
+        window.history.pushState({},"", "/profile/createplaylist/");
+        playlistModal.show();
+    }  
+
+    playlistModal.addEventListener('hidden.bs.modal', function (event) {
+        window.history.replaceState({}, "", "{% url 'user:get_playlists' user.id %}")
+    })
+</script>
+{% endblock %}

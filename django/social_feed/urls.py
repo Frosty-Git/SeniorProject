@@ -6,6 +6,7 @@ app_name = 'feed'
 urlpatterns = [
     path('', views.display_posts, name='feed'),
     path('create_post/', views.create_post, name='create_post'),
+    path('create_post_profile/', views.create_post_profile, name='create_post_profile'),
     path('delete_post/<post_id>', views.delete_post, name='delete_post'),
     path('<post_id>', views.create_comment, name='comment'),
     path('update_post/', views.update_post, name='update_post'),
