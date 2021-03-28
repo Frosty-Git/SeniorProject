@@ -296,15 +296,19 @@ def get_playlists(request, user_id):
     Gets all playlists for yourself.
     Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliott
     """
+    # Check to see you are accessing the playlist page that is your own.
     if request.user == User.objects.get(pk=user_id):
         you = UserProfile.objects.get(pk=user_id)
         playlists = Playlist.objects.filter(user_profile_fk=you)
         playlistform = PlaylistForm()
         context = {
             'playlists': playlists,
-            'playlistform': playlistform
+            'playlistform': playlistform,
+            'profile': you,
         }
         return render(request, 'profile/playlists.html', context)
+    # If it is not your own, then redirect to the page set up for viewing
+    # playlists that aren't yours.
     else:
         return redirect('/user/otherplaylists/' + str(user_id))
 
@@ -313,6 +317,9 @@ def other_playlists(request, user_id):
     Gets all playlists for a user.
     Last updated: 3/23/27 by Jacelynn Duranceau
     """
+    # There would be no reason to be able to access the playlist page where you
+    # wouldn't be able to edit it if it is your own, so we check that you are
+    # accessing one that isn't.
     if request.user != User.objects.get(pk=user_id):
         user = UserProfile.objects.get(pk=user_id)
         all_playlists = Playlist.objects.filter(user_profile_fk=user)
@@ -320,57 +327,75 @@ def other_playlists(request, user_id):
         for playlist in all_playlists:
             if playlist.is_private is False:
                 playlists.append(playlist)
-        # context = {
-        #     'playlists': playlists,
-        #     'user': user,
-        # }
-        return render(request, 'profile/other_playlists.html', {'playlists': playlists, 'profile': user})
+        context = {
+            'playlists': playlists,
+            'profile': user,
+        }
+        return render(request, 'profile/other_playlists.html', context)
+    # If the playlist is yours, then redirect to the page where you can actually
+    # modify it.
     else:
         return redirect('/user/playlists/' + str(user_id))
 
 def get_songs_playlist(request, playlist_id):
     """
     Gets the songs on your playlist based on the playlist's id
-    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    Last updated: 3/28/21 by Jacelynn Duranceau, Tucker Elliot, Joe Frost
     """
     you = UserProfile.objects.get(pk=request.user.id)
-    playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
-    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
-    songs = {}
-    for match in matches:
-        # sop_id is the id for the primary key of the row into the SongOnPlaylist
-        # table that the matching songs to playlists come from
-        sop_id = match.get('id')
-        song_id = match.get('spotify_id')
-        songs[sop_id] = song_id
+    # This automatically makes it so that you can't access a playlist that is
+    # not yours since there will be no matching playlist query for your user id
+    # if the playlist actually belongs to another user. It will go through the
+    # exception block if so.
+    try:
+        playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
+        matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+        songs = {}
+        for match in matches:
+            # sop_id is the id for the primary key of the row into the SongOnPlaylist
+            # table that the matching songs to playlists come from
+            sop_id = match.get('id')
+            song_id = match.get('spotify_id')
+            songs[sop_id] = song_id
 
-    context = {
-        'songs': songs,
-        'playlist': playlist,
-    }
-    return render(request, 'profile/single_playlist.html', context)
+        context = {
+            'songs': songs,
+            'playlist': playlist,
+        }
+        return render(request, 'profile/single_playlist.html', context)
+    except:
+        # Redirect back to your own playlists page if you are trying to access
+        # a playlist that does not belong to you or does not exist.
+        return redirect('/user/playlists/' + str(request.user.id))
 
 def get_other_songs_playlist(request, user_id, playlist_id):
     """
     Gets the songs on a user's playlist based on the playlist's id
-    Last updated: 3/27/21 by Jacelynn Duranceau
+    Last updated: 3/28/21 by Jacelynn Duranceau
     """
-    user = UserProfile.objects.get(pk=user_id)
-    playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=user)
-    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
-    songs = {}
-    for match in matches:
-        # sop_id is the id for the primary key of the row into the SongOnPlaylist
-        # table that the matching songs to playlists come from
-        sop_id = match.get('id')
-        song_id = match.get('spotify_id')
-        songs[sop_id] = song_id
+    # Checks to see the playlist page you are accessing isn't your own
+    if request.user != User.objects.get(pk=user_id): 
+        user = UserProfile.objects.get(pk=user_id)
+        playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=user)
+        matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+        songs = {}
+        for match in matches:
+            # sop_id is the id for the primary key of the row into the SongOnPlaylist
+            # table that the matching songs to playlists come from
+            sop_id = match.get('id')
+            song_id = match.get('spotify_id')
+            songs[sop_id] = song_id
 
-    context = {
-        'songs': songs,
-        'playlist': playlist,
-    }
-    return render(request, 'profile/other_single_playlist.html', context)
+        context = {
+            'songs': songs,
+            'playlist': playlist,
+            'profile': user,
+        }
+        return render(request, 'profile/other_single_playlist.html', context)
+    else:
+        # This means you are trying to access your own playlist page, so redirect
+        # there.
+        return redirect('/user/playlist/' + str(playlist_id))
 
 def create_playlist_popup(request):
     """

@@ -6,7 +6,7 @@
 {% block content %}
 
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-    Playlists
+    My Playlists
 </h1>
 
 <div class="center" style="width:150px; text-align:center;">
@@ -26,17 +26,17 @@
     <tr style="border-bottom: 1px solid black;">
         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
             {% if playlist.image %}
-                <a href="{% url 'user:get_songs_playlist' playlist.id%}">
+                <a href="{% url 'user:get_songs_playlist' playlist.id %}">
                     <img src="{{ playlist.image.url }}" width="70px" height="70px" style="border-radius: 50%;">
                 </a>
             {% else %}
-                <a href="{% url 'user:get_songs_playlist' playlist.id%}">
+                <a href="{% url 'user:get_songs_playlist' playlist.id %}">
                     <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
                 </a>
             {% endif %}
         </td>
         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
-            <a href="{% url 'user:get_songs_playlist' playlist.id%}">{{ playlist.name }}</a>
+            <a href="{% url 'user:get_songs_playlist' playlist.id %}">{{ playlist.name }}</a>
         </td>
         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">{{ playlist.date_last_updated }}</td>
         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">

@@ -6,9 +6,17 @@
 {% block content %}
 
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-    Playlists
+    {% if profile.image %}
+        <a href="{% url 'user:other_profile' profile.user.id %}">
+            <img src="{{ profile.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>
+        </a>
+    {% else %}
+        <a href="{% url 'user:other_profile' profile.user.id %}">
+            <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="50px" height="50px" style="border-radius: 50%;">
+        <a href="{% url 'user:other_profile' profile.user.id %}"></a>
+    {% endif %}
+    <a href="{% url 'user:other_profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlists
 </h1>
-{{ profile.user }}
 
 <table class="center" style="width:60%;">
     <tr>        
