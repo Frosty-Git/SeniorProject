@@ -16,6 +16,8 @@
     {% include 'profile/popup_playlist.html' %}
 </div>
 
+<br>
+
 <table class="center" style="width:60%;">
     <tr>        
         <th></th>
@@ -37,6 +39,9 @@
         </td>
         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
             <a href="{% url 'user:get_songs_playlist' playlist.id %}">{{ playlist.name }}</a>
+            {% if playlist.is_private %}
+            <img src="{% static 'images/private.png' type='image/png' %}" width="15px" height="15px">
+            {% endif %}
         </td>
         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">{{ playlist.date_last_updated }}</td>
         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">

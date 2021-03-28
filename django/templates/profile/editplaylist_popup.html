@@ -14,7 +14,7 @@
           <div class="modal-body">
             <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
             Playlist Name:
-            <input type="text" required class="form-control" aria-label="With textarea" id="new_name" name="new_name" value="{{ playlist.name }}">
+            <input type="text" required class="form-control" aria-label="With textarea" maxlength="30" id="new_name" name="new_name" value="{{ playlist.name }}">
             Playlist Image:
             <br>
             <input type="file" id="img" name="img" accept="image/*">

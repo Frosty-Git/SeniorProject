@@ -324,6 +324,7 @@ def other_playlists(request, user_id):
         user = UserProfile.objects.get(pk=user_id)
         all_playlists = Playlist.objects.filter(user_profile_fk=user)
         playlists = []
+        # Only show playlists that aren't private
         for playlist in all_playlists:
             if playlist.is_private is False:
                 playlists.append(playlist)
@@ -377,6 +378,9 @@ def get_other_songs_playlist(request, user_id, playlist_id):
     if request.user != User.objects.get(pk=user_id): 
         user = UserProfile.objects.get(pk=user_id)
         playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=user)
+        # Do not allow access to a user's private playlist
+        if playlist.is_private:
+            return redirect('/user/playlists/' + str(user_id))
         matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
         songs = {}
         for match in matches:
@@ -453,7 +457,8 @@ def edit_playlist_popup(request):
             is_private = False
         if name is not None:
             playlist.name = name
-            playlist.image = img
+            if img is not None:
+                playlist.image = img
             playlist.is_private = is_private
             playlist.date_last_updated = timezone.now()
             playlist.save()
