@@ -18,7 +18,7 @@
 
 <br>
 
-<table class="center" style="width:60%;">
+<table class="center" style="width:70%;">
     <tr>        
         <th></th>
         <th style="text-align: center;">Title</th>
@@ -26,7 +26,7 @@
     </tr>
     {% for playlist in playlists %}
     <tr style="border-bottom: 1px solid black;">
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
             {% if playlist.image %}
                 <a href="{% url 'user:get_songs_playlist' playlist.id %}">
                     <img src="{{ playlist.image.url }}" width="70px" height="70px" style="border-radius: 50%;">
@@ -37,15 +37,18 @@
                 </a>
             {% endif %}
         </td>
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
             <a href="{% url 'user:get_songs_playlist' playlist.id %}">{{ playlist.name }}</a>
             {% if playlist.is_private %}
             <img src="{% static 'images/private.png' type='image/png' %}" width="15px" height="15px">
             {% endif %}
         </td>
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">{{ playlist.date_last_updated }}</td>
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
             <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
+        </td>
+        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+            <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
         </td>
     {% endfor %}
 </tr>
