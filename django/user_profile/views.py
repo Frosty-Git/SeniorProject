@@ -306,7 +306,7 @@ def get_playlists(request, user_id):
             'playlistform': playlistform,
             'profile': you,
         }
-        return render(request, 'profile/playlists.html', context)
+        return render(request, 'playlists/playlists.html', context)
     # If it is not your own, then redirect to the page set up for viewing
     # playlists that aren't yours.
     else:
@@ -332,7 +332,7 @@ def other_playlists(request, user_id):
             'playlists': playlists,
             'profile': user,
         }
-        return render(request, 'profile/other_playlists.html', context)
+        return render(request, 'playlists/other_playlists.html', context)
     # If the playlist is yours, then redirect to the page where you can actually
     # modify it.
     else:
@@ -363,7 +363,7 @@ def get_songs_playlist(request, playlist_id):
             'songs': songs,
             'playlist': playlist,
         }
-        return render(request, 'profile/single_playlist.html', context)
+        return render(request, 'playlists/single_playlist.html', context)
     except:
         # Redirect back to your own playlists page if you are trying to access
         # a playlist that does not belong to you or does not exist.
@@ -395,7 +395,7 @@ def get_other_songs_playlist(request, user_id, playlist_id):
             'playlist': playlist,
             'profile': user,
         }
-        return render(request, 'profile/other_single_playlist.html', context)
+        return render(request, 'playlists/other_single_playlist.html', context)
     else:
         # This means you are trying to access your own playlist page, so redirect
         # there.
@@ -435,7 +435,7 @@ def add_song_to_playlist(request, query):
         #return redirect('/user/playlists/' + str(request.user.id))
         # return render(request, 'recommender/results.html')
     else:
-        return render(request, 'profile/addsong_popup.html')
+        return render(request, 'playlists/addsong_popup.html')
 
 def edit_playlist_popup(request):
     """
@@ -464,7 +464,7 @@ def edit_playlist_popup(request):
             playlist.save()
         return redirect('/user/playlist/' + str(playlist_id))
     else:
-        return render(request, 'profile/editplaylist_popup.html')
+        return render(request, 'playlists/editplaylist_popup.html')
 
 def delete_playlist(request, playlist_id):
     """
