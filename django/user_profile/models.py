@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from recommender.models import Musicdata
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # UserProfile
 class UserProfile(models.Model):
@@ -57,19 +58,27 @@ class Settings(models.Model):
 class Preferences(models.Model):
     """
     Preferences
-    Kevin Magill 03/06/2021 12:00 P.M.
+    Kevin Magill 03/29/2021 
     creates model for the database
     relationship is defined in UserProfile
     """
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
-    accousticness = models.FloatField(blank=True, default=0.0)
-    danceability = models.FloatField(blank=True, default=0.0)
-    energy = models.FloatField(blank=True, default=0.0)
-    instrumentalness = models.FloatField(blank=True, default=0.0)
-    speechiness = models.FloatField(blank=True, default=0.0)
-    loudness = models.FloatField(blank=True, default=0.0)
-    tempo = models.FloatField(blank=True, default=0.0)
-    valence = models.FloatField(blank=True, default=0.0)
+    # 0 to 1
+    acousticness = models.FloatField(blank=True, default=0.5, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+    # 0 to 1
+    danceability = models.FloatField(blank=True, default=0.5, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+    # 0 to 1
+    energy = models.FloatField(blank=True, default=0.5, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+    # 0 to 1
+    instrumentalness = models.FloatField(blank=True, default=0.5, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+    # 0 to 1
+    speechiness = models.FloatField(blank=True, default=0.5, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+    # -60 to 0
+    loudness = models.FloatField(blank=True, default=-30, validators=[MinValueValidator(-60.0), MaxValueValidator(0.0)])
+    # 50 to 150
+    tempo = models.FloatField(blank=True, default=100, validators=[MinValueValidator(50.0), MaxValueValidator(150.0)])
+    # 0 to 1
+    valence = models.FloatField(blank=True, default=0.5, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
 
     def __str__(self):
         return "Preferences"

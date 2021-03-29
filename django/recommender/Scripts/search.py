@@ -60,6 +60,15 @@ def search_audio_features(query):
     features = sp.audio_features(tracks=track)
     return features
 
+def get_audio_features(track):
+    """
+    Track should be a single song's id in an array. Returns the features of
+    said track.
+    Last updated: 3/29/21 by Katie Lee, Jacelynn Duranceau, Marc Colin
+    """
+    features = sp.audio_features(tracks=track)
+    return features
+
 def search_artist_features(query, feature, high_or_low):
     """
     Enter in an artist name. Returns the audio features of that song.

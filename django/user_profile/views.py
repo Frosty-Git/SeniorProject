@@ -35,7 +35,7 @@ def sign_up(request):
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
-            pref = Preferences(user_profile_fk = profile, accousticness=0.0, danceability=0.0, energy=0.0, instrumentalness=0.0, speechiness=0.0, loudness=0.0, tempo=0.0, valence=0.0)
+            pref = Preferences(user_profile_fk = profile)
             pref.save()
             sett = Settings(user_profile_fk = profile, private_profile=False, private_playlists=False, light_mode=False, explicit_music=False, live_music=False)
             sett.save()
@@ -289,7 +289,7 @@ def user_list(request):
     TEMPORARY just to see what users are in the system 
     """
     user_list = UserProfile.objects.exclude(pk=request.user.id)
-    return render(request, '/', {'user_list': user_list})
+    return render(request, 'profile/user_list.html', {'user_list': user_list})
 
 def get_playlists(request, user_id):
     """
