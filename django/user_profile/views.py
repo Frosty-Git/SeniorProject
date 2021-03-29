@@ -101,10 +101,28 @@ def profile(request, user_id):
             'profile': profile,
             'follower_list': follower_list,
             'post_list': post_list,
+            'image': profile.profilepic,
         }
-        return render(request, 'profile/my_profile.html', context)
     else:
-        return redirect('/user/userprofile/' + str(user_id))
+        loggedin = UserProfile.objects.get(pk=request.user.id)
+        profile = UserProfile.objects.get(pk=user_id)
+        follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
+        is_following = False if follower is None else True
+        posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+        follower_list = profile.users_followed.all()[:5]
+        upvotes = PostUserUpvote.objects.filter(user_from=loggedin).values()
+        downvotes = PostUserDownvote.objects.filter(user_from=loggedin).values()
+
+        post_list = vote_dictionary(upvotes, downvotes, posts)
+
+        context = {
+            'profile': profile,
+            'post_list': post_list,
+            'follower_list': follower_list,
+            'is_following': is_following,
+            'image': loggedin.profilepic,
+        }
+    return render(request, 'profile/profile.html', context)
 
 def vote_dictionary(upvotes, downvotes, posts):
     """
@@ -123,34 +141,6 @@ def vote_dictionary(upvotes, downvotes, posts):
                 down = True
         post_list[new_post] = [up, down]
     return post_list
-
-def other_profile(request, user_id):
-    """
-    Used for profiles that are not the logged in user's profile.
-    Last updated: 3/20/21 by Katie Lee
-    """
-    if request.user != User.objects.get(pk=user_id):
-        loggedin = UserProfile.objects.get(pk=request.user.id)
-        profile = UserProfile.objects.get(pk=user_id)
-        follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
-        is_following = False if follower is None else True
-        posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
-        follower_list = profile.users_followed.all()[:5]
-        upvotes = PostUserUpvote.objects.filter(user_from=loggedin).values()
-        downvotes = PostUserDownvote.objects.filter(user_from=loggedin).values()
-
-        post_list = vote_dictionary(upvotes, downvotes, posts)
-
-        context = {
-            'profile': profile,
-            'post_list': post_list,
-            'follower_list': follower_list,
-            'is_following': is_following,
-            'loggedin': loggedin,
-        }
-        return render(request, 'profile/other_profile.html', context)
-    else:
-        return redirect('/user/profile/' + str(user_id))
 
 
 @require_GET

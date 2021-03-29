@@ -6,7 +6,7 @@
 
 {% block content %}
     {% for user in user_list %}
-        <a href="{% url 'user:other_profile' user.user.id %}">{{ user.user.username }}</a><br>
+        <a href="{% url 'user:profile' user.user.id %}">{{ user.user.username }}</a><br>
     {% endfor %}
 
 

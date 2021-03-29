@@ -1,5 +1,6 @@
 {% load static %}
 {% load humanize %}
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
 
@@ -12,6 +13,12 @@
         visibility: hidden;
     }
 </style>
+
+{% if image %}
+    <input hidden id="user_profile" value="{{ image.url }}">
+{% else %}
+    <input hidden id="user_profile" value="{% static 'images/noprofilepic.jpg' type='image/jpg' %}">
+{% endif %}
 
 <!-- Included in Profile Feed -->
     <div class="modal fade" id="postmodal{{ post.id }}" tabindex="-1" aria-labelledby="myPostModalLabel" aria-hidden="true"  style="color:black;">
@@ -34,11 +41,7 @@
                                     <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                                 {% endif %}
                                 <br>
-                                {% if user.id == post.user_profile_fk.user.id %}
-                                    by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>
-                                {% else %}
-                                    by <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
-                                {% endif %}
+                                by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>
                                 <p>at {{ post.date_last_updated|naturaltime }}</p>
     
                             </div>
@@ -46,31 +49,17 @@
                                 <ul id="comment_list{{ post.id }}" style="overflow-y: scroll; height: auto; max-height:500px">
                                     {% for comment in post.comment_set.all %}
                                         <li class="post">
-                                            {% if user.id == comment.user_profile_fk.user.id %}
-                                                <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
-                                                    {% if comment.user_profile_fk.profilepic %}
-                                                        <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                                                    {% else %}
-                                                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                                                    {% endif %}
-                                                </a>
-                                                <br>
-                                                <a href="{% url 'user:profile' user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
-                                                <br>
-                                                {{ comment.text }} 
-                                            {% else %}
-                                                <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">
-                                                    {% if comment.user_profile_fk.profilepic %}
-                                                        <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
-                                                    {% else %}
-                                                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
-                                                    {% endif %}
-                                                </a>
-                                                <br>
-                                                <a href="{% url 'user:other_profile' comment.user_profile_fk.user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
-                                                <br>
-                                                {{ comment.text }}
-                                            {% endif %}
+                                            <a href="{% url 'user:profile' comment.user_profile_fk.user.id %}">
+                                                {% if comment.user_profile_fk.profilepic %}
+                                                    <img src="{{ comment.user_profile_fk.profilepic.url }}" width="40" height="40" class="d-inline-block align-top">
+                                                {% else %}
+                                                    <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="40" height="40" class="d-inline-block align-top" alt="...">
+                                                {% endif %}
+                                            </a>
+                                            <br>
+                                            <a href="{% url 'user:profile' user.id %}">@{{ comment.user_profile_fk.user.username }}</a>
+                                            <br>
+                                            {{ comment.text }} 
                                             <br>
                                             {{ comment.date_last_updated|naturaltime }}
                                         </li>
@@ -121,7 +110,7 @@
                                             $('#no_comment{{ post.id }}').remove();
                                         }
                                         $('#comment_list{{ post.id }}').append("<li class='post'><a href='{% url 'user:profile' user.id %}'>" + 
-                                                                '<img src=' + pic_url + ' width="40" height="40" class="d-inline-block align-top" %}">' +
+                                                                '<img src=' + pic_url + ' width="40" height="40" class="d-inline-block align-top">' +
                                                                 "</a><br>" +
                                                                 '<a href="{% url "user:profile" user.id %}">@{{ user.username }}</a><br>' +
                                                                 comment_text + '<br>' +

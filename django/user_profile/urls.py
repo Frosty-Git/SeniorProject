@@ -17,7 +17,6 @@ urlpatterns = [
     path('follow/<user_id>/<who>', views.follow, name='follow'),
     path('update_profile/', views.update_profile, name='update_profile'),
     path('user_list/', views.user_list, name='user_list'),
-    path('userprofile/<user_id>', views.other_profile, name='other_profile'),
     path('playlists/<user_id>', views.get_playlists, name='get_playlists'),
     path('playlist/<playlist_id>', views.get_songs_playlist, name='get_songs_playlist'),
     path('createplaylist/', views.create_playlist_popup, name='create_playlist_popup'),

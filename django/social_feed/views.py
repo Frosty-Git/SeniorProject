@@ -243,13 +243,8 @@ def popup_post(request, post_id):
             comment.save()
             return JsonResponse({'status': 'ok'})
         return JsonResponse({'status': 'ko'})
-
-    if post.user_profile_fk.user.id == user_id:
-        return redirect('/user/profile/' + str(request.user.id))
-    else:
-        return redirect('/user/userprofile/' + str(post.user_profile_fk.user.id))
+    return redirect('/user/profile/' + str(post.user_profile_fk.user.id))
     
-
 
 def popup_songpost(request):
     """
