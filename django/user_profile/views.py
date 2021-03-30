@@ -19,7 +19,7 @@ from recommender.Scripts.spotify_manager import SpotifyManager
 
 # Create your views here.
 
-# global variable for spotify manager
+# global variables for spotify manager
 spotify_manager = SpotifyManager()
 
 def sign_up(request):
