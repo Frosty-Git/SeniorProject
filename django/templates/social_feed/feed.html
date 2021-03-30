@@ -20,7 +20,6 @@
     <br>
     <ul>
         <li class="post">
-        {% if post.user_profile_fk.user.id == user.id %}
             <a href="{% url 'user:profile' post.user_profile_fk.user.id %}">
                 {% if post.user_profile_fk.profilepic %}
                     <img src="{{ post.user_profile_fk.profilepic.url }}" width="80" height="80" class="d-inline-block align-top">
@@ -39,26 +38,6 @@
             <br>
 
             <p>{{ post.date_last_updated }}</p>
-            
-        {% else %}
-            <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">
-                {% if post.user_profile_fk.profilepic %}
-                    <img src="{{ post.user_profile_fk.profilepic.url }}" width="80" height="80" class="d-inline-block align-top">
-                {% else %}
-                    <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="80" height="80" class="d-inline-block align-top" alt="...">
-                {% endif %}
-            </a>
-            <br>
-            <a href="{% url 'user:other_profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
-            <br>
-            <a href="{% url 'feed:comment' post.id %}">{{ post.text }}</a>
-            <br>
-            {% if post.type_post == "SongPost" %}
-                <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-            {% endif %}
-            <br>
-            <p>{{ post.date_last_updated }}</p>
-        {% endif %}
 
         
         <div class="btn-group btn-group-lg" style="float:left;">
