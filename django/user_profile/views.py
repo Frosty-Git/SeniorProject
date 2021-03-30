@@ -94,10 +94,9 @@ def profile(request, user_id):
         profile = UserProfile.objects.get(pk=user_id)
         posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
         follower_list = profile.users_followed.all()[:5]
-        upvotes = PostUserUpvote.objects.filter(user_from=profile).values()
-        downvotes = PostUserDownvote.objects.filter(user_from=profile).values()
+        votes = PostUserVote.objects.filter(user_from=profile).values()
         postform = PostForm()
-        post_list = vote_dictionary(upvotes, downvotes, posts)
+        post_list = vote_dictionary(votes, posts)
 
         context = {
             'postform': postform,
@@ -113,10 +112,9 @@ def profile(request, user_id):
         is_following = False if follower is None else True
         posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
         follower_list = profile.users_followed.all()[:5]
-        upvotes = PostUserUpvote.objects.filter(user_from=loggedin).values()
-        downvotes = PostUserDownvote.objects.filter(user_from=loggedin).values()
+        votes = PostUserVote.objects.filter(user_from=loggedin).values()
 
-        post_list = vote_dictionary(upvotes, downvotes, posts)
+        post_list = vote_dictionary(votes, posts)
 
         context = {
             'profile': profile,
@@ -127,7 +125,7 @@ def profile(request, user_id):
         }
     return render(request, 'profile/profile.html', context)
 
-def vote_dictionary(upvotes, downvotes, posts):
+def vote_dictionary(votes, posts):
     """
     """
     post_list = {}
@@ -135,13 +133,12 @@ def vote_dictionary(upvotes, downvotes, posts):
         new_post = cast_subclass(post)
         up = False
         down = False
-        for upvote in upvotes:
-            if upvote.get('post_to_id') == post.id:
-                up = True
-        
-        for downvote in downvotes:
-            if downvote.get('post_to_id') == post.id:
-                down = True
+        for vote in votes:
+            if vote.get('post_to_id') == post.id:
+                if vote.get('vote') == 'Like':
+                    up = True
+                elif vote.get('vote') == 'Dislike':
+                    down = True
         post_list[new_post] = [up, down]
     return post_list
 
