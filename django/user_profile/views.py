@@ -15,11 +15,11 @@ from datetime import datetime
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import recommender.Scripts.client_credentials as client_cred
-from recommender.Scripts.spotify_manager import SpotifyManager
+from recommender.Scripts.spotify_manager import SpotifyManager, session_cache_path, index
 
 # Create your views here.
 
-# global spotify manager variable
+# global variable for spotify manager
 spotify_manager = SpotifyManager()
 
 def sign_up(request):
@@ -406,12 +406,15 @@ def delete_song(request, playlist_id, sop_pk):
     return redirect('/user/playlist/' + str(playlist_id))
 
 def link_spotify(request):
-    spotify_manager.spotify.me()
+    index(request, spotify_manager)
+    #spotify = spotipy.Spotify(auth_manager=spotify_manager.auth_manager)
+    if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
+        request.session['_sp_auth_token'] = spotify_manager.auth_manager.get_access_token()
+    
     # This probably needs to go elsewhere. This will not save the token
     # if it is right here.
-    return redirect('/user/profile/' + str(request.user.id))    
+    return redirect('/')
 
-def save_token_redirect(request):
-    spotify_manager.save_token(request)
-    return redirect('/home')
+# def save_token_redirect(request):
+#     return redirect('')
 

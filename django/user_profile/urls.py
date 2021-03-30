@@ -26,7 +26,7 @@ urlpatterns = [
     path('deleteplaylist/<playlist_id>', views.delete_playlist, name='delete_playlist'),
     path('deletesong/<playlist_id>/<sop_pk>', views.delete_song, name='delete_song'),
     path('link_spotify/', views.link_spotify, name='link_spotify'),
-    path('token/', views.save_token_redirect, name='save_token_redirect'),
+    #path('', views.save_token_redirect, name='save_token_redirect'),
     #path('playlist/<playlist_id>', views.create_playlist, name='create_playlist'),
     # path('num_followers/<user_id>', views.num_followers, name='num_followers')
     
