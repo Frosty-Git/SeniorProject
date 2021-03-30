@@ -158,6 +158,7 @@ class SongId(models.Model):
     spotify_id = models.CharField(max_length=30, default='', primary_key=True)
     artists = models.TextField()
     name = models.TextField()
+    explicit = models.BooleanField()
     acousticness = models.FloatField()
     danceability = models.FloatField()
     energy = models.FloatField()

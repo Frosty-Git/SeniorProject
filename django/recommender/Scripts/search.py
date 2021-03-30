@@ -131,3 +131,7 @@ def get_song_name(track):
 def get_track(track):
     info = sp.track(track)
     return info
+
+def get_explicit(track):
+    explicit = sp.track(track)['explicit']
+    return explicit

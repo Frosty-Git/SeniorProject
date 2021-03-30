@@ -5,7 +5,7 @@ from .models import *
 from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
-from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features, get_artists, get_audio_features, get_track, get_song_name
+from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features, get_artists, get_audio_features, get_track, get_song_name, get_explicit
 from django.contrib.auth.models import User
 from user_profile.models import *
 import re
@@ -130,6 +130,7 @@ def save_songs(track_list):
             features = get_audio_features([track])[0]
             new_song = SongId(pk=track, artists=get_artists(track),
                                         name=get_song_name(track),
+                                        explicit=get_explicit(track),
                                         acousticness=features.get('acousticness'), 
                                         danceability=features.get('danceability'),
                                         energy=features.get('energy'),
