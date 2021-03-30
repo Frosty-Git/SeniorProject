@@ -32,10 +32,10 @@ class UserProfile(models.Model):
                                         symmetrical=False)
     num_followers = models.PositiveIntegerField(default=0)
     num_following = models.PositiveIntegerField(default=0)
-    access_token = models.CharField(default='None', max_length=255)
-    refresh_token = models.CharField(default='None', max_length=255)
-    expires_at = models.CharField(default='None', max_length=50)
-    scope = models.TextField(default='None')
+    access_token = models.CharField(default='No Value', max_length=255)
+    refresh_token = models.CharField(default='No Value', max_length=255)
+    expires_at = models.CharField(default='No Value', max_length=50)
+    scope = models.TextField(default='No Value')
 
     def __str__(self):
         return self.user.username
