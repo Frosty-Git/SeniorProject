@@ -15,9 +15,12 @@ from datetime import datetime
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import recommender.Scripts.client_credentials as client_cred
-from recommender.Scripts.spotify_token import *
+from recommender.Scripts.spotify_manager import SpotifyManager
 
 # Create your views here.
+
+# global variable for spotify manager
+spotify_manager = SpotifyManager()
 
 def sign_up(request):
     """
@@ -478,14 +481,20 @@ def delete_song(request, playlist_id, sop_pk):
     return redirect('/user/playlist/' + str(playlist_id))
 
 def link_spotify(request):
-    client_cred.setup()
-    scope = ('user-read-recently-played user-top-read user-read-playback-position '
-        'playlist-modify-public playlist-modify-private playlist-read-private '
-        'playlist-read-collaborative user-library-modify user-library-read')
-    spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
-    authenticator = spotipy.oauth2.SpotifyOAuth(scope=scope)
+    spotify = spotify_manager.create_spotify()
     spotify.me()
-    # This probably needs to go elsewhere. This will not save the token
-    # if it is right here.
-    #save_token(request, authenticator)
-    return redirect('/user/profile/' + str(request.user.id))    
+    return redirect()
+
+def save_token_redirect(request):
+    spotify = spotify_manager.create_spotify()
+    cached_token = spotify_manager.auth_manager.get_cached_token()
+    if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
+        user = UserProfile.objects.get(user=request.user.id)
+        user.access_token = cached_token['access_token']
+        user.refresh_token = cached_token['refresh_token']
+        user.expires_at = cached_token['expires_at']
+        user.scope = cached_token['scope']
+        user.linked_to_spotify = True
+        user.save()
+    return redirect('/')
+
