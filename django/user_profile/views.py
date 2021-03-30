@@ -265,7 +265,7 @@ def update_profile(request):
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.date_last_update = timezone.now()
-
+            
             profile.save()
             messages.success(request, ('Profile has been updated!'))
             return redirect('/user/update_profile/')
@@ -283,40 +283,113 @@ def user_list(request):
 
 def get_playlists(request, user_id):
     """
-    Gets all playlists for a user.
+    Gets all playlists for yourself.
     Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliott
     """
-    you = UserProfile.objects.get(pk=user_id)
-    playlists = Playlist.objects.filter(user_profile_fk=you)
-    playlistform = PlaylistForm()
-    context = {
-        'playlists': playlists,
-        'playlistform': playlistform
-    }
+    # Check to see you are accessing the playlist page that is your own.
+    if request.user == User.objects.get(pk=user_id):
+        you = UserProfile.objects.get(pk=user_id)
+        playlists = Playlist.objects.filter(user_profile_fk=you)
+        playlistform = PlaylistForm()
+        context = {
+            'playlists': playlists,
+            'playlistform': playlistform,
+            'profile': you,
+        }
+        return render(request, 'playlists/playlists.html', context)
+    # If it is not your own, then redirect to the page set up for viewing
+    # playlists that aren't yours.
+    else:
+        return redirect('/user/otherplaylists/' + str(user_id))
 
-    return render(request, 'profile/playlists.html', context)
+def other_playlists(request, user_id):
+    """
+    Gets all playlists for a user.
+    Last updated: 3/23/27 by Jacelynn Duranceau
+    """
+    # There would be no reason to be able to access the playlist page where you
+    # wouldn't be able to edit it if it is your own, so we check that you are
+    # accessing one that isn't.
+    if request.user != User.objects.get(pk=user_id):
+        user = UserProfile.objects.get(pk=user_id)
+        all_playlists = Playlist.objects.filter(user_profile_fk=user)
+        playlists = []
+        # Only show playlists that aren't private
+        for playlist in all_playlists:
+            if playlist.is_private is False:
+                playlists.append(playlist)
+        context = {
+            'playlists': playlists,
+            'profile': user,
+        }
+        return render(request, 'playlists/other_playlists.html', context)
+    # If the playlist is yours, then redirect to the page where you can actually
+    # modify it.
+    else:
+        return redirect('/user/playlists/' + str(user_id))
 
 def get_songs_playlist(request, playlist_id):
     """
-    Gets the songs on a playlist based on the playlist's id
-    Last updated: 3/23/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    Gets the songs on your playlist based on the playlist's id
+    Last updated: 3/28/21 by Jacelynn Duranceau, Tucker Elliot, Joe Frost
     """
     you = UserProfile.objects.get(pk=request.user.id)
-    playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
-    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
-    songs = {}
-    for match in matches:
-        # sop_id is the id for the primary key of the row into the SongOnPlaylist
-        # table that the matching songs to playlists come from
-        sop_id = match.get('id')
-        song_id = match.get('spotify_id')
-        songs[sop_id] = song_id
+    # This automatically makes it so that you can't access a playlist that is
+    # not yours since there will be no matching playlist query for your user id
+    # if the playlist actually belongs to another user. It will go through the
+    # exception block if so.
+    try:
+        playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
+        matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+        songs = {}
+        for match in matches:
+            # sop_id is the id for the primary key of the row into the SongOnPlaylist
+            # table that the matching songs to playlists come from
+            sop_id = match.get('id')
+            song_id = match.get('spotify_id')
+            songs[sop_id] = song_id
 
-    context = {
-        'songs': songs,
-        'playlist': playlist,
-    }
-    return render(request, 'profile/single_playlist.html', context)
+        context = {
+            'songs': songs,
+            'playlist': playlist,
+        }
+        return render(request, 'playlists/single_playlist.html', context)
+    except:
+        # Redirect back to your own playlists page if you are trying to access
+        # a playlist that does not belong to you or does not exist.
+        return redirect('/user/playlists/' + str(request.user.id))
+
+def get_other_songs_playlist(request, user_id, playlist_id):
+    """
+    Gets the songs on a user's playlist based on the playlist's id
+    Last updated: 3/28/21 by Jacelynn Duranceau
+    """
+    # Checks to see the playlist page you are accessing isn't your own
+    if request.user != User.objects.get(pk=user_id): 
+        user = UserProfile.objects.get(pk=user_id)
+        playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=user)
+        # Do not allow access to a user's private playlist
+        if playlist.is_private:
+            return redirect('/user/playlists/' + str(user_id))
+        matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+        songs = {}
+        for match in matches:
+            # sop_id is the id for the primary key of the row into the SongOnPlaylist
+            # table that the matching songs to playlists come from
+            sop_id = match.get('id')
+            song_id = match.get('spotify_id')
+            songs[sop_id] = song_id
+
+        context = {
+            'songs': songs,
+            'playlist': playlist,
+            'profile': user,
+        }
+        return render(request, 'playlists/other_single_playlist.html', context)
+    else:
+        # This means you are trying to access your own playlist page, so redirect
+        # there.
+        return redirect('/user/playlist/' + str(playlist_id))
 
 def create_playlist_popup(request):
     """
@@ -327,7 +400,9 @@ def create_playlist_popup(request):
         playlist_form = PlaylistForm(request.POST, request.FILES)
         if playlist_form.is_valid():
             you = UserProfile.objects.get(pk=request.user.id)
-            playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), image=playlist_form.cleaned_data.get('image'))
+            playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), 
+                                image=playlist_form.cleaned_data.get('image'),
+                                is_private=playlist_form.cleaned_data.get('is_private'))
             playlist.save()
             # playlist = playlist_form.save(commit=False)
             return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
@@ -350,26 +425,36 @@ def add_song_to_playlist(request, query):
         #return redirect('/user/playlists/' + str(request.user.id))
         # return render(request, 'recommender/results.html')
     else:
-        return render(request, 'profile/addsong_popup.html')
+        return render(request, 'playlists/addsong_popup.html')
 
 def edit_playlist_popup(request):
     """
     Updates a user's playlist
-    Last updated: 3/24/21 by Jacelynn Duranceau
+    Last updated: 3/27/21 by Jacelynn Duranceau
     """
     if request.method == 'POST':
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
         name = request.POST.get('new_name')
         img = request.FILES.get('img')
+        if playlist.is_private is True:
+            is_private = request.POST.get('is_private_t')
+        elif playlist.is_private is False:
+            is_private = request.POST.get('is_private_f')
+        if is_private == 'on':
+            is_private = True
+        elif is_private == None:
+            is_private = False
         if name is not None:
             playlist.name = name
-            playlist.image = img
+            if img is not None:
+                playlist.image = img
+            playlist.is_private = is_private
             playlist.date_last_updated = timezone.now()
             playlist.save()
         return redirect('/user/playlist/' + str(playlist_id))
     else:
-        return render(request, 'profile/editplaylist_popup.html')
+        return render(request, 'playlists/editplaylist_popup.html')
 
 def delete_playlist(request, playlist_id):
     """

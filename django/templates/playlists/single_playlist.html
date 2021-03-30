@@ -7,19 +7,27 @@
 
 
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+    My Playlist:
+    <br>
     {% if playlist.image %}
         <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>
     {% else %}
         <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="50px" height="50px" style="border-radius: 50%;">
     {% endif %}
-    Playlist: {{ playlist.name }}
+    {{ playlist.name }}
+    {% if playlist.is_private %}
+        <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
+    {% endif %}
 </h1>
 
 <div class="center" style="width:150px; text-align:center;">
     <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
         Edit Playlist
     </button>
-    {% include 'profile/editplaylist_popup.html' %}
+    {% include 'playlists/editplaylist_popup.html' %}
+</div>
+<div class="center" style="width:200px; text-align:center; margin-top:10px;">
+    <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
 </div>
 
 <table class="center" style="width:40%;">
