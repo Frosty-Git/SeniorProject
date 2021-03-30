@@ -5,7 +5,7 @@ from .models import *
 from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
-from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features
+from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features, get_artists, get_audio_features, get_track, get_song_name
 from django.contrib.auth.models import User
 from user_profile.models import *
 import re
@@ -72,8 +72,11 @@ def results(request):
         if form.is_valid():
             term = request.POST.get('term')
             track1_ids = search_tracks(term, 5, 0)
+            save_songs(track1_ids)
             track2_ids = search_tracks(term, 5, 4)
+            save_songs(track2_ids)
             track3_ids = search_tracks(term, 5, 9)
+            save_songs(track3_ids)
             
             album1_ids = search_albums(term, 5, 0)
             album2_ids = search_albums(term, 5, 4)
@@ -84,6 +87,9 @@ def results(request):
             artist3_ids = search_artists(term, 5, 9)
             
             features = search_audio_features(term)
+            artists = get_artists(track1_ids[0])
+            track_info = get_track(track1_ids[0])
+            name = get_song_name(track1_ids[0])
 
             playlists = []
             user_id = request.user.id
@@ -106,8 +112,33 @@ def results(request):
                 'features' : features,
                 'playlists' : playlists,
                 'users' : users,
+                'artists': artists,
+                'track_info': track_info,
+                'song_name': name
             }
     return render(request, 'recommender/results.html', context)
+
+def save_songs(track_list):
+    """
+    Save a song to our database if it does not already exist. Is called by the
+    results function to save all of the songs that come back for a search query.
+    Last updated: 3/30/21 by Marc Colin, Katie Lee, Jacelynn Duranceau
+    """
+    for track in track_list:
+        song = SongId.objects.filter(pk=track).first()
+        if song is None:
+            features = get_audio_features([track])[0]
+            new_song = SongId(pk=track, artists=get_artists(track),
+                                        name=get_song_name(track),
+                                        acousticness=features.get('acousticness'), 
+                                        danceability=features.get('danceability'),
+                                        energy=features.get('energy'),
+                                        instrumentalness=features.get('instrumentalness'),
+                                        speechiness=features.get('speechiness'),
+                                        loudness=features.get('loudness'),
+                                        tempo=features.get('tempo'),
+                                        valence=features.get('valence'))
+            new_song.save()
 
 #About Page
 def about(request):

@@ -418,10 +418,11 @@ def add_song_to_playlist(request, query):
     if request.method == 'POST':
         # user_id = request.user.id
         # user = UserProfile.objects.get(pk=user_id)
-        track = request.POST.get('track_id')
+        track_term = request.POST.get('track_id')
+        song = SongId.objects.get(pk=track_term)
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
-        new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=track)
+        new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=song)
         new_song.save()
         return redirect('/')
         # return redirect('/results/')

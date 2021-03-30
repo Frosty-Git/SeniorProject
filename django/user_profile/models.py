@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from recommender.models import Musicdata
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 # UserProfile
@@ -65,6 +65,7 @@ class Preferences(models.Model):
     Kevin Magill 03/29/2021 
     creates model for the database
     relationship is defined in UserProfile
+    Last updated: 3/30/21 by Marc Colin, Jacelynn Duranceau, Katie Lee
     """
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
     # 0 to 1
@@ -151,9 +152,24 @@ class FollowedPlaylist(models.Model):
     def __str__(self):
         return "Followed Playlist"
 
+class SongId(models.Model):
+    """
+    """
+    spotify_id = models.CharField(max_length=30, default='', primary_key=True)
+    artists = models.TextField()
+    name = models.TextField()
+    acousticness = models.FloatField()
+    danceability = models.FloatField()
+    energy = models.FloatField()
+    instrumentalness = models.FloatField()
+    speechiness = models.FloatField()
+    loudness = models.FloatField()
+    tempo = models.FloatField()
+    valence = models.FloatField()
 
+    def __str__(self):
+        return self.name
 
-# Song On Playlist
 class SongOnPlaylist(models.Model):
     """
     Model representing a table between a song and a playlist.
@@ -161,8 +177,16 @@ class SongOnPlaylist(models.Model):
     Kevin Magill
     """
     playlist_from = models.ForeignKey(Playlist, related_name='playlist_from', on_delete=models.CASCADE)
-    spotify_id = models.CharField(max_length=30, default='')
+    spotify_id = models.ForeignKey(SongId, related_name='song_to', on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return "Song"
+
+class SongToUser(models.Model):
+    """
+    """
+    user_from = models.ForeignKey(UserProfile, related_name='song_user_from', on_delete=models.CASCADE)
+    songid_to = models.ForeignKey(SongId, related_name='user_song_to', on_delete=models.CASCADE)
+    vote = models.TextField()   # Either Like or Dislike
+    date_created = models.DateTimeField(auto_now_add=True)

@@ -265,7 +265,7 @@ def popup_songpost(request):
 def upvote(request):
     """
     Counts upvotes for posts
-    Last updated: 3/22/21 by Marc Colin, Katie Lee
+    Last updated: 3/30/21 by Marc Colin, Katie Lee
     """
     post_id = request.POST.get('post_id')
     action = request.POST.get('action')
@@ -274,31 +274,30 @@ def upvote(request):
         post = Post.objects.get(pk=post_id)
         type_post = post.type_post
         if action == 'like':
-            upvote = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
-            downvote = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
-            if upvote is None:
-                up = PostUserUpvote(user_from=user, post_to=post)
+            vote = PostUserVote.objects.filter(user_from=user, post_to=post).first()
+            if vote is None:
+                up = PostUserVote(user_from=user, post_to=post, vote="Like")
                 up.save()
-                if downvote is not None:
-                    if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "like")
-                    downvote.delete()
-                    post.upvotes += 2
-                    post.save()
-                    return JsonResponse({'status':'switch'})
-                else:
-                    if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "like")
-                    post.upvotes += 1
-                    post.save()
-                    return JsonResponse({'status':'ok'})
-            else:
-                upvote.delete()
-                post.upvotes -= 1
+                if type_post == 'SongPost':
+                    songpost = SongPost.objects.get(pk=post_id)
+                    change_prefs_songpost(songpost.song, user, "like")
+                post.upvotes += 1
                 post.save()
-                return JsonResponse({'status':'undo_upvote'})
+                return JsonResponse({'status':'ok'})
+            else:
+                if vote.vote == 'Dislike':
+                    if type_post == 'SongPost':
+                        songpost = SongPost.objects.get(pk=post_id)
+                        change_prefs_songpost(songpost.song, user, "like")
+                    vote.vote = 'Like'
+                    post.upvotes += 2
+                    post.save()                                    
+                    return JsonResponse({'status':'switch'}) 
+                else:
+                    vote.delete()
+                    post.upvotes -= 1
+                    post.save()
+                    return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
 
 def downvote(request):
@@ -313,31 +312,30 @@ def downvote(request):
         post = Post.objects.get(pk=post_id)
         type_post = post.type_post
         if action == 'dislike':
-            down_list = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
-            up_list = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
-            if down_list is None:
-                downvote = PostUserDownvote(user_from=user, post_to=post)
-                downvote.save()
-                if up_list is not None:
-                    if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "dislike")
-                    up_list.delete()
-                    post.upvotes -= 2
-                    post.save()
-                    return JsonResponse({'status':'switch'})
-                else:
-                    if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "dislike")
-                    post.upvotes -= 1
-                    post.save()
-                    return JsonResponse({'status':'ok'})
-            else:
-                down_list.delete()
-                post.upvotes += 1
+            vote = PostUserVote.objects.filter(user_from=user, post_to=post).first()
+            if vote is None:
+                down = PostUserVote(user_from=user, post_to=post, vote="Dislike")
+                down.save()
+                if type_post == 'SongPost':
+                    songpost = SongPost.objects.get(pk=post_id)
+                    change_prefs_songpost(songpost.song, user, "dislike")
+                post.upvotes -= 1
                 post.save()
-                return JsonResponse({'status':'undo_downvote'})
+                return JsonResponse({'status':'ok'})
+            else:
+                if vote.vote == 'Like':
+                    if type_post == 'SongPost':
+                        songpost = SongPost.objects.get(pk=post_id)
+                        change_prefs_songpost(songpost.song, user, "dislike")
+                    vote.vote = 'Dislike'
+                    post.upvotes -= 2
+                    post.save()                                       
+                    return JsonResponse({'status':'switch'}) 
+                else:
+                    vote.delete()
+                    post.upvotes += 1
+                    post.save()
+                    return JsonResponse({'status':'undo_downvote'})
     return JsonResponse({'status':'ko'})
     
     
