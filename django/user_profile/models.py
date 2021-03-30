@@ -31,6 +31,10 @@ class UserProfile(models.Model):
                                         symmetrical=False)
     num_followers = models.PositiveIntegerField(default=0)
     num_following = models.PositiveIntegerField(default=0)
+    access_token = models.CharField(default='None', max_length=255)
+    refresh_token = models.CharField(default='None', max_length=255)
+    expires_at = models.CharField(default='None', max_length=50)
+    scope = models.TextField(default='None')
 
     def __str__(self):
         return self.user.username
@@ -147,7 +151,7 @@ class SongOnPlaylist(models.Model):
     Kevin Magill
     """
     playlist_from = models.ForeignKey(Playlist, related_name='playlist_from', on_delete=models.CASCADE)
-    spotify_id = models.CharField(max_length=30)
+    spotify_id = models.CharField(max_length=30, default='')
     date_added = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
