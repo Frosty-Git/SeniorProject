@@ -22,6 +22,10 @@
     padding-right: 10px;
 }
 
+.profilelink a:hover {
+    color:lightpink;
+}
+
 #feedheader a {
     text-decoration: none;
     

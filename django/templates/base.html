@@ -85,7 +85,7 @@
                 </ul>
                 <form class="d-flex" method="POST" action="{% url 'recommender:results' %}" style="text-align: center; margin: auto">
                   {% csrf_token %}
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="term" style="color: black; width: 300px;">
+                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="term" style="color: black; width: 350px;">
                   <button class="btn btn-outline-light" type="submit">Search</button>
                 </form>
                 {% if user.is_authenticated %}

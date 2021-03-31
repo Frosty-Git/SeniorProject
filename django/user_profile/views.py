@@ -149,14 +149,14 @@ def profile(request, user_id):
             posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
             follower_list = profile.users_followed.all()[:5]
 
-            post_list = []
+            nli_post_list = []
             for post in posts:
                 new_post = cast_subclass(post)
-                post_list.append(new_post)
+                nli_post_list.append(new_post)
 
             context = {
                 'profile': profile,
-                'post_list': post_list,
+                'nli_post_list': nli_post_list,
                 'follower_list': follower_list,
                 'nofollow': 'nofollow',
                 'acousticness': all_prefs['acousticness'],

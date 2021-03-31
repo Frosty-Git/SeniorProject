@@ -247,9 +247,9 @@ def popup_post(request, post_id):
     Last updated: 3/22/21 by Katie Lee
     """
     post = Post.objects.get(pk=post_id)
-    user_id = request.user.id
-    user = UserProfile.objects.get(pk=user_id)
     if request.method == 'POST':
+        user_id = request.user.id
+        user = UserProfile.objects.get(pk=user_id)
         text = request.POST.get('comment_text')
         if text is not None:
             comment = Comment(text=text, post_fk=post, user_profile_fk=user)
