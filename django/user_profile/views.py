@@ -492,6 +492,7 @@ def save_token_redirect(request):
     cached_token = spotify_manager.auth_manager.get_access_token(request.GET.__getitem__('code'))
     if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
         user = UserProfile.objects.get(user=request.user.id)
+        user.spotify_user_id = spotify.me().get('id')
         user.access_token = cached_token['access_token']
         user.refresh_token = cached_token['refresh_token']
         user.expires_at = cached_token['expires_at']

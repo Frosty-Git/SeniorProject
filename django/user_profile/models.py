@@ -36,6 +36,7 @@ class UserProfile(models.Model):
     refresh_token = models.CharField(default='No Value', max_length=255)
     expires_at = models.CharField(default='No Value', max_length=50)
     scope = models.TextField(default='No Value')
+    spotify_user_id = models.CharField(default='No Value', max_length=255)
 
     def __str__(self):
         return self.user.username
