@@ -1,4 +1,4 @@
-from django.utils import timezone
+import time
 import os
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
@@ -23,7 +23,7 @@ class SpotifyManager:
     def token_check(self, request):
         user = UserProfile.objects.get(user=request.user.id)
         
-        if(user.expires_at - int(timezone.now) <= 0):
+        if(int(user.expires_at) - int(time.time()) <= 0):
             token_info = self.auth_manager.refresh_access_token(user.refresh_token)
             
             user.access_token = token_info['access_token']
