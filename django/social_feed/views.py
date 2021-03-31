@@ -23,7 +23,7 @@ def display_posts(request):
     """
     Displays all posts in the database. Based only on users your follow and
     yourself.
-    Last updated: 3/17/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
+    Last updated: 3/30/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
     all_post_list = Post.objects.order_by('-date_last_updated')
     you = UserProfile.objects.get(pk=request.user.id)
@@ -43,6 +43,9 @@ def display_posts(request):
 
 def feed_vote_dictionary(votes, posts, you, following):
     """
+    Creates a dictionary that makes the post the key
+    and upvote/downvote in a list the value. Does it for all following the user.
+    Last updated: 3/30/21 by Katie Lee
     """
     post_list = {}
     for post in posts:
