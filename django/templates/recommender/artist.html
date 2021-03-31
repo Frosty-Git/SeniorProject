@@ -19,43 +19,130 @@
 <br>
 
 
-{% if highTracks %}
+{% if highTracks1 %}
 
-<p>
-    {{ highTracks }}
-</p>
+<p>highTrack IDS: {{ highTracks1 }} {{ highTracks2 }}</p>
 
-<p>
-    {{ lowTracks }}
-</p>
+<h3>High-Value Tracks:</h3>
+    <div id="highTrackCarousel" class="carousel slide" data-bs-interval="false">
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="false">
+            <!-- <img src="..." class="d-block w-100" alt="..."> -->
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                        {% for track in highTracks1 %}
+            
+                            <td>
+                                <div class='embed-container'>
+                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                                </div>
+                                <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
+                                {% include 'social_feed/popup_songpost.html' with track=track %}
+                                {% if playlists %}
+                                <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track }}">Add to Playlist</button>
+                                {% include 'playlists/addsong_popup.html' with term=term%}
+                                {% endif %}
+                            </td>
+            
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                        {% for track in highTracks2 %}
+            
+                            <td>
+                                <div class='embed-container'>
+                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                                </div>
+                                <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
+                                {% include 'social_feed/popup_songpost.html' with track=track %}
+                            </td>
 
-<table class="table">
-<tbody>
-<tr>
-    
-{% for track in highTracks %}
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+         
+        <button class="carousel-control-prev" type="button" data-bs-target="#highTrackCarousel"  data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#highTrackCarousel"  data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
 
-<td>
-<iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="380" 
-frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-</td>
+{% endif %}
+
+{% if lowTracks1 %}
+
+<p>LowTrack IDS: {{ lowTracks1 }} {{ lowTracks2 }}</p>
 
 
-{% endfor %}
+<h3>Low-Value Tracks</h3>
+<div id="lowTrackCarousel" class="carousel slide" data-bs-interval="false">
+    <div class="carousel-inner">
+      <div class="carousel-item active" data-bs-interval="false">
+        <!-- <img src="..." class="d-block w-100" alt="..."> -->
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for track in lowTracks1 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="carousel-item" >
+        <div class="table">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    {% for track in lowTracks2 %}
+        
+                        <td>
+                            <div class='embed-container'>
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+                            </div>
+                        </td>
+        
+                    {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
 
-</tr>
-
-<tr>
-{% for track in lowTracks %}
-
-<td>
-  <iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="380" 
-  frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-  </td>
-  
-  
-{% endfor %}
-</tr>
+      <button class="carousel-control-prev" type="button" data-bs-target="#lowTrackCarousel"  data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#lowTrackCarousel"  data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
 
 {% endif %}
 
