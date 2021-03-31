@@ -90,6 +90,7 @@ def profile(request, user_id):
     Used to display a user's information on their profile
     Last updated: 3/20/21 by Marc Colin, Katie Lee, Jacelynn Duranceau, Kevin Magill
     """
+    all_prefs = get_preferences(user_id)
     if request.user == User.objects.get(pk=user_id):
         profile = UserProfile.objects.get(pk=user_id)
         posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
@@ -104,6 +105,16 @@ def profile(request, user_id):
             'follower_list': follower_list,
             'post_list': post_list,
             'image': profile.profilepic,
+            'acousticness': all_prefs['acousticness'],
+            'danceability': all_prefs['danceability'],
+            'energy': all_prefs['energy'],
+            'instrumentalness': all_prefs['instrumentalness'],
+            'speechiness': all_prefs['speechiness'],
+            'loudness': all_prefs['loudness'],
+            'loudness_adjusted': all_prefs['loudness_adjusted'],
+            'tempo': all_prefs['tempo'],
+            'valence': all_prefs['valence'],
+            'private_prefs': all_prefs['private_prefs'],
         }
     else:
         if request.user.id is not None:
@@ -122,6 +133,16 @@ def profile(request, user_id):
                 'follower_list': follower_list,
                 'is_following': is_following,
                 'image': loggedin.profilepic,
+                'acousticness': all_prefs['acousticness'],
+                'danceability': all_prefs['danceability'],
+                'energy': all_prefs['energy'],
+                'instrumentalness': all_prefs['instrumentalness'],
+                'speechiness': all_prefs['speechiness'],
+                'loudness': all_prefs['loudness'],
+                'loudness_adjusted': all_prefs['loudness_adjusted'],
+                'tempo': all_prefs['tempo'],
+                'valence': all_prefs['valence'],
+                'private_prefs': all_prefs['private_prefs'],
             }
         else:
             profile = UserProfile.objects.get(pk=user_id)
@@ -132,6 +153,16 @@ def profile(request, user_id):
                 'posts': posts,
                 'follower_list': follower_list,
                 'nofollow': 'nofollow',
+                'acousticness': all_prefs['acousticness'],
+                'danceability': all_prefs['danceability'],
+                'energy': all_prefs['energy'],
+                'instrumentalness': all_prefs['instrumentalness'],
+                'speechiness': all_prefs['speechiness'],
+                'loudness': all_prefs['loudness'],
+                'loudness_adjusted': all_prefs['loudness_adjusted'],
+                'tempo': all_prefs['tempo'],
+                'valence': all_prefs['valence'],
+                'private_prefs': all_prefs['private_prefs'],
             }
     return render(request, 'profile/profile.html', context)
 
@@ -179,6 +210,7 @@ def settings_save(request, user_id):
     if settings_form.is_valid():
         setting.private_profile = settings_form.cleaned_data.get('private_profile')
         setting.private_playlists = settings_form.cleaned_data.get('private_playlists')
+        setting.private_preferences = settings_form.cleaned_data.get('private_preferences')
         setting.light_mode = settings_form.cleaned_data.get('light_mode')
         setting.explicit_music = settings_form.cleaned_data.get('explicit_music')
         setting.live_music = settings_form.cleaned_data.get('live_music')
@@ -508,4 +540,45 @@ def save_token_redirect(request):
         user.linked_to_spotify = True
         user.save()
     return redirect('/')
+
+def get_preferences(user_id):
+    """
+    Gets the preferences for a user.
+    Last updated: 3/30/21 by Jacelynn Duranceau
+    """
+    user = UserProfile.objects.get(pk=user_id)
+    settings = Settings.objects.get(user_profile_fk=user)
+    private_prefs = settings.private_preferences
+    prefs = Preferences.objects.get(user_profile_fk=user)
+    acousticness = prefs.acousticness
+    danceability = prefs.danceability
+    energy = prefs.energy
+    instrumentalness = prefs.instrumentalness
+    speechiness = prefs.speechiness
+    loudness = prefs.loudness
+    # This value is negative and cannot be shown properly on the template 
+    # in a progress bar unless adjusted to be a positive. So, for the progress bar
+    # purposes the range will be 0 to 60 rather than -60 to 0
+    loudness_adjusted = loudness + 60
+    tempo = prefs.tempo
+    valence = prefs.valence
+    user_prefs = {
+        'private_prefs': private_prefs,
+        'acousticness': acousticness,
+        'danceability': danceability,
+        'energy': energy,
+        'instrumentalness': instrumentalness,
+        'speechiness': speechiness,
+        'loudness': loudness,
+        'loudness_adjusted': loudness_adjusted,
+        'tempo': tempo,
+        'valence': valence,
+    }
+    return user_prefs
+
+def reset_prefs(request):
+    """
+    Reset the user's preferences back to the default value
+    """
+    
 
