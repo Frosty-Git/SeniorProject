@@ -16,6 +16,8 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import recommender.Scripts.client_credentials as client_cred
 from recommender.Scripts.spotify_manager import SpotifyManager
+import os
+from django.core.cache import cache
 
 # Create your views here.
 
@@ -483,11 +485,11 @@ def delete_song(request, playlist_id, sop_pk):
 def link_spotify(request):
     spotify = spotify_manager.create_spotify()
     spotify.me()
-    return redirect()
+    return redirect('/')
 
 def save_token_redirect(request):
     spotify = spotify_manager.create_spotify()
-    cached_token = spotify_manager.auth_manager.get_cached_token()
+    cached_token = spotify_manager.auth_manager.get_access_token(request.GET.__getitem__('code'))
     if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
         user = UserProfile.objects.get(user=request.user.id)
         user.access_token = cached_token['access_token']
@@ -496,5 +498,6 @@ def save_token_redirect(request):
         user.scope = cached_token['scope']
         user.linked_to_spotify = True
         user.save()
+        os.remove(os.path.abspath(".cache"))
     return redirect('/')
 
