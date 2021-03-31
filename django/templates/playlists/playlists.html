@@ -6,15 +6,21 @@
 {% block content %}
 
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-    My Playlists
+    {% if profile.user.id == user.id %}
+        My Playlists
+    {% else %}
+        <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlists:
+    {% endif %}
 </h1>
 
+{% if profile.user.id == user.id %}
 <div class="center" style="width:150px; text-align:center;">
     <button type="button" class="btn btn-dark" onclick="modalClick()" data-bs-toggle="modal" data-bs-target="#createplaylistmodal">
         Create Playlist
     </button>
     {% include 'playlists/popup_playlist.html' %}
 </div>
+{% endif %}
 
 <br>
 
@@ -24,34 +30,61 @@
         <th style="text-align: center;">Title</th>
         <th style="text-align: center;">Date Last Updated</th>
     </tr>
+    {% if profile.user.id == user.id %}
+        {% for playlist in playlists %}
+            <tr style="border-bottom: 1px solid black;">
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
+                    {% if playlist.image %}
+                        <a href="{% url 'user:get_songs_playlist' user.id playlist.id %}">
+                            <img src="{{ playlist.image.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                        </a>
+                    {% else %}
+                        <a href="{% url 'user:get_songs_playlist' user.id playlist.id %}">
+                            <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                        </a>
+                    {% endif %}
+                </td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
+                    <a href="{% url 'user:get_songs_playlist' user.id playlist.id %}">{{ playlist.name }}</a>
+                    {% if playlist.is_private %}
+                    <img src="{% static 'images/private.png' type='image/png' %}" width="15px" height="15px">
+                    {% endif %}
+                </td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
+                    <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
+                </td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+                    <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
+                </td>
+        {% endfor %}
+    </tr>
+    {% else %}
     {% for playlist in playlists %}
-    <tr style="border-bottom: 1px solid black;">
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-            {% if playlist.image %}
-                <a href="{% url 'user:get_songs_playlist' playlist.id %}">
-                    <img src="{{ playlist.image.url }}" width="70px" height="70px" style="border-radius: 50%;">
-                </a>
-            {% else %}
-                <a href="{% url 'user:get_songs_playlist' playlist.id %}">
-                    <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
-                </a>
-            {% endif %}
-        </td>
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-            <a href="{% url 'user:get_songs_playlist' playlist.id %}">{{ playlist.name }}</a>
-            {% if playlist.is_private %}
-            <img src="{% static 'images/private.png' type='image/png' %}" width="15px" height="15px">
-            {% endif %}
-        </td>
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-            <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
-        </td>
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
-            <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
-        </td>
+        {% if not playlist.is_private %}
+            <tr style="border-bottom: 1px solid black;">
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
+                    {% if playlist.image %}
+                        <a href="{% url 'user:get_songs_playlist' user.id playlist.id %}">
+                            <img src="{{ playlist.image.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                        </a>
+                    {% else %}
+                        <a href="{% url 'user:get_songs_playlist' user.id playlist.id %}">
+                            <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                        </a>
+                    {% endif %}
+                </td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
+                    <a href="{% url 'user:get_songs_playlist' user.id playlist.id %}">{{ playlist.name }}</a>
+                    {% if playlist.is_private %}
+                    <img src="{% static 'images/private.png' type='image/png' %}" width="15px" height="15px">
+                    {% endif %}
+                </td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
+        {% endif %}
     {% endfor %}
-</tr>
+    </tr>
+    {% endif %}
 </table>
 
 <script>
