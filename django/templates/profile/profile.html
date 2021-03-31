@@ -74,7 +74,6 @@
         <br><br>
     </div>
 
-
     <div class="w3-col m6 w3-center">
         <div style="border-bottom: white double;">
             <div class="w3-row">
@@ -118,6 +117,66 @@
         </table>
     </div>
 </div> 
+
+{% if profile.user.id == user.id %}
+<div style="width: 350px; text-align: center;">
+    <h2>Music Feature Preferences</h2>
+
+    Acousticness: {{ acousticness }}
+    <br>
+    0<progress min="0" max="1" value="{{ acousticness }}"></progress>1
+    <br>
+
+    Danceability: {{ danceability }}
+    <br>
+    0<progress min="0" max="1" value="{{ danceability }}"></progress>1
+    <br>
+
+    Energy: {{ energy }}
+    <br>
+    0<progress min="0" max="1" value="{{ energy }}"></progress>1
+    <br>
+
+    Instrumentalness: {{ instrumentalness}}
+    <br>
+    0<progress min="0" max="1" value="{{ instrumentalness }}"></progress>1
+    <br>
+
+    Speechiness: {{ speechiness }}
+    <br>
+    0<progress min="0" max="1" value="{{ speechiness }}"></progress>1
+    <br>
+
+    Loudness: {{ loudness }}
+    <br>
+    -60<progress min="0" max="60" value="{{ loudness_adjusted }}"></progress>0
+    <br>
+
+    Tempo: {{ tempo }}
+    <br>
+    50<progress min="50" max="150" value="{{ tempo }}"></progress>150
+    <br>
+
+    Valence: {{ valence }}
+    <br>
+    0<progress min="0" max="1" value="{{ valence }}"></progress>1
+    <br>
+
+ </div>
+{% else %}
+<div>
+    {% if private_prefs %}
+    <!-- You're viewing someone else's profile, so don't show their preferences if they don't want you to be able to see them -->
+    {% else %}
+    <h2>Music Feature Preferences</h2>
+
+        Danceability
+        0<progress min="0" max="1" value="{{ danceability }}"></progress>1
+        
+        
+    {% endif%}
+</div>
+{% endif %}
 
 
 <script type="text/javascript" src="{% static 'js/profile.js' %}"></script>
