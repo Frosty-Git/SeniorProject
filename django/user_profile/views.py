@@ -488,15 +488,36 @@ def delete_song(request, playlist_id, sop_pk):
     song.delete()
     return redirect('/user/playlist/' + str(playlist_id))
 
+def export_to_spotify(request, playlist_id):
+    """
+    Exports a playlist to the user's linked Spotify account. The exported 
+    playlist will show up on that user's Spotify playlists list if they check 
+    their Spotify app.
+    Last updated: 3/31/2021 Joe Frost, Tucker Elliott
+    """
 
-
+    return redirect('/user/playlists/' + str(request.user.id))
 
 def link_spotify(request):
+    """
+    This is the on action method for the Link Spotify button in the 
+    user profile page. It will send the user to the Spotify login page 
+    if they are currently not logged in.
+    Last updated: 3/31/2021 Joe Frost, Tucker Elliott
+    """
     spotify = spotify_manager.create_spotify()
     spotify.me()
     return redirect('/')
 
 def save_token_redirect(request):
+    """
+    This is a complementary view to the link_spotify view. After the user 
+    logs into Spotify on the Spotify login page which they were sent to 
+    after clicking the link spotify button in the user profile, the Spotify 
+    page will send them here. This view saves the Spotify token data into our 
+    database under the PengBeats user's profile entry.
+    Last updated: 3/31/2021 Joe Frost, Tucker Elliott
+    """
     spotify = spotify_manager.create_spotify()
     cached_token = spotify_manager.auth_manager.get_access_token(request.GET.__getitem__('code'))
     if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
