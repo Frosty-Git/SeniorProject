@@ -9,8 +9,8 @@
 </style>
 
 <div class="container feed_table" style="overflow-y: scroll; height: 560px;">
-    {% if posts %}
-        {% for post in posts %}
+    {% if post_list %}
+        {% for post in post_list %}
             <div class="row" style="padding-top: 10px;  margin-bottom: -10px; z-index: -1;">
                 <div class="col-2 post_image">
                     {% if post.user_profile_fk.profilepic %}
