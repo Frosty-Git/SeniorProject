@@ -4,3 +4,7 @@ function get_age(date) {
     let actualAge = Math.abs(ageDate.getUTCFullYear() - 1970);
     return actualAge;
 }
+
+function checkText(comment_text) {
+    return !comment_text ? false : true;
+}

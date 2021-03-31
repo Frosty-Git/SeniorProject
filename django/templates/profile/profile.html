@@ -65,7 +65,9 @@
         {% if profile.user.id == user.id %}
             <a class="btn btn-dark" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
         {% else %}
-            {% if is_following %}
+            {% if nofollow %}
+
+            {% elif is_following %}
                 <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
             {% else %}
                 <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>

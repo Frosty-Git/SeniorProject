@@ -84,7 +84,7 @@ def login_request(request):
     return render(request, 'registration/login.html', {"form": form})
 
 
-@login_required
+
 def profile(request, user_id):
     """
     Used to display a user's information on their profile
@@ -117,33 +117,53 @@ def profile(request, user_id):
             'private_prefs': all_prefs['private_prefs'],
         }
     else:
-        loggedin = UserProfile.objects.get(pk=request.user.id)
-        profile = UserProfile.objects.get(pk=user_id)
-        follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
-        is_following = False if follower is None else True
-        posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
-        follower_list = profile.users_followed.all()[:5]
-        votes = PostUserVote.objects.filter(user_from=loggedin).values()
+        if request.user.id is not None:
+            loggedin = UserProfile.objects.get(pk=request.user.id)
+            follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
+            is_following = False if follower is None else True
+            votes = PostUserVote.objects.filter(user_from=loggedin).values()
+            profile = UserProfile.objects.get(pk=user_id)
+            posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+            follower_list = profile.users_followed.all()[:5]
+            post_list = vote_dictionary(votes, posts)
 
-        post_list = vote_dictionary(votes, posts)
-
-        context = {
-            'profile': profile,
-            'post_list': post_list,
-            'follower_list': follower_list,
-            'is_following': is_following,
-            'image': loggedin.profilepic,
-            'acousticness': all_prefs['acousticness'],
-            'danceability': all_prefs['danceability'],
-            'energy': all_prefs['energy'],
-            'instrumentalness': all_prefs['instrumentalness'],
-            'speechiness': all_prefs['speechiness'],
-            'loudness': all_prefs['loudness'],
-            'loudness_adjusted': all_prefs['loudness_adjusted'],
-            'tempo': all_prefs['tempo'],
-            'valence': all_prefs['valence'],
-            'private_prefs': all_prefs['private_prefs'],
-        }
+            context = {
+                'profile': profile,
+                'post_list': post_list,
+                'follower_list': follower_list,
+                'is_following': is_following,
+                'image': loggedin.profilepic,
+                'acousticness': all_prefs['acousticness'],
+                'danceability': all_prefs['danceability'],
+                'energy': all_prefs['energy'],
+                'instrumentalness': all_prefs['instrumentalness'],
+                'speechiness': all_prefs['speechiness'],
+                'loudness': all_prefs['loudness'],
+                'loudness_adjusted': all_prefs['loudness_adjusted'],
+                'tempo': all_prefs['tempo'],
+                'valence': all_prefs['valence'],
+                'private_prefs': all_prefs['private_prefs'],
+            }
+        else:
+            profile = UserProfile.objects.get(pk=user_id)
+            posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+            follower_list = profile.users_followed.all()[:5]
+            context = {
+                'profile': profile,
+                'posts': posts,
+                'follower_list': follower_list,
+                'nofollow': 'nofollow',
+                'acousticness': all_prefs['acousticness'],
+                'danceability': all_prefs['danceability'],
+                'energy': all_prefs['energy'],
+                'instrumentalness': all_prefs['instrumentalness'],
+                'speechiness': all_prefs['speechiness'],
+                'loudness': all_prefs['loudness'],
+                'loudness_adjusted': all_prefs['loudness_adjusted'],
+                'tempo': all_prefs['tempo'],
+                'valence': all_prefs['valence'],
+                'private_prefs': all_prefs['private_prefs'],
+            }
     return render(request, 'profile/profile.html', context)
 
 def vote_dictionary(votes, posts):
