@@ -37,7 +37,7 @@
     {% if profile.user.id == user.id or playlist.is_shareable%}
         <div class="center" style="width:100px; text-align:center; margin-top:10px;">
             <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
-            {% include 'social_feed/popup_playlistpost.html' %}
+            {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
         </div>
     {% endif %}
 {% endif %}

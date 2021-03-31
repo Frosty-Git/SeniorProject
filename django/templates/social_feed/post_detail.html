@@ -6,6 +6,15 @@
 
 {% block content %}
     <p>{{ post.text }}</p>
+    {% if post.type_post == "SongPost" %}
+        <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    {% endif %}
+    <p> 
+        {% if post.type_post == "PlaylistPost" %}
+            <a href="{% url 'user:profile' post.playlist.user_profile_fk.user.id %}">@{{ post.playlist.user_profile_fk.user.username }}</a>'s playlist: <a href="{% url 'user:get_songs_playlist' post.playlist.user_profile_fk.user.id post.playlist.id %}">{{ post.playlist.name }}</a>
+        {% endif %}
+    </p>
+
     by <a href="{% url 'user:profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
     <p>at {{ post.date_last_updated }}</p>
     

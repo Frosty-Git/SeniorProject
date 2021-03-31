@@ -15,7 +15,7 @@
 
 {% if profile.user.id == user.id %}
 <div class="center" style="width:150px; text-align:center;">
-    <button type="button" class="btn btn-dark" onclick="modalClick()" data-bs-toggle="modal" data-bs-target="#createplaylistmodal">
+    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createplaylistmodal">
         Create Playlist
     </button>
     {% include 'playlists/popup_playlist.html' %}
@@ -59,13 +59,14 @@
                     <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
-                    <button type="button" class="btn btn-dark" onclick="postModalClick()" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">
+                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">
                         Share
                     </button>
-                    {% include '../social_feed/popup_playlistpost.html' %}
                 </td>
+            {% include 'social_feed/popup_playlistpost.html' with user_id=user.id %}
         {% endfor %}
     </tr>
+
     <!-- You are viewing someone elses playlists -->
     {% else %}
     {% for playlist in playlists %}
@@ -90,36 +91,17 @@
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
                 {% if playlist.is_shareable%}
-                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
-                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
-                    {% include 'social_feed/popup_playlistpost.html' %}
-                </td>
+                    <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                        {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
+                    </td>
                 {% endif %}
+                {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
         {% endif %}
+
     {% endfor %}
     </tr>
     {% endif %}
 </table>
 
-<script>
-    var playlistModal = document.getElementById('createplaylistmodal');
-    function modalClick() {
-        window.history.pushState({},"", "/profile/createplaylist/");
-        playlistModal.show();
-    }  
-
-    playlistModal.addEventListener('hidden.bs.modal', function (event) {
-        window.history.replaceState({}, "", "{% url 'user:get_playlists' user.id %}")
-    })
-
-    var sharePlaylistModal = document.getElementById('playlistpostmodal{{ playlist.id }}');
-    function postModalClick() {
-        window.history.pushState({},"", "/feed/share_playlistpost/");
-        sharePlaylistModal.show();
-    }  
-
-    sharePlaylistModal.addEventListener('hidden.bs.modal', function (event) {
-        window.history.replaceState({}, "", "{% url 'user:get_playlists' user.id %}")
-    })
-</script>
 {% endblock %}

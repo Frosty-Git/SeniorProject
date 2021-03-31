@@ -11,6 +11,7 @@ from recommender.Scripts.search import get_audio_features
 import numpy as np
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+import datetime
 
 # Create your views here.
 # def share_song(request, id):
@@ -84,7 +85,10 @@ def cast_subclass(post):
     try:
         return SongPost.objects.get(id=post.id)
     except:
-        return post
+        try:
+            return PlaylistPost.objects.get(id=post.id)
+        except:
+            return post
 
 def create_post(request):
     """
@@ -153,7 +157,7 @@ def get_comments(post_id):
     Gets all the comments on a particular post.
     Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
     """
-    post = Post.objects.get(id=post_id)
+    post = cast_subclass(Post.objects.get(id=post_id))
     comment_list = Comment.objects.filter(post_fk=post)
     comment_form = CommentForm()
 
@@ -284,7 +288,7 @@ def popup_playlistpost(request):
         user = UserProfile.objects.get(pk=user_id)
         text = request.POST.get('post_text')
         playlist_id = request.POST.get('playlist_id')
-        playlist_object = Playlists.objects.get(playlist_id)
+        playlist_object = Playlist.objects.get(pk=playlist_id)
         if text is not None:
             post = PlaylistPost(playlist=playlist_object, text=text, user_profile_fk=user, type_post="PlaylistPost")
             post.save()
@@ -293,6 +297,32 @@ def popup_playlistpost(request):
         return render(request, 'social_feed/popup_playlistpost.html')
 
 
+def check_posts(profile, song, vote):
+    """
+    """
+    posts = PostUserVote.objects.filter(user_from=profile).values('post_to_id', 'vote')
+    # Returns an empty array if the user has not liked anyything yet
+    if len(posts) != 0:
+        recent = datetime.datetime(1970, 1, 1).replace(tzinfo=None)
+        last_post = None
+        last_post_vote = None
+        for dicti in posts:
+            post = Post.objects.get(pk=dicti.get('post_to_id'))
+            type_post = post.type_post
+            if type_post == 'SongPost':
+                songpost = SongPost.objects.get(pk=post.id)
+                songid = songpost.song
+                created = songpost.date_created.replace(tzinfo=None)
+                if created >= recent:
+                    recent = created
+                    last_post = songpost
+                    last_post_vote = dicti.get('vote')
+
+        if song == last_post.song:
+            if last_post_vote == vote: # vote equals one another
+                return True
+        
+    return False
 
 def upvote(request):
     """
@@ -308,19 +338,21 @@ def upvote(request):
         if action == 'like':
             vote = PostUserVote.objects.filter(user_from=user, post_to=post).first()
             if vote is None:
+                if type_post == 'SongPost':
+                    songpost = SongPost.objects.get(pk=post_id).song
+                    if not check_posts(user, songpost, 'Like'):
+                        change_prefs_song(songpost, user, "like")
                 up = PostUserVote(user_from=user, post_to=post, vote="Like")
                 up.save()
-                if type_post == 'SongPost':
-                    songpost = SongPost.objects.get(pk=post_id)
-                    change_prefs_song(songpost.song, user, "like")
                 post.upvotes += 1
                 post.save()
                 return JsonResponse({'status':'ok'})
             else:
                 if vote.vote == 'Dislike':
                     if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_song(songpost.song, user, "like")
+                        songpost = SongPost.objects.get(pk=post_id).song
+                        if not check_posts(user, songpost, 'Like'):
+                            change_prefs_song(songpost, user, "like")
                     vote.vote = 'Like'
                     post.upvotes += 2
                     post.save()   
@@ -347,19 +379,21 @@ def downvote(request):
         if action == 'dislike':
             vote = PostUserVote.objects.filter(user_from=user, post_to=post).first()
             if vote is None:
+                if type_post == 'SongPost':
+                    song = SongPost.objects.get(pk=post_id).song
+                    if not check_posts(user, song, 'Dislike'):
+                        change_prefs_song(song, user, "dislike")
                 down = PostUserVote(user_from=user, post_to=post, vote="Dislike")
                 down.save()
-                if type_post == 'SongPost':
-                    songpost = SongPost.objects.get(pk=post_id)
-                    change_prefs_song(songpost.song, user, "dislike")
                 post.upvotes -= 1
                 post.save()
                 return JsonResponse({'status':'ok'})
             else:
                 if vote.vote == 'Like':
                     if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_song(songpost.song, user, "dislike")
+                        songpost = SongPost.objects.get(pk=post_id).song
+                        if not check_posts(user, songpost, 'Dislike'):
+                            change_prefs_song(songpost, user, "dislike")
                     vote.vote = 'Dislike'
                     post.upvotes -= 2
                     post.save()          
@@ -378,7 +412,7 @@ def change_prefs_song(track, profile, type_vote):
     Change the preferences for a user after they like or dislike a song.
     Last updated: 3/29/21 Katie Lee, Marc Colin, Jacelynn Duranceau
     """
-    features = get_audio_features(track)
+    features = get_audio_features([track])
     prefs = Preferences.objects.get(user_profile_fk=profile.user.id)
     song_pref = features[0]
 
@@ -415,28 +449,28 @@ def change_prefs_song(track, profile, type_vote):
             percent = 0 # We won't be making a change due to negligible difference
 
         elif absdiff < 20:
-            percent = 0.001 if type_vote == 'dislike' else 0.0005
+            percent = 0.002 if type_vote == 'dislike' else 0.001
 
         elif absdiff < 40:
-            percent = 0.002 if type_vote == 'dislike' else 0.001
+            percent = 0.004 if type_vote == 'dislike' else 0.002
                 
         elif absdiff < 60:
-            percent = 0.0025 if type_vote == 'dislike' else 0.00125
-                
-        elif absdiff < 80:
             percent = 0.005 if type_vote == 'dislike' else 0.0025
                 
+        elif absdiff < 80:
+            percent = 0.010 if type_vote == 'dislike' else 0.005
+                
         elif absdiff < 100:
-            percent = 0.0075 if type_vote == 'dislike' else 0.00375
+            percent = 0.015 if type_vote == 'dislike' else 0.0075
 
         elif absdiff < 200:
-            percent = 0.01 if type_vote == 'dislike' else 0.005
+            percent = 0.04 if type_vote == 'dislike' else 0.02
 
         elif absdiff < 400:
-            percent = 0.025 if type_vote == 'dislike' else 0.0125
+            percent = 0.05 if type_vote == 'dislike' else 0.025
 
         else: # >= 400
-            percent = 0.05 if type_vote == 'dislike' else 0.025
+            percent = 0.1 if type_vote == 'dislike' else 0.05
             
         change = percent * pref
         if diff > 0: # Song feature is greater than preference
@@ -465,8 +499,11 @@ def change_prefs_song(track, profile, type_vote):
         diff = arr[1]
         pref = arr[2]
         percent = arr[3]
-        # Double the effect of the max difference(s) in preferences
-        change = 2 * percent * pref
+        # Quadruple or Double the effect of the max difference(s) in preferences
+        if percent < 0.05:
+            change = 4 * percent * pref
+        else:
+            change = 2 * percent * pref
         if diff > 0: # Song feature is greater than preference
             # Move farther away from the current preferences if it is a dislike,
             # Move closer if it is a like. Like moves in same direction as the

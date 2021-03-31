@@ -1,7 +1,7 @@
 {% load static %}
 
 <!-- Included in playlists.html and single_playlist.html -->
-<div class="modal fade" id="#playlistpostmodal{{ playlist.id}}" tabindex="-1" aria-labelledby="myPlaylistPostModalLabel" aria-hidden="true"  style="color:black">
+<div class="modal fade" id="playlistpostmodal{{ playlist.id }}" tabindex="-1" aria-labelledby="myPlaylistPostModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form method="post" action="{% url 'feed:playlistpost' %}">
@@ -15,7 +15,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
                     <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
-                    <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">Playlist</a>
+                    Playlist to share: <a href="{% url 'user:get_songs_playlist' user_id playlist.id %}" target="_blank">{{ playlist.name }}</a>
                 </div>
 
                 <div class="modal-footer">

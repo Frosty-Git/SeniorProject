@@ -362,11 +362,11 @@ def song_upvote(request):
     action = request.POST.get('action')
     user = UserProfile.objects.get(pk=request.user.id)
     if track and action:
-        track = SongId.objects.get(pk=track)
+        song = SongId.objects.get(pk=track)
         if action == 'like':
-            vote = SongToUser.objects.filter(user_from=user, songid_to=track).first()
+            vote = SongToUser.objects.filter(user_from=user, songid_to=song).first()
             if vote is None:
-                up = SongToUser(user_from=user, songid_to=track, vote="Like")
+                up = SongToUser(user_from=user, songid_to=song, vote="Like")
                 up.save()
                 change_prefs_song(track, user, "like")
                 return JsonResponse({'status':'ok'})
@@ -390,11 +390,11 @@ def song_downvote(request):
     action = request.POST.get('action')
     user = UserProfile.objects.get(pk=request.user.id)
     if track and action:
-        track = SongId.objects.get(pk=track)
+        song = SongId.objects.get(pk=track)
         if action == 'dislike':
-            vote = SongToUser.objects.filter(user_from=user, songid_to=track).first()
+            vote = SongToUser.objects.filter(user_from=user, songid_to=song).first()
             if vote is None:
-                down = SongToUser(user_from=user, songid_to=track, vote="Dislike")
+                down = SongToUser(user_from=user, songid_to=song, vote="Dislike")
                 down.save()
                 change_prefs_song(track, user, "dislike")
                 return JsonResponse({'status':'ok'})
@@ -406,5 +406,5 @@ def song_downvote(request):
                     return JsonResponse({'status':'switch'}) 
                 else:
                     vote.delete()
-                    return JsonResponse({'status':'undo_upvote'})
+                    return JsonResponse({'status':'undo_downvote'})
     return JsonResponse({'status':'ko'})

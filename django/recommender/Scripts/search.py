@@ -66,7 +66,7 @@ def get_audio_features(track):
     said track.
     Last updated: 3/29/21 by Katie Lee, Jacelynn Duranceau, Marc Colin
     """
-    features = sp.audio_features(tracks=[track])
+    features = sp.audio_features(tracks=track)
     return features
 
 def search_artist_features(query, feature, high_or_low):
