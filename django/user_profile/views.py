@@ -560,5 +560,14 @@ def reset_prefs(request):
     """
     Reset the user's preferences back to the default value
     """
-    
-
+    # user = UserProfile.objects.get(pk=request.user.id)
+    # prefs = Preferences.objects.get(user_profile_fk=user)
+    # prefs.acousticness = prefs.acousticness.default
+    # danceability = prefs.danceability
+    # energy = prefs.energy
+    # instrumentalness = prefs.instrumentalness
+    # speechiness = prefs.speechiness
+    # loudness = prefs.loudness
+    # tempo = prefs.tempo
+    # valence = prefs.valence
+    # prefs.save()
