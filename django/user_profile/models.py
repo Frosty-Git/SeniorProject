@@ -36,6 +36,10 @@ class UserProfile(models.Model):
     refresh_token = models.CharField(default='No Value', max_length=255)
     expires_at = models.CharField(default='No Value', max_length=50)
     scope = models.TextField(default='No Value')
+    songs_liked = models.ManyToManyField('SongId', 
+                                        through="SongToUser",
+                                        related_name='songs_liked',
+                                        symmetrical=False)
 
     def __str__(self):
         return self.user.username
@@ -155,6 +159,8 @@ class FollowedPlaylist(models.Model):
 
 class SongId(models.Model):
     """
+    Model based on Spotify IDs and gets the attributes for the track.
+    Last updated: 3/31/21 by Katie Lee, Jacelynn Duranceau, Marc Colin
     """
     spotify_id = models.CharField(max_length=30, default='', primary_key=True)
     artists = models.TextField()
@@ -187,6 +193,8 @@ class SongOnPlaylist(models.Model):
 
 class SongToUser(models.Model):
     """
+    Model representing if a user has liked a song from the search.
+    Last updated: 3/31/21 by  Marc Colin, Katie Lee, Jacelynn Duranceau,
     """
     user_from = models.ForeignKey(UserProfile, related_name='song_user_from', on_delete=models.CASCADE)
     songid_to = models.ForeignKey(SongId, related_name='user_song_to', on_delete=models.CASCADE)
