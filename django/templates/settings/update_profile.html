@@ -5,8 +5,8 @@
 
 {% block setting %}
     <center><h1 style="margin-top: 2%">Edit Profile</h1></center>
-    <a class="btn btn-dark" href="" role="button">Reset Preferences</a>
-    <a class="btn btn-dark" href="" role="button">Delete Profile</a>
+    <a class="btn btn-dark" href="{% url 'user:reset_preferences' %}" role="button">Reset Preferences</a>
+    <a class="btn btn-dark" href="{% url 'user:delete_account' %}" role="button">Delete Profile</a>
     <form method="POST" enctype="multipart/form-data" action="/user/update_profile/">
         {% csrf_token %}
         {{ form.as_p }}
