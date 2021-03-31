@@ -35,10 +35,13 @@
                                 <p style="word-break: break-all;" class='poppost_text{{post.id}}'>{{ post.text }}</p>
                                 <div style="display: none" id="editform{{post.id}}">
                                     <form method='POST' action='{% url "feed:pop_update_post" post.id %}' > 
-                                        <textarea id="formpop_text{{ post.id }}" class="form-control" aria-label="With textarea" name="post_text">{{ post.text }}</textarea>
-                                        <button type="submit" class="postbtn{{ post.id }} btn btn-primary" style="display: block">Update</button>
+                                        <div class="input-group mb-3">
+                                            <textarea id="formpop_text{{ post.id }}" class="form-control" aria-label="With textarea" name="post_text" aria-describedby="button-addon2">{{ post.text }}</textarea>
+                                            <button type="submit" class="postbtn{{ post.id }} btn btn-outline-secondary" style="display: block" id="button-addon2">Update</button>
+                                        </div>
                                     </form>
                                 </div>
+                                <br>
                                 <script>
                                     $('.postbtn{{post.id}}').click(function(e){
                                         e.preventDefault();
@@ -57,6 +60,9 @@
                                                         $('#editform{{post.id}}').toggle();
                                                         $('.poppost_text{{post.id}}').text(post_text).toggle();
                                                         $('#post_date{{post.id}}').text(date);
+                                                        $('.feed_post_text{{post.id}}').text(post_text);
+                                                        $('#feed_date{{post.id}}').text(date);
+
                                                     }
                                                 }
                                             })

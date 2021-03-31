@@ -9,8 +9,8 @@
 </style>
 
 <div class="container feed_table" style="overflow-y: scroll; height: 560px;">
-    {% if post_list %}
-        {% for post in post_list %}
+    {% if nli_post_list %}
+        {% for post in nli_post_list %}
             <div class="row" style="padding-top: 10px;  margin-bottom: -10px; z-index: -1;">
                 <div class="col-2 post_image">
                     {% if post.user_profile_fk.profilepic %}
@@ -92,7 +92,7 @@
         {% empty %}
             <p>No Posts to show... Create some in Feed!</p>
         {% endfor %}
-    {% elif post_list%}
+    {% elif post_list %}
         {% for post, vote in post_list.items %}
             <div class="row" style="padding-top: 10px;  margin-bottom: -10px; z-index: -1;">
                 <div class="col-2 post_image">
@@ -106,13 +106,13 @@
                     <p style="text-align: left; font-size: medium;">{{ post.user_profile_fk.user.first_name }} {{ post.user_profile_fk.user.last_name }} 
                         <span style="font-size: small; color:lightgray">@{{ post.user_profile_fk.user.username }}</span>
                     </p>
-                    <p style="word-break: break-all; text-align: left; font-size: 13px;" class='post_text{{post.id}}'>{{ post.text }}</p>
+                    <p style="word-break: break-all; text-align: left; font-size: 13px;" class='feed_post_text{{post.id}}'>{{ post.text }}</p>
                     {% if post.type_post == "SongPost" %}
                         <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                     {% endif %}
                 </div>
                 <div class="col-2">
-                    <span style="font-size: x-small; text-align: right;">{{ post.date_last_updated|naturaltime }}</span>
+                    <span style="font-size: x-small; text-align: right;" id='feed_date{{post.id}}'>{{ post.date_last_updated|naturaltime }}</span>
                 </div>
             </div>
             <div class="row" style="border-bottom:1px solid white;">
