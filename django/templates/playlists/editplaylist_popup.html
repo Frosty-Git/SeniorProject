@@ -25,6 +25,9 @@
               <input type="checkbox" id="is_private_f" name="is_private_f">
               <label for="is_private_f">Private</label>
             {% endif %}
+            <br>
+            Description:
+            <input type="text" required class="form-control" aria-label="With textarea" maxlength="299" id="new_description" name="new_description" value="{{ playlist.description }}">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>

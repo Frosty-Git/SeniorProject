@@ -94,16 +94,19 @@ class Playlist(models.Model):
     Model for playlists created by users on the site. Songs can be added or
     deleted to the playlists, and playlists can be liked or disliked by other
     users.
-    Last updated: 3/27/21 by Jacelynn Duranceau
+    Last updated: 3/31/21 by Jacelynn Duranceau, Joe Frost, Tucker Elliott
     """
     user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, default=None) # Who created the playlist
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True, verbose_name="", blank=True) # Pillow
-    upvotes = models.IntegerField(default=0) 
+    upvotes = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     date_last_updated = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)
-    #theme = models.TextField(null=True, blank=True)  # Genres
+    is_imported = models.BooleanField(default=False) # Is imported to the linked Spotify account.
+    spotify_playlist_id = models.CharField(default='No Link', max_length=255)
+    description = models.TextField(blank=True, null=True, max_length=299)
+    # theme = models.TextField(null=True, blank=True)  # Genres
     # this_weeks_upvotes = models.IntegerField()
     # length = # Derived
     # num_songs = # Derived

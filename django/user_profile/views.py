@@ -405,9 +405,12 @@ def create_playlist_popup(request):
         playlist_form = PlaylistForm(request.POST, request.FILES)
         if playlist_form.is_valid():
             you = UserProfile.objects.get(pk=request.user.id)
-            playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), 
+            playlist = Playlist(user_profile_fk=you,
+                                name=playlist_form.cleaned_data.get('name'), 
                                 image=playlist_form.cleaned_data.get('image'),
-                                is_private=playlist_form.cleaned_data.get('is_private'))
+                                is_private=playlist_form.cleaned_data.get('is_private'),
+                                description=playlist_form.cleaned_data.get('description')
+                                )
             playlist.save()
             # playlist = playlist_form.save(commit=False)
             return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
@@ -435,12 +438,13 @@ def add_song_to_playlist(request, query):
 def edit_playlist_popup(request):
     """
     Updates a user's playlist
-    Last updated: 3/27/21 by Jacelynn Duranceau
+    Last updated: 3/31/21 by Jacelynn Duranceau, Joe Frost, Tucker Elliott
     """
     if request.method == 'POST':
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
         name = request.POST.get('new_name')
+        description = request.POST.get('new_description')
         img = request.FILES.get('img')
         if playlist.is_private is True:
             is_private = request.POST.get('is_private_t')
@@ -454,6 +458,8 @@ def edit_playlist_popup(request):
             playlist.name = name
             if img is not None:
                 playlist.image = img
+            if description is not None:
+                playlist.description = description
             playlist.is_private = is_private
             playlist.date_last_updated = timezone.now()
             playlist.save()
@@ -481,6 +487,9 @@ def delete_song(request, playlist_id, sop_pk):
     song = SongOnPlaylist.objects.get(pk=sop_pk)
     song.delete()
     return redirect('/user/playlist/' + str(playlist_id))
+
+
+
 
 def link_spotify(request):
     spotify = spotify_manager.create_spotify()
