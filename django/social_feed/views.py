@@ -274,6 +274,25 @@ def popup_songpost(request):
     else:
         return render(request, 'social_feed/popup_songpost.html')
 
+def popup_playlistpost(request):
+    """
+    Used to share a playlist to the social feed
+    Last updated: 3/31/21 by Jacelynn Duranceau
+    """
+    if request.method == 'POST':
+        user_id = request.user.id
+        user = UserProfile.objects.get(pk=user_id)
+        text = request.POST.get('post_text')
+        playlist_id = request.POST.get('playlist_id')
+        playlist_object = Playlists.objects.get(playlist_id)
+        if text is not None:
+            post = PlaylistPost(playlist=playlist_object, text=text, user_profile_fk=user, type_post="PlaylistPost")
+            post.save()
+            return redirect('/feed/')
+    else:
+        return render(request, 'social_feed/popup_playlistpost.html')
+
+
 
 def upvote(request):
     """
@@ -293,7 +312,7 @@ def upvote(request):
                 up.save()
                 if type_post == 'SongPost':
                     songpost = SongPost.objects.get(pk=post_id)
-                    change_prefs_songpost(songpost.song, user, "like")
+                    change_prefs_song(songpost.song, user, "like")
                 post.upvotes += 1
                 post.save()
                 return JsonResponse({'status':'ok'})
@@ -301,7 +320,7 @@ def upvote(request):
                 if vote.vote == 'Dislike':
                     if type_post == 'SongPost':
                         songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "like")
+                        change_prefs_song(songpost.song, user, "like")
                     vote.vote = 'Like'
                     post.upvotes += 2
                     post.save()   
@@ -332,7 +351,7 @@ def downvote(request):
                 down.save()
                 if type_post == 'SongPost':
                     songpost = SongPost.objects.get(pk=post_id)
-                    change_prefs_songpost(songpost.song, user, "dislike")
+                    change_prefs_song(songpost.song, user, "dislike")
                 post.upvotes -= 1
                 post.save()
                 return JsonResponse({'status':'ok'})
@@ -340,7 +359,7 @@ def downvote(request):
                 if vote.vote == 'Like':
                     if type_post == 'SongPost':
                         songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "dislike")
+                        change_prefs_song(songpost.song, user, "dislike")
                     vote.vote = 'Dislike'
                     post.upvotes -= 2
                     post.save()          
@@ -354,12 +373,12 @@ def downvote(request):
     return JsonResponse({'status':'ko'})
     
     
-def change_prefs_songpost(track, profile, type_vote):
+def change_prefs_song(track, profile, type_vote):
     """
     Change the preferences for a user after they like or dislike a song.
     Last updated: 3/29/21 Katie Lee, Marc Colin, Jacelynn Duranceau
     """
-    features = get_audio_features([track])
+    features = get_audio_features(track)
     prefs = Preferences.objects.get(user_profile_fk=profile.user.id)
     song_pref = features[0]
 

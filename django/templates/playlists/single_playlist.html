@@ -25,15 +25,21 @@
 </h1>
 
 {% if profile.user.id == user.id %}
-<div class="center" style="width:150px; text-align:center;">
-    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
-        Edit Playlist
-    </button>
-    {% include 'playlists/editplaylist_popup.html' %}
-</div>
-<div class="center" style="width:200px; text-align:center; margin-top:10px;">
-    <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
-</div>
+    <div class="center" style="width:150px; text-align:center;">
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
+            Edit Playlist
+        </button>
+        {% include 'playlists/editplaylist_popup.html' %}
+    </div>
+    <div class="center" style="width:200px; text-align:center; margin-top:10px;">
+        <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
+    </div>
+    {% if profile.user.id == user.id or playlist.is_shareable%}
+        <div class="center" style="width:100px; text-align:center; margin-top:10px;">
+            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+            {% include 'social_feed/popup_playlistpost.html' %}
+        </div>
+    {% endif %}
 {% endif %}
 
 <table class="center" style="width:40%;">

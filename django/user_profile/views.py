@@ -6,6 +6,7 @@ from social_feed.views import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.models import User
@@ -479,7 +480,8 @@ def create_playlist_popup(request):
             you = UserProfile.objects.get(pk=request.user.id)
             playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), 
                                 image=playlist_form.cleaned_data.get('image'),
-                                is_private=playlist_form.cleaned_data.get('is_private'))
+                                is_private=playlist_form.cleaned_data.get('is_private'),
+                                is_shareable=playlist_form.cleaned_data.get('is_shareable'))
             playlist.save()
             # playlist = playlist_form.save(commit=False)
             return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
@@ -515,6 +517,7 @@ def edit_playlist_popup(request):
         playlist = Playlist.objects.get(pk=playlist_id)
         name = request.POST.get('new_name')
         img = request.FILES.get('img')
+
         if playlist.is_private is True:
             is_private = request.POST.get('is_private_t')
         elif playlist.is_private is False:
@@ -523,14 +526,25 @@ def edit_playlist_popup(request):
             is_private = True
         elif is_private == None:
             is_private = False
+
+        if playlist.is_shareable is True:
+            is_shareable = request.POST.get('is_shareable_t')
+        elif playlist.is_shareable is False:
+            is_shareable = request.POST.get('is_shareable_f')
+        if is_shareable == 'on':
+            is_shareable = True
+        elif is_shareable == None:
+            is_shareable = False
+        
         if name is not None:
             playlist.name = name
             if img is not None:
                 playlist.image = img
             playlist.is_private = is_private
+            playlist.is_shareable = is_shareable
             playlist.date_last_updated = timezone.now()
             playlist.save()
-        return redirect('/user/playlist/' + str(playlist_id))
+        return redirect('/user/playlist/' + str(request.user.id) +'/' + str(playlist_id))
     else:
         return render(request, 'playlists/editplaylist_popup.html')
 
@@ -621,10 +635,12 @@ def reset_preferences(request):
     prefs.instrumentalness = 0.5
     prefs.speechiness = 0.5
     prefs.loudness = -30
-    prefs.tempo = 50
+    prefs.tempo = 100
     prefs.valence = 0.5
     prefs.save()
-    return redirect('/user/update_profile/')
+    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://127.0.0.1:8000/survey/'>Survey</a>."))
+    # return redirect('/survey/')
+    return redirect('/user/update_profile/#/')
 
 def delete_account(request):
     """
@@ -648,4 +664,5 @@ def delete_account(request):
 
     user = User.objects.get(pk=request.user.id)
     user.delete()
+    messages.success(request, ('Account deletion successful!'))
     return redirect('/')

@@ -5,6 +5,15 @@
 {% block title %}PengBeats | Survey{% endblock %}
 
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <center>
 <h3>Survey</h3>

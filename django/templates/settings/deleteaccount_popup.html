@@ -1,0 +1,27 @@
+{% load static %}
+<!-- Included in base_settings.html -->   
+<div class="modal fade" id="deleteaccountmodal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true"  style="color:black">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAccountModalLabel">Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Doing so will permanently delete your account and all data associated with it from our site.
+                        <span style='color: #FF0000;'>This action <b>cannot</b> be undone.</span>
+                    </p>  
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+                    <a class="btn btn-dark" href="{% url 'user:delete_account' %}" role="button">Delete Account</a>
+                </div>
+        </div>
+    </div>
+</div>
+  
+<script>
+    document.getElementById("post_text").value = "";
+</script>

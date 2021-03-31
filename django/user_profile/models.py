@@ -101,13 +101,14 @@ class Playlist(models.Model):
     users.
     Last updated: 3/27/21 by Jacelynn Duranceau
     """
-    user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, default=None) # Who created the playlist
+    user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None) # Who created the playlist
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True, verbose_name="", blank=True) # Pillow
     upvotes = models.IntegerField(default=0) 
     date_created = models.DateTimeField(auto_now_add=True)
     date_last_updated = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)
+    is_shareable = models.BooleanField(default=True)
     #theme = models.TextField(null=True, blank=True)  # Genres
     # this_weeks_upvotes = models.IntegerField()
     # length = # Derived

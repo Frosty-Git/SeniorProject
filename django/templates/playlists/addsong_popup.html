@@ -1,6 +1,6 @@
 {% load static %}
 <!-- Included in results.html -->   
-<div class="modal fade" id="addtoplaylistmodal{{ track }}" tabindex="-1" aria-labelledby="myAddSongModalLabel" aria-hidden="true"  style="color:black">
+<div class="modal fade" id="addtoplaylistmodal{{ song }}" tabindex="-1" aria-labelledby="myAddSongModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form method="post" action="{% url 'user:add_song_popup' term%}">
@@ -12,7 +12,7 @@
                 </div>
             
                 <div class="modal-body">
-                    <input type="hidden" id="track_id" name="track_id" value="{{ track }}">
+                    <input type="hidden" id="track_id" name="track_id" value="{{ song }}">
                     <select name="playlist_id" id="playlist_id">
                         {% for playlist in playlists %}
                         <option value="{{ playlist.id }}">{{ playlist.name }}</option>

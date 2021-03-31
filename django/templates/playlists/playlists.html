@@ -30,6 +30,7 @@
         <th style="text-align: center;">Title</th>
         <th style="text-align: center;">Date Last Updated</th>
     </tr>
+    <!-- You are viewing your own playlists -->
     {% if profile.user.id == user.id %}
         {% for playlist in playlists %}
             <tr style="border-bottom: 1px solid black;">
@@ -57,8 +58,15 @@
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
                     <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
                 </td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+                    <button type="button" class="btn btn-dark" onclick="postModalClick()" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">
+                        Share
+                    </button>
+                    {% include '../social_feed/popup_playlistpost.html' %}
+                </td>
         {% endfor %}
     </tr>
+    <!-- You are viewing someone elses playlists -->
     {% else %}
     {% for playlist in playlists %}
         {% if not playlist.is_private %}
@@ -81,6 +89,12 @@
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
+                {% if playlist.is_shareable%}
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                    {% include 'social_feed/popup_playlistpost.html' %}
+                </td>
+                {% endif %}
         {% endif %}
     {% endfor %}
     </tr>
@@ -95,6 +109,16 @@
     }  
 
     playlistModal.addEventListener('hidden.bs.modal', function (event) {
+        window.history.replaceState({}, "", "{% url 'user:get_playlists' user.id %}")
+    })
+
+    var sharePlaylistModal = document.getElementById('playlistpostmodal{{ playlist.id }}');
+    function postModalClick() {
+        window.history.pushState({},"", "/feed/share_playlistpost/");
+        sharePlaylistModal.show();
+    }  
+
+    sharePlaylistModal.addEventListener('hidden.bs.modal', function (event) {
         window.history.replaceState({}, "", "{% url 'user:get_playlists' user.id %}")
     })
 </script>

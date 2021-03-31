@@ -4,9 +4,25 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block setting %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
     <center><h1 style="margin-top: 2%">Edit Profile</h1></center>
-    <a class="btn btn-dark" href="{% url 'user:reset_preferences' %}" role="button">Reset Preferences</a>
-    <a class="btn btn-dark" href="{% url 'user:delete_account' %}" role="button">Delete Profile</a>
+    <div>
+        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#resetprefsmodal">Reset Preferences</button>
+    </div>
+    {% include 'settings/resetpreferences_popup.html' %}
+
+    <div>
+        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#deleteaccountmodal">Delete Account</button>
+    </div>
+    {% include 'settings/deleteaccount_popup.html' %}
+
     <form method="POST" enctype="multipart/form-data" action="/user/update_profile/">
         {% csrf_token %}
         {{ form.as_p }}
