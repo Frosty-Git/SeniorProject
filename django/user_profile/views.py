@@ -627,6 +627,25 @@ def reset_preferences(request):
     return redirect('/user/update_profile/')
 
 def delete_account(request):
+    """
+    Deletes a user's account. Updates the follower count of any individual you
+    were following (-1). Updates the following count of any individual that was
+    following you (-1).
+    """
+    your_profile = UserProfile.objects.get(pk=request.user.id)
+
+    users_you_follow = your_profile.users_followed.all()
+    for person in users_you_follow:
+        person.num_followers -= 1
+        person.save()
+
+    users_following_you_ids = FollowedUser.objects.filter(user_to=your_profile).values('user_from')
+    for result in users_following_you_ids:
+        for id in result.values():
+            person = UserProfile.objects.get(pk=id)
+            person.num_following -= 1
+            person.save()
+
     user = User.objects.get(pk=request.user.id)
     user.delete()
     return redirect('/')
