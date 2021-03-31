@@ -5,6 +5,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
 from django.conf import settings
 import recommender.Scripts.client_credentials as client_cred
+from user_profile.models import *
 
 class SpotifyManager:
     def __init__(self):
@@ -18,4 +19,15 @@ class SpotifyManager:
         spotify = spotipy.Spotify(auth_manager=self.auth_manager)
         return spotify
 
+    def token_check(self):
+        if(user.expires_at - timezone.now <= 0):
+            token_info = self.auth_manager.refresh_access_token(user.refresh_token)
+            user = UserProfile.objects.get(user=request.user.id)
+            user.access_token = token_info['access_token']
+            user.refresh_token = token_info['refresh_token']
+            user.expires_at = token_info['expires_at']
+            user.save()
+            os.remove(os.path.abspath(".cache"))
+        
+        
         
