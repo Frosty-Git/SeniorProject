@@ -228,6 +228,18 @@ def update_post(request):
     else:
         return render(request, 'social_feed/edit_post.html')
 
+def pop_update_post(request, post_id):
+    """
+    """
+    if request.method == 'POST':
+        post = Post.objects.get(pk=post_id)
+        text = request.POST.get('post_text')
+        if text is not None:
+            post.text = text
+            post.date_last_updated = timezone.now()
+            post.save()
+        return JsonResponse({'status': 'ok'})
+
 
 def popup_post(request, post_id):
     """
