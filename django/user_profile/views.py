@@ -495,7 +495,7 @@ def export_to_spotify(request, playlist_id):
     their Spotify app.
     Last updated: 3/31/2021 Joe Frost, Tucker Elliott
     """
-
+    spotify_manager.token_check(request)
     return redirect('/user/playlists/' + str(request.user.id))
 
 def link_spotify(request):
