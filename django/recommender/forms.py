@@ -12,7 +12,7 @@ class ArtistForm(forms.Form):
     artist_name = forms.CharField(label='Artist name', max_length=100)
 
 class SongForm(forms.Form):
-    song_title = forms.CharField(label='Artist name', max_length=100)
+    song_title = forms.CharField(label='Song title', max_length=100)
 
 class SurveyForm(forms.Form):
     artist_name = forms.CharField(label='Artist name', max_length=100)

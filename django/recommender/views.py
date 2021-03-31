@@ -194,21 +194,44 @@ def searchArtist_post(request):
             # Get their songs with the highest/lowest Acousticness
             highAcous = search_artist_features(id, 'acousticness', True)
             lowAcous = search_artist_features(id, 'acousticness', False)
-            # Get their songs with the highest/lowest Variance
-            highVal = search_artist_features(id, 'valence', True)
-            lowVal = search_artist_features(id, 'valence', False)
             # Get their songs with the highest/lowest Danceability
             highDance = search_artist_features(id, 'danceability', True)
             lowDance = search_artist_features(id, 'danceability', False)
             # Get their songs with the highest/lowest Energy
             highLive = search_artist_features(id, 'energy', True)
             lowLive = search_artist_features(id, 'energy', False)
+            # Get their songs with the highest/lowest Energy
+            highInst = search_artist_features(id, 'instrumentalness', True)
+            lowInst = search_artist_features(id, 'instrumentalness', False)
+            # Get their songs with the highest/lowest Energy
+            highSpeech = search_artist_features(id, 'speechiness', True)
+            lowSpeech = search_artist_features(id, 'speechiness', False)
+            # Get their songs with the highest/lowest Energy
+            highLoud = search_artist_features(id, 'loudness', True)
+            lowLoud = search_artist_features(id, 'loudness', False)
+            # Get their songs with the highest/lowest Energy
+            highTempo = search_artist_features(id, 'tempo', True)
+            lowTempo = search_artist_features(id, 'tempo', False)
+            # Get their songs with the highest/lowest Variance
+            highVal = search_artist_features(id, 'valence', True)
+            lowVal = search_artist_features(id, 'valence', False)
+            
             form = ArtistForm()
 
-            highTracks = list([highAcous, highVal, highDance, highLive]) 
-            lowTracks = list([lowAcous, lowVal, lowDance, lowLive])
+            highTracks1 = list([highDance, highAcous, highLive, highInst])
+            highTracks2 = list([highSpeech, highLoud, highTempo, highVal]) 
+            lowTracks1 = list([lowDance, lowAcous, lowLive, lowInst])
+            lowTracks2 = list([lowSpeech, lowLoud, lowTempo, lowVal])
 
-            return render(request, 'recommender/artist.html', {'form': form, 'highTracks': highTracks, 'lowTracks': lowTracks})
+            context = {
+                'form': form, 
+                'highTracks1': highTracks1,
+                'highTracks2': highTracks2, 
+                'lowTracks1': lowTracks1,
+                'lowTracks2': lowTracks2
+                }
+
+            return render(request, 'recommender/artist.html', context)
         else:
             raise Http404('Something went wrong')
 
@@ -226,31 +249,54 @@ def searchSong_post(request):
         if form.is_valid():
             cd = form.cleaned_data
 
-            # Get the artist
-            #results = sp.search(cd, 1, 0, "artist")
-            #artist = results['artists']['items'][0]
-            #id = artist['name']
-            id = cd['artist_name']
+            name = cd['song_title']
+            features = search_audio_features(name)
 
-            # Get their songs with the highest/lowest Acousticness
-            #highAcous = find_track(id, 'acousticness', True)
-            highAcous = search_artist_features(id, 'acousticness')[1]
-            lowAcous = search_artist_features(id, 'acousticness')[0]
-            # Get their songs with the highest/lowest Variance
-            highVal = search_artist_features(id, 'valence')[1]
-            lowVal = search_artist_features(id, 'valence')[0]
-            # Get their songs with the highest/lowest Danceability
-            highDance = search_artist_features(id, 'danceability')[1]
-            lowDance = search_artist_features(id, 'danceability')[0]
-            # Get their songs with the highest/lowest Liveness
-            highLive = search_artist_features(id, 'liveness')[1]
-            lowLive = search_artist_features(id, 'liveness')[0]
-            form = ArtistForm()
+            # # Get their songs with the highest/lowest Acousticness
+            # #highAcous = find_track(id, 'acousticness', True)
+            # highAcous = search_artist_features(id, 'acousticness')[1]
+            # lowAcous = search_artist_features(id, 'acousticness')[0]
+            # # Get their songs with the highest/lowest Variance
+            # highVal = search_artist_features(id, 'valence')[1]
+            # lowVal = search_artist_features(id, 'valence')[0]
+            # # Get their songs with the highest/lowest Danceability
+            # highDance = search_artist_features(id, 'danceability')[1]
+            # lowDance = search_artist_features(id, 'danceability')[0]
+            # # Get their songs with the highest/lowest Liveness
+            # highLive = search_artist_features(id, 'liveness')[1]
+            # lowLive = search_artist_features(id, 'liveness')[0]
+            # form = ArtistForm()
 
-            tracks = list([highAcous, highVal, highDance,
-                           highLive, lowAcous, lowVal, lowDance, lowLive])
+            track_id = features[0]['id']
+            danceability = features[0]['danceability']
+            acousticness = features[0]['acousticness']
+            energy = features[0]['energy']
+            instrumentalness = features[0]['instrumentalness']
+            speechiness = features[0]['speechiness']
+            loudness = features[0]['loudness']
+            tempo = features[0]['tempo']
+            valence = features[0]['valence']
+            
+            
+            
+            
 
-            return render(request, 'recommender/song.html', {'form': form, 'tracks': tracks})
+            
+            
+
+            context = {
+                'form': form,
+                'id': track_id,
+                'danceability': danceability,
+                'acousticness': acousticness,
+                'energy': energy,
+                'instrumentalness': instrumentalness,
+                'speechiness': speechiness,
+                'loudness': loudness,
+                'tempo': tempo,
+                'valence': valence,
+            }
+            return render(request, 'recommender/song.html', context)
         else:
             raise Http404('Something went wrong')
 
