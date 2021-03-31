@@ -238,10 +238,15 @@ def display_following(request, user_id):
     """
     you = UserProfile.objects.get(pk=user_id)
     following = you.users_followed.all()
+    following_arr = []
+    for user_profile in following:
+        determination = is_following(request.user.id, user_profile.user.id)
+        #following_dict[user_profile].append(determination)
+        following_arr.append([user_profile, determination])
     # following = FollowedUser.objects.filter(user_from=user_id)
     # get_list = FollowedUser.objects.get(user_from=user_id)
     #following = get_list.user_to
-    return render(request, 'profile/following.html', {'following': following})
+    return render(request, 'profile/following.html', {'following': following_arr})
 
 @require_GET
 def display_followers(request, user_id):
@@ -253,11 +258,13 @@ def display_followers(request, user_id):
     """
     user = UserProfile.objects.get(pk=user_id)
     follower_ids = FollowedUser.objects.filter(user_to=user).values('user_from') # Returns dictionary of ids
-    followers = []
+    followers_arr = []
     for user in follower_ids:
         for id in user.values():
-            followers.append(UserProfile.objects.get(pk=id))
-    return render(request, 'profile/followers.html', {'followers': followers})
+            person = UserProfile.objects.get(pk=id)
+            determination = is_following(request.user.id, id)
+            followers_arr.append([person, determination])
+    return render(request, 'profile/followers.html', {'followers': followers_arr})
 
 def unfollow(request, user_id, who):
     """
@@ -625,7 +632,7 @@ def get_preferences(user_id):
 def reset_preferences(request):
     """
     Reset the user's preferences back to the default value
-    Last updated: 3/30/21 by Jacelynn Duranceau
+    Last updated: 3/31/21 by Jacelynn Duranceau
     """
     user = UserProfile.objects.get(pk=request.user.id)
     prefs = Preferences.objects.get(user_profile_fk=user)
@@ -647,6 +654,7 @@ def delete_account(request):
     Deletes a user's account. Updates the follower count of any individual you
     were following (-1). Updates the following count of any individual that was
     following you (-1).
+    Last updated: 3/31/21 by Jacelynn Duranceau
     """
     your_profile = UserProfile.objects.get(pk=request.user.id)
 
@@ -666,3 +674,18 @@ def delete_account(request):
     user.delete()
     messages.success(request, ('Account deletion successful!'))
     return redirect('/')
+
+def is_following(your_id, user_to_id):
+    """
+    Determines where or not you follow a particular user.
+    Last updated: 3/31/21 by Jacelynn Duranceau
+    """
+    you = UserProfile.objects.get(pk=your_id)
+    is_following = False
+    users_you_follow = you.users_followed.all()
+    for person in users_you_follow:
+        if person.user.id == user_to_id:
+            is_following = True
+            break
+    return is_following
+        
