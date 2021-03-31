@@ -23,7 +23,6 @@ function Question(question, choices) {
     this.choices = choices;
     this.danceability = danceability;
     this.accousticness = accousticness;
-    this.danceability = danceability;
     this.energy = energy;
     this.instrumentalness = instrumentalness;
     this.speechiness = speechiness;
