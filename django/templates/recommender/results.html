@@ -62,20 +62,17 @@
                                     <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                                 </div>
                                 {% if user.is_authenticated %}
-                                    <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
-                                {% include 'social_feed/popup_songpost.html' with track=track %}
-                                {% endif %}
-                                {% if playlists %}
-                                    <div class="btn-group" role="group" style="margin-left:auto; margin-right: auto; display:flex">
-                                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track }}">Add to Playlist</button>
+                                    {% if playlists %}
+                                        <div class="btn-group" role="group" style="margin-left:auto; margin-right: auto; display:flex">
+                                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track }}">Add to Playlist</button>
+                                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
+                                        </div>
+                                        {% include 'playlists/addsong_popup.html' with term=term%}
+                                    {% else %}
                                         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
-                                    </div>
-                                    {% include 'playlists/addsong_popup.html' with term=term%}
-                                {% else %}
-                                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
+                                    {% endif %}
                                 {% endif %}
                             </td>
-            
                         {% endfor %}
                         </tr>
                     </tbody>
