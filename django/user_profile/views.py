@@ -148,6 +148,9 @@ def profile(request, user_id):
 
 def vote_dictionary(votes, posts):
     """
+    Creates a dictionary that makes the post the key
+    and upvote/downvote in a list the value.
+    Last updated: 3/30/21 by Katie Lee
     """
     post_list = {}
     for post in posts:
