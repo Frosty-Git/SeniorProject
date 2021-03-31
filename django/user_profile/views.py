@@ -1,4 +1,6 @@
+
 from django.shortcuts import render, redirect
+from requests.sessions import Session
 from user_profile.models import *
 from user_profile.forms import *
 from social_feed.models import *
@@ -496,6 +498,28 @@ def export_to_spotify(request, playlist_id):
     Last updated: 3/31/2021 Joe Frost, Tucker Elliott
     """
     spotify_manager.token_check(request)
+    spotify = spotify_manager.create_spotify()
+    user = UserProfile.objects.get(pk=request.user.id)
+    playlist = Playlist.objects.get(pk=playlist_id)
+    # Check if the playlist is on Spotify already.
+    if playlist.is_imported:
+    # If it is already on Spotify, replace the playlist on Spotify with this new version.
+        matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+        song_ids = []
+        for match in matches:
+            song_ids.append(match.get('spotify_id'))
+        spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
+    else:
+    # If it is not on Spotify, create the new playlist there, change our db boolean value
+    # to say it is on Spotify, and get the Spotify playlist id saved into our db.
+        spotify.user_playlist_create(user=user.spotify_user_id,
+                                    name=playlist.name,
+                                    public=(not playlist.is_private),
+                                    collaborative=False,
+                                    description=playlist.description)
+        playlist.is_imported = True
+        new_playlist_id = spotify.user_playlists(user, limit=1, offset=0)[0]
+        print(new_playlist_id)
     return redirect('/user/playlists/' + str(request.user.id))
 
 def link_spotify(request):
