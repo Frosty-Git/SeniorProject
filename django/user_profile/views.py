@@ -336,7 +336,7 @@ def other_playlists(request, user_id):
 def get_songs_playlist(request, playlist_id):
     """
     Gets the songs on your playlist based on the playlist's id
-    Last updated: 3/28/21 by Jacelynn Duranceau, Tucker Elliot, Joe Frost
+    Last updated: 3/28/21 by Jacelynn Duranceau, Tucker Elliott, Joe Frost
     """
     you = UserProfile.objects.get(pk=request.user.id)
     # This automatically makes it so that you can't access a playlist that is
@@ -399,7 +399,7 @@ def get_other_songs_playlist(request, user_id, playlist_id):
 def create_playlist_popup(request):
     """
     Creates a playlist
-    Last updated: 3/24/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    Last updated: 3/24/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliott
     """
     if request.method == 'POST':
         playlist_form = PlaylistForm(request.POST, request.FILES)
