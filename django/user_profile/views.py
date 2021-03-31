@@ -582,9 +582,25 @@ def get_preferences(user_id):
     }
     return user_prefs
 
-def reset_prefs(request):
+def reset_preferences(request):
     """
     Reset the user's preferences back to the default value
+    Last updated: 3/30/21 by Jacelynn Duranceau
     """
-    
+    user = UserProfile.objects.get(pk=request.user.id)
+    prefs = Preferences.objects.get(user_profile_fk=user)
+    prefs.acousticness = 0.5
+    prefs.danceability = 0.5
+    prefs.energy = 0.5
+    prefs.instrumentalness = 0.5
+    prefs.speechiness = 0.5
+    prefs.loudness = -30
+    prefs.tempo = 50
+    prefs.valence = 0.5
+    prefs.save()
+    return redirect('/user/update_profile/')
 
+def delete_account(request):
+    user = User.objects.get(pk=request.user.id)
+    user.delete()
+    return redirect('/')

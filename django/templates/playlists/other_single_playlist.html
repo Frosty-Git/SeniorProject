@@ -7,7 +7,7 @@
 
 
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-    <a href="{% url 'user:other_profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
+    <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
     <br>
     {% if playlist.image %}
         <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>

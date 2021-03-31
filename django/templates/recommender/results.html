@@ -68,8 +68,10 @@
                                             <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
                                         </div>
                                         {% include 'playlists/addsong_popup.html' with term=term%}
+                                        {% include 'social_feed/popup_songpost.html' %}
                                     {% else %}
                                         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
+                                        {% include 'social_feed/popup_songpost.html' %}
                                     {% endif %}
                                     {% include 'social_feed/popup_songpost.html'%}
                                 {% endif %}
