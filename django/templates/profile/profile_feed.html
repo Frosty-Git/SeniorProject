@@ -78,10 +78,11 @@
                 })            
             </script>    
         {% empty %}
-            <p>No Posts to show... Create some in Feed!</p>
+            <br>
+            <p>No Posts to show... </p>
         {% endfor %}
     
-    {% elif post_list %}
+    {% else %}
         {% for post, vote in post_list.items %}
             <div class="row" style="padding-top: 10px;  margin-bottom: -10px; z-index: -1;">
                 <div class="col-2 post_image">
@@ -195,7 +196,8 @@
                 })            
             </script>    
         {% empty %}
-            <p>No Posts to show... Create some in Feed!</p>
+            <br>
+            <p>No Posts to show... Create some in <a href="{% url 'feed:feed' %}" style="text-decoration: none;">Feed!</a></p>
         {% endfor %}
     {% endif %}
 </div>
