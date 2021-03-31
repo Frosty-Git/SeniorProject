@@ -397,7 +397,8 @@ def get_songs_playlist(request, playlist_id):
             # sop_id is the id for the primary key of the row into the SongOnPlaylist
             # table that the matching songs to playlists come from
             sop_id = match.get('id')
-            song_id = match.get('spotify_id')
+            # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
+            song_id = match.get('spotify_id_id')
             songs[sop_id] = song_id
 
         context = {
