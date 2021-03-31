@@ -23,7 +23,6 @@ function Question(question, choices) {
     this.choices = choices;
     this.danceability = danceability;
     this.accousticness = accousticness;
-    this.danceability = danceability;
     this.energy = energy;
     this.instrumentalness = instrumentalness;
     this.speechiness = speechiness;
@@ -35,7 +34,7 @@ function Question(question, choices) {
 
 
 let questions = [
-    new Question("Which of the following genres do you prefer?",["Rock", "Country", "Pop","Sea-Shanties","Tibetan Throat Singing"]),
+    new Question("Which of the following genres do you prefer?",["Rock", "Country", "Pop","Sea-Shanties","Tibetan Throat Singing"],["0","1","2","3","4"]),
     new Question("Which of the following artists do you prefer?",["The Beatles", "Metallica", "The Grateful Dead","Electric Lights Orchestra","Simon and Garfunkel"]),
     new Question("Which of the following artists do you prefer?",["Carrie Underwood", "Dan + Shay", "Morgan Wallen","Luke Combs","Kane Brown"]),
     new Question("Which of the following artists do you prefer?",["Justin Bieber", "Nikki Minaj", "Katy Perry","Billy Eilish", "Ariana Grande"]),
