@@ -40,21 +40,14 @@
 <script>
  $(document).ready(function() {
    $("#submit").click(function(){
-      let value = document.querySelector('input[name="Form1"]:checked').value;
-      increment_and_reload(value);
+      let answer = quiz.get_currently_selected_answer(); 
       
    })
  })
  $(document).ready(function() {
    $("#multiple_choice_form").click(function(){
-      answer = quiz.get_currently_selected_answer();
-
-      $.ajax({
-        type : "GET",
-        url: "get_artist/",
-        data: {'answer': answer}
-      })
-        
+      let answer = quiz.get_currently_selected_answer(); 
+      
       })
    })
  
@@ -62,6 +55,7 @@
   </div>
 </div>
 <button type="button"  id = "submit" class="btn btn-success" >Submit</button>
+<input type="hidden" id = "data_to_submit" name = "user" value="data_to_submit">
 </form>
 {% if artist_id %}
 <div id="artistCarousel" class="carousel slide" data-bs-interval="false">

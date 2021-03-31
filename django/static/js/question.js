@@ -2,15 +2,6 @@
 function Quiz(questions){
     this.questions = questions;
     this.questionIndex = 0;
-    this.danceability = 0;
-    this.accousticness = 0;
-    this.danceability = 0;
-    this.energy = 0;
-    this.instrumentalness = 0;
-    this.speechiness = 0;
-    this.loudness = 0;
-    this.tempo = 0;
-    this.valence = 0;
 }
 
 Quiz.prototype.increment_question_index = function(value) {
@@ -30,6 +21,16 @@ Quiz.prototype.return_question_index = function() {
 function Question(question, choices) {
     this.question = question;
     this.choices = choices;
+    this.danceability = danceability;
+    this.accousticness = accousticness;
+    this.danceability = danceability;
+    this.energy = energy;
+    this.instrumentalness = instrumentalness;
+    this.speechiness = speechiness;
+    this.loudness = loudness;
+    this.tempo = tempo;
+    this.valence = valence;
+    
 };
 
 
@@ -86,16 +87,16 @@ function increment_and_reload(value){
     quiz.increment_question_index(1);
     }
     else if (value == "2"){
-    quiz.increment_question_index(2);
+    quiz.increment_question_index(1);
     }
     else if (value == "3"){
-    quiz.increment_question_index(3);
+    quiz.increment_question_index(1);
     }
     else if (value == "4"){
-    quiz.increment_question_index(4);
+    quiz.increment_question_index(1);
     }
     else if (value == "5"){
-    quiz.increment_question_index(5);
+    quiz.increment_question_index(1);
     }
     Get_Question();
  
