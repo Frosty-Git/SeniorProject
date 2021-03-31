@@ -100,7 +100,7 @@
 
 
     <div class="w3-col m2 w3-center" id="followingheader">
-        <h2><a href="{% url 'user:following' user.id %}" style="font-family: 'Noto Sans JP', sans-serif;text-decoration: none;">Following</a></h2>
+        <h2><a href="{% url 'user:following' profile.user.id %}" style="font-family: 'Noto Sans JP', sans-serif;text-decoration: none;">Following</a></h2>
         <table style="display: inline-block; text-align: left;">
         {% for follower in follower_list %}
             <tr>
