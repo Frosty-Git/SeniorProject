@@ -497,9 +497,9 @@ def export_to_spotify(request, playlist_id):
     their Spotify app.
     Last updated: 3/31/2021 Joe Frost, Tucker Elliott
     """
-    spotify_manager.token_check(request)
-    spotify = spotify_manager.create_spotify()
     user = UserProfile.objects.get(pk=request.user.id)
+    spotify_manager.token_check(request)
+    spotify = spotipy.Spotify(auth=user.access_token)
     playlist = Playlist.objects.get(pk=playlist_id)
     # Check if the playlist is on Spotify already.
     if playlist.is_imported:
@@ -518,7 +518,9 @@ def export_to_spotify(request, playlist_id):
                                     collaborative=False,
                                     description=playlist.description)
         playlist.is_imported = True
-        new_playlist_id = spotify.user_playlists(user, limit=1, offset=0)[0]
+        new_playlist_id = spotify.user_playlists(user.spotify_user_id, limit=1, offset=0).get('id')
+        playlist.spotify_playlist_id = new_playlist_id
+        playlist.save()
         print(new_playlist_id)
     return redirect('/user/playlists/' + str(request.user.id))
 
