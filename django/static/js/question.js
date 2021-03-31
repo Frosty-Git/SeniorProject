@@ -157,6 +157,24 @@ let questions = [
     //valence
     [0.435, 0.315, 0.937, 0.187, 0.289]
     ),
+    new Question("Which of the following songs do you listen to the most?", ["Sad But True", "Nothing Else Matters", "Enter Sandman", "Master of Puppets", "Fade To Black"]
+    //danceability
+    [0.632, 0.558, 0.579, 0.539, 0.256],
+    //acousticness
+    [0.000773, 0.0505, 0.00206, 0.00067, 0.00311],
+    //energy
+    [0.845, 0.364, 0.824, 0.828, 0.929],
+    //instrumentalness
+    [0.00152, 0.00000502, 0.421, 0.248, 0.201],
+    //speechiness
+    [0.0333, 0.0265, 0.03, 0.035, 0.113],
+    //loudness
+    [-6.336, -11.258, -8.71, -9.108, -6.667],
+    //tempo
+    [89.232, 142.171, 123.331, 105.25, 113.47],
+    //valence
+    [0.433, 0.17, 0.635, 0.562, 0.278]
+    ),
 
 
 
