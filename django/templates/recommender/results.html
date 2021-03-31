@@ -71,6 +71,7 @@
                                     {% else %}
                                         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
                                     {% endif %}
+                                    {% include 'social_feed/popup_songpost.html'%}
                                 {% endif %}
                             </td>
                         {% endfor %}
