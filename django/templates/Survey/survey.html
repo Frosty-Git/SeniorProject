@@ -40,13 +40,13 @@
 <script>
  $(document).ready(function() {
    $("#submit").click(function(){
-      let answer = quiz.get_currently_selected_answer(); 
-      
+      let answer_value = document.querySelector('input[name="Form1"]:checked').value;
+      increment_and_reload(answer_value);
    })
  })
  $(document).ready(function() {
    $("#multiple_choice_form").click(function(){
-      let answer = quiz.get_currently_selected_answer(); 
+    
       
       })
    })
