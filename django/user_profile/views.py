@@ -5,7 +5,7 @@ from user_profile.models import *
 from user_profile.forms import *
 from social_feed.models import *
 from social_feed.views import *
-from recommender.views import get_user_playlists
+from recommender.views import get_user_playlists, song_vote_dictionary
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -515,6 +515,32 @@ def get_playlists(request, user_id):
                 return redirect('/')
 
 
+def song_vote_sop_ziplist(matches, songs_votes):
+    """
+    """
+    sop_list = []
+    song_list = []
+    vote_list = []
+    for match in matches:
+        # sop_id is the id for the primary key of the row into the SongOnPlaylist
+        # table that the matching songs to playlists come from
+        sop_list.append(match.get('id'))
+        # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
+        spotify_song = match.get('spotify_id_id')
+        song_list.append(spotify_song)
+
+        up = False
+        down = False
+        for song in songs_votes:
+            if song['songid_to_id'] == spotify_song:
+                if song['vote'] == 'Like':
+                    up = True
+                elif song['vote'] == 'Dislike':
+                    down = True
+        vote_list.append([up, down])
+    zip_list = zip(sop_list, song_list, vote_list)
+    return zip_list
+
 def get_songs_playlist(request, user_id, playlist_id):
     """
     Gets the songs on your playlist based on the playlist's id
@@ -535,6 +561,9 @@ def get_songs_playlist(request, user_id, playlist_id):
         
         private_profile = profile_privacy(user_id)
         following_status = is_following(request.user.id, user_id)
+        songs_votes = SongToUser.objects.filter(user_from=you).values('songid_to_id', 'vote')
+
+        playlists = get_user_playlists(request.user.id)
 
         context = {
             'songs': songs,
@@ -542,6 +571,8 @@ def get_songs_playlist(request, user_id, playlist_id):
             'profile': you,
             'private_profile': private_profile,
             'following_status': following_status,
+            'loggedin': you,
+            'playlists': playlists,
         }
         return render(request, 'playlists/single_playlist.html', context)
     else:
@@ -565,12 +596,18 @@ def get_songs_playlist(request, user_id, playlist_id):
                         song_id = match.get('spotify_id_id')
                         songs[sop_id] = song_id
 
+                    my_user_id = request.user.id
+                    loggedin = UserProfile.objects.get(pk=my_user_id)
+                    playlists = get_user_playlists(my_user_id)
+
                     context = {
                         'songs': songs,
                         'playlist': playlist,
                         'profile': other_user,
                         'private_profile': private_profile,
                         'following_status': following_status,
+                        'playlists': playlists,
+                        'loggedin': loggedin,
                     }
                     return render(request, 'playlists/single_playlist.html', context)
                 else:
@@ -648,8 +685,7 @@ def add_song_to_playlist(request):
         playlist = Playlist.objects.get(pk=playlist_id)
         new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=song)
         new_song.save()
-        return redirect('/')
-        # return JsonResponse({'status': 'ok'})
+        return JsonResponse({'status': 'ok'})
         # return redirect('/results/')
         #return redirect('/user/playlists/' + str(request.user.id))
         # return render(request, 'recommender/results.html')

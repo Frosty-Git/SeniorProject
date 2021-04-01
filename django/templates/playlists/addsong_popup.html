@@ -12,27 +12,60 @@
                 </div>
             
                 <div class="modal-body">
-                    <input type="hidden" id="track_id" name="track_id" value="{{ song }}">
-                    <select name="playlist_id" id="playlist_id">
+                    <input type="hidden" id="track_id{{ song }}" name="track_id" value="{{ song }}">
+                    <select name="playlist_id" id="playlist_id{{ song }}">
                         {% for playlist in playlists %}
                             <!-- Don't allow a user to add a song to the My Liked Songs playlist -->
-                            {% if playlist != profile.liked_songs_playlist_fk %}
+                            {% if playlist != loggedin.liked_songs_playlist_fk %}
                                 <option value="{{ playlist.id }}">{{ playlist.name }}</option>
                             {% endif %}
                         {% endfor %}
-                      </select>    
+                    </select>
+                    <div class="alert{{ song }} alert alert-success" role="alert" style="display: none">
+                        Song successfully added to playlist!
+                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary popupbtn{{ song }}" style="display: block">Submit</button>
+                    <button id="load{{ song }}" class="btn btn-primary" type="button" disabled style="display: none">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    </button>
                 </div>
                 
             </form>
         </div>
     </div>
 </div>
-  
+
 <script>
-    document.getElementById("post_text").value = "";
+    $('.popupbtn{{ song }}').click(function(e) {
+        $('#load{{ song }}').show();
+        $('.popupbtn{{ song}}').hide();
+        e.preventDefault();
+        var song = $('#track_id{{ song }}').val();
+        var playlist = $('#playlist_id{{ song }}').val();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "user:add_song_popup" %}',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                track_id: song,
+                playlist_id: playlist,
+            },
+            success: function(json){
+                if (json['status'] == 'ok') {
+                    setTimeout(function() {
+                        $('#load{{ song }}').hide();
+                        $('.popupbtn{{ song }}').show();
+                        $('.alert{{ song }}').show();
+                    }, 2000);
+                }
+
+            },
+            error: function(xhr, errmsg, err) {}
+        })
+        return false;
+    })
 </script>

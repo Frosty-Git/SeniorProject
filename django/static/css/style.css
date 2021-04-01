@@ -24,6 +24,13 @@ body {
     white-space: nowrap;
 }
 
+/* Columns in the edit playlist popup page*/
+.epc {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
 /* Begin changing default Bootstrap CSS */
 .btn.btn-outline-dark {
     color: white;
