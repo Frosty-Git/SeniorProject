@@ -122,6 +122,7 @@ def results(request):
                     'features' : features,
                     'playlists' : playlists,
                     'users' : users,
+                    'profile': loggedin,
                     'artists': artists,
                     'track_info': track_info,
                     'song_name': name,
@@ -369,14 +370,18 @@ def song_upvote(request):
                 up = SongToUser(user_from=user, songid_to=song, vote="Like")
                 up.save()
                 change_prefs_song(track, user, "like")
+                add_to_liked_songs(user, track)
                 return JsonResponse({'status':'ok'})
             else:
                 if vote.vote == 'Dislike':
                     change_prefs_song(track, user, "like")
                     vote.vote = 'Like'
-                    vote.save()                                 
+                    vote.save()
+                    add_to_liked_songs(user, track)                                 
                     return JsonResponse({'status':'switch'}) 
                 else:
+                    # Took your like away, so remove the song from the My Liked Songs playlist
+                    rm_from_liked_songs(user, track)
                     vote.delete()
                     return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
@@ -397,14 +402,38 @@ def song_downvote(request):
                 down = SongToUser(user_from=user, songid_to=song, vote="Dislike")
                 down.save()
                 change_prefs_song(track, user, "dislike")
+                rm_from_liked_songs(user, track)
                 return JsonResponse({'status':'ok'})
             else:
                 if vote.vote == 'Like':
                     change_prefs_song(track, user, "dislike")
                     vote.vote = 'Dislike'
-                    vote.save()                                 
+                    vote.save()   
+                    rm_from_liked_songs(user, track)                              
                     return JsonResponse({'status':'switch'}) 
                 else:
                     vote.delete()
                     return JsonResponse({'status':'undo_downvote'})
     return JsonResponse({'status':'ko'})
+
+def add_to_liked_songs(user_profile, track):
+    """
+    Adds a song to a user's My Liked Songs playlist
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    song = SongId.objects.get(pk=track)
+    liked_songs_playlist = user_profile.liked_songs_playlist_fk
+    new_song = SongOnPlaylist(playlist_from=liked_songs_playlist, spotify_id=song)
+    new_song.save()
+
+def rm_from_liked_songs(user_profile, track):
+    """
+    Removes a song from a user's My Liked Songs playlist
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    song = SongId.objects.get(pk=track)
+    liked_songs_playlist = user_profile.liked_songs_playlist_fk
+    # This will only be one song since a user cannot manually add songs to the playlist,
+    # so there is no issue of a duplicate playlist/song match
+    sop = SongOnPlaylist.objects.get(playlist_from=liked_songs_playlist, spotify_id=song)
+    sop.delete()

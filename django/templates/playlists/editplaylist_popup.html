@@ -13,11 +13,18 @@
         
           <div class="modal-body">
             <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
-            Playlist Name:
-            <input type="text" required class="form-control" aria-label="With textarea" maxlength="30" id="new_name" name="new_name" value="{{ playlist.name }}">
-            Playlist Image:
-            <input type="file" id="img" name="img" accept="image/*">
-            <br>
+            {% if playlist != profile.liked_songs_playlist_fk %}
+              Playlist Name:
+              <input type="text" required class="form-control" aria-label="With textarea" maxlength="30" id="new_name" name="new_name" value="{{ playlist.name }}">
+              Playlist Image:
+              <input type="file" id="img" name="img" accept="image/*">
+              <br>
+            {% else %}
+              <h5>This is the default playlist for your liked songs.</h5>
+              <input type="hidden" id="new_name" name="new_name" value="{{ playlist.name }}">
+              <input type="hidden" id="img" name="img" accept="image/*">
+              <br>
+            {% endif %}
             {% if playlist.is_private %}
               <input type="checkbox" id="is_private_t" name="is_private_t" checked>
               <label for="is_private_t">Private</label>
@@ -26,6 +33,8 @@
               <label for="is_private_f">Private</label>
             {% endif %}
             <br>
+            If you make your playlist private, it will not be viewable or shareable by other users.
+            <br>
             {% if playlist.is_shareable %}
               <input type="checkbox" id="is_shareable_t" name="is_shareable_t" checked>
               <label for="is_shareable_t">Shareable</label>
@@ -33,6 +42,9 @@
               <input type="checkbox" id="is_shareable_f" name="is_shareable_f">
               <label for="is_shareable_f">Shareable</label>
             {% endif %}
+            <br>
+            Shareable refers to whether or not other users can share your playlists. You can still share your own playlist
+            regardless of this setting.
             <br>
             Note: Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible. Additionally,
             your playlist privacy setting takes precedence over the shareability setting. If your playlist is shareable but private, you will still not be able to share it.

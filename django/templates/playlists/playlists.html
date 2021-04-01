@@ -52,9 +52,14 @@
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
+                {% if playlist != profile.liked_songs_playlist_fk %}
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
                     <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
                 </td>
+                {% else %}
+                    <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
+                    </td>
+                {% endif %}
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
                     <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
                 </td>

@@ -114,14 +114,15 @@
                                             })
                                         })
                                     </script>
-                                    {% if playlists %}
+                                    <!-- If playlist.count is 1, then it means they only have a My Liked Songs playlist, which they cannot add to unless they like the song -->
+                                    {% if playlists.count > 1 %}
                                         <tr>
                                             <td>
                                                 <div class="btn-group" role="group" style="margin-left:auto; margin-right: auto; display:flex">
                                                     <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
                                                     <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
                                                 </div>
-                                                {% include 'playlists/addsong_popup.html' with term=term%}
+                                                {% include 'playlists/addsong_popup.html' with term=term profile=profile%}
                                             </td>
                                         </tr>
                                     {% else %}

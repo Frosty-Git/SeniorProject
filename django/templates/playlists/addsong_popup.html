@@ -15,7 +15,10 @@
                     <input type="hidden" id="track_id" name="track_id" value="{{ song }}">
                     <select name="playlist_id" id="playlist_id">
                         {% for playlist in playlists %}
-                        <option value="{{ playlist.id }}">{{ playlist.name }}</option>
+                            <!-- Don't allow a user to add a song to the My Liked Songs playlist -->
+                            {% if playlist != profile.liked_songs_playlist_fk %}
+                                <option value="{{ playlist.id }}">{{ playlist.name }}</option>
+                            {% endif %}
                         {% endfor %}
                       </select>    
                 </div>

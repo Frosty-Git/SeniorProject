@@ -43,6 +43,10 @@ def sign_up(request):
             pref.save()
             sett = Settings(user_profile_fk = profile, private_profile=False, private_playlists=False, light_mode=False, explicit_music=False, live_music=False)
             sett.save()
+            liked_songs = Playlist(user_profile_fk=profile, name="My Liked Songs")
+            liked_songs.save()
+            profile.liked_songs_playlist_fk = liked_songs
+            profile.save()
 
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
