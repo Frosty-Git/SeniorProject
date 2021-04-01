@@ -5,7 +5,7 @@ from .models import *
 from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
-from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features, get_artists, get_audio_features, get_track, get_song_name, get_explicit
+from recommender.Scripts.search import *
 from django.contrib.auth.models import User
 from user_profile.models import *
 import re
@@ -154,6 +154,35 @@ def results(request):
             }
     return render(request, 'recommender/results.html', context)
 
+def user_preference_recommender(request):
+    """
+    This is for providing recommendations based on the user's preferences.
+    Last updated: 4/1/21 by Tucker Elliott and Joe Frost
+    """
+    user = UserProfile.objects.get(pk=request.user.id)
+    preferences = Preferences.objects.get(user_profile_fk=user)
+    limit = 5
+    pref_dict = {
+        'target_acousticness'     : preferences.acousticness,
+        'target_danceability'     : preferences.danceability,
+        'target_energy'           : preferences.energy,
+        'target_instrumentalness' : preferences.instrumentalness,
+        'target_speechiness'      : preferences.speechiness,
+        'target_loudness'         : preferences.loudness,
+        'target_tempo'            : preferences.tempo,
+        'target_valence'          : preferences.valence,
+    }
+    recommendations = get_recommendation(limit, **pref_dict)
+    track_ids = []
+    for x in range(limit):
+        if x+1 > len(recommendations['tracks']['items']):
+            break
+        track_ids.append(recommendations['tracks']['items'][x]['id'])
+    
+    context = {
+        'track_ids' : track_ids,
+    }
+    return render(request, 'recommender/user_preference_recommender.html', context)
 
 def song_vote_dictionary(songs_votes, tracks):
     """

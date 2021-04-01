@@ -104,6 +104,10 @@ def search_artist_features(query, feature, high_or_low):
     else:
         return low_song
         
+def get_recommendation(limit, **kwargs):
+    recommendations = sp.recommendations(seed_artists=['4NHQUGzhtTLFvgF5SZesLK'], seed_genres=['alt_rock'], seed_tracks=['0c6xIDDpzE81m2q797ordA'], limit=limit, country=None, **kwargs)
+    return recommendations
+
 def get_artists(track):
     """
     """
