@@ -3,12 +3,18 @@ function Quiz(questions) {
     this.questions = questions;
     this.questionIndex = 0;
     this.previous_value_boolean = false;
+    this.value = 0;
 }
 
 Quiz.prototype.change_question_index = function (value) {
     this.questionIndex = value;
 }
-
+Quiz.prototype.get_value = function () {
+    return this.value;
+}
+Quiz.prototype.set_value = function (value) {
+    this.value = value;
+}
 
 Quiz.prototype.return_value_of_question = function () {
     return this.questions[this.questionIndex];
@@ -575,7 +581,7 @@ function increment_and_reload(value) {
         increment_value = 1;
         if(quiz.return_value_of_question().is_dynamic == true){
     
-            quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+            quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );
             quiz.set_previous_value_boolean(true);
         }
         else{
@@ -583,7 +589,9 @@ function increment_and_reload(value) {
                 console.log((quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
                 quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
                 quiz.set_previous_value_boolean(false);
+                quiz.set_value(quiz.return_question_index());
             }else{
+                quiz.set_value(quiz.return_question_index());
                 quiz.set_previous_value_boolean(false);
                 quiz.change_question_index(quiz.return_question_index() + 1);
             }
@@ -592,13 +600,15 @@ function increment_and_reload(value) {
     else if (value == "2") {
         increment_value = 2;
         if(quiz.return_value_of_question().is_dynamic == true){
-            quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+            quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );
             quiz.set_previous_value_boolean(true);
         }else{
             if(quiz.return_previous_value_boolean() == true){
                 quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
                 quiz.set_previous_value_boolean(false);
+                quiz.set_value(quiz.return_question_index());
             }else{
+                    quiz.set_value(quiz.return_question_index());
                     quiz.set_previous_value_boolean(false);
                     quiz.change_question_index(quiz.return_question_index() + 1);
                 }
@@ -607,45 +617,51 @@ function increment_and_reload(value) {
     else if (value == "3") {
         increment_value = 3;
         if(quiz.return_value_of_question().is_dynamic == true){
-            quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+            quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );
             quiz.set_previous_value_boolean(true);
     }else{
         if(quiz.return_previous_value_boolean() == true){
             quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
             quiz.set_previous_value_boolean(false);
+            quiz.set_value(quiz.return_question_index());
         }else{
                 quiz.change_question_index(quiz.return_question_index() + 1);
                 quiz.set_previous_value_boolean(false);
+                quiz.set_value(quiz.return_question_index());
             }
     } 
     }
     else if (value == "4") {
         increment_value = 4;
         if(quiz.return_value_of_question().is_dynamic == true){
-            quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+            quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );
             quiz.set_previous_value_boolean(true);
     }else{
         if(quiz.return_previous_value_boolean() == true){
             quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
-            quiz.set_previous_value_boolean(false);   
+            quiz.set_previous_value_boolean(false);  
+            quiz.set_value(quiz.return_question_index()); 
         }else{
                 quiz.change_question_index(quiz.return_question_index() + 1);
                 quiz.set_previous_value_boolean(false);
+                quiz.set_value(quiz.return_question_index());
             }
     }
     }
     else if (value == "5") {
         if(quiz.return_value_of_question().is_dynamic == true){
         increment_value = 5;
-        quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+        quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );;
         quiz.set_previous_value_boolean(true);
     }else{
         if(quiz.return_previous_value_boolean() == true){
             quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
             quiz.set_previous_value_boolean(false);
+            quiz.set_value(quiz.return_question_index());
         }else{
             quiz.set_previous_value_boolean(false);
                 quiz.change_question_index(quiz.return_question_index() + 1);
+                quiz.set_value(quiz.return_question_index());
             }
     }  
     }
