@@ -98,7 +98,10 @@
     padding: 5px;
 }
 
-
+.buttons {
+    width: 1%;
+    white-space: nowrap;
+}
 
 /* Start Custom Scrollbar */
 ::-webkit-scrollbar {

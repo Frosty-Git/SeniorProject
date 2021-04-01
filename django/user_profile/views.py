@@ -138,7 +138,7 @@ def profile(request, user_id):
                 'follower_list': follower_list,
                 'is_following': bool_following,
                 'image': loggedin.profilepic,
-                'acousticness': all_prefs['acousticness'],
+                'acousticness': all_prefs['acousticness']*100,
                 'danceability': all_prefs['danceability'],
                 'energy': all_prefs['energy'],
                 'instrumentalness': all_prefs['instrumentalness'],
