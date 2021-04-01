@@ -121,7 +121,7 @@ def create_post_profile(request):
 
 
 
-def delete_post(request, post_id):
+def delete_post(request, post_id, location):
     """
     Deletes a post and redirects back to profile.
     This will only show up for the logged in user's profile.
@@ -129,7 +129,11 @@ def delete_post(request, post_id):
     """
     post = Post.objects.get(pk=post_id)
     post.delete()
-    return redirect('/user/profile/' + str(request.user.id))
+    if location == 'profile':
+        return redirect('/user/profile/' + str(request.user.id))
+    else:
+        return redirect('/feed/')
+
 
 def create_comment(request, post_id):
     """
