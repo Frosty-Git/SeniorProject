@@ -27,41 +27,64 @@
 </h1>
 
 {% if profile.user.id == user.id %}
-    <div class="center" style="width:150px; text-align:center;">
-        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
-            Edit Playlist
-        </button>
-        {% include 'playlists/editplaylist_popup.html' %}
-    </div>
-    <div class="center" style="width:200px; text-align:center; margin-top:10px;">
-        <a class="btn btn-dark" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
-    </div>
+    <table class="center">
+        <tr>
+            <td>
+                <div class="center" style="width:175px; text-align:center;">
+                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
+                        Edit Playlist
+                    </button>
+                    {% include 'playlists/editplaylist_popup.html' %}
+                </div>
+            </td>
+            <td>
+                <div class="center" style="width:175px; text-align:center;">
+                    <a class="btn btn-dark" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
+                </div>
+            </td>
+        </tr>
+
+        {% if playlist != profile.liked_songs_playlist_fk %}
+        <tr>
+            <td colspan="2" class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
+                <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete Playlist</a>
+            </td>
+        </tr>
+        {% endif %}
+
     {% if profile.user.id == user.id %}
         {% if not playlist.is_private %}
-            <div class="center" style="width:100px; text-align:center; margin-top:10px;">
-                <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
-                {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
-            </div>
+        <tr>
+            <td colspan="2">
+                <div class="center" style="width:100px; text-align:center; margin-top:10px;">
+                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                    {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
+                </div>
+            </td>
+        </tr>
         {% endif %}
     {% endif %}
-{% endif %}
-{% if profile.user.id != user.id and playlist.is_shareable %}
-    {% if not playlist.is_private %}
-    <div class="center" style="width:100px; text-align:center; margin-top:10px;">
-        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
-        {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id private_profile=private_profile %}
-    </div>
-    {% endif %}
-{% endif %}
-{% if playlist != profile.liked_songs_playlist_fk %}
-    <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-        <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
-    </td>
-{% else %}
-    <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-    </td>
+</table>
 {% endif %}
 
+
+{% if profile.user.id != user.id and playlist.is_shareable %}
+    {% if user.is_authenticated %}
+        {% if not playlist.is_private %}
+            <table class="center">
+                <tr>
+                    <td>
+                        <div class="center" style="width:100px; text-align:center; margin-top:10px;">
+                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                            {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id private_profile=private_profile %}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        {% endif %}
+    {% endif %}
+
+{% endif %}
 
 <table class="center" style="width:40%;">
     {% for song in songs %}

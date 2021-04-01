@@ -99,10 +99,12 @@
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
                 {% if playlist.is_shareable%}
-                    <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
-                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
-                        {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
-                    </td>
+                    {% if user.is_authenticated%}
+                        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
+                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                            {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
+                        </td>
+                    {% endif %}
                 {% endif %}
                 {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
         {% endif %}
