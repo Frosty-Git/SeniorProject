@@ -16,7 +16,7 @@
     <input hidden id="user_profile" value="{% static 'images/noprofilepic.jpg' type='image/jpg' %}">
 {% endif %}
 
-<!-- Included in Profile Feed -->
+<!-- Included in Feed -->
     <div class="modal fade" id="postmodal{{ post.id }}" tabindex="-1" aria-labelledby="myPostModalLabel" aria-hidden="true"  style="color:black;">
         <div class="modal-dialog modal-lg modal-dialog-centered" >
           <div class="modal-content">
@@ -76,7 +76,7 @@
                                     <a href="{% url 'user:profile' post.playlist.user_profile_fk.user.id %}">@{{ post.playlist.user_profile_fk.user.username }}</a>'s playlist: <a href="{% url 'user:get_songs_playlist' post.playlist.user_profile_fk.user.id post.playlist.id %}">{{ post.playlist.name }}</a>
                                 {% endif %}
                                 <br>
-                                by <a href="{% url 'user:profile' user.id %}">@{{ post.user_profile_fk.user.username }}</a>
+                                by <a href="{% url 'user:profile' post.user_profile_fk.user.id %}">@{{ post.user_profile_fk.user.username }}</a>
                                 <p id="post_date{{post.id}}">{{ post.date_last_updated|naturaltime }}</p>
                                 <br>
 
@@ -110,7 +110,7 @@
                                                     </button>
                                                 </div>
                                             </td>
-                                            {% if profile.user.id == user.id %}
+                                            {% if post.user_profile_fk.user.id == user.id %}
                                             <td style="float:right">
                                                 <div class="btn-group" role="group" style="float:right; ">
                                                     <a role="button" class="btn popedit{{ post.id }}" style="color:black">
@@ -249,6 +249,9 @@
                                                                                 + '</svg></a></td></tr></table></div>');
                                         $('#comment_count{{ post.id }}').text(previous_comment_count + 1);
                                     }, 2000);
+                                }
+                                if (json['status'] == 'ko') {
+                                    alert('ko');
                                 }
 
                             },

@@ -1,12 +1,7 @@
 {% load static %}
 {% load humanize %}
 {% load widget_tweaks %}
-<style>
-    .buttons {
-        width: 1%;
-        white-space: nowrap;
-    }
-</style>
+
 
 <div class="container feed_table" style="overflow-y: scroll; height: 560px;">
     {% if nli_post_list %}
@@ -153,7 +148,7 @@
                                 </button>  
                             </div>
                             {% include 'social_feed/popup_post.html' with post=post image=image %}
-                            {% include 'profile/vote_script.html' %}
+                            {% include 'social_feed/vote_script.html' %}
                             
                         </td>
                         {% if profile.user.id == user.id%}

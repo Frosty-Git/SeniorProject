@@ -39,6 +39,7 @@ def display_posts(request):
         'post_list': post_list,
         'comment_list': comment_list,
         'postform': postform,
+        'image': you.profilepic,
     }  
     return render(request, 'social_feed/feed.html', context)
 
