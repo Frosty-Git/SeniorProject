@@ -476,23 +476,40 @@ def get_playlists(request, user_id):
         }
         return render(request, 'playlists/playlists.html', context)
     else:
-        other_user = UserProfile.objects.get(pk=user_id)
-        private_profile = profile_privacy(user_id)
-        following_status = is_following(request.user.id, other_user.user.id)
-        # following_status or 
-        if following_status or not private_profile:
-            playlists = Playlist.objects.filter(user_profile_fk=other_user)
-            context = {
-                'playlists': playlists,
-                'profile': other_user,
-                'private_profile': private_profile,
-                'following_status': following_status,
-            }
-            return render(request, 'playlists/playlists.html', context)
+        # You are accessing someone else's playlists page while logged in
+        if request.user.id is not None:
+            other_user = UserProfile.objects.get(pk=user_id)
+            private_profile = profile_privacy(user_id)
+            following_status = is_following(request.user.id, other_user.user.id)
+            if following_status or not private_profile:
+                playlists = Playlist.objects.filter(user_profile_fk=other_user)
+                context = {
+                    'playlists': playlists,
+                    'profile': other_user,
+                    'private_profile': private_profile,
+                    'following_status': following_status,
+                }
+                return render(request, 'playlists/playlists.html', context)
+            else:
+                # Redirect back to your own playlist page since the user is private
+                # and you don't follow them
+                return redirect('/user/playlists/' + str(request.user.id))
+
+        # You are accessing someone else's playlists page while not logged in
         else:
-            # Redirect back to your own playlist page since the user is private
-            # and you don't follow them
-            return redirect('/user/playlists/' + str(request.user.id))
+            other_user = UserProfile.objects.get(pk=user_id)
+            private_profile = profile_privacy(user_id)
+            if not private_profile:
+                playlists = Playlist.objects.filter(user_profile_fk=other_user)
+                context = {
+                    'playlists': playlists,
+                    'profile': other_user,
+                    'private_profile': private_profile,
+                }
+                return render(request, 'playlists/playlists.html', context)
+            else:
+                return redirect('/')
+
 
 def get_songs_playlist(request, user_id, playlist_id):
     """
@@ -524,39 +541,74 @@ def get_songs_playlist(request, user_id, playlist_id):
         }
         return render(request, 'playlists/single_playlist.html', context)
     else:
-        other_user = UserProfile.objects.get(pk=user_id)
-        private_profile = profile_privacy(user_id)
-        following_status = is_following(request.user.id, other_user.user.id)
-        # If the person's profile is not private or if you follow them, then you can
-        # see their playlists
-        if not private_profile or following_status:
-            playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=other_user)
-            if not playlist.is_private:
-                matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
-                songs = {}
-                for match in matches:
-                    # sop_id is the id for the primary key of the row into the SongOnPlaylist
-                    # table that the matching songs to playlists come from
-                    sop_id = match.get('id')
-                    # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
-                    song_id = match.get('spotify_id_id')
-                    songs[sop_id] = song_id
+        # You are accessing a playlist that belongs to someone else while logged in
+        if request.user.id is not None:
+            other_user = UserProfile.objects.get(pk=user_id)
+            private_profile = profile_privacy(user_id)
+            following_status = is_following(request.user.id, other_user.user.id)
+            # If the person's profile is not private or if you follow them, then you can
+            # see their playlists
+            if not private_profile or following_status:
+                playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=other_user)
+                if not playlist.is_private:
+                    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+                    songs = {}
+                    for match in matches:
+                        # sop_id is the id for the primary key of the row into the SongOnPlaylist
+                        # table that the matching songs to playlists come from
+                        sop_id = match.get('id')
+                        # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
+                        song_id = match.get('spotify_id_id')
+                        songs[sop_id] = song_id
 
-                context = {
-                    'songs': songs,
-                    'playlist': playlist,
-                    'profile': other_user,
-                    'private_profile': private_profile,
-                    'following_status': following_status,
-                }
-                return render(request, 'playlists/single_playlist.html', context)
+                    context = {
+                        'songs': songs,
+                        'playlist': playlist,
+                        'profile': other_user,
+                        'private_profile': private_profile,
+                        'following_status': following_status,
+                    }
+                    return render(request, 'playlists/single_playlist.html', context)
+                else:
+                    # The single playlist you are trying to access is private, so redirect back to that 
+                    # user's playlists page
+                    return redirect('/user/playlists/' + str(user_id))
             else:
-                # The single playlist you are trying to access is private, so redirect back to that 
-                # user's playlists page
-                return redirect('/user/playlists/' + str(user_id))
+                # Redirect back to your own playlist page since the user is private
+                return redirect('/user/playlists/' + str(request.user.id))
+        # You are accessing a playlist that belongs to someone else while not logged in
         else:
-            # Redirect back to your own playlist page since the user is private
-            return redirect('/user/playlists/' + str(request.user.id))
+            other_user = UserProfile.objects.get(pk=user_id)
+            private_profile = profile_privacy(user_id)
+            # If the person's profile is not private then you can see their playlists
+            if not private_profile:
+                playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=other_user)
+                if not playlist.is_private:
+                    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+                    songs = {}
+                    for match in matches:
+                        # sop_id is the id for the primary key of the row into the SongOnPlaylist
+                        # table that the matching songs to playlists come from
+                        sop_id = match.get('id')
+                        # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
+                        song_id = match.get('spotify_id_id')
+                        songs[sop_id] = song_id
+
+                    context = {
+                        'songs': songs,
+                        'playlist': playlist,
+                        'profile': other_user,
+                        'private_profile': private_profile,
+                    }
+                    return render(request, 'playlists/single_playlist.html', context)
+                else:
+                    # The single playlist you are trying to access is private, so redirect back to that 
+                    # user's playlists page
+                    return redirect('/user/playlists/' + str(user_id))
+            else:
+                # Redirect back to your own playlist page since the user is private
+                return redirect('/')
+            
 
 def create_playlist_popup(request):
     """
