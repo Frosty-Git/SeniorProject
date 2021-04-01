@@ -1,4 +1,4 @@
-
+import time
 from django.shortcuts import render, redirect
 from requests.sessions import Session
 from user_profile.models import *
@@ -636,7 +636,7 @@ def export_to_spotify(request, playlist_id):
         matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
         song_ids = []
         for match in matches:
-            song_ids.append(match.get('spotify_id'))
+            song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
     else:
     # If it is not on Spotify, create the new playlist there, change our db boolean value
@@ -647,10 +647,14 @@ def export_to_spotify(request, playlist_id):
                                     collaborative=False,
                                     description=playlist.description)
         playlist.is_imported = True
-        new_playlist_id = spotify.user_playlists(user.spotify_user_id, limit=1, offset=0).get('id')
+        new_playlist_id = spotify.user_playlists(user.spotify_user_id, limit=1, offset=0).get('items')[0].get('id')
         playlist.spotify_playlist_id = new_playlist_id
         playlist.save()
-        print(new_playlist_id)
+        matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+        song_ids = []
+        for match in matches:
+            song_ids.append('spotify:track:' + match.get('spotify_id_id'))
+        spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
     return redirect('/user/playlists/' + str(request.user.id))
 
 def link_spotify(request):
