@@ -115,6 +115,7 @@ def profile(request, user_id):
             'loudness': all_prefs['loudness'],
             'loudness_adjusted': all_prefs['loudness_adjusted'],
             'tempo': all_prefs['tempo'],
+            'tempo_adjusted': all_prefs['tempo_adjusted'],
             'valence': all_prefs['valence'],
             'private_prefs': all_prefs['private_prefs'],
             'private_profile': is_profile_private,
@@ -146,6 +147,7 @@ def profile(request, user_id):
                 'loudness': all_prefs['loudness'],
                 'loudness_adjusted': all_prefs['loudness_adjusted'],
                 'tempo': all_prefs['tempo'],
+                'tempo_adjusted': all_prefs['tempo_adjusted'],
                 'valence': all_prefs['valence'],
                 'private_prefs': all_prefs['private_prefs'],
                 'private_profile': is_profile_private,
@@ -174,6 +176,7 @@ def profile(request, user_id):
                 'loudness': all_prefs['loudness'],
                 'loudness_adjusted': all_prefs['loudness_adjusted'],
                 'tempo': all_prefs['tempo'],
+                'tempo_adjusted': all_prefs['tempo_adjusted'],
                 'valence': all_prefs['valence'],
                 'private_prefs': all_prefs['private_prefs'],
                 'private_profile': is_profile_private,
@@ -669,6 +672,7 @@ def get_preferences(user_id):
     # purposes the range will be 0 to 60 rather than -60 to 0
     loudness_adjusted = loudness + 60
     tempo = prefs.tempo
+    tempo_adjusted = tempo - 50
     valence = prefs.valence
     user_prefs = {
         'private_prefs': private_prefs,
@@ -680,6 +684,7 @@ def get_preferences(user_id):
         'loudness': loudness,
         'loudness_adjusted': loudness_adjusted,
         'tempo': tempo,
+        'tempo_adjusted': tempo_adjusted,
         'valence': valence,
     }
     return user_prefs
