@@ -515,31 +515,29 @@ def get_playlists(request, user_id):
                 return redirect('/')
 
 
-def song_vote_sop_ziplist(matches, songs_votes):
+def sop_song_vote_array(matches, songs_votes):
     """
     """
-    sop_list = []
-    song_list = []
-    vote_list = []
+    songs = []
     for match in matches:
         # sop_id is the id for the primary key of the row into the SongOnPlaylist
         # table that the matching songs to playlists come from
-        sop_list.append(match.get('id'))
+        sop_id = match.get('id')
         # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
-        spotify_song = match.get('spotify_id_id')
-        song_list.append(spotify_song)
+        song_id = match.get('spotify_id_id')
 
         up = False
         down = False
         for song in songs_votes:
-            if song['songid_to_id'] == spotify_song:
+            if song['songid_to_id'] == song_id:
                 if song['vote'] == 'Like':
                     up = True
                 elif song['vote'] == 'Dislike':
                     down = True
-        vote_list.append([up, down])
-    zip_list = zip(sop_list, song_list, vote_list)
-    return zip_list
+        vote = [up, down]
+        
+        songs.append([sop_id, song_id, vote])
+    return songs
 
 def get_songs_playlist(request, user_id, playlist_id):
     """
@@ -550,18 +548,12 @@ def get_songs_playlist(request, user_id, playlist_id):
         you = UserProfile.objects.get(pk=request.user.id)
         playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=you)
         matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
-        songs = {}
-        for match in matches:
-            # sop_id is the id for the primary key of the row into the SongOnPlaylist
-            # table that the matching songs to playlists come from
-            sop_id = match.get('id')
-            # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
-            song_id = match.get('spotify_id_id')
-            songs[sop_id] = song_id
+        songs_votes = SongToUser.objects.filter(user_from=you).values('songid_to_id', 'vote')
+
+        songs = sop_song_vote_array(matches, songs_votes)
         
         private_profile = profile_privacy(user_id)
         following_status = is_following(request.user.id, user_id)
-        songs_votes = SongToUser.objects.filter(user_from=you).values('songid_to_id', 'vote')
 
         playlists = get_user_playlists(request.user.id)
 
@@ -578,6 +570,7 @@ def get_songs_playlist(request, user_id, playlist_id):
     else:
         # You are accessing a playlist that belongs to someone else while logged in
         if request.user.id is not None:
+            you = UserProfile.objects.get(pk=request.user.id)
             other_user = UserProfile.objects.get(pk=user_id)
             private_profile = profile_privacy(user_id)
             following_status = is_following(request.user.id, other_user.user.id)
@@ -587,14 +580,9 @@ def get_songs_playlist(request, user_id, playlist_id):
                 playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=other_user)
                 if not playlist.is_private:
                     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
-                    songs = {}
-                    for match in matches:
-                        # sop_id is the id for the primary key of the row into the SongOnPlaylist
-                        # table that the matching songs to playlists come from
-                        sop_id = match.get('id')
-                        # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
-                        song_id = match.get('spotify_id_id')
-                        songs[sop_id] = song_id
+                    songs_votes = SongToUser.objects.filter(user_from=you).values('songid_to_id', 'vote')
+
+                    songs = sop_song_vote_array(matches, songs_votes)
 
                     my_user_id = request.user.id
                     loggedin = UserProfile.objects.get(pk=my_user_id)
@@ -626,15 +614,8 @@ def get_songs_playlist(request, user_id, playlist_id):
                 playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=other_user)
                 if not playlist.is_private:
                     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
-                    songs = {}
-                    for match in matches:
-                        # sop_id is the id for the primary key of the row into the SongOnPlaylist
-                        # table that the matching songs to playlists come from
-                        sop_id = match.get('id')
-                        # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
-                        song_id = match.get('spotify_id_id')
-                        songs[sop_id] = song_id
-
+                    songs = sop_song_vote_array(matches, [])
+                    
                     context = {
                         'songs': songs,
                         'playlist': playlist,
@@ -755,7 +736,7 @@ def delete_song(request, playlist_id, sop_pk):
     # the match comes from
     song = SongOnPlaylist.objects.get(pk=sop_pk)
     song.delete()
-    return redirect('/user/playlist/' + str(playlist_id))
+    return redirect('/user/playlist/' + str(request.user.id) + '/' + str(playlist_id))
 
 def export_to_spotify(request, playlist_id):
     """
