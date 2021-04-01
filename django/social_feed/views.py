@@ -135,28 +135,6 @@ def delete_post(request, post_id, location):
         return redirect('/feed/')
 
 
-def create_comment(request, post_id):
-    """
-    Creates a comment on a particular post.
-    Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
-    """
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        post = get_object_or_404(Post, id=post_id)
-
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.text = form.cleaned_data.get('text')
-            comment.post_fk = post
-            user = UserProfile.objects.get(pk=request.user.id)
-            comment.user_profile_fk = user
-            comment.save()
-            url = '/feed/' + post_id
-            return redirect(url)
-    else:
-        context = get_comments(post_id)
-    return render(request, 'social_feed/post_detail.html', context)
-
 def get_comments(post_id):
     """
     Gets all the comments on a particular post.
