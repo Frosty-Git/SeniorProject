@@ -62,6 +62,7 @@ class ExtendedUserChangeForm(UserChangeForm):
 class PlaylistForm(forms.ModelForm):
     name = forms.CharField(max_length=30)
     image = forms.ImageField(required=False)
+    description = forms.CharField(widget=forms.Textarea, required=False, max_length=299)
     date_created = datetime.datetime.now()
     is_private = forms.BooleanField(required=False)
     is_shareable = forms.BooleanField(required=False, initial=True)

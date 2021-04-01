@@ -33,6 +33,7 @@
               <label for="is_private_f">Private</label>
             {% endif %}
             <br>
+
             If you make your playlist private, it will not be viewable or shareable by other users.
             <br>
             {% if playlist.is_shareable %}
@@ -46,8 +47,12 @@
             Shareable refers to whether or not other users can share your playlists. You can still share your own playlist
             regardless of this setting.
             <br>
+            Description:
+            <input type="text" required class="form-control" aria-label="With textarea" maxlength="299" id="new_description" name="new_description" value="{{ playlist.description }}">
+            <br>
             Note: Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible. Additionally,
             your playlist privacy setting takes precedence over the shareability setting. If your playlist is shareable but private, you will still not be able to share it.
+            
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>

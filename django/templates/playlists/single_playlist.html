@@ -32,7 +32,7 @@
         {% include 'playlists/editplaylist_popup.html' %}
     </div>
     <div class="center" style="width:200px; text-align:center; margin-top:10px;">
-        <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
+        <a class="btn btn-dark" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
     </div>
     {% if profile.user.id == user.id %}
         {% if not playlist.is_private %}
@@ -51,6 +51,7 @@
     </div>
     {% endif %}
 {% endif %}
+
 
 <table class="center" style="width:40%;">
     {% for id,song in songs.items %}

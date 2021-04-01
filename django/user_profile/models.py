@@ -36,12 +36,13 @@ class UserProfile(models.Model):
     refresh_token = models.CharField(default='No Value', max_length=255)
     expires_at = models.CharField(default='No Value', max_length=50)
     scope = models.TextField(default='No Value')
+    spotify_user_id = models.CharField(default='No Value', max_length=255)
     songs_liked = models.ManyToManyField('SongId', 
                                         through="SongToUser",
                                         related_name='songs_liked',
                                         symmetrical=False)
     liked_songs_playlist_fk = models.ForeignKey('Playlist', on_delete=models.CASCADE, null=True, blank=True)
-
+    
     def __str__(self):
         return self.user.username
 
@@ -100,17 +101,20 @@ class Playlist(models.Model):
     Model for playlists created by users on the site. Songs can be added or
     deleted to the playlists, and playlists can be liked or disliked by other
     users.
-    Last updated: 3/27/21 by Jacelynn Duranceau
+    Last updated: 3/31/21 by Jacelynn Duranceau, Joe Frost, Tucker Elliott
     """
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None) # Who created the playlist
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True, verbose_name="", blank=True) # Pillow
-    upvotes = models.IntegerField(default=0) 
+    upvotes = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     date_last_updated = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)
     is_shareable = models.BooleanField(default=True)
-    #theme = models.TextField(null=True, blank=True)  # Genres
+    is_imported = models.BooleanField(default=False) # Is imported to the linked Spotify account.
+    spotify_playlist_id = models.CharField(default='No Link', max_length=255)
+    description = models.TextField(blank=True, null=True, max_length=299)
+    # theme = models.TextField(null=True, blank=True)  # Genres
     # this_weeks_upvotes = models.IntegerField()
     # length = # Derived
     # num_songs = # Derived

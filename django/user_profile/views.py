@@ -1,4 +1,6 @@
+
 from django.shortcuts import render, redirect
+from requests.sessions import Session
 from user_profile.models import *
 from user_profile.forms import *
 from social_feed.models import *
@@ -17,10 +19,12 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import recommender.Scripts.client_credentials as client_cred
 from recommender.Scripts.spotify_manager import SpotifyManager
+import os
+from django.core.cache import cache
 
 # Create your views here.
 
-# global variable for spotify manager
+# global variables for spotify manager
 spotify_manager = SpotifyManager()
 
 def sign_up(request):
@@ -512,16 +516,19 @@ def get_songs_playlist(request, user_id, playlist_id):
 def create_playlist_popup(request):
     """
     Creates a playlist
-    Last updated: 3/24/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliot
+    Last updated: 3/24/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliott
     """
     if request.method == 'POST':
         playlist_form = PlaylistForm(request.POST, request.FILES)
         if playlist_form.is_valid():
             you = UserProfile.objects.get(pk=request.user.id)
-            playlist = Playlist(user_profile_fk=you, name=playlist_form.cleaned_data.get('name'), 
+            playlist = Playlist(user_profile_fk=you,
+                                name=playlist_form.cleaned_data.get('name'), 
                                 image=playlist_form.cleaned_data.get('image'),
                                 is_private=playlist_form.cleaned_data.get('is_private'),
                                 is_shareable=playlist_form.cleaned_data.get('is_shareable'))
+                                description=playlist_form.cleaned_data.get('description')
+                                )
             playlist.save()
             # playlist = playlist_form.save(commit=False)
             return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
@@ -550,12 +557,13 @@ def add_song_to_playlist(request, query):
 def edit_playlist_popup(request):
     """
     Updates a user's playlist
-    Last updated: 3/27/21 by Jacelynn Duranceau
+    Last updated: 3/31/21 by Jacelynn Duranceau, Joe Frost, Tucker Elliott
     """
     if request.method == 'POST':
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
         name = request.POST.get('new_name')
+        description = request.POST.get('new_description')
         img = request.FILES.get('img')
 
         if playlist.is_private is True:
@@ -580,6 +588,8 @@ def edit_playlist_popup(request):
             playlist.name = name
             if img is not None:
                 playlist.image = img
+            if description is not None:
+                playlist.description = description
             playlist.is_private = is_private
             playlist.is_shareable = is_shareable
             playlist.date_last_updated = timezone.now()
@@ -609,22 +619,72 @@ def delete_song(request, playlist_id, sop_pk):
     song.delete()
     return redirect('/user/playlist/' + str(playlist_id))
 
+def export_to_spotify(request, playlist_id):
+    """
+    Exports a playlist to the user's linked Spotify account. The exported 
+    playlist will show up on that user's Spotify playlists list if they check 
+    their Spotify app.
+    Last updated: 3/31/2021 Joe Frost, Tucker Elliott
+    """
+    user = UserProfile.objects.get(pk=request.user.id)
+    spotify_manager.token_check(request)
+    spotify = spotipy.Spotify(auth=user.access_token)
+    playlist = Playlist.objects.get(pk=playlist_id)
+    # Check if the playlist is on Spotify already.
+    if playlist.is_imported:
+    # If it is already on Spotify, replace the playlist on Spotify with this new version.
+        matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+        song_ids = []
+        for match in matches:
+            song_ids.append(match.get('spotify_id'))
+        spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
+    else:
+    # If it is not on Spotify, create the new playlist there, change our db boolean value
+    # to say it is on Spotify, and get the Spotify playlist id saved into our db.
+        spotify.user_playlist_create(user=user.spotify_user_id,
+                                    name=playlist.name,
+                                    public=(not playlist.is_private),
+                                    collaborative=False,
+                                    description=playlist.description)
+        playlist.is_imported = True
+        new_playlist_id = spotify.user_playlists(user.spotify_user_id, limit=1, offset=0).get('id')
+        playlist.spotify_playlist_id = new_playlist_id
+        playlist.save()
+        print(new_playlist_id)
+    return redirect('/user/playlists/' + str(request.user.id))
+
 def link_spotify(request):
+    """
+    This is the on action method for the Link Spotify button in the 
+    user profile page. It will send the user to the Spotify login page 
+    if they are currently not logged in.
+    Last updated: 3/31/2021 Joe Frost, Tucker Elliott
+    """
     spotify = spotify_manager.create_spotify()
     spotify.me()
-    return redirect()
+    return redirect('/')
 
 def save_token_redirect(request):
+    """
+    This is a complementary view to the link_spotify view. After the user 
+    logs into Spotify on the Spotify login page which they were sent to 
+    after clicking the link spotify button in the user profile, the Spotify 
+    page will send them here. This view saves the Spotify token data into our 
+    database under the PengBeats user's profile entry.
+    Last updated: 3/31/2021 Joe Frost, Tucker Elliott
+    """
     spotify = spotify_manager.create_spotify()
-    cached_token = spotify_manager.auth_manager.get_cached_token()
+    cached_token = spotify_manager.auth_manager.get_access_token(request.GET.__getitem__('code'))
     if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
         user = UserProfile.objects.get(user=request.user.id)
+        user.spotify_user_id = spotify.me().get('id')
         user.access_token = cached_token['access_token']
         user.refresh_token = cached_token['refresh_token']
         user.expires_at = cached_token['expires_at']
         user.scope = cached_token['scope']
         user.linked_to_spotify = True
         user.save()
+        os.remove(os.path.abspath(".cache"))
     return redirect('/')
 
 def get_preferences(user_id):
