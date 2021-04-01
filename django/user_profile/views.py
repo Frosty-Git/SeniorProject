@@ -243,17 +243,40 @@ def display_following(request, user_id):
     foreign key, which represents the users followed.
     Last updated: 3/11/21 by Jacelynn Duranceau
     """
-    you = UserProfile.objects.get(pk=user_id)
-    following = you.users_followed.all()
-    following_arr = []
-    for user_profile in following:
-        determination = is_following(request.user.id, user_profile.user.id)
-        #following_dict[user_profile].append(determination)
-        following_arr.append([user_profile, determination])
-    # following = FollowedUser.objects.filter(user_from=user_id)
-    # get_list = FollowedUser.objects.get(user_from=user_id)
-    #following = get_list.user_to
-    return render(request, 'profile/following.html', {'following': following_arr})
+    if request.user == User.objects.get(pk=user_id):
+        you = UserProfile.objects.get(pk=user_id)
+        following = you.users_followed.all()
+        following_arr = []
+        for user_profile in following:
+            determination = is_following(request.user.id, user_profile.user.id)
+            #following_dict[user_profile].append(determination)
+            following_arr.append([user_profile, determination])
+        # following = FollowedUser.objects.filter(user_from=user_id)
+        # get_list = FollowedUser.objects.get(user_from=user_id)
+        #following = get_list.user_to
+        return render(request, 'profile/following.html', {'following': following_arr})
+    else:
+        user = UserProfile.objects.get(pk=user_id)
+        private_profile = profile_privacy(user_id)
+        following_status = is_following(request.user.id, user_id)
+        if following_status or not private_profile:
+            following = user.users_followed.all()
+            following_arr = []
+            for user_profile in following:
+                determination = is_following(request.user.id, user_profile.user.id)
+                #following_dict[user_profile].append(determination)
+                following_arr.append([user_profile, determination])
+            # following = FollowedUser.objects.filter(user_from=user_id)
+            # get_list = FollowedUser.objects.get(user_from=user_id)
+            #following = get_list.user_to
+            context = {
+                'following': following_arr,
+                'private_profile': private_profile,
+                'following_status': following_status,
+            }
+            return render(request, 'profile/following.html', context)
+        else:
+            return redirect('/user/following/' + str(request.user.id))
 
 @require_GET
 def display_followers(request, user_id):
@@ -368,14 +391,15 @@ def get_playlists(request, user_id):
         }
         return render(request, 'playlists/playlists.html', context)
     else:
-        user = UserProfile.objects.get(pk=user_id)
+        other_user = UserProfile.objects.get(pk=user_id)
         private_profile = profile_privacy(user_id)
-        following_status = is_following(request.user.id, user_id)
+        following_status = is_following(request.user.id, other_user.user.id)
+        # following_status or 
         if following_status or not private_profile:
-            playlists = Playlist.objects.filter(user_profile_fk=user)
+            playlists = Playlist.objects.filter(user_profile_fk=other_user)
             context = {
                 'playlists': playlists,
-                'profile': user,
+                'profile': other_user,
                 'private_profile': private_profile,
                 'following_status': following_status,
             }
@@ -441,13 +465,13 @@ def get_songs_playlist(request, user_id, playlist_id):
         }
         return render(request, 'playlists/single_playlist.html', context)
     else:
-        user = UserProfile.objects.get(pk=user_id)
+        other_user = UserProfile.objects.get(pk=user_id)
         private_profile = profile_privacy(user_id)
-        following_status = is_following(request.user.id, user_id)
+        following_status = is_following(request.user.id, other_user.user.id)
         # If the person's profile is not private or if you follow them, then you can
         # see their playlists
         if not private_profile or following_status:
-            playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=user)
+            playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=other_user)
             if not playlist.is_private:
                 matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
                 songs = {}
@@ -462,7 +486,7 @@ def get_songs_playlist(request, user_id, playlist_id):
                 context = {
                     'songs': songs,
                     'playlist': playlist,
-                    'profile': user,
+                    'profile': other_user,
                     'private_profile': private_profile,
                     'following_status': following_status,
                 }
@@ -718,6 +742,13 @@ def is_following(your_id, user_to_id):
         if person.user.id == user_to_id:
             is_following = True
             break
+    # users_you_follow = FollowedUser.objects.filter(user_from=you).values('user_to')
+    # for result in users_you_follow:
+    #     for id in result.values():
+    #         if id == user_to_id:
+    #             is_following = True
+    #             break
+    
     return is_following
         
 def profile_privacy(user_id):
