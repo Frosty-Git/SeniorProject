@@ -290,8 +290,6 @@ def display_following(request, user_id):
                 context = {
                     'following': following_arr,
                     'profile': other_user,
-                    'private_profile': private_profile,
-                    'following_status': following_status,
                 }
                 return render(request, 'profile/following.html', context)
             else:
@@ -308,7 +306,6 @@ def display_following(request, user_id):
                 context = {
                     'following': following_arr,
                     'profile': other_user,
-                    'private_profile': private_profile,
                 }
                 return render(request, 'profile/following.html', context)
             else:
