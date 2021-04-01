@@ -22,17 +22,12 @@ urlpatterns = [
     path('createplaylist/', views.create_playlist_popup, name='create_playlist_popup'),
     path('addsong/<query>', views.add_song_to_playlist, name='add_song_popup'),
     path('editplaylist/', views.edit_playlist_popup, name='edit_playlist_popup'),
-#     path('otherplaylists/<user_id>', views.other_playlists, name='other_playlists'),
-#     path('playlist/<user_id>/<playlist_id>', views.get_other_songs_playlist, name='get_other_songs_playlist'),
     path('deleteplaylist/<playlist_id>', views.delete_playlist, name='delete_playlist'),
     path('deletesong/<playlist_id>/<sop_pk>', views.delete_song, name='delete_song'),
     path('link_spotify/', views.link_spotify, name='link_spotify'),
     path('reset_preferences/', views.reset_preferences, name='reset_preferences'),
     path('delete_account/', views.delete_account, name='delete_account'),
-    #path('', views.save_token_redirect, name='save_token_redirect'),
-    #path('playlist/<playlist_id>', views.create_playlist, name='create_playlist'),
-    # path('num_followers/<user_id>', views.num_followers, name='num_followers')
-    
+    #path('', views.save_token_redirect, name='save_token_redirect'),    
 
     # Password related URLs
     path('account_setting/', auth_views.PasswordChangeView.as_view(
