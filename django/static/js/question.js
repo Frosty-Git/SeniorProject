@@ -4,8 +4,8 @@ function Quiz(questions) {
     this.questionIndex = 0;
 }
 
-Quiz.prototype.increment_question_index = function (value) {
-    this.questionIndex = this.questionIndex + value;
+Quiz.prototype.change_question_index = function (value) {
+    this.questionIndex = value
 }
 
 
@@ -18,7 +18,7 @@ Quiz.prototype.return_question_index = function () {
     return this.questionIndex;
 }
 
-function Question(question, choices, danceability, accousticness, energy, instrumentalness, speechiness, loudness, tempo, valence) {
+function Question(question, choices, danceability, accousticness, energy, instrumentalness, speechiness, loudness, tempo, valence, is_dynamic) {
     this.question = question;
     this.choices = choices;
     this.danceability = danceability;
@@ -29,6 +29,7 @@ function Question(question, choices, danceability, accousticness, energy, instru
     this.loudness = loudness;
     this.tempo = tempo;
     this.valence = valence;
+    this.is_dynamic = is_dynamic;
 
 };
 
@@ -50,7 +51,8 @@ let questions = [
         //tempo
         [null, null, null, null, null],
         //valence
-        [null, null, null, null, null]
+        [null, null, null, null, null],
+        true
     ),
     new Question("Which of the following artists do you prefer?", ["The Beatles", "Metallica", "The Grateful Dead", "Electric Lights Orchestra", "Simon and Garfunkel"],
         //danceability
@@ -68,7 +70,8 @@ let questions = [
         //tempo
         [null, null, null, null, null],
         //valence
-        [null, null, null, null, null]
+        [null, null, null, null, null],
+        true
     ),
     new Question("Which of the following artists do you prefer?", ["Carrie Underwood", "Dan + Shay", "Morgan Wallen", "Luke Combs", "Kane Brown"],
         //danceability
@@ -86,7 +89,8 @@ let questions = [
         //tempo
         [null, null, null, null, null],
         //valence
-        [null, null, null, null, null]
+        [null, null, null, null, null],
+        true
     ),
     new Question("Which of the following artists do you prefer?", ["Justin Bieber", "Nicki Minaj", "Katy Perry", "Billy Eilish", "Ariana Grande"],
       //danceability
@@ -104,8 +108,11 @@ let questions = [
       //tempo
       [null, null, null, null, null],
       //valence
-      [null, null, null, null, null]),
-    new Question("Which of the following artists do you prefer?", ["The Irish Sailors", "The Largest Johns", "The Irish Rovers", "The Fisherman's Friends", "The Jolly Rodgers"],
+      [null, null, null, null, null],
+      true
+      ),
+      
+    new Question("Which of the following artists do you prefer?", ["The Irish Sailors", "The Largest Johns", "The Irish Rovers", "The Fisherman's Friends", "High Tide"],
       //danceability
       [null, null, null, null, null],
       //acousticness
@@ -121,7 +128,9 @@ let questions = [
       //tempo
       [null, null, null, null, null],
       //valence
-      [null, null, null, null, null]),
+      [null, null, null, null, null],
+      true
+      ),
     new Question("Which of the following artists do you prefer?", ["Deva Premal", "Tibetan Monks", "The Gyuto Monks of Tibet", "Tradidional", "Shu-de"],
       //danceability
       [null, null, null, null, null],
@@ -138,7 +147,9 @@ let questions = [
       //tempo
       [null, null, null, null, null],
       //valence
-      [null, null, null, null, null]),
+      [null, null, null, null, null],
+      true
+      ),
     new Question("Which of the following songs do you listen to the most?", ["In My Life", "Yesterday", "Twist and Shout", "Come Together", "Strawberry Fields Forever"],
     //danceability
     [0.688, 0.332, 0.482, 0.533, 0.39],
@@ -155,8 +166,10 @@ let questions = [
     //tempo
     [103.239, 96.529, 124.631, 165.007, 97.871],
     //valence
-    [0.435, 0.315, 0.937, 0.187, 0.289]
+    [0.435, 0.315, 0.937, 0.187, 0.289],
+    true
     ),
+    
     new Question("Which of the following songs do you listen to the most?", ["Sad But True", "Nothing Else Matters", "Enter Sandman", "Master of Puppets", "Fade To Black"],
     //danceability
     [0.632, 0.558, 0.579, 0.539, 0.256],
@@ -173,7 +186,8 @@ let questions = [
     //tempo
     [89.232, 142.171, 123.331, 105.25, 113.47],
     //valence
-    [0.433, 0.17, 0.635, 0.562, 0.278]
+    [0.433, 0.17, 0.635, 0.562, 0.278],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["Shakedown Street", "Althea", "Touch of Grey", "Truckin'", "Casey Jones"],
     //danceability
@@ -191,7 +205,8 @@ let questions = [
     //tempo
     [109.447, 82.676, 159.829, 126.553, 99.678],
     //valence
-    [0.85, 0.584, 0.849, 0.676, 0.828]
+    [0.85, 0.584, 0.849, 0.676, 0.828],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["Mr. Blue Sky", "Last Train to London", "Don't Bring Me Down", "Turn to Stone", "Evil Woman"],
     //danceability
@@ -209,7 +224,8 @@ let questions = [
     //tempo
     [177.784, 121.493, 115.692, 140.966, 119.624],
     //valence
-    [0.477, 0.954, 0.805, 0.458, 0.74]
+    [0.477, 0.954, 0.805, 0.458, 0.74],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["Cecilia", "Bridge Over Troubled Water", "The Only Living Boy in New York", "The Boxer", "America"],
     //danceability
@@ -227,7 +243,8 @@ let questions = [
     //tempo
     [102.762, 79.764, 76.963, 93.017, 178.453],
     //valence
-    [0.954, 0.264, 0.524, 0.629, 0.275]
+    [0.954, 0.264, 0.524, 0.629, 0.275],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["The Champion", "Jesus, Take the Wheel", "Before He Cheats", "All-American Girl", "How Great Thou Art"],
     //danceability
@@ -245,7 +262,8 @@ let questions = [
     //tempo
     [91.056, 76.572, 147.905, 123.991, 92.535],
     //valence
-    [0.51, 0.135, 0.29, 0.77, 0.282]
+    [0.51, 0.135, 0.29, 0.77, 0.282],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["Glad You Exist", "I Should Probably Go To Bed", "10,000 Hours (with Justin Bieber)", "How Not To", "From the Ground Up"],
     //danceability
@@ -263,7 +281,8 @@ let questions = [
     //tempo
     [103.953, 131.935, 89.991, 159.863, 151.568],
     //valence
-    [0.66, 0.309, 0.43, 0.618, 0.282]
+    [0.66, 0.309, 0.43, 0.618, 0.282],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["Somebody's Problem", "865", "Whiskey Glasses", "Sand In My Boots", "Dangerous"],
     //danceability
@@ -281,7 +300,8 @@ let questions = [
     //tempo
     [136.97, 88.003, 149.959, 69.877, 119.017],
     //valence
-    [0.625, 0.367, 0.707, 0.414, 0.948]
+    [0.625, 0.367, 0.707, 0.414, 0.948],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["Lovin' On You", "Better Together", "Hurricane", "She Got the Best of Me", "Forever After All"],
     //danceability
@@ -299,7 +319,8 @@ let questions = [
     //tempo
     [118.974, 138.002, 75.977, 150.99, 151.964],
     //valence
-    [0.53, 0.67, 0.515, 0.7, 0.456]
+    [0.53, 0.67, 0.515, 0.7, 0.456],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["Be Like That", "Like a Rodeo", "Lose It", "For My Daughter", "What Ifs"],
     //danceability
@@ -317,7 +338,8 @@ let questions = [
     //tempo
     [86.97, 119.985, 91.966, 139.939, 125.976],
     //valence
-    [0.322, 0.425, 0.436, 0.35, 0.687]
+    [0.322, 0.425, 0.436, 0.35, 0.687],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["As I Am", "Anyone", "Hold On", "Ghost", "2 Much"],
     //danceability
@@ -335,7 +357,8 @@ let questions = [
     //tempo
     [99.928, 115.884, 139.98, 153.96, 119.59],
     //valence
-    [0.109, 0.584, 0.29, 0.441, 0.167]
+    [0.109, 0.584, 0.29, 0.441, 0.167],
+    true
     ),
     new Question("Which of the following songs do you listen to the most?", ["Anaconda", "Feeling Myself", "The Night is Still Young", "Yikes", "I'm Legit"],
     //danceability
@@ -353,7 +376,8 @@ let questions = [
     //tempo
     [129.99, 139.045, 128.016, 149.996, 75.002],
     //valence
-    [0.646, 0.477, 0.693, 0.66, 0.543]
+    [0.646, 0.477, 0.693, 0.66, 0.543],
+    true
     )
 
 
@@ -399,35 +423,55 @@ Get_Question();
 
 function increment_and_reload(value) {
     let increment_value = 0;
+    
     if (value == "1") {
         increment_value = 1;
-        quiz.increment_question_index(increment_value);
+        if(quiz.return_value_of_question().is_dynamic == true){
+    
+            quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+        }
+        else{
+            quiz.change_question_index( quiz.return_question_index() + (6 - (quiz.return_question_index() % 5))  );
+        }
     }
     else if (value == "2") {
         increment_value = 2;
-        quiz.increment_question_index(increment_value);
+        if(quiz.return_value_of_question().is_dynamic == true){
+            quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+        }else{
     
+            
+        }
     }
     else if (value == "3") {
         increment_value = 3;
-        quiz.increment_question_index(increment_value);
-       
+        if(quiz.return_value_of_question().is_dynamic == true){
+            quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+    }else{
+      
+    } 
     }
     else if (value == "4") {
         increment_value = 4;
-        quiz.increment_question_index(increment_value);
-        increment_value = 4;
+        if(quiz.return_value_of_question().is_dynamic == true){
+            quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+    }else{
+       
+    }
     }
     else if (value == "5") {
+        if(quiz.return_value_of_question().is_dynamic == true){
         increment_value = 5;
-        quiz.increment_question_index(increment_value);
-        
+        quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
+    }else{
+       
+    }  
     }
 Get_Question();
-quiz.increment_question_index( (5 - increment_value));
+
 
     
 
 
-}
 
+}
