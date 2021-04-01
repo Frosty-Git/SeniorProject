@@ -14,7 +14,7 @@
     } 
 </style>
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-    Followers
+    <a href="{% url 'user:profile' profile.user.id %}">@{{ profile.user.username }}</a>'s Followers
 </h1>
 
     <!--Note this will have to match for one single user - the logged in one!!-->
