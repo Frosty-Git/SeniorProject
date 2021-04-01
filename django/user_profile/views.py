@@ -99,6 +99,7 @@ def profile(request, user_id):
         votes = PostUserVote.objects.filter(user_from=profile).values()
         postform = PostForm()
         post_list = vote_dictionary(votes, posts)
+        is_profile_private = profile_privacy(user_id)
 
         context = {
             'postform': postform,
@@ -116,23 +117,26 @@ def profile(request, user_id):
             'tempo': all_prefs['tempo'],
             'valence': all_prefs['valence'],
             'private_prefs': all_prefs['private_prefs'],
+            'private_profile': is_profile_private,
         }
     else:
         if request.user.id is not None:
             loggedin = UserProfile.objects.get(pk=request.user.id)
             follower = FollowedUser.objects.filter(user_from=request.user.id, user_to=user_id).first()
-            is_following = False if follower is None else True
+            bool_following = False if follower is None else True
             votes = PostUserVote.objects.filter(user_from=loggedin).values()
             profile = UserProfile.objects.get(pk=user_id)
             posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
             follower_list = profile.users_followed.all()[:5]
             post_list = vote_dictionary(votes, posts)
+            is_profile_private = profile_privacy(user_id)
+            following_status = is_following(request.user.id, user_id)
 
             context = {
                 'profile': profile,
                 'post_list': post_list,
                 'follower_list': follower_list,
-                'is_following': is_following,
+                'is_following': bool_following,
                 'image': loggedin.profilepic,
                 'acousticness': all_prefs['acousticness'],
                 'danceability': all_prefs['danceability'],
@@ -144,11 +148,13 @@ def profile(request, user_id):
                 'tempo': all_prefs['tempo'],
                 'valence': all_prefs['valence'],
                 'private_prefs': all_prefs['private_prefs'],
+                'private_profile': is_profile_private,
             }
         else:
             profile = UserProfile.objects.get(pk=user_id)
             posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
             follower_list = profile.users_followed.all()[:5]
+            is_profile_private = profile_privacy(user_id)
 
             nli_post_list = []
             for post in posts:
@@ -170,6 +176,7 @@ def profile(request, user_id):
                 'tempo': all_prefs['tempo'],
                 'valence': all_prefs['valence'],
                 'private_prefs': all_prefs['private_prefs'],
+                'private_profile': is_profile_private,
             }
     return render(request, 'profile/profile.html', context)
 
@@ -689,3 +696,12 @@ def is_following(your_id, user_to_id):
             break
     return is_following
         
+def profile_privacy(user_id):
+    """
+    Tells you whether or not a user has set their profile to private
+    Last updated: 3/31/21 by Jacelynn Duranceau
+    """
+    user = UserProfile.objects.get(pk=user_id)
+    settings = Settings.objects.get(user_profile_fk=user)
+    profile_privacy = settings.private_profile
+    return profile_privacy
