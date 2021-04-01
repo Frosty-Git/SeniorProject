@@ -23,6 +23,10 @@
         <div>
             <h2 style="font-family: 'Noto Sans JP', sans-serif;">
                 <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
+                {% if profile.user.id == user.id or not private_profile or is_following %}
+                {% elif private_profile%}
+                    <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
+                {% endif %}
             </h2>
             <p style="margin-top: -10px; color:lightgray">
                 @{{ profile.user.username }}
