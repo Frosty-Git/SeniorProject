@@ -357,24 +357,33 @@ def get_playlists(request, user_id):
         you = UserProfile.objects.get(pk=request.user.id)
         playlists = Playlist.objects.filter(user_profile_fk=you)
         playlistform = PlaylistForm()
+        private_profile = profile_privacy(user_id)
+        following_status = is_following(request.user.id, user_id)
         context = {
             'playlists': playlists,
             'playlistform': playlistform,
             'profile': you,
+            'private_profile': private_profile,
+            'following_status': following_status,
         }
         return render(request, 'playlists/playlists.html', context)
-    # If it is not your own, then redirect to the page set up for viewing
-    # playlists that aren't yours.
     else:
         user = UserProfile.objects.get(pk=user_id)
-        playlists = Playlist.objects.filter(user_profile_fk=user)
-        playlistform = PlaylistForm()
-        context = {
-            'playlists': playlists,
-            'playlistform': playlistform,
-            'profile': user,
-        }
-        return render(request, 'playlists/playlists.html', context)
+        private_profile = profile_privacy(user_id)
+        following_status = is_following(request.user.id, user_id)
+        if following_status or not private_profile:
+            playlists = Playlist.objects.filter(user_profile_fk=user)
+            context = {
+                'playlists': playlists,
+                'profile': user,
+                'private_profile': private_profile,
+                'following_status': following_status,
+            }
+            return render(request, 'playlists/playlists.html', context)
+        else:
+            # Redirect back to your own playlist page since the user is private
+            # and you don't follow them
+            return redirect('/user/playlists/' + str(request.user.id))
 
 # def other_playlists(request, user_id):
 #     """
@@ -419,37 +428,52 @@ def get_songs_playlist(request, user_id, playlist_id):
             # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
             song_id = match.get('spotify_id_id')
             songs[sop_id] = song_id
+        
+        private_profile = profile_privacy(user_id)
+        following_status = is_following(request.user.id, user_id)
 
         context = {
             'songs': songs,
             'playlist': playlist,
             'profile': you,
+            'private_profile': private_profile,
+            'following_status': following_status,
         }
         return render(request, 'playlists/single_playlist.html', context)
     else:
         user = UserProfile.objects.get(pk=user_id)
-        playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=user)
-        if not playlist.is_private:
-            matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
-            songs = {}
-            for match in matches:
-                # sop_id is the id for the primary key of the row into the SongOnPlaylist
-                # table that the matching songs to playlists come from
-                sop_id = match.get('id')
-                # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
-                song_id = match.get('spotify_id_id')
-                songs[sop_id] = song_id
+        private_profile = profile_privacy(user_id)
+        following_status = is_following(request.user.id, user_id)
+        # If the person's profile is not private or if you follow them, then you can
+        # see their playlists
+        if not private_profile or following_status:
+            playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=user)
+            if not playlist.is_private:
+                matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+                songs = {}
+                for match in matches:
+                    # sop_id is the id for the primary key of the row into the SongOnPlaylist
+                    # table that the matching songs to playlists come from
+                    sop_id = match.get('id')
+                    # The result appends 'id' to our original name of 'spotify_id', hence the extra 'id' in the name
+                    song_id = match.get('spotify_id_id')
+                    songs[sop_id] = song_id
 
-            context = {
-                'songs': songs,
-                'playlist': playlist,
-                'profile': user,
-            }
-            return render(request, 'playlists/single_playlist.html', context)
+                context = {
+                    'songs': songs,
+                    'playlist': playlist,
+                    'profile': user,
+                    'private_profile': private_profile,
+                    'following_status': following_status,
+                }
+                return render(request, 'playlists/single_playlist.html', context)
+            else:
+                # The single playlist you are trying to access is private, so redirect back to that 
+                # user's playlists page
+                return redirect('/user/playlists/' + str(user_id))
         else:
-            # The single playlist you are trying to access is private, so redirect back to that 
-            # user's playlists page
-            return redirect('/user/playlists/' + str(user_id))
+            # Redirect back to your own playlist page since the user is private
+            return redirect('/user/playlists/' + str(request.user.id))
 
 # def get_other_songs_playlist(request, user_id, playlist_id):
 #     """

@@ -129,6 +129,13 @@
         {% endfor %}
         </table>
     </div>
+
+    <div>
+        <h2 class="w3-col m2 w3-center">Playlists</h2>
+        <a href="{% url 'user:get_playlists' profile.user.id %}">
+            @{{ profile.user.username }}'s Playlists
+        </a>
+    </div>
     {% endif %}
 </div> 
 

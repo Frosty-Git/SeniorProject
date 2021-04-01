@@ -8,19 +8,30 @@
                 {% csrf_token %}
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myPlaylistPostModalLabel">Create Post</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    {% if not private_profile %}
+                        <h5 class="modal-title" id="myPlaylistPostModalLabel">Share Playlist</h5>
+                    {% else %}
+                        <h5 class="modal-title" id="myPlaylistPostModalLabel">Unable to Share Playlist</h5>
+                    {% endif %}
                 </div>
             
                 <div class="modal-body">
-                    <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
-                    <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
-                    Playlist to share: <a href="{% url 'user:get_songs_playlist' user_id playlist.id %}" target="_blank">{{ playlist.name }}</a>
+                    {% if not private_profile %}
+                        <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
+                        Say something:
+                        <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
+                        Playlist to share: <a href="{% url 'user:get_songs_playlist' user_id playlist.id %}" target="_blank">{{ playlist.name }}</a>
+                    {% else %}
+                    You cannot share this playlist because your profile is currently private. Your profile's privacy takes precedence, so your playlist
+                    cannot be shared even though it is not set to private itself.
+                    {% endif %}
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    {% if not private_profile %}
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    {% endif %}
                 </div>
                 
             </form>
