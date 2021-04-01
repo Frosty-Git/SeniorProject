@@ -586,8 +586,8 @@ function increment_and_reload(value) {
         }
         else{
             if(quiz.return_previous_value_boolean() == true){
-                console.log((quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
-                quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
+    
+                quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
                 quiz.set_previous_value_boolean(false);
                 quiz.set_value(quiz.return_question_index());
             }else{
@@ -604,7 +604,7 @@ function increment_and_reload(value) {
             quiz.set_previous_value_boolean(true);
         }else{
             if(quiz.return_previous_value_boolean() == true){
-                quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
+               quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
                 quiz.set_previous_value_boolean(false);
                 quiz.set_value(quiz.return_question_index());
             }else{
@@ -621,7 +621,7 @@ function increment_and_reload(value) {
             quiz.set_previous_value_boolean(true);
     }else{
         if(quiz.return_previous_value_boolean() == true){
-            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
+            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
             quiz.set_previous_value_boolean(false);
             quiz.set_value(quiz.return_question_index());
         }else{
@@ -638,7 +638,7 @@ function increment_and_reload(value) {
             quiz.set_previous_value_boolean(true);
     }else{
         if(quiz.return_previous_value_boolean() == true){
-            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
+            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
             quiz.set_previous_value_boolean(false);  
             quiz.set_value(quiz.return_question_index()); 
         }else{
@@ -655,7 +655,7 @@ function increment_and_reload(value) {
         quiz.set_previous_value_boolean(true);
     }else{
         if(quiz.return_previous_value_boolean() == true){
-            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
+            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
             quiz.set_previous_value_boolean(false);
             quiz.set_value(quiz.return_question_index());
         }else{
