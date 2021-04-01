@@ -87,7 +87,7 @@
 
         {% if profile.user.id == user.id %}
         <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
-            <h2>Music Preferences</h2>
+            <h2 style="font-family: 'Noto Sans JP', sans-serif;">Music Preferences</h2>
     
             <table class="center">
                 <tr>
@@ -272,7 +272,7 @@
     </div>
 
     <div class="w3-col m2 w3-center header">
-        <h2 >Playlists</h2>
+        <h2 style="font-family: 'Noto Sans JP', sans-serif;">Playlists</h2>
         <a href="{% url 'user:get_playlists' profile.user.id %}">
             @{{ profile.user.username }}'s Playlists
         </a>
