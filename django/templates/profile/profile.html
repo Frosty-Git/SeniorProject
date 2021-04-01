@@ -88,50 +88,89 @@
         {% if profile.user.id == user.id %}
         <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
             <h2>Music Preferences</h2>
-        
-            Acousticness: {{ acousticness }}
-            <br>
-            <div class="progress">
-                <div class="progress-bar" style="width: '{{ acousticness }}%'" role="progressbar" aria-valuenow="{{ acousticness }}" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            0 <progress min="0" max="1" value="{{ acousticness }}"></progress> 1
-            <br>
-        
-            Danceability: {{ danceability }}
-            <br>
-            0 <progress min="0" max="1" value="{{ danceability }}"></progress> 1
-            <br>
-        
-            Energy: {{ energy }}
-            <br>
-            0 <progress min="0" max="1" value="{{ energy }}"></progress> 1
-            <br>
-        
-            Instrumentalness: {{ instrumentalness}}
-            <br>
-            0 <progress min="0" max="1" value="{{ instrumentalness }}"></progress> 1
-            <br>
-        
-            Speechiness: {{ speechiness }}
-            <br>
-            0 <progress min="0" max="1" value="{{ speechiness }}"></progress> 1
-            <br>
-        
-            Loudness: {{ loudness }}
-            <br>
-            -60 <progress min="0" max="60" value="{{ loudness_adjusted }}"></progress> 0
-            <br>
-        
-            Tempo: {{ tempo }}
-            <br>
-            50 <progress min="50" max="150" value="{{ tempo }}"></progress> 150
-            <br>
-        
-            Valence: {{ valence }}
-            <br>
-            0 <progress min="0" max="1" value="{{ valence }}"></progress> 1
-            <br>
-        
+    
+            <table class="center">
+                <tr>
+                    <td colspan="3">
+                        Acousticness: {{ acousticness }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ acousticness }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Danceability: {{ danceability }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ danceability }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Energy: {{ energy }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ energy }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Instrumentalness: {{ instrumentalness}}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ instrumentalness }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Speechiness: {{ speechiness }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ speechiness }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Loudness: {{ loudness }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> -60 </td>
+                    <td><progress min="0" max="60" value="{{ loudness_adjusted }}"></progress></td>
+                    <td style="padding-left: 5px;"> 0 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Tempo: {{ tempo }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 50 </td>
+                    <td><progress min="50" max="150" value="{{ tempo }}"></progress></td>
+                    <td style="padding-left: 5px;"> 150 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Valence: {{ valence }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ valence }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+            </table>
          </div>
         {% else %}
         <div style="width: 350px; text-align: center;">
@@ -189,11 +228,11 @@
     </div>
 
     {% if profile.user.id == user.id or not private_profile or is_following%}
-    <div class="w3-col m6 w3-center">
+    <div class="w3-col m6 w3-center header">
         <div style="border-bottom: white double;">
             <div class="w3-row">
                 <div class="w3-col s6">
-                    <h2 id="feedheader" style="text-align: left; font-family: 'Noto Sans JP', sans-serif;"><a href="{% url 'feed:feed' %}">Feed</a></h2>
+                    <h2 style="text-align: left; font-family: 'Noto Sans JP', sans-serif;"><a href="{% url 'feed:feed' %}">Feed</a></h2>
                 </div>
                 {% if profile.user.id == user.id %}
                 <div class="w3-col s6" style="padding-top: 10px;">
@@ -212,7 +251,7 @@
     </div>
     
 
-    <div class="w3-col m2 w3-center" id="followingheader">
+    <div class="w3-col m2 w3-center header">
         <h2><a href="{% url 'user:following' profile.user.id %}" style="font-family: 'Noto Sans JP', sans-serif;text-decoration: none;">Following</a></h2>
         <table style="display: inline-block; text-align: left;">
         {% for follower in follower_list %}
@@ -232,8 +271,8 @@
         </table>
     </div>
 
-    <div>
-        <h2 class="w3-col m2 w3-center">Playlists</h2>
+    <div class="w3-col m2 w3-center header">
+        <h2 >Playlists</h2>
         <a href="{% url 'user:get_playlists' profile.user.id %}">
             @{{ profile.user.username }}'s Playlists
         </a>

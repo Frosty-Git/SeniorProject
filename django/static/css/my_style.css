@@ -26,18 +26,15 @@
     color:lightpink;
 }
 
-#feedheader a {
+.header a {
     text-decoration: none;
     
 }
 
-#feedheader a:hover {
+.header a:hover {
     color:lightpink;
 }
 
-#followingheader a:hover {
-    color:lightpink;
-}
 
 .sidenav {
     width: 160px;
