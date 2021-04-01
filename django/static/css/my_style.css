@@ -22,18 +22,19 @@
     padding-right: 10px;
 }
 
-#feedheader a {
+.profilelink a:hover {
+    color:lightpink;
+}
+
+.header a {
     text-decoration: none;
     
 }
 
-#feedheader a:hover {
+.header a:hover {
     color:lightpink;
 }
 
-#followingheader a:hover {
-    color:lightpink;
-}
 
 .sidenav {
     width: 160px;
@@ -94,7 +95,10 @@
     padding: 5px;
 }
 
-
+.buttons {
+    width: 1%;
+    white-space: nowrap;
+}
 
 /* Start Custom Scrollbar */
 ::-webkit-scrollbar {

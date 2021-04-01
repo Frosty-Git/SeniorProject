@@ -104,5 +104,34 @@ def search_artist_features(query, feature, high_or_low):
     else:
         return low_song
         
+def get_artists(track):
+    """
+    """
+    artist_names = []
+    artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
+    for dicti in artists:
+        artist_names.append(dicti['name'])
+    
+    size = len(artist_names)
+    string_artists = ''
+    for i, name in enumerate(artist_names):
+        if i != size-1:
+            string_artists += (name + ', ')
+        else:
+            string_artists += name
 
+    return string_artists
         
+def get_song_name(track):
+    """
+    """
+    name = sp.track(track)['name']
+    return name
+
+def get_track(track):
+    info = sp.track(track)
+    return info
+
+def get_explicit(track):
+    explicit = sp.track(track)['explicit']
+    return explicit

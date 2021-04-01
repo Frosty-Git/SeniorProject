@@ -5,13 +5,15 @@ from .models import *
 from .forms import *
 from django.views.decorators.http import require_POST, require_GET
 import numpy as np
-from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features
+from recommender.Scripts.search import search_albums, search_artists, search_tracks, search_audio_features, search_artist_features, get_artists, get_audio_features, get_track, get_song_name, get_explicit
 from django.contrib.auth.models import User
 from user_profile.models import *
 import re
 from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
+from social_feed.models import *
+from social_feed.views import *
 
 #----Dr Baliga's Code----
 
@@ -75,6 +77,12 @@ def results(request):
             track2_ids = search_tracks(term, 5, 4)
             track3_ids = search_tracks(term, 5, 9)
             
+            all_tracks = []
+            all_tracks.extend(track1_ids)
+            all_tracks.extend(track2_ids)
+            all_tracks.extend(track3_ids)
+            save_songs(all_tracks)
+
             album1_ids = search_albums(term, 5, 0)
             album2_ids = search_albums(term, 5, 4)
             album3_ids = search_albums(term, 5, 9)
@@ -84,13 +92,47 @@ def results(request):
             artist3_ids = search_artists(term, 5, 9)
             
             features = search_audio_features(term)
+            artists = get_artists(track1_ids[0])
+            track_info = get_track(track1_ids[0])
+            name = get_song_name(track1_ids[0])
+
+            user_id = request.user.id
+            users = search_users(term, user_id)
 
             playlists = []
-            user_id = request.user.id
             if user_id is not None:
+                song_list_1 = {}
+                song_list_2 = {}
+                song_list_3 = {}
                 playlists = get_user_playlists(user_id)
+                loggedin = UserProfile.objects.get(pk=user_id)
+                songs_votes = SongToUser.objects.filter(user_from=loggedin).values('songid_to_id', 'vote')
+                song_list_1 = song_vote_dictionary(songs_votes, track1_ids)
+                song_list_2 = song_vote_dictionary(songs_votes, track2_ids)
+                song_list_3 = song_vote_dictionary(songs_votes, track3_ids)
 
-            users = search_users(term, user_id)
+                context = {
+                    'term' : term,
+                    'albums1' : album1_ids,
+                    'albums2' : album2_ids,
+                    'albums3' : album3_ids,
+                    'artists1' : artist1_ids,
+                    'artists2' : artist2_ids,
+                    'artists3' : artist3_ids,
+                    'features' : features,
+                    'playlists' : playlists,
+                    'users' : users,
+                    'profile': loggedin,
+                    'artists': artists,
+                    'track_info': track_info,
+                    'song_name': name,
+                    'song_list_1': song_list_1,
+                    'song_list_2': song_list_2,
+                    'song_list_3': song_list_3,
+                }
+                return render(request, 'recommender/results.html', context)
+
+
 
             context = {
                 'term' : term,
@@ -106,8 +148,54 @@ def results(request):
                 'features' : features,
                 'playlists' : playlists,
                 'users' : users,
+                'artists': artists,
+                'track_info': track_info,
+                'song_name': name,
             }
     return render(request, 'recommender/results.html', context)
+
+
+def song_vote_dictionary(songs_votes, tracks):
+    """
+    Creates a dictionary that makes the post the key
+    and upvote/downvote in a list the value.
+    Last updated: 3/30/21 by Katie Lee
+    """
+    song_list = {}
+    for track in tracks:
+        up = False
+        down = False
+        for song in songs_votes:
+            if song['songid_to_id'] == track:
+                if song['vote'] == 'Like':
+                    up = True
+                elif song['vote'] == 'Dislike':
+                    down = True
+        song_list[track] = [up, down]
+    return song_list
+
+def save_songs(track_list):
+    """
+    Save a song to our database if it does not already exist. Is called by the
+    results function to save all of the songs that come back for a search query.
+    Last updated: 3/30/21 by Marc Colin, Katie Lee, Jacelynn Duranceau
+    """
+    for track in track_list:
+        song = SongId.objects.filter(pk=track).first()
+        if song is None:
+            features = get_audio_features([track])[0]
+            new_song = SongId(pk=track, artists=get_artists(track),
+                                        name=get_song_name(track),
+                                        explicit=get_explicit(track),
+                                        acousticness=features.get('acousticness'), 
+                                        danceability=features.get('danceability'),
+                                        energy=features.get('energy'),
+                                        instrumentalness=features.get('instrumentalness'),
+                                        speechiness=features.get('speechiness'),
+                                        loudness=features.get('loudness'),
+                                        tempo=features.get('tempo'),
+                                        valence=features.get('valence'))
+            new_song.save()
 
 #About Page
 def about(request):
@@ -266,5 +354,86 @@ def get_artist_from_passed_value(request):
     form = ArtistForm()
     return render(request, 'Survey/survey.html', {'form':form, 'artist_id':artist_id})
 
+def song_upvote(request):
+    """
+    Counts upvotes for posts
+    Last updated: 3/30/21 by Marc Colin, Katie Lee
+    """
+    track = request.POST.get('track')
+    action = request.POST.get('action')
+    user = UserProfile.objects.get(pk=request.user.id)
+    if track and action:
+        song = SongId.objects.get(pk=track)
+        if action == 'like':
+            vote = SongToUser.objects.filter(user_from=user, songid_to=song).first()
+            if vote is None:
+                up = SongToUser(user_from=user, songid_to=song, vote="Like")
+                up.save()
+                change_prefs_song(track, user, "like")
+                add_to_liked_songs(user, track)
+                return JsonResponse({'status':'ok'})
+            else:
+                if vote.vote == 'Dislike':
+                    change_prefs_song(track, user, "like")
+                    vote.vote = 'Like'
+                    vote.save()
+                    add_to_liked_songs(user, track)                                 
+                    return JsonResponse({'status':'switch'}) 
+                else:
+                    # Took your like away, so remove the song from the My Liked Songs playlist
+                    rm_from_liked_songs(user, track)
+                    vote.delete()
+                    return JsonResponse({'status':'undo_upvote'})
+    return JsonResponse({'status':'ko'})
 
+def song_downvote(request):
+    """
+    Counts upvotes for posts
+    Last updated: 3/30/21 by Marc Colin, Katie Lee
+    """
+    track = request.POST.get('track')
+    action = request.POST.get('action')
+    user = UserProfile.objects.get(pk=request.user.id)
+    if track and action:
+        song = SongId.objects.get(pk=track)
+        if action == 'dislike':
+            vote = SongToUser.objects.filter(user_from=user, songid_to=song).first()
+            if vote is None:
+                down = SongToUser(user_from=user, songid_to=song, vote="Dislike")
+                down.save()
+                change_prefs_song(track, user, "dislike")
+                rm_from_liked_songs(user, track)
+                return JsonResponse({'status':'ok'})
+            else:
+                if vote.vote == 'Like':
+                    change_prefs_song(track, user, "dislike")
+                    vote.vote = 'Dislike'
+                    vote.save()   
+                    rm_from_liked_songs(user, track)                              
+                    return JsonResponse({'status':'switch'}) 
+                else:
+                    vote.delete()
+                    return JsonResponse({'status':'undo_downvote'})
+    return JsonResponse({'status':'ko'})
 
+def add_to_liked_songs(user_profile, track):
+    """
+    Adds a song to a user's My Liked Songs playlist
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    song = SongId.objects.get(pk=track)
+    liked_songs_playlist = user_profile.liked_songs_playlist_fk
+    new_song = SongOnPlaylist(playlist_from=liked_songs_playlist, spotify_id=song)
+    new_song.save()
+
+def rm_from_liked_songs(user_profile, track):
+    """
+    Removes a song from a user's My Liked Songs playlist
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    song = SongId.objects.get(pk=track)
+    liked_songs_playlist = user_profile.liked_songs_playlist_fk
+    # This will only be one song since a user cannot manually add songs to the playlist,
+    # so there is no issue of a duplicate playlist/song match
+    sop = SongOnPlaylist.objects.get(playlist_from=liked_songs_playlist, spotify_id=song)
+    sop.delete()

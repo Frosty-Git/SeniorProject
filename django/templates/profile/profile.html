@@ -23,63 +23,259 @@
         <div>
             <h2 style="font-family: 'Noto Sans JP', sans-serif;">
                 <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
+                {% if profile.user.id == user.id or not private_profile or is_following %}
+                {% elif private_profile%}
+                    <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
+                {% endif %}
             </h2>
             <p style="margin-top: -10px; color:lightgray">
                 @{{ profile.user.username }}
             </p>
             <p>
-                <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
-                <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
+                {% if profile.user.id == user.id or not private_profile or is_following %}
+                    <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
+                    <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
+                {% elif private_profile%}
+                    <p>{{ profile.num_followers }} Followers {{ profile.num_following }} Following</p>
+                {% endif %}
             </p>
         </div>
 
-        {% if profile.description %}
-            <h5 style="font-size: 20px;">
-                {{ profile.description }}
-            </h5>
-        {% endif %}
+        {% if profile.user.id == user.id or not private_profile or is_following %}
+            {% if profile.description %}
+                <h5 style="font-size: 20px;">
+                    {{ profile.description }}
+                </h5>
+            {% endif %}
 
-        <h6 style="padding-bottom:20px; font-size: 13px;">
-            DOB: {{ profile.birthdate }}
-            (<span id="age"></span>)
-        </h6>
+            <h6 style="padding-bottom:20px; font-size: 13px;">
+                DOB: {{ profile.birthdate }}
+                (<span id="age"></span>)
+            </h6>
 
-        {% if profile.likes or profile.dislikes %}
-            <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
-                <table style="margin-left:auto; margin-right:auto;">
-                    <tr>
-                        {% if profile.likes %}
-                            <th>Likes: </th>
-                            <td style="word-break: break-all; text-align: left;">{{ profile.likes }}</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if profile.dislikes %}
-                            <th>Dislikes: </th>
-                            <td style="word-break: break-all; text-align: left;">{{ profile.dislikes }}</td>
-                        {% endif %}
-                    </tr>
-                </table>
-            </div>
-        {% endif %}
-        {% if profile.user.id == user.id %}
-            <a class="btn btn-dark" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
-        {% else %}
-            {% if is_following %}
-                <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
+            {% if profile.likes or profile.dislikes or is_following %}
+                <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
+                    <table style="margin-left:auto; margin-right:auto;">
+                        <tr>
+                            {% if profile.likes %}
+                                <th>Likes: </th>
+                                <td style="word-break: break-all; text-align: left;">{{ profile.likes }}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if profile.dislikes %}
+                                <th>Dislikes: </th>
+                                <td style="word-break: break-all; text-align: left;">{{ profile.dislikes }}</td>
+                            {% endif %}
+                        </tr>
+                    </table>
+                </div>
+            {% endif %}
+            {% if profile.user.id == user.id %}
+                <a class="btn btn-dark" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
             {% else %}
-                <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
+                {% if nofollow %}
+
+                {% elif is_following %}
+                    <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
+                {% else %}
+                    <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
+                {% endif %}
             {% endif %}
         {% endif %}
         <br><br>
+
+        {% if profile.user.id == user.id %}
+        <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
+            <h2 style="font-family: 'Noto Sans JP', sans-serif;">Music Preferences</h2>
+    
+            <table class="center">
+                <tr>
+                    <td colspan="3">
+                        Acousticness: {{ acousticness }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ acousticness }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Danceability: {{ danceability }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ danceability }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Energy: {{ energy }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ energy }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Instrumentalness: {{ instrumentalness}}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ instrumentalness }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Speechiness: {{ speechiness }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ speechiness }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Loudness: {{ loudness }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> -60 </td>
+                    <td><progress min="0" max="60" value="{{ loudness_adjusted }}"></progress></td>
+                    <td style="padding-left: 5px;"> 0 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Tempo: {{ tempo }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 50 </td>
+                    <td><progress min="0" max="100" value="{{ tempo_adjusted }}"></progress></td>
+                    <td style="padding-left: 5px;"> 150 </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Valence: {{ valence }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 5px;"> 0 </td>
+                    <td><progress min="0" max="1" value="{{ valence }}"></progress></td>
+                    <td style="padding-left: 5px;"> 1 </td>
+                </tr>
+            </table>
+         </div>
+        {% else %}
+            {% if not private_profile or is_following %}
+                {% if not private_prefs%}
+                <!-- Ensure the public profile or person you are following has allowed their preferences to be visible, even to followers -->
+                    <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
+                        <h2 style="font-family: 'Noto Sans JP', sans-serif;">Music Preferences</h2>
+                
+                        <table class="center">
+                            <tr>
+                                <td colspan="3">
+                                    Acousticness: {{ acousticness }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><progress min="0" max="1" value="{{ acousticness }}"></progress></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Danceability: {{ danceability }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><progress min="0" max="1" value="{{ danceability }}"></progress></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Energy: {{ energy }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><progress min="0" max="1" value="{{ energy }}"></progress></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Instrumentalness: {{ instrumentalness}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><progress min="0" max="1" value="{{ instrumentalness }}"></progress></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Speechiness: {{ speechiness }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><progress min="0" max="1" value="{{ speechiness }}"></progress></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Loudness: {{ loudness }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> -60 </td>
+                                <td><progress min="0" max="60" value="{{ loudness_adjusted }}"></progress></td>
+                                <td style="padding-left: 5px;"> 0 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Tempo: {{ tempo }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 50 </td>
+                                <td><progress min="0" max="100" value="{{ tempo_adjusted }}"></progress></td>
+                                <td style="padding-left: 5px;"> 150 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Valence: {{ valence }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><progress min="0" max="1" value="{{ valence }}"></progress></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                        </table>
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- You're viewing someone else's profile, so don't show their preferences if they don't want you to be able to see them -->
+                <!-- or the person's profile is private so don't show them anyway -->
+            {% endif%}
+        {% endif %}
     </div>
 
-
-    <div class="w3-col m6 w3-center">
+    {% if profile.user.id == user.id or not private_profile or is_following%}
+    <div class="w3-col m6 w3-center header">
         <div style="border-bottom: white double;">
             <div class="w3-row">
                 <div class="w3-col s6">
-                    <h2 id="feedheader" style="text-align: left; font-family: 'Noto Sans JP', sans-serif;"><a href="{% url 'feed:feed' %}">Feed</a></h2>
+                    <h2 style="text-align: left; font-family: 'Noto Sans JP', sans-serif;"><a href="{% url 'feed:feed' %}">Feed</a></h2>
                 </div>
                 {% if profile.user.id == user.id %}
                 <div class="w3-col s6" style="padding-top: 10px;">
@@ -96,10 +292,10 @@
         </div>
         {% include 'profile/profile_feed.html' with post_list=post_list image=image %}
     </div>
+    
 
-
-    <div class="w3-col m2 w3-center" id="followingheader">
-        <h2><a href="{% url 'user:following' user.id %}" style="font-family: 'Noto Sans JP', sans-serif;text-decoration: none;">Following</a></h2>
+    <div class="w3-col m2 w3-center header">
+        <h2><a href="{% url 'user:following' profile.user.id %}" style="font-family: 'Noto Sans JP', sans-serif;text-decoration: none;">Following</a></h2>
         <table style="display: inline-block; text-align: left;">
         {% for follower in follower_list %}
             <tr>
@@ -117,8 +313,15 @@
         {% endfor %}
         </table>
     </div>
-</div> 
 
+    <div class="w3-col m2 w3-center header">
+        <h2 style="font-family: 'Noto Sans JP', sans-serif;">Playlists</h2>
+        <a href="{% url 'user:get_playlists' profile.user.id %}">
+            @{{ profile.user.username }}'s Playlists
+        </a>
+    </div>
+    {% endif %}
+</div> 
 
 <script type="text/javascript" src="{% static 'js/profile.js' %}"></script>
 <script>

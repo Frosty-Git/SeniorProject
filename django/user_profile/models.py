@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from recommender.models import Musicdata
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 # UserProfile
@@ -37,7 +37,12 @@ class UserProfile(models.Model):
     expires_at = models.CharField(default='No Value', max_length=50)
     scope = models.TextField(default='No Value')
     spotify_user_id = models.CharField(default='No Value', max_length=255)
-
+    songs_liked = models.ManyToManyField('SongId', 
+                                        through="SongToUser",
+                                        related_name='songs_liked',
+                                        symmetrical=False)
+    liked_songs_playlist_fk = models.ForeignKey('Playlist', on_delete=models.CASCADE, null=True, blank=True)
+    
     def __str__(self):
         return self.user.username
 
@@ -50,7 +55,8 @@ class Settings(models.Model):
     """
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
     private_profile = models.BooleanField(default=False)
-    private_playlists = models.BooleanField(default=False)
+    private_playlists = models.BooleanField(default=False)  # will be removes
+    private_preferences = models.BooleanField(default=False)
     light_mode = models.BooleanField(default=False)
     explicit_music = models.BooleanField(default=False)
     live_music = models.BooleanField(default=False)
@@ -66,6 +72,7 @@ class Preferences(models.Model):
     Kevin Magill 03/29/2021 
     creates model for the database
     relationship is defined in UserProfile
+    Last updated: 3/30/21 by Marc Colin, Jacelynn Duranceau, Katie Lee
     """
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
     # 0 to 1
@@ -96,13 +103,14 @@ class Playlist(models.Model):
     users.
     Last updated: 3/31/21 by Jacelynn Duranceau, Joe Frost, Tucker Elliott
     """
-    user_profile_fk = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, default=None) # Who created the playlist
+    user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None) # Who created the playlist
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True, verbose_name="", blank=True) # Pillow
     upvotes = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     date_last_updated = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)
+    is_shareable = models.BooleanField(default=True)
     is_imported = models.BooleanField(default=False) # Is imported to the linked Spotify account.
     spotify_playlist_id = models.CharField(default='No Link', max_length=255)
     description = models.TextField(blank=True, null=True, max_length=299)
@@ -155,9 +163,27 @@ class FollowedPlaylist(models.Model):
     def __str__(self):
         return "Followed Playlist"
 
+class SongId(models.Model):
+    """
+    Model based on Spotify IDs and gets the attributes for the track.
+    Last updated: 3/31/21 by Katie Lee, Jacelynn Duranceau, Marc Colin
+    """
+    spotify_id = models.CharField(max_length=30, default='', primary_key=True)
+    artists = models.TextField()
+    name = models.TextField()
+    explicit = models.BooleanField()
+    acousticness = models.FloatField()
+    danceability = models.FloatField()
+    energy = models.FloatField()
+    instrumentalness = models.FloatField()
+    speechiness = models.FloatField()
+    loudness = models.FloatField()
+    tempo = models.FloatField()
+    valence = models.FloatField()
 
+    def __str__(self):
+        return self.name
 
-# Song On Playlist
 class SongOnPlaylist(models.Model):
     """
     Model representing a table between a song and a playlist.
@@ -165,8 +191,18 @@ class SongOnPlaylist(models.Model):
     Kevin Magill
     """
     playlist_from = models.ForeignKey(Playlist, related_name='playlist_from', on_delete=models.CASCADE)
-    spotify_id = models.CharField(max_length=30, default='')
+    spotify_id = models.ForeignKey(SongId, related_name='song_to', on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return "Song"
+
+class SongToUser(models.Model):
+    """
+    Model representing if a user has liked a song from the search.
+    Last updated: 3/31/21 by  Marc Colin, Katie Lee, Jacelynn Duranceau,
+    """
+    user_from = models.ForeignKey(UserProfile, related_name='song_user_from', on_delete=models.CASCADE)
+    songid_to = models.ForeignKey(SongId, related_name='user_song_to', on_delete=models.CASCADE)
+    vote = models.TextField()   # Either Like or Dislike
+    date_created = models.DateTimeField(auto_now_add=True)

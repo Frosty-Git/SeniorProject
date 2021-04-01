@@ -11,6 +11,7 @@ from recommender.Scripts.search import get_audio_features
 import numpy as np
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+import datetime
 
 # Create your views here.
 # def share_song(request, id):
@@ -23,15 +24,14 @@ def display_posts(request):
     """
     Displays all posts in the database. Based only on users your follow and
     yourself.
-    Last updated: 3/17/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
+    Last updated: 3/30/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
     all_post_list = Post.objects.order_by('-date_last_updated')
     you = UserProfile.objects.get(pk=request.user.id)
     following = you.users_followed.all()
-    upvotes = PostUserUpvote.objects.filter(user_from=you).values()
-    downvotes = PostUserDownvote.objects.filter(user_from=you).values()
+    votes = PostUserVote.objects.filter(user_from=you).values()
 
-    post_list = feed_vote_dictionary(upvotes, downvotes, all_post_list, you, following)
+    post_list = feed_vote_dictionary(votes, all_post_list, you, following)
     comment_list = Comment.objects.order_by('date_last_updated')
     postform = PostForm()
 
@@ -39,11 +39,15 @@ def display_posts(request):
         'post_list': post_list,
         'comment_list': comment_list,
         'postform': postform,
+        'image': you.profilepic,
     }  
     return render(request, 'social_feed/feed.html', context)
 
-def feed_vote_dictionary(upvotes, downvotes, posts, you, following):
+def feed_vote_dictionary(votes, posts, you, following):
     """
+    Creates a dictionary that makes the post the key
+    and upvote/downvote in a list the value. Does it for all following the user.
+    Last updated: 3/30/21 by Katie Lee
     """
     post_list = {}
     for post in posts:
@@ -51,26 +55,25 @@ def feed_vote_dictionary(upvotes, downvotes, posts, you, following):
         if post.user_profile_fk == you:
             up = False
             down = False
-            for upvote in upvotes:
-                if upvote.get('post_to_id') == post.id:
-                    up = True
+            for vote in votes:
+                if vote.get('post_to_id') == post.id:
+                    if vote.get('vote') == 'Like':
+                        up = True
+                    elif vote.get('vote') == 'Dislike':
+                        down = True
             
-            for downvote in downvotes:
-                if downvote.get('post_to_id') == post.id:
-                    down = True
             post_list[new_post] = [up, down]
 
         for user in following:
             if post.user_profile_fk == user:
                 up = False
                 down = False
-                for upvote in upvotes:
-                    if upvote.get('post_to_id') == post.id:
-                        up = True
-                
-                for downvote in downvotes:
-                    if downvote.get('post_to_id') == post.id:
-                        down = True
+                for vote in votes:
+                    if vote.get('post_to_id') == post.id:
+                        if vote.get('vote') == 'Like':
+                            up = True
+                        elif vote.get('vote') == 'Dislike':
+                            down = True
                 post_list[new_post] = [up, down]
     return post_list
 
@@ -83,7 +86,10 @@ def cast_subclass(post):
     try:
         return SongPost.objects.get(id=post.id)
     except:
-        return post
+        try:
+            return PlaylistPost.objects.get(id=post.id)
+        except:
+            return post
 
 def create_post(request):
     """
@@ -115,7 +121,7 @@ def create_post_profile(request):
 
 
 
-def delete_post(request, post_id):
+def delete_post(request, post_id, location):
     """
     Deletes a post and redirects back to profile.
     This will only show up for the logged in user's profile.
@@ -123,36 +129,18 @@ def delete_post(request, post_id):
     """
     post = Post.objects.get(pk=post_id)
     post.delete()
-    return redirect('/user/profile/' + str(request.user.id))
-
-def create_comment(request, post_id):
-    """
-    Creates a comment on a particular post.
-    Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
-    """
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        post = get_object_or_404(Post, id=post_id)
-
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.text = form.cleaned_data.get('text')
-            comment.post_fk = post
-            user = UserProfile.objects.get(pk=request.user.id)
-            comment.user_profile_fk = user
-            comment.save()
-            url = '/feed/' + post_id
-            return redirect(url)
+    if location == 'profile':
+        return redirect('/user/profile/' + str(request.user.id))
     else:
-        context = get_comments(post_id)
-    return render(request, 'social_feed/post_detail.html', context)
+        return redirect('/feed/')
+
 
 def get_comments(post_id):
     """
     Gets all the comments on a particular post.
     Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
     """
-    post = Post.objects.get(id=post_id)
+    post = cast_subclass(Post.objects.get(id=post_id))
     comment_list = Comment.objects.filter(post_fk=post)
     comment_form = CommentForm()
 
@@ -227,6 +215,18 @@ def update_post(request):
     else:
         return render(request, 'social_feed/edit_post.html')
 
+def pop_update_post(request, post_id):
+    """
+    """
+    if request.method == 'POST':
+        post = Post.objects.get(pk=post_id)
+        text = request.POST.get('post_text')
+        if text is not None:
+            post.text = text
+            post.date_last_updated = timezone.now()
+            post.save()
+        return JsonResponse({'status': 'ok'})
+
 
 def popup_post(request, post_id):
     """
@@ -234,9 +234,9 @@ def popup_post(request, post_id):
     Last updated: 3/22/21 by Katie Lee
     """
     post = Post.objects.get(pk=post_id)
-    user_id = request.user.id
-    user = UserProfile.objects.get(pk=user_id)
     if request.method == 'POST':
+        user_id = request.user.id
+        user = UserProfile.objects.get(pk=user_id)
         text = request.POST.get('comment_text')
         if text is not None:
             comment = Comment(text=text, post_fk=post, user_profile_fk=user)
@@ -261,11 +261,56 @@ def popup_songpost(request):
     else:
         return render(request, 'social_feed/popup_songpost.html')
 
+def popup_playlistpost(request):
+    """
+    Used to share a playlist to the social feed
+    Last updated: 3/31/21 by Jacelynn Duranceau
+    """
+    if request.method == 'POST':
+        user_id = request.user.id
+        user = UserProfile.objects.get(pk=user_id)
+        text = request.POST.get('post_text')
+        playlist_id = request.POST.get('playlist_id')
+        playlist_object = Playlist.objects.get(pk=playlist_id)
+        if text is not None:
+            post = PlaylistPost(playlist=playlist_object, text=text, user_profile_fk=user, type_post="PlaylistPost")
+            post.save()
+            return redirect('/feed/')
+    else:
+        return render(request, 'social_feed/popup_playlistpost.html')
+
+
+def check_posts(profile, song, vote):
+    """
+    """
+    posts = PostUserVote.objects.filter(user_from=profile).values('post_to_id', 'vote')
+    # Returns an empty array if the user has not liked anyything yet
+    if len(posts) != 0:
+        recent = datetime.datetime(1970, 1, 1).replace(tzinfo=None)
+        last_post = None
+        last_post_vote = None
+        for dicti in posts:
+            post = Post.objects.get(pk=dicti.get('post_to_id'))
+            type_post = post.type_post
+            if type_post == 'SongPost':
+                songpost = SongPost.objects.get(pk=post.id)
+                songid = songpost.song
+                created = songpost.date_created.replace(tzinfo=None)
+                if created >= recent:
+                    recent = created
+                    last_post = songpost
+                    last_post_vote = dicti.get('vote')
+
+        if song == last_post.song:
+            if last_post_vote == vote: # vote equals one another
+                return True
+        
+    return False
 
 def upvote(request):
     """
     Counts upvotes for posts
-    Last updated: 3/22/21 by Marc Colin, Katie Lee
+    Last updated: 3/30/21 by Marc Colin, Katie Lee
     """
     post_id = request.POST.get('post_id')
     action = request.POST.get('action')
@@ -274,31 +319,33 @@ def upvote(request):
         post = Post.objects.get(pk=post_id)
         type_post = post.type_post
         if action == 'like':
-            upvote = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
-            downvote = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
-            if upvote is None:
-                up = PostUserUpvote(user_from=user, post_to=post)
+            vote = PostUserVote.objects.filter(user_from=user, post_to=post).first()
+            if vote is None:
+                if type_post == 'SongPost':
+                    songpost = SongPost.objects.get(pk=post_id).song
+                    if not check_posts(user, songpost, 'Like'):
+                        change_prefs_song(songpost, user, "like")
+                up = PostUserVote(user_from=user, post_to=post, vote="Like")
                 up.save()
-                if downvote is not None:
-                    if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "like")
-                    downvote.delete()
-                    post.upvotes += 2
-                    post.save()
-                    return JsonResponse({'status':'switch'})
-                else:
-                    if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "like")
-                    post.upvotes += 1
-                    post.save()
-                    return JsonResponse({'status':'ok'})
-            else:
-                upvote.delete()
-                post.upvotes -= 1
+                post.upvotes += 1
                 post.save()
-                return JsonResponse({'status':'undo_upvote'})
+                return JsonResponse({'status':'ok'})
+            else:
+                if vote.vote == 'Dislike':
+                    if type_post == 'SongPost':
+                        songpost = SongPost.objects.get(pk=post_id).song
+                        if not check_posts(user, songpost, 'Like'):
+                            change_prefs_song(songpost, user, "like")
+                    vote.vote = 'Like'
+                    post.upvotes += 2
+                    post.save()   
+                    vote.save()                                 
+                    return JsonResponse({'status':'switch'}) 
+                else:
+                    vote.delete()
+                    post.upvotes -= 1
+                    post.save()
+                    return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
 
 def downvote(request):
@@ -313,35 +360,37 @@ def downvote(request):
         post = Post.objects.get(pk=post_id)
         type_post = post.type_post
         if action == 'dislike':
-            down_list = PostUserDownvote.objects.filter(user_from=user, post_to=post).first()
-            up_list = PostUserUpvote.objects.filter(user_from=user, post_to=post).first()
-            if down_list is None:
-                downvote = PostUserDownvote(user_from=user, post_to=post)
-                downvote.save()
-                if up_list is not None:
-                    if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "dislike")
-                    up_list.delete()
-                    post.upvotes -= 2
-                    post.save()
-                    return JsonResponse({'status':'switch'})
-                else:
-                    if type_post == 'SongPost':
-                        songpost = SongPost.objects.get(pk=post_id)
-                        change_prefs_songpost(songpost.song, user, "dislike")
-                    post.upvotes -= 1
-                    post.save()
-                    return JsonResponse({'status':'ok'})
-            else:
-                down_list.delete()
-                post.upvotes += 1
+            vote = PostUserVote.objects.filter(user_from=user, post_to=post).first()
+            if vote is None:
+                if type_post == 'SongPost':
+                    song = SongPost.objects.get(pk=post_id).song
+                    if not check_posts(user, song, 'Dislike'):
+                        change_prefs_song(song, user, "dislike")
+                down = PostUserVote(user_from=user, post_to=post, vote="Dislike")
+                down.save()
+                post.upvotes -= 1
                 post.save()
-                return JsonResponse({'status':'undo_downvote'})
+                return JsonResponse({'status':'ok'})
+            else:
+                if vote.vote == 'Like':
+                    if type_post == 'SongPost':
+                        songpost = SongPost.objects.get(pk=post_id).song
+                        if not check_posts(user, songpost, 'Dislike'):
+                            change_prefs_song(songpost, user, "dislike")
+                    vote.vote = 'Dislike'
+                    post.upvotes -= 2
+                    post.save()          
+                    vote.save()                             
+                    return JsonResponse({'status':'switch'}) 
+                else:
+                    vote.delete()
+                    post.upvotes += 1
+                    post.save()
+                    return JsonResponse({'status':'undo_downvote'})
     return JsonResponse({'status':'ko'})
     
     
-def change_prefs_songpost(track, profile, type_vote):
+def change_prefs_song(track, profile, type_vote):
     """
     Change the preferences for a user after they like or dislike a song.
     Last updated: 3/29/21 Katie Lee, Marc Colin, Jacelynn Duranceau
@@ -383,28 +432,28 @@ def change_prefs_songpost(track, profile, type_vote):
             percent = 0 # We won't be making a change due to negligible difference
 
         elif absdiff < 20:
-            percent = 0.001 if type_vote == 'dislike' else 0.0005
+            percent = 0.002 if type_vote == 'dislike' else 0.001
 
         elif absdiff < 40:
-            percent = 0.002 if type_vote == 'dislike' else 0.001
+            percent = 0.004 if type_vote == 'dislike' else 0.002
                 
         elif absdiff < 60:
-            percent = 0.0025 if type_vote == 'dislike' else 0.00125
-                
-        elif absdiff < 80:
             percent = 0.005 if type_vote == 'dislike' else 0.0025
                 
+        elif absdiff < 80:
+            percent = 0.010 if type_vote == 'dislike' else 0.005
+                
         elif absdiff < 100:
-            percent = 0.0075 if type_vote == 'dislike' else 0.00375
+            percent = 0.015 if type_vote == 'dislike' else 0.0075
 
         elif absdiff < 200:
-            percent = 0.01 if type_vote == 'dislike' else 0.005
+            percent = 0.04 if type_vote == 'dislike' else 0.02
 
         elif absdiff < 400:
-            percent = 0.025 if type_vote == 'dislike' else 0.0125
+            percent = 0.05 if type_vote == 'dislike' else 0.025
 
         else: # >= 400
-            percent = 0.05 if type_vote == 'dislike' else 0.025
+            percent = 0.1 if type_vote == 'dislike' else 0.05
             
         change = percent * pref
         if diff > 0: # Song feature is greater than preference
@@ -433,8 +482,11 @@ def change_prefs_songpost(track, profile, type_vote):
         diff = arr[1]
         pref = arr[2]
         percent = arr[3]
-        # Double the effect of the max difference(s) in preferences
-        change = 2 * percent * pref
+        # Quadruple or Double the effect of the max difference(s) in preferences
+        if percent < 0.05:
+            change = 4 * percent * pref
+        else:
+            change = 2 * percent * pref
         if diff > 0: # Song feature is greater than preference
             # Move farther away from the current preferences if it is a dislike,
             # Move closer if it is a like. Like moves in same direction as the

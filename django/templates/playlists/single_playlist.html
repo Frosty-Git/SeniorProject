@@ -7,7 +7,11 @@
 
 
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-    My Playlist:
+    {% if profile.user.id == user.id %}
+        My Playlist:
+    {% else %}
+        <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
+    {% endif %}
     <br>
     {% if playlist.image %}
         <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>
@@ -20,15 +24,34 @@
     {% endif %}
 </h1>
 
-<div class="center" style="width:150px; text-align:center;">
-    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
-        Edit Playlist
-    </button>
-    {% include 'playlists/editplaylist_popup.html' %}
-</div>
-<div class="center" style="width:200px; text-align:center; margin-top:10px;">
-    <a class="btn btn-dark" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
-</div>
+{% if profile.user.id == user.id %}
+    <div class="center" style="width:150px; text-align:center;">
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
+            Edit Playlist
+        </button>
+        {% include 'playlists/editplaylist_popup.html' %}
+    </div>
+    <div class="center" style="width:200px; text-align:center; margin-top:10px;">
+        <a class="btn btn-dark" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
+    </div>
+    {% if profile.user.id == user.id %}
+        {% if not playlist.is_private %}
+            <div class="center" style="width:100px; text-align:center; margin-top:10px;">
+                <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{% if profile.user.id != user.id and playlist.is_shareable %}
+    {% if not playlist.is_private %}
+    <div class="center" style="width:100px; text-align:center; margin-top:10px;">
+        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+        {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id private_profile=private_profile %}
+    </div>
+    {% endif %}
+{% endif %}
+
 
 <table class="center" style="width:40%;">
     {% for id,song in songs.items %}
@@ -36,9 +59,19 @@
         <td class="centered-column" style="width:400px; padding-top:8px; padding-bottom: 8px;">
             <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
         </td>
+        {% if profile.user.id == user.id and playlist != profile.liked_songs_playlist_fk %}
+        <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
+            Like / Dislike buttons here :)
+        </td>
         <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
             <a class="btn btn-dark" href="{% url 'user:delete_song' playlist.id id %}" role="button">Delete Song</a>
         </td>
+        {% else %}
+        <!-- These will display for when you are viewing other people's playlists too, it will be linked to your likes and dislikes though right? -->
+            <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
+                Like / Dislike buttons here :)
+            </td>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>
@@ -52,7 +85,7 @@
     }  
 
     editPlaylistModal.addEventListener('hidden.bs.modal', function (event) {
-        window.history.replaceState({}, "", "{% url 'user:get_songs_playlist' playlist.id %}")
+        window.history.replaceState({}, "", "{% url 'user:get_songs_playlist' profile.user.id playlist.id %}")
     })
 </script>
 
