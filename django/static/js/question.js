@@ -487,25 +487,80 @@ let questions = [
     ),
     new Question("Which of the following songs do you listen to the most?", ["Retirement Song", "Santiana", "Oak & Ash & Thorn", "Randy Dandy-O", "Bones in the Ocean"],
     //danceability
-    [0.877, null, null, null, null],
+    [0.877, 0.721, 0.475, 0.631, 0.841],
     //acousticness
-    [0.717, null, null, null, null],
+    [0.717, 0.942, 0.574, 0.934, 0.896],
     //energy
-    [0.387, null, null, null, null],
+    [0.387, 0.33, 0.577, 0.669, 0.166],
     //instrumentalness
-    [0, null, null, null, null],
+    [0, 0, 0, 0, 0],
     //speechiness
-    [0.301, null, null, null, null],
+    [0.301, 0.0623, 0.0307, 0.127, 0.179],
     //loudness
-    [10.899, null, null, null, null],
+    [10.899, 6.781, -7.498, -4.171, -13.163],
     //tempo
-    [126.232, null, null, null, null],
+    [126.232, 134.086, 111.973, 110.094, 79.985],
     //valence
-    [0.739, null, null, null, null],
+    [0.739, 0.734, 0.6, 0.88, 0.437],
     true
     ),
-
-
+    new Question("Which of the following songs do you listen to the most?", ["The Orange and the Green", "The Unicorn", "Johnny I Hardley Knew Ye", "Haul Away Joe", "Whiskey in the Jar"],
+    //danceability
+    [0.789, 0.705, 0.453, 0.644, 0.511],
+    //acousticness
+    [0.637, 0.738, 0.65, 0.929, 0.00000536],
+    //energy
+    [0.684, 0.311, 0.82, 0.422, 0.972],
+    //instrumentalness
+    [0.00000201, 0, 0.00000195, 0, 0.00101],
+    //speechiness
+    [0.0368, 0.0488, 0.122, 0.143, 0.0413],
+    //loudness
+    [-6.655, -12.344, -8.738, -6.279, -3.751],
+    //tempo
+    [117.007, 117.26, 112.047, 114.703, 132.97],
+    //valence
+    [0.965, 0.785, 0.402, 0.753, 0.532],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["The Bonny Ship the Diamond", "Migalay Boat Song", "South Australia", "No Hopers, Jokers & Rogues", "Shanty Man"],
+    //danceability
+    [0.726, 0.413, 0.807, 0.678, 0.532],
+    //acousticness
+    [0.39, 0.992, 0.957, 0.381, 0.957],
+    //energy
+    [0.747, 0.00909, 0.194, 0.683, 0.132],
+    //instrumentalness
+    [0, 0, 0, 0, 0],
+    //speechiness
+    [0.0518, 0.0341, 0.0403, 0.0432, 0.261],
+    //loudness
+    [-6.924, -23.799, -13.702, -8.085, -19.486],
+    //tempo
+    [96.971, 93.437, 103.614, 100.035, 176.025],
+    //valence
+    [0.72, 0.436, 0.917, 0.837, 0.83],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Sea Shanty 2", "Futilist's Lament", "Time Unlimited", "Not The One", "Nightingale"],
+    //danceability
+    [0.772, 0.144, 0.72, 0.525, 0.505],
+    //acousticness
+    [0.441, 0.211, 0.00105, 0.00603, 0.177],
+    //energy
+    [0.407, 0.828, 0.663, 0.52, 0.62],
+    //instrumentalness
+    [0.767, 0.964, 0.774, 0.000014, 0.00000231],
+    //speechiness
+    [0.11, 0.0701, 0.0342, 0.0323, 0.0252],
+    //loudness
+    [-9.192, -9.321, -7.538, -8.602, -6.986],
+    //tempo
+    [166.047, 187.648, 119.566, 124.839, 77.99],
+    //valence
+    [0.55, 0.537, 0.648, 0.0719, 0.233],
+    true
+    ),
 
     new Question("How likely are you to recommend Pengbeats to a friend?", ["Very Likely", "Likely", "Not Likely or Unlikely", "Unlikely", "Very Unlikely"],
     //danceability
