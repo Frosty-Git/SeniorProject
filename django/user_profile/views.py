@@ -617,7 +617,7 @@ def delete_song(request, playlist_id, sop_pk):
     # the match comes from
     song = SongOnPlaylist.objects.get(pk=sop_pk)
     song.delete()
-    return redirect('/user/playlist/' + str(playlist_id))
+    return redirect('/user/playlist/' + str(request.user.id) + '/' + str(playlist_id))
 
 def export_to_spotify(request, playlist_id):
     """
@@ -638,6 +638,11 @@ def export_to_spotify(request, playlist_id):
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
+        spotify.user_playlist_change_details(user.spotify_user_id, playlist.spotify_playlist_id, 
+                                            name=playlist.name, 
+                                            public=(not playlist.is_private), 
+                                            collaborative=False, 
+                                            description=playlist.description)
     else:
     # If it is not on Spotify, create the new playlist there, change our db boolean value
     # to say it is on Spotify, and get the Spotify playlist id saved into our db.
