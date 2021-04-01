@@ -148,7 +148,7 @@ let questions = [
       [null, null, null, null, null],
       true
       ),
-    new Question("Which of the following artists do you prefer?", ["Deva Premal", "Tibetan Monks", "The Gyuto Monks of Tibet", "Tradidional", "Shu-de"],
+    new Question("Which of the following artists do you prefer?", ["Deva Premal", "Tibetan Monks", "The Gyuto Monks of Tibet", "Traditional", "Shu-de"],
       //danceability
       [null, null, null, null, null],
       //acousticness
@@ -565,6 +565,101 @@ let questions = [
     [166.047, 187.648, 119.566, 124.839, 77.99],
     //valence
     [0.55, 0.537, 0.648, 0.0719, 0.233],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Gayatri Mantra", "So Much Magnificence", "Om Namo Bhagavate", "Om Sahana Vavatu (Shanti Mantra)", "Incantation"],
+    //danceability
+    [0.424, 0.401, 0.29, 0.309, 0.221],
+    //acousticness
+    [0.856, 0.74, 0.765, 0.809, 0.821],
+    //energy
+    [0.448, 0.29, 0.261, 0.0502, 0.0398],
+    //instrumentalness
+    [0.0000187, 0.0214, 0.0000645, 0, 0.00000219],
+    //speechiness
+    [0.0752, 0.0268, 0.0311, 0.0419, 0.0446],
+    //loudness
+    [-12.682, -14.122, -13.302, -19.058, -17.311],
+    //tempo
+    [81.979, 75.019, 125.725, 129.431, 134.029],
+    //valence
+    [0.238, 0.143, 0.173, 0.357, 0.117],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Three Deep Singing Monks Pt1", "Big Om of Tibet", "Blowing the Big and Small Ceremonial Horns With Big Cymbals", "Big Choir of Monks Pt1", "Three Deep Singing Monks Pt2"],
+    //danceability
+    [0.254, 0.241, 0.215, 0.211, 0.254],
+    //acousticness
+    [0.924, 0.985, 0.0102, 0.896, 0.924],
+    //energy
+    [0.114, 0.111, 0.299, 0.146, 0.114],
+    //instrumentalness
+    [0, 0.929, 0.779,  0.000586, 0],
+    //speechiness
+    [0.0395, 0.0501, 0.0433,  0.0376, 0.0395],
+    //loudness
+    [-20.159, -22.254, -21.362, -23.243, -20.159],
+    //tempo
+    [115.622, 141.161, 96.604, 135.912, 115.622],
+    //valence
+    [0.0547, 0.024, 0.0809, 0.139, 0.0547],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Mahakala", "Karma Burning", "Legend Of The Yogi", "Lama Gonpo", "Tara Drolma"],
+    //danceability
+    [0.458, 0.337, 0.235, 0.187, 0.292],
+    //acousticness
+    [0.000481, 0.901, 0.0373, 0.724, 0.21],
+    //energy
+    [0.984, 0.105, 0.675, 0.52, 0.673],
+    //instrumentalness
+    [0, 0.344, 0.459, 0.473, 0.827],
+    //speechiness
+    [0.29, 0.0472, 0.042, 0.0584, 0.0418],
+    //loudness
+    [-3.682, -27.471, -10.696, -16.55, 10.147],
+    //tempo
+    [142.495, 118.996, 119.919, 125.755, 100.024],
+    //valence
+    [0.211, 0.0884, 0.16, 0.133, 0.166],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["The Wren Boys / Gavin's Hornpipe / Honeysuckle", "The Highland Set", "Amazigh Lullaby", "Isigunqugunqu", "Cry of the Dreamer"],
+    //danceability
+    [0.433, 0.393, 0.45, 0.888, 0.387],
+    //acousticness
+    [0.965, 0.763, 0.969, 0.205, 0.82],
+    //energy
+    [0.443, 0.57, 0.0143, 0.328, 0.312],
+    //instrumentalness
+    [0.394, 0.00052, 0.00323, 0, 0],
+    //speechiness
+    [0.0403, 0.0396, 0.0438, 0.341, 0.0297],
+    //loudness
+    [-7.371, -7.358, -26.729, -11.861, -8.538],
+    //tempo
+    [133.426, 133.277, 84.558, 98.008, 138.576],
+    //valence
+    [0.727, 0.376, 0.156, 0.203, 0.48],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Sygyt, Khoomei, Kargyraa", "Durgen Chugaa", "Buura", "Yraazhy Kys", "Throat-Singing and Igil"],
+    //danceability
+    [0.341, 0.242, 0.574, 0.425, 0.274],
+    //acousticness
+    [0.851, 0.98, 0.324, 0.738, 0.947],
+    //energy
+    [0.225, 0.209, 0.51, 0.33, 0.121],
+    //instrumentalness
+    [0.00543, 0.142, 0.000902, 0.0000215, 0],
+    //speechiness
+    [0.0364, 0.0318, 0.061, 0.0742, 0.0417],
+    //loudness
+    [-17.746, -13.456, -20.837, -14.616, -17.125],
+    //tempo
+    [116.969, 102.497, 130.352, 172.469, 141.312],
+    //valence
+    [0.0595, 0.0996, 0.238, 0.798, 0.206],
     true
     ),
 
