@@ -227,7 +227,7 @@ def display_settings(request, user_id):
 @require_POST
 def settings_save(request, user_id):
     """
-    Alteers a user's settings.
+    Alters a user's settings.
     Last updated: 3/11/21 by Jacelynn Duranceau 
     """
     setting = Settings.objects.get(user_profile_fk=user_id)
