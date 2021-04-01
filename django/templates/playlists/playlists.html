@@ -48,7 +48,7 @@
             <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
         </td>
         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
-            <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
+            <a class="btn btn-dark" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
         </td>
     {% endfor %}
 </tr>
