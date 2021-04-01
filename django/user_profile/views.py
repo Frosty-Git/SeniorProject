@@ -256,11 +256,11 @@ def display_following(request, user_id):
         #following = get_list.user_to
         return render(request, 'profile/following.html', {'following': following_arr})
     else:
-        user = UserProfile.objects.get(pk=user_id)
+        other_user = UserProfile.objects.get(pk=user_id)
         private_profile = profile_privacy(user_id)
-        following_status = is_following(request.user.id, user_id)
+        following_status = is_following(request.user.id, other_user.user.id)
         if following_status or not private_profile:
-            following = user.users_followed.all()
+            following = other_user.users_followed.all()
             following_arr = []
             for user_profile in following:
                 determination = is_following(request.user.id, user_profile.user.id)
@@ -286,15 +286,31 @@ def display_followers(request, user_id):
     that is the user_from match in said table.
     Last updated: 3/11/21 by Jacelynn Duranceau
     """
-    user = UserProfile.objects.get(pk=user_id)
-    follower_ids = FollowedUser.objects.filter(user_to=user).values('user_from') # Returns dictionary of ids
-    followers_arr = []
-    for user in follower_ids:
-        for id in user.values():
-            person = UserProfile.objects.get(pk=id)
-            determination = is_following(request.user.id, id)
-            followers_arr.append([person, determination])
-    return render(request, 'profile/followers.html', {'followers': followers_arr})
+    if request.user == User.objects.get(pk=user_id):
+        user = UserProfile.objects.get(pk=user_id)
+        follower_ids = FollowedUser.objects.filter(user_to=user).values('user_from') # Returns dictionary of ids
+        followers_arr = []
+        for user in follower_ids:
+            for id in user.values():
+                person = UserProfile.objects.get(pk=id)
+                determination = is_following(request.user.id, id)
+                followers_arr.append([person, determination])
+        return render(request, 'profile/followers.html', {'followers': followers_arr})
+    else:
+        other_user = UserProfile.objects.get(pk=user_id)
+        private_profile = profile_privacy(user_id)
+        following_status = is_following(request.user.id, other_user.user.id)
+        if following_status or not private_profile:
+            follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
+            followers_arr = []
+            for user in follower_ids:
+                for id in user.values():
+                    person = UserProfile.objects.get(pk=id)
+                    determination = is_following(request.user.id, id)
+                    followers_arr.append([person, determination])
+            return render(request, 'profile/followers.html', {'followers': followers_arr})
+        else:
+            return redirect('/user/followers/' + str(request.user.id))
 
 def unfollow(request, user_id, who):
     """
