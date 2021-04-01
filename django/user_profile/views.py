@@ -526,7 +526,7 @@ def create_playlist_popup(request):
                                 name=playlist_form.cleaned_data.get('name'), 
                                 image=playlist_form.cleaned_data.get('image'),
                                 is_private=playlist_form.cleaned_data.get('is_private'),
-                                is_shareable=playlist_form.cleaned_data.get('is_shareable')),
+                                is_shareable=playlist_form.cleaned_data.get('is_shareable'),
                                 description=playlist_form.cleaned_data.get('description'),
                                 )
             playlist.save()
