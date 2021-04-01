@@ -61,7 +61,7 @@
                     </td>
                 {% endif %}
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
-                    <a class="btn btn-dark" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
+                    <a class="btn btn-success" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
                 </td>
                 {% if not playlist.is_private %}
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
