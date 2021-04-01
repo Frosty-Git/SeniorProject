@@ -254,7 +254,11 @@ def display_following(request, user_id):
         # following = FollowedUser.objects.filter(user_from=user_id)
         # get_list = FollowedUser.objects.get(user_from=user_id)
         #following = get_list.user_to
-        return render(request, 'profile/following.html', {'following': following_arr})
+        context = {
+            'profile': you,
+            'following': following_arr,
+        }
+        return render(request, 'profile/following.html', context)
     else:
         other_user = UserProfile.objects.get(pk=user_id)
         private_profile = profile_privacy(user_id)
@@ -271,6 +275,7 @@ def display_following(request, user_id):
             #following = get_list.user_to
             context = {
                 'following': following_arr,
+                'profile': other_user,
                 'private_profile': private_profile,
                 'following_status': following_status,
             }
@@ -287,15 +292,19 @@ def display_followers(request, user_id):
     Last updated: 3/11/21 by Jacelynn Duranceau
     """
     if request.user == User.objects.get(pk=user_id):
-        user = UserProfile.objects.get(pk=user_id)
-        follower_ids = FollowedUser.objects.filter(user_to=user).values('user_from') # Returns dictionary of ids
+        you = UserProfile.objects.get(pk=user_id)
+        follower_ids = FollowedUser.objects.filter(user_to=you).values('user_from') # Returns dictionary of ids
         followers_arr = []
         for user in follower_ids:
             for id in user.values():
                 person = UserProfile.objects.get(pk=id)
                 determination = is_following(request.user.id, id)
                 followers_arr.append([person, determination])
-        return render(request, 'profile/followers.html', {'followers': followers_arr})
+        context = {
+            'profile': you,
+            'followers': followers_arr,
+        }
+        return render(request, 'profile/followers.html', context)
     else:
         other_user = UserProfile.objects.get(pk=user_id)
         private_profile = profile_privacy(user_id)
@@ -308,7 +317,11 @@ def display_followers(request, user_id):
                     person = UserProfile.objects.get(pk=id)
                     determination = is_following(request.user.id, id)
                     followers_arr.append([person, determination])
-            return render(request, 'profile/followers.html', {'followers': followers_arr})
+            context = {
+                'profile': other_user,
+                'followers': followers_arr,
+            }
+            return render(request, 'profile/followers.html', context)
         else:
             return redirect('/user/followers/' + str(request.user.id))
 
