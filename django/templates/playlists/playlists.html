@@ -58,7 +58,7 @@
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
                     <a class="btn btn-dark" href="" role="button">Import to Spotify</a>
                 </td>
-                {% if not playlist.is_private%}
+                {% if not playlist.is_private %}
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
                     <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">
                         Share
@@ -100,7 +100,6 @@
                 {% endif %}
                 {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
         {% endif %}
-
     {% endfor %}
     </tr>
     {% endif %}
