@@ -192,7 +192,6 @@ let questions = [
 
 
 
-
 ];
 
 
@@ -242,7 +241,7 @@ function increment_and_reload(value) {
             quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
         }
         else{
-            quiz.increment_question_index(increment_value);
+            quiz.change_question_index( quiz.return_question_index() + (6 - (quiz.return_question_index() % 5))  );
         }
     }
     else if (value == "2") {
@@ -250,7 +249,8 @@ function increment_and_reload(value) {
         if(quiz.return_value_of_question().is_dynamic == true){
             quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
         }else{
-            quiz.increment_question_index(increment_value);
+    
+            
         }
     }
     else if (value == "3") {
@@ -258,7 +258,7 @@ function increment_and_reload(value) {
         if(quiz.return_value_of_question().is_dynamic == true){
             quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
     }else{
-        quiz.increment_question_index(increment_value);
+      
     } 
     }
     else if (value == "4") {
@@ -266,7 +266,7 @@ function increment_and_reload(value) {
         if(quiz.return_value_of_question().is_dynamic == true){
             quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
     }else{
-        quiz.increment_question_index(increment_value);
+       
     }
     }
     else if (value == "5") {
@@ -274,7 +274,7 @@ function increment_and_reload(value) {
         increment_value = 5;
         quiz.change_question_index( quiz.return_question_index() * 5 + increment_value );
     }else{
-        quiz.increment_question_index(increment_value);
+       
     }  
     }
 Get_Question();
