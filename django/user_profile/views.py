@@ -5,6 +5,7 @@ from user_profile.models import *
 from user_profile.forms import *
 from social_feed.models import *
 from social_feed.views import *
+from recommender.views import get_user_playlists
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -290,6 +291,8 @@ def display_following(request, user_id):
                 context = {
                     'following': following_arr,
                     'profile': other_user,
+                    'private_profile': private_profile,
+                    'following_status': following_status,
                 }
                 return render(request, 'profile/following.html', context)
             else:
@@ -306,6 +309,7 @@ def display_following(request, user_id):
                 context = {
                     'following': following_arr,
                     'profile': other_user,
+                    'private_profile': private_profile,
                 }
                 return render(request, 'profile/following.html', context)
             else:
@@ -630,7 +634,7 @@ def create_playlist_popup(request):
             # playlist = playlist_form.save(commit=False)
             return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
 
-def add_song_to_playlist(request, query):
+def add_song_to_playlist(request):
     """
     Adds a song to a playlist
     Last updated: 3/24/21 by Jacelynn Duranceau
@@ -645,6 +649,7 @@ def add_song_to_playlist(request, query):
         new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=song)
         new_song.save()
         return redirect('/')
+        # return JsonResponse({'status': 'ok'})
         # return redirect('/results/')
         #return redirect('/user/playlists/' + str(request.user.id))
         # return render(request, 'recommender/results.html')
