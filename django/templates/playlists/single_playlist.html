@@ -58,10 +58,18 @@
         <td class="centered-column" style="width:400px; padding-top:8px; padding-bottom: 8px;">
             <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
         </td>
-        {% if profile.user.id == user.id %}
+        {% if profile.user.id == user.id and playlist != profile.liked_songs_playlist_fk %}
+        <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
+            Like / Dislike buttons here :)
+        </td>
         <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
             <a class="btn btn-dark" href="{% url 'user:delete_song' playlist.id id %}" role="button">Delete Song</a>
         </td>
+        {% else %}
+        <!-- These will display for when you are viewing other people's playlists too, it will be linked to your likes and dislikes though right? -->
+            <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
+                Like / Dislike buttons here :)
+            </td>
         {% endif %}
     </tr>
     {% endfor %}
