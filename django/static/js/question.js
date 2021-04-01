@@ -101,7 +101,7 @@ let questions = [
         [null, null, null, null, null],
         //valence
         [null, null, null, null, null],
-        true
+        false
     ),
     new Question("Which of the following artists do you prefer?", ["Justin Bieber", "Nicki Minaj", "Katy Perry", "Billy Eilish", "Ariana Grande"],
       //danceability
@@ -443,10 +443,11 @@ function increment_and_reload(value) {
         }
         else{
             if(quiz.return_previous_value_boolean() == true){
-                console.log((quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 5);
+                console.log((quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
                 quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
-
+                quiz.set_previous_value_boolean(false);
             }else{
+                quiz.set_previous_value_boolean(false);
                 quiz.change_question_index(quiz.return_question_index() + 1);
             }
         }
@@ -459,7 +460,9 @@ function increment_and_reload(value) {
         }else{
             if(quiz.return_previous_value_boolean() == true){
                 quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
-                }else{
+                quiz.set_previous_value_boolean(false);
+            }else{
+                    quiz.set_previous_value_boolean(false);
                     quiz.change_question_index(quiz.return_question_index() + 1);
                 }
         }
@@ -472,8 +475,10 @@ function increment_and_reload(value) {
     }else{
         if(quiz.return_previous_value_boolean() == true){
             quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
-            }else{
+            quiz.set_previous_value_boolean(false);
+        }else{
                 quiz.change_question_index(quiz.return_question_index() + 1);
+                quiz.set_previous_value_boolean(false);
             }
     } 
     }
@@ -485,8 +490,10 @@ function increment_and_reload(value) {
     }else{
         if(quiz.return_previous_value_boolean() == true){
             quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
-            }else{
+            quiz.set_previous_value_boolean(false);   
+        }else{
                 quiz.change_question_index(quiz.return_question_index() + 1);
+                quiz.set_previous_value_boolean(false);
             }
     }
     }
@@ -498,7 +505,9 @@ function increment_and_reload(value) {
     }else{
         if(quiz.return_previous_value_boolean() == true){
             quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5)) * 5 + 6);
-            }else{
+            quiz.set_previous_value_boolean(false);
+        }else{
+            quiz.set_previous_value_boolean(false);
                 quiz.change_question_index(quiz.return_question_index() + 1);
             }
     }  
