@@ -92,7 +92,7 @@ let questions = [
         [null, null, null, null, null],
         true
     ),
-    new Question("Which of the following artists do you prefer?", ["Justin Bieber", "Nicki Minaj", "Katy Perry", "Billy Eilish", "Ariana Grande"],
+    new Question("Which of the following artists do you prefer?", ["Justin Bieber", "Nicki Minaj", "Katy Perry", "Billie Eilish", "Ariana Grande"],
       //danceability
       [null, null, null, null, null],
       //acousticness
@@ -112,7 +112,7 @@ let questions = [
       true
       ),
       
-    new Question("Which of the following artists do you prefer?", ["The Irish Sailors", "The Largest Johns", "The Irish Rovers", "The Fisherman's Friends", "High Tide"],
+    new Question("Which of the following artists do you prefer?", ["Storm Weather Shanty Choir", "The Longest Johns", "The Irish Rovers", "The Fisherman's Friends", "High Tide"],
       //danceability
       [null, null, null, null, null],
       //acousticness
@@ -378,7 +378,144 @@ let questions = [
     //valence
     [0.646, 0.477, 0.693, 0.66, 0.543],
     true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Never Really Over", "Roar", "Hot N Cold", "Last Friday Night", "I Kissed A Girl"],
+    //danceability
+    [0.77, 0.554, 0.706, 0.652, 0.699],
+    //acousticness
+    [0.194, 0.00487, 0.0000795, 0.00125, 0.00223],
+    //energy
+    [0.882, 0.772, 0.841, 0.812, 0.76],
+    //instrumentalness
+    [0, 0.00927, 0,  0.0000301, 0],
+    //speechiness
+    [0.0602, 0.0418, 0.0418, 0.0409, 0.0677],
+    //loudness
+    [-4.792, -4.821, -3.956, -3.797, -3.173],
+    //tempo
+    [99.991, 179.984, 132.032, 126.023, 129.996],
+    //valence
+    [0.385, 0.455, 0.861, 0.72, 0.696],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Therefore I Am", "listen before i go", "when the party's over", "bad guy", "lovely (with Khalid)"],
+    //danceability
+    [0.889, 0.319, 0.367, 0.701, 0.351],
+    //acousticness
+    [0.218, 0.935, 0.978, 0.328, 0.934],
+    //energy
+    [0.34, 0.0561, 0.111, 0.425, 0.296],
+    //instrumentalness
+    [0.13, 0.00384, 0.0000397, 0.13, 0],
+    //speechiness
+    [0.0697, 0.045, 0.0972, 0.375, 0.0333],
+    //loudness
+    [-7.773, -23.023, -14.084, -10.965, -10.109],
+    //tempo
+    [94.009, 79.764, 82.642, 135.128, 115.284],
+    //valence
+    [0.716, 0.082, 0.198, 0.562, 0.12],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["pov", "34+35 Remix.", "7 rings", "test drive", "positions"],
+    //danceability
+    [0.487, 0.88, 0.778, 0.698, 0.737],
+    //acousticness
+    [0.36, 0.205, 0.592, 0.0251, 0.468],
+    //energy
+    [0.534, 0.662, 0.317, 0.708, 0.802],
+    //instrumentalness
+    [0, 0, 0, 0, 0],
+    //speechiness
+    [0.0555, 0.304, 0.334, 0.0454, 0.0878],
+    //loudness
+    [-5.664, -5.766, -10.732, -4.943, -4.771],
+    //tempo
+    [131.798, 109.988, 140.048, 115.036, 144.015],
+    //valence
+    [0.173, 0.726, 0.327, 0.322, 0.682],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["pov", "34+35 Remix.", "7 rings", "test drive", "positions"],
+    //danceability
+    [0.487, 0.88, 0.778, 0.698, 0.737],
+    //acousticness
+    [0.36, 0.205, 0.592, 0.0251, 0.468],
+    //energy
+    [0.534, 0.662, 0.317, 0.708, 0.802],
+    //instrumentalness
+    [0, 0, 0, 0, 0],
+    //speechiness
+    [0.0555, 0.304, 0.334, 0.0454, 0.0878],
+    //loudness
+    [-5.664, -5.766, -10.732, -4.943, -4.771],
+    //tempo
+    [131.798, 109.988, 140.048, 115.036, 144.015],
+    //valence
+    [0.173, 0.726, 0.327, 0.322, 0.682],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Johnny, Come Down to Hilo", "Ring Down Below", "Rio Grande", "Drunken Sailor", "Fish in the Sea"],
+    //danceability
+    [0.828, 0.623, 0.354, 0.668, 0.604],
+    //acousticness
+    [0.945, 0.979, 0.66, 0.626, 0.0905],
+    //energy
+    [0.416, 0.254, 0.443, 0.897, 0.908],
+    //instrumentalness
+    [0, 0, 0.00000725, 0.229, 0.0000013],
+    //speechiness
+    [0.284, 0.22, 0.0373, 0.0418, 0.0421],
+    //loudness
+    [-8.929, -11.573, -7.19, -5.135, 6.002],
+    //tempo
+    [123.734, 82.681, 67.915, 121.855, 110.523],
+    //valence
+    [0.827, 0.625, 0.538, 0.955, 0.593],
+    true
+    ),
+    new Question("Which of the following songs do you listen to the most?", ["Retirement Song", "Santiana", "Oak & Ash & Thorn", "Randy Dandy-O", "Bones in the Ocean"],
+    //danceability
+    [0.877, null, null, null, null],
+    //acousticness
+    [0.717, null, null, null, null],
+    //energy
+    [0.387, null, null, null, null],
+    //instrumentalness
+    [0, null, null, null, null],
+    //speechiness
+    [0.301, null, null, null, null],
+    //loudness
+    [10.899, null, null, null, null],
+    //tempo
+    [126.232, null, null, null, null],
+    //valence
+    [0.739, null, null, null, null],
+    true
+    ),
+
+
+
+    new Question("How likely are you to recommend Pengbeats to a friend?", ["Very Likely", "Likely", "Not Likely or Unlikely", "Unlikely", "Very Unlikely"],
+    //danceability
+    [null, null, null, null, null],
+    //acousticness
+    [null, null, null, null, null],
+    //energy
+    [null, null, null, null, null],
+    //instrumentalness
+    [null, null, null, null, null],
+    //speechiness
+    [null, null, null, null, null],
+    //loudness
+    [null, null, null, null, null],
+    //tempo
+    [null, null, null, null, null],
+    //valence
+    [null, null, null, null, null],
+    false
     )
+
 
 
 
