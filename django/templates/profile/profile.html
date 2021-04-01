@@ -28,54 +28,61 @@
                 @{{ profile.user.username }}
             </p>
             <p>
-                <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
-                <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
+                {% if profile.user.id == user.id or not private_profile or is_following %}
+                    <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
+                    <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
+                {% elif private_profile%}
+                    <p>{{ profile.num_followers }} Followers {{ profile.num_following }} Following</p>
+                {% endif %}
             </p>
         </div>
 
-        {% if profile.description %}
-            <h5 style="font-size: 20px;">
-                {{ profile.description }}
-            </h5>
-        {% endif %}
+        {% if profile.user.id == user.id or not private_profile or is_following %}
+            {% if profile.description %}
+                <h5 style="font-size: 20px;">
+                    {{ profile.description }}
+                </h5>
+            {% endif %}
 
-        <h6 style="padding-bottom:20px; font-size: 13px;">
-            DOB: {{ profile.birthdate }}
-            (<span id="age"></span>)
-        </h6>
+            <h6 style="padding-bottom:20px; font-size: 13px;">
+                DOB: {{ profile.birthdate }}
+                (<span id="age"></span>)
+            </h6>
 
-        {% if profile.likes or profile.dislikes %}
-            <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
-                <table style="margin-left:auto; margin-right:auto;">
-                    <tr>
-                        {% if profile.likes %}
-                            <th>Likes: </th>
-                            <td style="word-break: break-all; text-align: left;">{{ profile.likes }}</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        {% if profile.dislikes %}
-                            <th>Dislikes: </th>
-                            <td style="word-break: break-all; text-align: left;">{{ profile.dislikes }}</td>
-                        {% endif %}
-                    </tr>
-                </table>
-            </div>
-        {% endif %}
-        {% if profile.user.id == user.id %}
-            <a class="btn btn-dark" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
-        {% else %}
-            {% if nofollow %}
-
-            {% elif is_following %}
-                <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
+            {% if profile.likes or profile.dislikes or is_following %}
+                <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
+                    <table style="margin-left:auto; margin-right:auto;">
+                        <tr>
+                            {% if profile.likes %}
+                                <th>Likes: </th>
+                                <td style="word-break: break-all; text-align: left;">{{ profile.likes }}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if profile.dislikes %}
+                                <th>Dislikes: </th>
+                                <td style="word-break: break-all; text-align: left;">{{ profile.dislikes }}</td>
+                            {% endif %}
+                        </tr>
+                    </table>
+                </div>
+            {% endif %}
+            {% if profile.user.id == user.id %}
+                <a class="btn btn-dark" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
             {% else %}
-                <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
+                {% if nofollow %}
+
+                {% elif is_following %}
+                    <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
+                {% else %}
+                    <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
+                {% endif %}
             {% endif %}
         {% endif %}
         <br><br>
     </div>
 
+    {% if profile.user.id == user.id or not private_profile or is_following%}
     <div class="w3-col m6 w3-center">
         <div style="border-bottom: white double;">
             <div class="w3-row">
@@ -97,7 +104,7 @@
         </div>
         {% include 'profile/profile_feed.html' with post_list=post_list image=image %}
     </div>
-
+    
 
     <div class="w3-col m2 w3-center" id="followingheader">
         <h2><a href="{% url 'user:following' profile.user.id %}" style="font-family: 'Noto Sans JP', sans-serif;text-decoration: none;">Following</a></h2>
@@ -118,6 +125,7 @@
         {% endfor %}
         </table>
     </div>
+    {% endif %}
 </div> 
 
 {% if profile.user.id == user.id %}
@@ -167,51 +175,54 @@
  </div>
 {% else %}
 <div style="width: 350px; text-align: center;">
-    {% if private_prefs %}
-    <!-- You're viewing someone else's profile, so don't show their preferences if they don't want you to be able to see them -->
+    {% if not private_profile or is_following %}
+        {% if not private_prefs%}
+        <!-- Ensure the public profile or person you are following has allowed their preferences to be visible, even to followers -->
+        <h2>Music Feature Preferences</h2>
+
+            Acousticness: {{ acousticness }}
+            <br>
+            0<progress min="0" max="1" value="{{ acousticness }}"></progress>1
+            <br>
+
+            Danceability: {{ danceability }}
+            <br>
+            0<progress min="0" max="1" value="{{ danceability }}"></progress>1
+            <br>
+
+            Energy: {{ energy }}
+            <br>
+            0<progress min="0" max="1" value="{{ energy }}"></progress>1
+            <br>
+
+            Instrumentalness: {{ instrumentalness}}
+            <br>
+            0<progress min="0" max="1" value="{{ instrumentalness }}"></progress>1
+            <br>
+
+            Speechiness: {{ speechiness }}
+            <br>
+            0<progress min="0" max="1" value="{{ speechiness }}"></progress>1
+            <br>
+
+            Loudness: {{ loudness }}
+            <br>
+            -60<progress min="0" max="60" value="{{ loudness_adjusted }}"></progress>0
+            <br>
+
+            Tempo: {{ tempo }}
+            <br>
+            50<progress min="50" max="150" value="{{ tempo }}"></progress>150
+            <br>
+
+            Valence: {{ valence }}
+            <br>
+            0<progress min="0" max="1" value="{{ valence }}"></progress>1
+            <br>
+        {% endif %}
     {% else %}
-    <h2>Music Feature Preferences</h2>
-
-        Acousticness: {{ acousticness }}
-        <br>
-        0<progress min="0" max="1" value="{{ acousticness }}"></progress>1
-        <br>
-
-        Danceability: {{ danceability }}
-        <br>
-        0<progress min="0" max="1" value="{{ danceability }}"></progress>1
-        <br>
-
-        Energy: {{ energy }}
-        <br>
-        0<progress min="0" max="1" value="{{ energy }}"></progress>1
-        <br>
-
-        Instrumentalness: {{ instrumentalness}}
-        <br>
-        0<progress min="0" max="1" value="{{ instrumentalness }}"></progress>1
-        <br>
-
-        Speechiness: {{ speechiness }}
-        <br>
-        0<progress min="0" max="1" value="{{ speechiness }}"></progress>1
-        <br>
-
-        Loudness: {{ loudness }}
-        <br>
-        -60<progress min="0" max="60" value="{{ loudness_adjusted }}"></progress>0
-        <br>
-
-        Tempo: {{ tempo }}
-        <br>
-        50<progress min="50" max="150" value="{{ tempo }}"></progress>150
-        <br>
-
-        Valence: {{ valence }}
-        <br>
-        0<progress min="0" max="1" value="{{ valence }}"></progress>1
-        <br>
-        
+        <!-- You're viewing someone else's profile, so don't show their preferences if they don't want you to be able to see them -->
+        <!-- or the person's profile is private so don't show them anyway -->
     {% endif%}
 </div>
 {% endif %}
