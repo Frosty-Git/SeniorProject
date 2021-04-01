@@ -71,6 +71,12 @@
             <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
                 Like / Dislike buttons here :)
             </td>
+            <td>
+                <div class="btn-group" role="group" style="margin-left:auto; margin-right: auto; display:flex">
+                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
+                </div>
+                {% include 'playlists/addsong_popup.html' with term=term profile=profile%}
+            </td>
         {% endif %}
     </tr>
     {% endfor %}
