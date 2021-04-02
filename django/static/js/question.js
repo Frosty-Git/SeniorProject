@@ -4,8 +4,63 @@ function Quiz(questions) {
     this.questionIndex = 0;
     this.previous_value_boolean = false;
     this.value = 0;
+    this.number_of_values_danceability = 0;
+    this.number_of_values_acousticness = 0;
+    this.number_of_values_energy = 0;
+    this.number_of_values_instrumentalness = 0;
+    this.number_of_values_speechiness = 0;
+    this.number_of_values_loudness = 0;
+    this.number_of_values_tempo = 0;
+    this.number_of_values_valence = 0;
 }
-
+Quiz.prototype.set_number_of_values_danceability = function (value) {
+    this.number_of_values_danceability = value;
+}
+Quiz.prototype.get_number_of_values_danceability = function () {
+    return this.number_of_values_danceability ;
+}
+Quiz.prototype.set_number_of_values_acousticness = function (value) {
+    this.number_of_values_acousticness = value;
+}
+Quiz.prototype.get_number_of_values_acousticness = function () {
+    return this.number_of_values_acousticness ;
+}
+    Quiz.prototype.set_number_of_values_energy = function (value) {
+        this.number_of_values_energy = value;
+    }
+    Quiz.prototype.get_number_of_values_energy = function () {
+        return this.number_of_values_energy ;
+    }
+    Quiz.prototype.set_number_of_values_instrumentalness = function (value) {
+        this.number_of_values_instrumentalness = value;
+    }
+    Quiz.prototype.get_number_of_values_instrumentalness = function () {
+        return this.number_of_values_instrumentalness ;
+    }
+    Quiz.prototype.set_number_of_values_speechiness = function (value) {
+        this.number_of_values_speechiness = value;
+    }
+    Quiz.prototype.get_number_of_values_speechiness = function () {
+        return this.number_of_values_speechiness ;
+    }
+    Quiz.prototype.set_number_of_values_loudness = function (value) {
+        this.number_of_values_loudness = value;
+    }
+    Quiz.prototype.get_number_of_values_loudness = function () {
+        return this.number_of_values_loudness ;
+    }
+    Quiz.prototype.set_number_of_values_tempo = function (value) {
+        this.number_of_values_tempo = value;
+    }
+    Quiz.prototype.get_number_of_values_tempo = function () {
+        return this.number_of_values_tempo ;
+    }
+    Quiz.prototype.set_number_of_values_valence = function (value) {
+        this.number_of_values_valence = value;
+    }
+    Quiz.prototype.get_number_of_values_valence = function () {
+        return this.number_of_values_valence ;
+    }
 Quiz.prototype.change_question_index = function (value) {
     this.questionIndex = value;
 }
@@ -35,11 +90,11 @@ Quiz.prototype.return_question_index = function () {
     return this.questionIndex;
 }
 
-function Question(question, choices, danceability, accousticness, energy, instrumentalness, speechiness, loudness, tempo, valence, is_dynamic) {
+function Question(question, choices, danceability, acousticness, energy, instrumentalness, speechiness, loudness, tempo, valence, is_dynamic) {
     this.question = question;
     this.choices = choices;
     this.danceability = danceability;
-    this.accousticness = accousticness;
+    this.acousticness = acousticness;
     this.energy = energy;
     this.instrumentalness = instrumentalness;
     this.speechiness = speechiness;
@@ -107,7 +162,7 @@ let questions = [
         [null, null, null, null, null],
         //valence
         [null, null, null, null, null],
-        false
+        true
     ),
     new Question("Which of the following artists do you prefer?", ["Justin Bieber", "Nicki Minaj", "Katy Perry", "Billie Eilish", "Ariana Grande"],
       //danceability
@@ -184,7 +239,7 @@ let questions = [
     [103.239, 96.529, 124.631, 165.007, 97.871],
     //valence
     [0.435, 0.315, 0.937, 0.187, 0.289],
-    true
+    false
     ),
     
     new Question("Which of the following songs do you listen to the most?", ["Sad But True", "Nothing Else Matters", "Enter Sandman", "Master of Puppets", "Fade To Black"],
@@ -204,7 +259,7 @@ let questions = [
     [89.232, 142.171, 123.331, 105.25, 113.47],
     //valence
     [0.433, 0.17, 0.635, 0.562, 0.278],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Shakedown Street", "Althea", "Touch of Grey", "Truckin'", "Casey Jones"],
     //danceability
@@ -223,7 +278,7 @@ let questions = [
     [109.447, 82.676, 159.829, 126.553, 99.678],
     //valence
     [0.85, 0.584, 0.849, 0.676, 0.828],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Mr. Blue Sky", "Last Train to London", "Don't Bring Me Down", "Turn to Stone", "Evil Woman"],
     //danceability
@@ -242,7 +297,7 @@ let questions = [
     [177.784, 121.493, 115.692, 140.966, 119.624],
     //valence
     [0.477, 0.954, 0.805, 0.458, 0.74],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Cecilia", "Bridge Over Troubled Water", "The Only Living Boy in New York", "The Boxer", "America"],
     //danceability
@@ -261,7 +316,7 @@ let questions = [
     [102.762, 79.764, 76.963, 93.017, 178.453],
     //valence
     [0.954, 0.264, 0.524, 0.629, 0.275],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["The Champion", "Jesus, Take the Wheel", "Before He Cheats", "All-American Girl", "How Great Thou Art"],
     //danceability
@@ -280,7 +335,7 @@ let questions = [
     [91.056, 76.572, 147.905, 123.991, 92.535],
     //valence
     [0.51, 0.135, 0.29, 0.77, 0.282],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Glad You Exist", "I Should Probably Go To Bed", "10,000 Hours (with Justin Bieber)", "How Not To", "From the Ground Up"],
     //danceability
@@ -299,7 +354,7 @@ let questions = [
     [103.953, 131.935, 89.991, 159.863, 151.568],
     //valence
     [0.66, 0.309, 0.43, 0.618, 0.282],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Somebody's Problem", "865", "Whiskey Glasses", "Sand In My Boots", "Dangerous"],
     //danceability
@@ -318,7 +373,7 @@ let questions = [
     [136.97, 88.003, 149.959, 69.877, 119.017],
     //valence
     [0.625, 0.367, 0.707, 0.414, 0.948],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Lovin' On You", "Better Together", "Hurricane", "She Got the Best of Me", "Forever After All"],
     //danceability
@@ -337,7 +392,7 @@ let questions = [
     [118.974, 138.002, 75.977, 150.99, 151.964],
     //valence
     [0.53, 0.67, 0.515, 0.7, 0.456],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Be Like That", "Like a Rodeo", "Lose It", "For My Daughter", "What Ifs"],
     //danceability
@@ -356,7 +411,7 @@ let questions = [
     [86.97, 119.985, 91.966, 139.939, 125.976],
     //valence
     [0.322, 0.425, 0.436, 0.35, 0.687],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["As I Am", "Anyone", "Hold On", "Ghost", "2 Much"],
     //danceability
@@ -375,7 +430,7 @@ let questions = [
     [99.928, 115.884, 139.98, 153.96, 119.59],
     //valence
     [0.109, 0.584, 0.29, 0.441, 0.167],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Anaconda", "Feeling Myself", "The Night is Still Young", "Yikes", "I'm Legit"],
     //danceability
@@ -394,7 +449,7 @@ let questions = [
     [129.99, 139.045, 128.016, 149.996, 75.002],
     //valence
     [0.646, 0.477, 0.693, 0.66, 0.543],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Never Really Over", "Roar", "Hot N Cold", "Last Friday Night", "I Kissed A Girl"],
     //danceability
@@ -413,7 +468,7 @@ let questions = [
     [99.991, 179.984, 132.032, 126.023, 129.996],
     //valence
     [0.385, 0.455, 0.861, 0.72, 0.696],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Therefore I Am", "listen before i go", "when the party's over", "bad guy", "lovely (with Khalid)"],
     //danceability
@@ -432,7 +487,7 @@ let questions = [
     [94.009, 79.764, 82.642, 135.128, 115.284],
     //valence
     [0.716, 0.082, 0.198, 0.562, 0.12],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["pov", "34+35 Remix.", "7 rings", "test drive", "positions"],
     //danceability
@@ -451,27 +506,9 @@ let questions = [
     [131.798, 109.988, 140.048, 115.036, 144.015],
     //valence
     [0.173, 0.726, 0.327, 0.322, 0.682],
-    true
+    false
     ),
-    new Question("Which of the following songs do you listen to the most?", ["pov", "34+35 Remix.", "7 rings", "test drive", "positions"],
-    //danceability
-    [0.487, 0.88, 0.778, 0.698, 0.737],
-    //acousticness
-    [0.36, 0.205, 0.592, 0.0251, 0.468],
-    //energy
-    [0.534, 0.662, 0.317, 0.708, 0.802],
-    //instrumentalness
-    [0, 0, 0, 0, 0],
-    //speechiness
-    [0.0555, 0.304, 0.334, 0.0454, 0.0878],
-    //loudness
-    [-5.664, -5.766, -10.732, -4.943, -4.771],
-    //tempo
-    [131.798, 109.988, 140.048, 115.036, 144.015],
-    //valence
-    [0.173, 0.726, 0.327, 0.322, 0.682],
-    true
-    ),
+
     new Question("Which of the following songs do you listen to the most?", ["Johnny, Come Down to Hilo", "Ring Down Below", "Rio Grande", "Drunken Sailor", "Fish in the Sea"],
     //danceability
     [0.828, 0.623, 0.354, 0.668, 0.604],
@@ -489,7 +526,7 @@ let questions = [
     [123.734, 82.681, 67.915, 121.855, 110.523],
     //valence
     [0.827, 0.625, 0.538, 0.955, 0.593],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Retirement Song", "Santiana", "Oak & Ash & Thorn", "Randy Dandy-O", "Bones in the Ocean"],
     //danceability
@@ -508,7 +545,7 @@ let questions = [
     [126.232, 134.086, 111.973, 110.094, 79.985],
     //valence
     [0.739, 0.734, 0.6, 0.88, 0.437],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["The Orange and the Green", "The Unicorn", "Johnny I Hardley Knew Ye", "Haul Away Joe", "Whiskey in the Jar"],
     //danceability
@@ -527,7 +564,7 @@ let questions = [
     [117.007, 117.26, 112.047, 114.703, 132.97],
     //valence
     [0.965, 0.785, 0.402, 0.753, 0.532],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["The Bonny Ship the Diamond", "Migalay Boat Song", "South Australia", "No Hopers, Jokers & Rogues", "Shanty Man"],
     //danceability
@@ -546,7 +583,7 @@ let questions = [
     [96.971, 93.437, 103.614, 100.035, 176.025],
     //valence
     [0.72, 0.436, 0.917, 0.837, 0.83],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Sea Shanty 2", "Futilist's Lament", "Time Unlimited", "Not The One", "Nightingale"],
     //danceability
@@ -565,7 +602,7 @@ let questions = [
     [166.047, 187.648, 119.566, 124.839, 77.99],
     //valence
     [0.55, 0.537, 0.648, 0.0719, 0.233],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Gayatri Mantra", "So Much Magnificence", "Om Namo Bhagavate", "Om Sahana Vavatu (Shanti Mantra)", "Incantation"],
     //danceability
@@ -584,7 +621,7 @@ let questions = [
     [81.979, 75.019, 125.725, 129.431, 134.029],
     //valence
     [0.238, 0.143, 0.173, 0.357, 0.117],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Three Deep Singing Monks Pt1", "Big Om of Tibet", "Blowing the Big and Small Ceremonial Horns With Big Cymbals", "Big Choir of Monks Pt1", "Three Deep Singing Monks Pt2"],
     //danceability
@@ -603,7 +640,7 @@ let questions = [
     [115.622, 141.161, 96.604, 135.912, 115.622],
     //valence
     [0.0547, 0.024, 0.0809, 0.139, 0.0547],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Mahakala", "Karma Burning", "Legend Of The Yogi", "Lama Gonpo", "Tara Drolma"],
     //danceability
@@ -622,7 +659,7 @@ let questions = [
     [142.495, 118.996, 119.919, 125.755, 100.024],
     //valence
     [0.211, 0.0884, 0.16, 0.133, 0.166],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["The Wren Boys / Gavin's Hornpipe / Honeysuckle", "The Highland Set", "Amazigh Lullaby", "Isigunqugunqu", "Cry of the Dreamer"],
     //danceability
@@ -641,7 +678,7 @@ let questions = [
     [133.426, 133.277, 84.558, 98.008, 138.576],
     //valence
     [0.727, 0.376, 0.156, 0.203, 0.48],
-    true
+    false
     ),
     new Question("Which of the following songs do you listen to the most?", ["Sygyt, Khoomei, Kargyraa", "Durgen Chugaa", "Buura", "Yraazhy Kys", "Throat-Singing and Igil"],
     //danceability
@@ -660,7 +697,7 @@ let questions = [
     [116.969, 102.497, 130.352, 172.469, 141.312],
     //valence
     [0.0595, 0.0996, 0.238, 0.798, 0.206],
-    true
+    false
     ),
 
     new Question("How likely are you to recommend Pengbeats to a friend?", ["Very Likely", "Likely", "Not Likely or Unlikely", "Unlikely", "Very Unlikely"],
@@ -683,6 +720,9 @@ let questions = [
     false
     )
 
+
+
+
 ];
 
 
@@ -704,7 +744,59 @@ Quiz.prototype.get_currently_selected_answer = function () {
         return this.questions[this.questionIndex].choices[4];
     }
 }
+ function calculate_return_values(value){
+    if( quiz.return_value_of_question().danceability[value] != null ){
+        element = document.getElementById("danceability");
+        total = quiz.get_number_of_values_danceability() + 1;
+        element.value = ((element.value * quiz.get_number_of_values_danceability()+ quiz.return_value_of_question().danceability[value])/total);
+        quiz.set_number_of_values_danceability(total);
+    }
+    if( quiz.return_value_of_question().acousticness[value] != null ){
+        element = document.getElementById("acousticness");
+        total = quiz.get_number_of_values_acousticness() + 1;
+        element.value = ((quiz.return_value_of_question().acousticness[value] + element.value * quiz.get_number_of_values_acousticness())/total);
+        quiz.set_number_of_values_acousticness(total);
+    }
+    if( quiz.return_value_of_question().energy[value] != null ){
+        element = document.getElementById("energy");
+        total = quiz.get_number_of_values_energy() + 1;
+        element.value = ((quiz.return_value_of_question().energy[value] + element.value * quiz.get_number_of_values_energy())/total);
+        quiz.set_number_of_values_energy(total);
+    }
+    if( quiz.return_value_of_question().instrumentalness[value] != null ){
+        element = document.getElementById("instrumentalness");
+        total = quiz.get_number_of_values_instrumentalness() + 1;
+        element.value = ((quiz.return_value_of_question().instrumentalness[value] + element.value  * quiz.get_number_of_values_instrumentalness())/total);
+        quiz.set_number_of_values_instrumentalness(total);
+    }
+    if( quiz.return_value_of_question().speechiness[value] != null ){
+        element = document.getElementById("speechiness");
+        total = quiz.get_number_of_values_speechiness() + 1;
+        element.value = ((quiz.return_value_of_question().speechiness[value] + element.value * quiz.get_number_of_values_speechiness())/total);
+        quiz.set_number_of_values_speechiness(total);
+        
+    }
+    if( quiz.return_value_of_question().loudness[value] != null ){
+        element = document.getElementById("loudness");
+        total = quiz.get_number_of_values_loudness()+ 1;
+        element.value = ((quiz.return_value_of_question().loudness[value] + element.value * quiz.get_number_of_values_loudness())/total);
+        quiz.set_number_of_values_loudness(total);
+    }
+    if( quiz.return_value_of_question().tempo[value] != null ){
+        element = document.getElementById("tempo");
+        total = quiz.get_number_of_values_tempo() + 1;
+        element.value = ((quiz.return_value_of_question().tempo[value] + element.value * quiz.get_number_of_values_tempo())/total);
+        quiz.set_number_of_values_tempo(total);
+    }
+    if( quiz.return_value_of_question().valence[value] != null ){
+        element = document.getElementById("valence");
+        total = quiz.get_number_of_values_valence() + 1;
+        element.value =((quiz.return_value_of_question().valence[value] + element.value * quiz.get_number_of_values_valence())/total);
+        quiz.set_number_of_values_valence(total);
+    }
 
+
+ }
 
 function Get_Question() {
 
@@ -724,93 +816,115 @@ Get_Question();
 
 function increment_and_reload(value) {
     let increment_value = 0;
+
     if (value == "1") {
         increment_value = 1;
+        calculate_return_values(increment_value - 1 );
         if(quiz.return_value_of_question().is_dynamic == true){
     
-            quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );
-            quiz.set_previous_value_boolean(true);
-        }
-        else{
-            if(quiz.return_previous_value_boolean() == true){
-    
-                quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
-                quiz.set_previous_value_boolean(false);
-                quiz.set_value(quiz.return_question_index());
-            }else{
-                quiz.set_value(quiz.return_question_index());
-                quiz.set_previous_value_boolean(false);
+        quiz.change_question_index( ((quiz.return_question_index()   * 5) +  increment_value ));
+        quiz.set_previous_value_boolean(true);
+        quiz.set_value(quiz.get_value() + 1 );
+
+    }else{
+        if(quiz.return_previous_value_boolean() == true){
+            quiz.change_question_index( ( Math.pow(5, (quiz.get_value() - 1 )) + Math.pow(5, quiz.get_value())) + 1  ); 
+            quiz.set_previous_value_boolean(false);
+           
+        }else{
+            quiz.set_previous_value_boolean(false);
                 quiz.change_question_index(quiz.return_question_index() + 1);
+   
             }
-        }
+    } 
+    
     }
     else if (value == "2") {
         increment_value = 2;
+        calculate_return_values(increment_value - 1 );
         if(quiz.return_value_of_question().is_dynamic == true){
-            quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );
-            quiz.set_previous_value_boolean(true);
+        quiz.change_question_index( ((quiz.return_question_index()   * 5) +  increment_value ));
+        quiz.set_previous_value_boolean(true);
+        quiz.set_value(quiz.get_value() + 1 );
+        
+    }else{
+        if(quiz.return_previous_value_boolean() == true){
+            quiz.change_question_index( ( Math.pow(5, (quiz.get_value() - 1 )) + Math.pow(5, quiz.get_value())) + 1  ); 
+            quiz.set_previous_value_boolean(false);
+           
         }else{
-            if(quiz.return_previous_value_boolean() == true){
-               quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
-                quiz.set_previous_value_boolean(false);
-                quiz.set_value(quiz.return_question_index());
-            }else{
-                    quiz.set_value(quiz.return_question_index());
-                    quiz.set_previous_value_boolean(false);
-                    quiz.change_question_index(quiz.return_question_index() + 1);
-                }
-        }
+            quiz.set_previous_value_boolean(false);
+                quiz.change_question_index(quiz.return_question_index() + 1);
+   
+            }
+    } 
+
     }
     else if (value == "3") {
         increment_value = 3;
+        calculate_return_values(increment_value - 1 );
         if(quiz.return_value_of_question().is_dynamic == true){
-            quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );
-            quiz.set_previous_value_boolean(true);
+        quiz.change_question_index( ((quiz.return_question_index()   * 5) +  increment_value ));
+        quiz.set_previous_value_boolean(true);
+        quiz.set_value(quiz.get_value() + 1 );
     }else{
         if(quiz.return_previous_value_boolean() == true){
-            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
+            quiz.change_question_index( ( Math.pow(5, (quiz.get_value() - 1 )) + Math.pow(5, quiz.get_value())) + 1  ); 
             quiz.set_previous_value_boolean(false);
-            quiz.set_value(quiz.return_question_index());
+           
         }else{
+            quiz.set_previous_value_boolean(false);
                 quiz.change_question_index(quiz.return_question_index() + 1);
-                quiz.set_previous_value_boolean(false);
-                quiz.set_value(quiz.return_question_index());
+   
             }
     } 
+ 
     }
     else if (value == "4") {
         increment_value = 4;
+        calculate_return_values(increment_value - 1 );
         if(quiz.return_value_of_question().is_dynamic == true){
-            quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );
-            quiz.set_previous_value_boolean(true);
+        quiz.change_question_index( ((quiz.return_question_index()   * 5) +  increment_value ));
+        quiz.set_previous_value_boolean(true);
+        quiz.set_value(quiz.get_value() + 1 );
+        
     }else{
         if(quiz.return_previous_value_boolean() == true){
-            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
-            quiz.set_previous_value_boolean(false);  
-            quiz.set_value(quiz.return_question_index()); 
+            quiz.change_question_index( ( Math.pow(5, (quiz.get_value() - 1 )) + Math.pow(5, quiz.get_value())) + 1  ); 
+            quiz.set_previous_value_boolean(false);
+
+           
         }else{
+            quiz.set_previous_value_boolean(false);
                 quiz.change_question_index(quiz.return_question_index() + 1);
-                quiz.set_previous_value_boolean(false);
-                quiz.set_value(quiz.return_question_index());
+              
+   
             }
-    }
+    } 
+ 
     }
     else if (value == "5") {
-        if(quiz.return_value_of_question().is_dynamic == true){
         increment_value = 5;
-        quiz.change_question_index( ((quiz.return_question_index() - quiz.get_value())  * 5) + quiz.get_value() + increment_value );;
+        calculate_return_values(increment_value - 1 );
+        if(quiz.return_value_of_question().is_dynamic == true){ 
+        quiz.change_question_index( ((quiz.return_question_index()   * 5) +  increment_value ));
         quiz.set_previous_value_boolean(true);
+        quiz.set_value(quiz.get_value() + 1 );
+        
     }else{
         if(quiz.return_previous_value_boolean() == true){
-            quiz.change_question_index( (quiz.return_question_index() - (quiz.return_question_index() % 5) - quiz.get_value()) * 5 + 6 + quiz.get_value());
+            quiz.change_question_index( ( Math.pow(5, (quiz.get_value() - 1 )) + Math.pow(5, quiz.get_value())) + 1  ); 
             quiz.set_previous_value_boolean(false);
-            quiz.set_value(quiz.return_question_index());
+   
+           
         }else{
             quiz.set_previous_value_boolean(false);
                 quiz.change_question_index(quiz.return_question_index() + 1);
-                quiz.set_value(quiz.return_question_index());
+           
+   
             }
-    }  
+    } 
+
     }
 Get_Question();
 
