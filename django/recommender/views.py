@@ -175,9 +175,9 @@ def user_preference_recommender(request):
     recommendations = get_recommendation(limit, **pref_dict)
     track_ids = []
     for x in range(limit):
-        if x+1 > len(recommendations['tracks']['items']):
+        if x+1 > len(recommendations['tracks']):
             break
-        track_ids.append(recommendations['tracks']['items'][x]['id'])
+        track_ids.append(recommendations['tracks'][x]['id'])
     
     context = {
         'track_ids' : track_ids,
