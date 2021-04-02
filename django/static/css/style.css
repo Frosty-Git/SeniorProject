@@ -29,6 +29,10 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
     text-align: center;
+
+/* Used to create spacing in the recommender tables */
+.recCol {
+    padding: 20px 20px 20px 20px;
 }
 
 /* Begin changing default Bootstrap CSS */
