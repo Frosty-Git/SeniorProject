@@ -14,6 +14,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
 from social_feed.models import *
 from social_feed.views import *
+from collections import Counter
 
 #----Dr Baliga's Code----
 
@@ -111,6 +112,11 @@ def results(request):
                 song_list_2 = song_vote_dictionary(songs_votes, track2_ids)
                 song_list_3 = song_vote_dictionary(songs_votes, track3_ids)
 
+                top_artists = get_top_artists_by_name(user_id)
+                top_artists_ids = get_top_artists_by_id(user_id)
+                top_artists_features = get_artists_features(top_artists_ids)
+                top_artists_genres = get_artists_genres(top_artists_ids)
+
                 context = {
                     'term' : term,
                     'albums1' : album1_ids,
@@ -129,6 +135,10 @@ def results(request):
                     'song_list_1': song_list_1,
                     'song_list_2': song_list_2,
                     'song_list_3': song_list_3,
+                    'top_artists': top_artists,
+                    'top_artists_ids': top_artists_ids,
+                    'top_artists_features': top_artists_features,
+                    'top_artists_genres': top_artists_genres,
                 }
                 return render(request, 'recommender/results.html', context)
 
@@ -172,10 +182,11 @@ def user_preference_recommender(request):
         'target_tempo'            : preferences.tempo,
         'target_valence'          : preferences.valence,
     }
-    recommendations = get_recommendation(limit, **pref_dict)
+    recommendations = get_recommendation(limit, request.user.id, **pref_dict)
     track_ids = []
     for x in range(limit):
-        if x+1 > len(recommendations['tracks']['items']):
+        test = recommendations['tracks']['items']
+        if x+1 > len(test):
             break
         track_ids.append(recommendations['tracks']['items'][x]['id'])
     
@@ -466,3 +477,85 @@ def rm_from_liked_songs(user_profile, track):
     # so there is no issue of a duplicate playlist/song match
     sop = SongOnPlaylist.objects.get(playlist_from=liked_songs_playlist, spotify_id=song)
     sop.delete()
+
+def get_top_artists_by_name(user_id):
+    """
+    Gets the top 5 artists from a user's liked songs
+    Last updated: 4/1/21 by Jacelynn Duranceau 
+    """
+    user = UserProfile.objects.get(pk=user_id)
+    liked_songs = user.liked_songs_playlist_fk
+    matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
+    songs = []
+
+    for match in matches:
+        song_id = match.get('spotify_id_id')
+        songs.append(song_id)
+
+    all_artists = []
+    for song in songs:
+        artists = get_artists_names_list(song)
+        for artist_name in artists: 
+            all_artists.append(artist_name)
+
+    # Dictionary for frequency
+    frequency = Counter(all_artists)
+    most_common = frequency.most_common(5)
+    top_5_artists = [key for key, val in most_common]
+
+    return top_5_artists
+
+def get_top_artists_by_id(user_id):
+    """
+    Gets the top 5 artists ids from a user's liked songs
+    Last updated: 4/1/21 by Jacelynn Duranceau 
+    """
+    user = UserProfile.objects.get(pk=user_id)
+    liked_songs = user.liked_songs_playlist_fk
+    matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
+    songs = []
+
+    for match in matches:
+        song_id = match.get('spotify_id_id')
+        songs.append(song_id)
+
+    all_artists = []
+    for song in songs:
+        artists = get_artists_ids_list(song)
+        for artist_id in artists: 
+            all_artists.append(artist_id)
+
+    # Dictionary for frequency
+    frequency = Counter(all_artists)
+    most_common = frequency.most_common(5)
+    top_5_artists = [key for key, val in most_common]
+
+    return top_5_artists
+
+def get_artists_features(artist_id_list):
+    """
+    Gets a long list of features about artists
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artists_features = get_artists_features_sp(artist_id_list)
+    return artists_features
+
+def get_artists_genres(artist_id_list):
+    """
+    Gets the top 5 genres from your top 5 artists
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artists_features = get_artists_features(artist_id_list)['artists']
+    all_genres = []
+    for artist in artists_features:
+        genres = artist['genres']
+        for genre in genres:
+            all_genres.append(genre)
+
+    frequency = Counter(all_genres)
+    most_common = frequency.most_common(5)
+    top_5_genres = [key for key, val in most_common]
+
+    return top_5_genres
+
+

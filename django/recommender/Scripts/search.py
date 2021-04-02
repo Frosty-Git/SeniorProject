@@ -104,12 +104,16 @@ def search_artist_features(query, feature, high_or_low):
     else:
         return low_song
         
-def get_recommendation(limit, **kwargs):
+def get_recommendation(limit, user_id, **kwargs):
+    seed_artists = get_artists_ids_list(user_id)
+    seed_genres = get_artists_genres(seed_artists)
     recommendations = sp.recommendations(seed_artists=['4NHQUGzhtTLFvgF5SZesLK'], seed_genres=['alt_rock'], seed_tracks=['0c6xIDDpzE81m2q797ordA'], limit=limit, country=None, **kwargs)
     return recommendations
 
 def get_artists(track):
     """
+    Gets the artists of a song as a string list
+    Last updated:
     """
     artist_names = []
     artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
@@ -125,17 +129,57 @@ def get_artists(track):
             string_artists += name
 
     return string_artists
+
+def get_artists_names_list(track):
+    """
+    Gets the artists of a song in a list / array
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artist_names = []
+    artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
+    for dicti in artists:
+        artist_names.append(dicti['name'])
+
+    return artist_names
+
+def get_artists_features_sp(artists_ids):
+    """
+    Gets the names of artists from a list of artist ids
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artists_features = sp.artists(artists_ids)
+    return artists_features
+
+def get_artists_ids_list(track):
+    """
+    Gets the artists ids of a song in a list / array
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artist_names = []
+    artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
+    for dicti in artists:
+        artist_names.append(dicti['id'])
+
+    return artist_names
         
 def get_song_name(track):
     """
+    Gets the name of a song based on its id
     """
     name = sp.track(track)['name']
     return name
 
 def get_track(track):
+    """
+    Gets a lot of information about a track based on its id.
+    """
     info = sp.track(track)
     return info
 
 def get_explicit(track):
+    """
+    Tells whether a song is explicit or not.
+    Last updated:
+    """
     explicit = sp.track(track)['explicit']
     return explicit

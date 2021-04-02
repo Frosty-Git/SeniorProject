@@ -44,6 +44,13 @@
     <p>Artists: {{ artists }}</p>
     <p>Track info: {{track_info}}</p>
     <p>Name: {{ song_name }}</p> -->
+    <p>Your top artists: {{ top_artists }}</p>
+    <p>Your top genres: {{ top_artists_genres }}
+    <p>top artists features: {{ top_artists_features }}</p>
+
+    {% for artist_id in top_artists_ids %}
+        <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+    {% endfor %}
     
 {% if song_list_1 %}
 {% include 'recommender/logged_in_tracks.html' %}

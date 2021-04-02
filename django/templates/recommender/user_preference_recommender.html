@@ -6,4 +6,8 @@
 
 <p>{{ track_ids }}</p>
 
+{% for track in track_ids%}
+    <iframe src='https://open.spotify.com/embed/track/{{ track }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+{% endfor %}
+
 {% endblock %}
