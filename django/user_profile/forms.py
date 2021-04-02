@@ -58,7 +58,6 @@ class ExtendedUserChangeForm(UserChangeForm):
         model = User
         fields = ('first_name', 'last_name', 'email',)
 
-
 class PlaylistForm(forms.ModelForm):
     name = forms.CharField(max_length=30)
     image = forms.ImageField(required=False)

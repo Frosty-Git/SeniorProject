@@ -1,6 +1,10 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import recommender.Scripts.client_credentials as client_cred
+from user_profile.models import *
+from collections import Counter
+import re
+
 
 client_cred.setup()
 auth_manager = SpotifyClientCredentials()
@@ -104,8 +108,82 @@ def search_artist_features(query, feature, high_or_low):
     else:
         return low_song
         
+def get_recommendation(request, limit, user_id, **kwargs):
+    seed_artists = get_top_artists_by_id(user_id)
+    top_genre = get_artists_genres(seed_artists)
+    track = get_top_track(request)
+    # 3 artists, 1 genre, 
+    recommendations = sp.recommendations(seed_artists=seed_artists,
+                                        seed_genres=[top_genre], 
+                                        seed_tracks=[track], 
+                                        limit=limit,
+                                        country=None,
+                                        **kwargs)
+    return recommendations
+
+def get_top_artists_by_id(user_id):
+    """
+    Gets the top 3 artists ids from a user's liked songs
+    Last updated: 4/1/21 by Jacelynn Duranceau 
+    """
+    user = UserProfile.objects.get(pk=user_id)
+    liked_songs = user.liked_songs_playlist_fk
+    matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
+    songs = []
+
+    for match in matches:
+        song_id = match.get('spotify_id_id')
+        songs.append(song_id)
+
+    all_artists = []
+    for song in songs:
+        artists = get_artists_ids_list(song)
+        for artist_id in artists: 
+            all_artists.append(artist_id)
+
+    # Dictionary for frequency
+    frequency = Counter(all_artists)
+    most_common = frequency.most_common(3)
+    top_3_artists = [key for key, val in most_common]
+
+    return top_3_artists
+
+def get_artists_genres(artist_id_list):
+    """
+    Gets the top 1 genres from your top 3 artists
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artists_features = get_artists_features(artist_id_list)['artists']
+    all_genres = []
+    for artist in artists_features:
+        genres = artist['genres']
+        for genre in genres:
+            all_genres.append(genre)
+
+    frequency = Counter(all_genres)
+    most_common = frequency.most_common(1)
+    top_genre = most_common[0][0]
+
+    genre_seeds = sp.recommendation_genre_seeds()['genres']
+
+    appears = False
+    for genre in genre_seeds:
+        if top_genre == genre:
+            appears = True
+            return top_genre
+
+    if not appears:
+        matches = re.findall(r"(?=("+'|'.join(genre_seeds)+r"))", top_genre)
+        return matches[0]
+
+# def match(input_string, string_list):
+#     words = re.findall(r'\w+', input_string)
+#     return [word for word in words if word in string_list]
+
 def get_artists(track):
     """
+    Gets the artists of a song as a string list
+    Last updated:
     """
     artist_names = []
     artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
@@ -121,17 +199,78 @@ def get_artists(track):
             string_artists += name
 
     return string_artists
+
+def get_artists_names_list(track):
+    """
+    Gets the artists of a song in a list / array
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artist_names = []
+    artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
+    for dicti in artists:
+        artist_names.append(dicti['name'])
+
+    return artist_names
+
+def get_artists_features(artists_ids):
+    """
+    Gets the names of artists from a list of artist ids
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artists_features = sp.artists(artists_ids)
+    return artists_features
+
+def get_artists_ids_list(track):
+    """
+    Gets the artists ids of a song in a list / array
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artist_names = []
+    artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
+    for dicti in artists:
+        artist_names.append(dicti['id'])
+
+    return artist_names
         
 def get_song_name(track):
     """
+    Gets the name of a song based on its id
     """
     name = sp.track(track)['name']
     return name
 
 def get_track(track):
+    """
+    Gets a lot of information about a track based on its id.
+    """
     info = sp.track(track)
     return info
 
 def get_explicit(track):
+    """
+    Tells whether a song is explicit or not.
+    Last updated:
+    """
     explicit = sp.track(track)['explicit']
     return explicit
+
+def genre_seeds():
+    seeds = sp.recommendation_genre_seeds()
+    return seeds
+
+def get_top_track(request):
+    """
+    Gets the top track of a user
+    Last updated: 4/1/21 by Tucker Elliott and Jacelynn Duranceau
+    """
+    user = UserProfile.objects.get(pk=request.user.id)
+    if user.linked_to_spotify:
+        spotify_manager.token_check(request)
+        spotify = spotipy.Spotify(auth=user.access_token)
+        top_track_id = spotify.current_user_top_tracks(limit=1, offset=0, time_range='long_term')
+        return top_track_id[0]['tracks']['items']['id']
+    else:
+        liked_songs_playlist = user.liked_songs_playlist_fk
+        sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist).first()
+        spotify_id = sop.spotify_id.spotify_id
+        return spotify_id

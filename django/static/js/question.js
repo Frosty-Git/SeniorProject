@@ -35,9 +35,9 @@ function Question(question, choices) {
 
 let questions = [
     new Question("Which of the following genres do you prefer?",["Rock", "Country", "Pop","Sea-Shanties","Tibetan Throat Singing"]),
-    new Question("Which of the following artists do you prefer?",["The Beatles", "Metallica", "The Grateful Dead","Electric Lights Orchestra","Simon and Garfunkel"]),
+    new Question("Which of the following artists do you prefer?",["The Beatles", "Metallica", "The Grateful Dead","Electric Light Orchestra","Simon and Garfunkel"]),
     new Question("Which of the following artists do you prefer?",["Carrie Underwood", "Dan + Shay", "Morgan Wallen","Luke Combs","Kane Brown"]),
-    new Question("Which of the following artists do you prefer?",["Justin Bieber", "Nikki Minaj", "Katy Perry","Billy Eilish", "Ariana Grande"]),
+    new Question("Which of the following artists do you prefer?",["Justin Bieber", "Nicki Minaj", "Katy Perry","Billie Eilish", "Ariana Grande"]),
     new Question("Which of the following artists do you prefer?",["The Irish Sailors", "The Largest Johns", "The Irish Rovers","The Fisherman's Friends","High Tide"]),
     new Question("Which of the following artists do you prefer?",["Deva Premal", "Tibetan Monks", "The Gyuto Monks of Tibet","Tradidional","Shu-de"]),
    // new Question("Which of the following songs do you listen to the most?", [""])

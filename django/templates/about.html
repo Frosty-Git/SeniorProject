@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}PengBeats | Home{% endblock %}
+{% block title %}PengBeats | About Us{% endblock %}
 
 {% block content %}
 <br>
@@ -17,14 +17,15 @@
 
     <center>
         <!-- <img src="{% static 'images/pengbeats.png' type='image/png' %}" class="img-fluid" alt="..." width="200" height="200"> -->
-        <h1>{{ name }} About Us</h1>
+        <h1>About Us</h1>
     <br>
     <p>
         Here at PengBeats, our mission is to provide you with the best possible listening experience.
     </p>
     <br>
-    <p>
-        Please use these resources to elevate your life!
+    <p style="width:750px;">
+        PengBeats is the result of a Spring 2021 Senior Project at Rowan University in Glassboro, NJ. Contributors to this project include:
+        Joseph Frost, Katie Lee, Jacelynn Duranceau, Tucker Elliott, Marc Colin, Alex Caruso, Kevin Magill, and James Cino
     </p>
     <br>
     <br>
@@ -36,6 +37,14 @@
                 </label>
             </td>
         </tr>
+        <tr style="height: 60px;">
+            <td>
+                <label>
+                    <a href="{% url 'recommender:top-tracks' %}"><b>Top Songs</b></a>
+                </label>
+            </td>
+        </tr>
+        {% if user.is_authenticated %}
         <tr style="height: 60px;">
             <td>
                 <label>
@@ -64,17 +73,11 @@
                 </label>
             </td>
         </tr>
+        {% endif %}
         <tr style="height: 60px;">
             <td>
                 <label>
-                    <a href="{% url 'recommender:top-tracks' %}"><b>Top Songs</b></a>
-                </label>
-            </td>
-        </tr>
-        <tr style="height: 60px;">
-            <td>
-                <label>
-                    <a href="https://en.wikipedia.org/wiki/Penguin"><b>Important Link</b></a>
+                    <a href="https://en.wikipedia.org/wiki/Penguin" target="_blank"><b>Important Link</b></a>
                 </label>
             </td>
         </tr>
