@@ -112,7 +112,7 @@ def get_recommendation(request, limit, user_id, **kwargs):
     seed_artists = get_top_artists_by_id(user_id)
     top_genre = get_artists_genres(seed_artists)
     track = get_top_track(request)
-    # 3 artists, 1 genre, 
+    # 3 artists, 1 genre, 1 track
     recommendations = sp.recommendations(seed_artists=seed_artists,
                                         seed_genres=[top_genre], 
                                         seed_tracks=[track], 
