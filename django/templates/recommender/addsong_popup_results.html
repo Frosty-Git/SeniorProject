@@ -48,7 +48,7 @@
         var playlist = $('#playlist_id{{ song }}').val();
         $.ajax({
             type: 'POST',
-            url: '{% url "user:add_song_popup" location %}',
+            url: '/user/addsong/results',
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 track_id: song,
