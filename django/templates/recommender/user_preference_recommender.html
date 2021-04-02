@@ -1,13 +1,84 @@
 {% extends 'base.html' %}
 
-{% block title %} UPR {% endblock %}
+{% block title %} User Recommendations {% endblock %}
 
 {% block content %}
 
-<p>{{ track_ids }}</p>
+<!-- <p>{{ track_ids }}</p> -->
+<center><h1>My Recommendations</h1></center>
+<br>
 
-{% for track in track_ids%}
+<!-- {% for track in track_ids%}
     <iframe src='https://open.spotify.com/embed/track/{{ track }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
-{% endfor %}
+{% endfor %} -->
+
+<table class="center">
+    <tr>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.0 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td class="recCol"> 
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.1 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.2 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+    </tr>
+    <tr>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.3 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.4 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.5 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+    </tr>
+    <tr>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.6 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.7 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/track/{{ track_ids.8 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+        </td>
+    </tr>
+</table>
+
+<br>
+<center><h3>More From Artists You Like:</h3></center>
+<!-- {% for artist_id in top_artists_ids %}
+    <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+{% endfor %} -->
+<table class="center">
+    <tr >
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.0 }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+        </td>
+        {% if top_artists_ids.1 %}
+        <td>
+            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.1 }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+        </td class="recCol">
+        {% endif %}
+        {% if top_artists_ids.2 %}
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.2 }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+        </td>
+        {% endif %}
+    </tr>
+</table>
 
 {% endblock %}

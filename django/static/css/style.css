@@ -24,6 +24,11 @@ body {
     white-space: nowrap;
 }
 
+/* Used to create spacing in the recommender tables */
+.recCol {
+    padding: 10px 10px 10px 10px;
+}
+
 /* Begin changing default Bootstrap CSS */
 .btn.btn-outline-dark {
     color: white;

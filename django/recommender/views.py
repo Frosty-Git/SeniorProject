@@ -172,9 +172,10 @@ def user_preference_recommender(request):
     This is for providing recommendations based on the user's preferences.
     Last updated: 4/1/21 by Tucker Elliott and Joe Frost
     """
-    user = UserProfile.objects.get(pk=request.user.id)
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
     preferences = Preferences.objects.get(user_profile_fk=user)
-    limit = 10
+    limit = 9
     pref_dict = {
         'target_acousticness'     : preferences.acousticness,
         'target_danceability'     : preferences.danceability,
@@ -185,15 +186,21 @@ def user_preference_recommender(request):
         'target_tempo'            : preferences.tempo,
         'target_valence'          : preferences.valence,
     }
-    recommendations = get_recommendation(request, limit, request.user.id, **pref_dict)
+    recommendations = get_recommendation(request, limit, user_id, **pref_dict)
     track_ids = []
     for x in range(limit):
         if x+1 > len(recommendations['tracks']):
             break
         track_ids.append(recommendations['tracks'][x]['id'])
-    
+
+    playlists = get_user_playlists(user_id)
+    top_artists_ids = get_top_artists_by_id(user_id)
+
     context = {
         'track_ids' : track_ids,
+        'playlists': playlists,
+        'profile': user,
+        'top_artists_ids': top_artists_ids,
     }
     return render(request, 'recommender/user_preference_recommender.html', context)
 
