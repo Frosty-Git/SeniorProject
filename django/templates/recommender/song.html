@@ -3,7 +3,7 @@
 {% block title %} Song Search {% endblock %}
 
 {% block content %}
-<form method='post' action="/artistp/">
+<form method='post' action="/songp/">
     {% csrf_token %}
     <br>
     <center>
@@ -19,25 +19,24 @@
 <br>
 
 
-{% if tracks %}
-<table class="table">
-<tbody>
-<tr>
-
-{% for track in tracks %}
+{% if danceability %}
 
 <td>
-<iframe src="https://open.spotify.com/embed/track/{{ track.id }}" width="300" height="380" 
-frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-</td>
+    <iframe src="https://open.spotify.com/embed/track/{{ id }}" width="300" height="380" 
+    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    </td>
+    
 
+<p>Track ID: {{ id }}</p>
+<p>Danceability: {{ danceability }}</p>
+<p>Acousticness: {{ acousticness }}</p>
+<p>Energy: {{ energy }}</p>
+<p>Instrumentalness: {{ instrumentalness }}</p>
+<p>Speechiness: {{ speechiness }}</p>
+<p>Loudness: {{ loudness }}</p>
+<p>Tempo: {{ tempo }}</p>
+<p>Valence: {{ valence }}</p>
 
-
-{% endfor %}
-
-</tr>
-</tbody>
-</table>
 
 {% endif %}
 

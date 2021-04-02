@@ -49,21 +49,15 @@
 <script>
  $(document).ready(function() {
    $("#submit").click(function(){
-      let value = document.querySelector('input[name="Form1"]:checked').value;
-      increment_and_reload(value);
-      
+      let answer_value = document.querySelector('input[name="Form1"]:checked').value;
+      increment_and_reload(answer_value);
+
    })
  })
  $(document).ready(function() {
    $("#multiple_choice_form").click(function(){
-      answer = quiz.get_currently_selected_answer();
-
-      $.ajax({
-        type : "GET",
-        url: "get_artist/",
-        data: {'answer': answer}
-      })
-        
+    
+      
       })
    })
  
@@ -71,6 +65,14 @@
   </div>
 </div>
 <button type="button"  id = "submit" class="btn btn-success" >Submit</button>
+<input type="hidden" id = "danceability" name = "user" value="data_to_submit">
+<input type="hidden" id = "acousticness" name = "user" value="data_to_submit">
+<input type="hidden" id = "energy" name = "user" value="data_to_submit">
+<input type="hidden" id = "instrumentalness" name = "user" value="data_to_submit">
+<input type="hidden" id = "speechiness" name = "user" value="data_to_submit">
+<input type="hidden" id = "loudness" name = "user" value="data_to_submit">
+<input type="hidden" id = "tempo" name = "user" value="data_to_submit">
+<input type="hidden" id = "valence" name = "user" value="data_to_submit">
 </form>
 {% if artist_id %}
 <div id="artistCarousel" class="carousel slide" data-bs-interval="false">
