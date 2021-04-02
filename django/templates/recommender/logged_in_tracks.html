@@ -54,7 +54,7 @@
                                                     <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
                                                     <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
                                                 </div>
-                                                {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile %}
+                                                {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location %}
                                             </td>
                                         </tr>
                                     {% else %}

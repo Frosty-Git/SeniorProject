@@ -660,14 +660,16 @@ def add_song_to_playlist(request, location):
     if request.method == 'POST':
         # user_id = request.user.id
         # user = UserProfile.objects.get(pk=user_id)
+        print('is this working')
         track_term = request.POST.get('track_id')
+        print('track_term')
         song = SongId.objects.get(pk=track_term)
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
         new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=song)
         new_song.save()
 
-        if location == 'playlists' or location == 'playlists':
+        if location == 'playlists':
             return JsonResponse({'status': 'reload'})
         else:
             return JsonResponse({'status': 'ok'})

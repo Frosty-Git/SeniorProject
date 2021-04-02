@@ -137,6 +137,7 @@ def results(request):
                     'song_list_1': song_list_1,
                     'song_list_2': song_list_2,
                     'song_list_3': song_list_3,
+                    'location': 'results',
                     # 'top_artists': top_artists,
                     # 'top_artists_ids': top_artists_ids,
                     # 'top_artists_features': top_artists_features,
@@ -164,6 +165,7 @@ def results(request):
                 'artists': artists,
                 'track_info': track_info,
                 'song_name': name,
+                'location': 'results',
             }
     return render(request, 'recommender/results.html', context)
 
@@ -200,20 +202,26 @@ def user_preference_recommender(request):
             if x+1 > len(recommendations['tracks']):
                 break
             track_ids.append(recommendations['tracks'][x]['id'])
+        save_songs(track_ids)
         playlists = get_user_playlists(user_id)
         top_artists_ids = get_top_artists_by_id(user_id)
 
+        songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+        song_list = song_vote_dictionary(songs_votes, track_ids)
+
         context = {
-            'track_ids' : track_ids,
+            'track_ids' : song_list,
             'playlists': playlists,
             'profile': user,
             'top_artists_ids': top_artists_ids,
             'min_likes_met': min_likes_met,
+            'location': 'recommender',
         }
     else:
         context = {
             'profile': user,
             'min_likes_met': min_likes_met,
+            'location': 'recommender',
     }
 
     return render(request, 'recommender/user_preference_recommender.html', context)
