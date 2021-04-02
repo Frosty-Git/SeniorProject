@@ -202,11 +202,15 @@ def user_preference_recommender(request):
             if x+1 > len(recommendations['tracks']):
                 break
             track_ids.append(recommendations['tracks'][x]['id'])
+        save_songs(track_ids)
         playlists = get_user_playlists(user_id)
         top_artists_ids = get_top_artists_by_id(user_id)
 
+        songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+        song_list = song_vote_dictionary(songs_votes, track_ids)
+
         context = {
-            'track_ids' : track_ids,
+            'track_ids' : song_list,
             'playlists': playlists,
             'profile': user,
             'top_artists_ids': top_artists_ids,
