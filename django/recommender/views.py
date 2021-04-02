@@ -117,6 +117,8 @@ def results(request):
                 top_artists_features = get_artists_features(top_artists_ids)
                 top_artists_genres = get_artists_genres(top_artists_ids)
 
+                genre_seeds_v = genre_seeds()
+
                 context = {
                     'term' : term,
                     'albums1' : album1_ids,
@@ -139,6 +141,7 @@ def results(request):
                     'top_artists_ids': top_artists_ids,
                     'top_artists_features': top_artists_features,
                     'top_artists_genres': top_artists_genres,
+                    'genre_seeds': genre_seeds_v,
                 }
                 return render(request, 'recommender/results.html', context)
 
@@ -504,57 +507,57 @@ def get_top_artists_by_name(user_id):
 
     return top_5_artists
 
-def get_top_artists_by_id(user_id):
-    """
-    Gets the top 5 artists ids from a user's liked songs
-    Last updated: 4/1/21 by Jacelynn Duranceau 
-    """
-    user = UserProfile.objects.get(pk=user_id)
-    liked_songs = user.liked_songs_playlist_fk
-    matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
-    songs = []
+# def get_top_artists_by_id(user_id):
+#     """
+#     Gets the top 5 artists ids from a user's liked songs
+#     Last updated: 4/1/21 by Jacelynn Duranceau 
+#     """
+#     user = UserProfile.objects.get(pk=user_id)
+#     liked_songs = user.liked_songs_playlist_fk
+#     matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
+#     songs = []
 
-    for match in matches:
-        song_id = match.get('spotify_id_id')
-        songs.append(song_id)
+#     for match in matches:
+#         song_id = match.get('spotify_id_id')
+#         songs.append(song_id)
 
-    all_artists = []
-    for song in songs:
-        artists = get_artists_ids_list(song)
-        for artist_id in artists: 
-            all_artists.append(artist_id)
+#     all_artists = []
+#     for song in songs:
+#         artists = get_artists_ids_list(song)
+#         for artist_id in artists: 
+#             all_artists.append(artist_id)
 
-    # Dictionary for frequency
-    frequency = Counter(all_artists)
-    most_common = frequency.most_common(5)
-    top_5_artists = [key for key, val in most_common]
+#     # Dictionary for frequency
+#     frequency = Counter(all_artists)
+#     most_common = frequency.most_common(5)
+#     top_5_artists = [key for key, val in most_common]
 
-    return top_5_artists
+#     return top_5_artists
 
-def get_artists_features(artist_id_list):
-    """
-    Gets a long list of features about artists
-    Last updated: 4/1/21 by Jacelynn Duranceau
-    """
-    artists_features = get_artists_features_sp(artist_id_list)
-    return artists_features
+# def get_artists_features(artist_id_list):
+#     """
+#     Gets a long list of features about artists
+#     Last updated: 4/1/21 by Jacelynn Duranceau
+#     """
+#     artists_features = get_artists_features_sp(artist_id_list)
+#     return artists_features
 
-def get_artists_genres(artist_id_list):
-    """
-    Gets the top 5 genres from your top 5 artists
-    Last updated: 4/1/21 by Jacelynn Duranceau
-    """
-    artists_features = get_artists_features(artist_id_list)['artists']
-    all_genres = []
-    for artist in artists_features:
-        genres = artist['genres']
-        for genre in genres:
-            all_genres.append(genre)
+# def get_artists_genres(artist_id_list):
+#     """
+#     Gets the top 5 genres from your top 5 artists
+#     Last updated: 4/1/21 by Jacelynn Duranceau
+#     """
+#     artists_features = get_artists_features(artist_id_list)['artists']
+#     all_genres = []
+#     for artist in artists_features:
+#         genres = artist['genres']
+#         for genre in genres:
+#             all_genres.append(genre)
 
-    frequency = Counter(all_genres)
-    most_common = frequency.most_common(5)
-    top_5_genres = [key for key, val in most_common]
+#     frequency = Counter(all_genres)
+#     most_common = frequency.most_common(5)
+#     top_5_genres = [key for key, val in most_common]
 
-    return top_5_genres
+#     return top_5_genres
 
 

@@ -45,8 +45,10 @@
     <p>Track info: {{track_info}}</p>
     <p>Name: {{ song_name }}</p> -->
     <p>Your top artists: {{ top_artists }}</p>
-    <p>Your top genres: {{ top_artists_genres }}
+    <p>Your top genres: {{ top_artists_genres }}</p>
+    <p>Your artists ids {{ top_artists_ids }}</p>
     <p>top artists features: {{ top_artists_features }}</p>
+    <p>genre seeds: {{ genre_seeds }}</p>
 
     {% for artist_id in top_artists_ids %}
         <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                

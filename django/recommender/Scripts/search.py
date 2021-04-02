@@ -1,6 +1,9 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import recommender.Scripts.client_credentials as client_cred
+from user_profile.models import *
+from collections import Counter
+
 
 client_cred.setup()
 auth_manager = SpotifyClientCredentials()
@@ -105,15 +108,60 @@ def search_artist_features(query, feature, high_or_low):
         return low_song
         
 def get_recommendation(limit, user_id, **kwargs):
-    seed_artists = get_artists_ids_list(user_id)
+    seed_artists = get_top_artists_by_id(user_id)
     seed_genres = get_artists_genres(seed_artists)
     recommendations = sp.recommendations(seed_artists=seed_artists,
-                                        seed_genres=seed_genres, 
+                                        seed_genres=['alt-rock'], 
                                         seed_tracks=['0c6xIDDpzE81m2q797ordA'], 
                                         limit=limit,
                                         country=None,
                                         **kwargs)
     return recommendations
+
+def get_top_artists_by_id(user_id):
+    """
+    Gets the top 5 artists ids from a user's liked songs
+    Last updated: 4/1/21 by Jacelynn Duranceau 
+    """
+    user = UserProfile.objects.get(pk=user_id)
+    liked_songs = user.liked_songs_playlist_fk
+    matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
+    songs = []
+
+    for match in matches:
+        song_id = match.get('spotify_id_id')
+        songs.append(song_id)
+
+    all_artists = []
+    for song in songs:
+        artists = get_artists_ids_list(song)
+        for artist_id in artists: 
+            all_artists.append(artist_id)
+
+    # Dictionary for frequency
+    frequency = Counter(all_artists)
+    most_common = frequency.most_common(5)
+    top_5_artists = [key for key, val in most_common]
+
+    return top_5_artists
+
+def get_artists_genres(artist_id_list):
+    """
+    Gets the top 5 genres from your top 5 artists
+    Last updated: 4/1/21 by Jacelynn Duranceau
+    """
+    artists_features = get_artists_features(artist_id_list)['artists']
+    all_genres = []
+    for artist in artists_features:
+        genres = artist['genres']
+        for genre in genres:
+            all_genres.append(genre)
+
+    frequency = Counter(all_genres)
+    most_common = frequency.most_common(5)
+    top_5_genres = [key for key, val in most_common]
+
+    return top_5_genres
 
 def get_artists(track):
     """
@@ -147,7 +195,7 @@ def get_artists_names_list(track):
 
     return artist_names
 
-def get_artists_features_sp(artists_ids):
+def get_artists_features(artists_ids):
     """
     Gets the names of artists from a list of artist ids
     Last updated: 4/1/21 by Jacelynn Duranceau
@@ -188,3 +236,7 @@ def get_explicit(track):
     """
     explicit = sp.track(track)['explicit']
     return explicit
+
+def genre_seeds():
+    seeds = sp.recommendation_genre_seeds()
+    return seeds
