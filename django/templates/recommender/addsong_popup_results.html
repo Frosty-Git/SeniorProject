@@ -3,7 +3,7 @@
 <div class="modal fade" id="addtoplaylistmodal{{ song }}" tabindex="-1" aria-labelledby="myAddSongModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="{% url 'user:add_song_popup' {{ song }}">
+            <form method="post" action="">
                 {% csrf_token %}
 
                 <div class="modal-header">
