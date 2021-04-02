@@ -60,9 +60,11 @@
                     <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
                     </td>
                 {% endif %}
+                {% if profile.linked_to_spotify %}
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
                     <a class="btn btn-success" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
                 </td>
+                {% endif %}
                 {% if not playlist.is_private %}
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px;">
                     <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">

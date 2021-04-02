@@ -38,11 +38,13 @@
                     {% include 'playlists/editplaylist_popup.html' %}
                 </div>
             </td>
+            {% if profile.linked_to_spotify %}
             <td>
                 <div class="center" style="width:175px; text-align:center;">
                     <a class="btn btn-success" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
                 </div>
             </td>
+            {% endif %}
         </tr>
 
         {% if playlist != profile.liked_songs_playlist_fk %}

@@ -71,7 +71,7 @@
                     </table>
                 </div>
             {% endif %}
-            {% if profile.user.id == user.id %}
+            {% if profile.user.id == user.id and not profile.linked_to_spotify %}
                 <a class="btn btn-success" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
             {% else %}
                 {% if nofollow %}
