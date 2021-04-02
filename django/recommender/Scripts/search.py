@@ -3,6 +3,7 @@ from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import recommender.Scripts.client_credentials as client_cred
 from user_profile.models import *
 from collections import Counter
+import re
 
 
 client_cred.setup()
@@ -107,12 +108,14 @@ def search_artist_features(query, feature, high_or_low):
     else:
         return low_song
         
-def get_recommendation(limit, user_id, **kwargs):
+def get_recommendation(request, limit, user_id, **kwargs):
     seed_artists = get_top_artists_by_id(user_id)
-    seed_genres = get_artists_genres(seed_artists)
+    top_genre = get_artists_genres(seed_artists)
+    track = get_top_track(request)
+    # 3 artists, 1 genre, 
     recommendations = sp.recommendations(seed_artists=seed_artists,
-                                        seed_genres=['alt-rock'], 
-                                        seed_tracks=['0c6xIDDpzE81m2q797ordA'], 
+                                        seed_genres=[top_genre], 
+                                        seed_tracks=[track], 
                                         limit=limit,
                                         country=None,
                                         **kwargs)
@@ -120,7 +123,7 @@ def get_recommendation(limit, user_id, **kwargs):
 
 def get_top_artists_by_id(user_id):
     """
-    Gets the top 5 artists ids from a user's liked songs
+    Gets the top 3 artists ids from a user's liked songs
     Last updated: 4/1/21 by Jacelynn Duranceau 
     """
     user = UserProfile.objects.get(pk=user_id)
@@ -140,14 +143,14 @@ def get_top_artists_by_id(user_id):
 
     # Dictionary for frequency
     frequency = Counter(all_artists)
-    most_common = frequency.most_common(5)
-    top_5_artists = [key for key, val in most_common]
+    most_common = frequency.most_common(3)
+    top_3_artists = [key for key, val in most_common]
 
-    return top_5_artists
+    return top_3_artists
 
 def get_artists_genres(artist_id_list):
     """
-    Gets the top 5 genres from your top 5 artists
+    Gets the top 1 genres from your top 3 artists
     Last updated: 4/1/21 by Jacelynn Duranceau
     """
     artists_features = get_artists_features(artist_id_list)['artists']
@@ -158,10 +161,24 @@ def get_artists_genres(artist_id_list):
             all_genres.append(genre)
 
     frequency = Counter(all_genres)
-    most_common = frequency.most_common(5)
-    top_5_genres = [key for key, val in most_common]
+    most_common = frequency.most_common(1)
+    top_genre = most_common[0][0]
 
-    return top_5_genres
+    genre_seeds = sp.recommendation_genre_seeds()['genres']
+
+    appears = False
+    for genre in genre_seeds:
+        if top_genre == genre:
+            appears = True
+            return top_genre
+
+    if not appears:
+        matches = re.findall(r"(?=("+'|'.join(genre_seeds)+r"))", top_genre)
+        return matches[0]
+
+# def match(input_string, string_list):
+#     words = re.findall(r'\w+', input_string)
+#     return [word for word in words if word in string_list]
 
 def get_artists(track):
     """
@@ -240,3 +257,20 @@ def get_explicit(track):
 def genre_seeds():
     seeds = sp.recommendation_genre_seeds()
     return seeds
+
+def get_top_track(request):
+    """
+    Gets the top track of a user
+    Last updated: 4/1/21 by Tucker Elliott and Jacelynn Duranceau
+    """
+    user = UserProfile.objects.get(pk=request.user.id)
+    if user.linked_to_spotify:
+        spotify_manager.token_check(request)
+        spotify = spotipy.Spotify(auth=user.access_token)
+        top_track_id = spotify.current_user_top_tracks(limit=1, offset=0, time_range='long_term')
+        return top_track_id[0]['tracks']['items']['id']
+    else:
+        liked_songs_playlist = user.liked_songs_playlist_fk
+        sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist).first()
+        spotify_id = sop.spotify_id.spotify_id
+        return spotify_id

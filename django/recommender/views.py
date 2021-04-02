@@ -174,7 +174,7 @@ def user_preference_recommender(request):
     """
     user = UserProfile.objects.get(pk=request.user.id)
     preferences = Preferences.objects.get(user_profile_fk=user)
-    limit = 5
+    limit = 10
     pref_dict = {
         'target_acousticness'     : preferences.acousticness,
         'target_danceability'     : preferences.danceability,
@@ -185,7 +185,7 @@ def user_preference_recommender(request):
         'target_tempo'            : preferences.tempo,
         'target_valence'          : preferences.valence,
     }
-    recommendations = get_recommendation(limit, request.user.id, **pref_dict)
+    recommendations = get_recommendation(request, limit, request.user.id, **pref_dict)
     track_ids = []
     for x in range(limit):
         if x+1 > len(recommendations['tracks']):
@@ -482,7 +482,7 @@ def rm_from_liked_songs(user_profile, track):
 
 def get_top_artists_by_name(user_id):
     """
-    Gets the top 5 artists from a user's liked songs
+    Gets the top 3 artists from a user's liked songs
     Last updated: 4/1/21 by Jacelynn Duranceau 
     """
     user = UserProfile.objects.get(pk=user_id)
@@ -502,10 +502,10 @@ def get_top_artists_by_name(user_id):
 
     # Dictionary for frequency
     frequency = Counter(all_artists)
-    most_common = frequency.most_common(5)
-    top_5_artists = [key for key, val in most_common]
+    most_common = frequency.most_common(3)
+    top_3_artists = [key for key, val in most_common]
 
-    return top_5_artists
+    return top_3_artists
 
 # def get_top_artists_by_id(user_id):
 #     """
