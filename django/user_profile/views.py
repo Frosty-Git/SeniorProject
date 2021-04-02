@@ -667,7 +667,7 @@ def add_song_to_playlist(request, location):
         new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=song)
         new_song.save()
 
-        if location == 'playlists' or location == 'playlists':
+        if location == 'playlists':
             return JsonResponse({'status': 'reload'})
         else:
             return JsonResponse({'status': 'ok'})

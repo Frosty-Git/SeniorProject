@@ -137,6 +137,7 @@ def results(request):
                     'song_list_1': song_list_1,
                     'song_list_2': song_list_2,
                     'song_list_3': song_list_3,
+                    'location': 'results',
                     # 'top_artists': top_artists,
                     # 'top_artists_ids': top_artists_ids,
                     # 'top_artists_features': top_artists_features,
@@ -164,6 +165,7 @@ def results(request):
                 'artists': artists,
                 'track_info': track_info,
                 'song_name': name,
+                'location': 'results',
             }
     return render(request, 'recommender/results.html', context)
 
@@ -209,11 +211,13 @@ def user_preference_recommender(request):
             'profile': user,
             'top_artists_ids': top_artists_ids,
             'min_likes_met': min_likes_met,
+            'location': 'recommender',
         }
     else:
         context = {
             'profile': user,
             'min_likes_met': min_likes_met,
+            'location': 'recommender',
     }
 
     return render(request, 'recommender/user_preference_recommender.html', context)
