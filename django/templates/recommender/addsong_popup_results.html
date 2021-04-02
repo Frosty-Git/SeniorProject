@@ -1,9 +1,9 @@
 {% load static %}
 <!-- Included in results.html -->   
-<div class="modal fade" id="addtoplaylistmodal{{ song.0 }}" tabindex="-1" aria-labelledby="myAddSongModalLabel" aria-hidden="true"  style="color:black">
+<div class="modal fade" id="addtoplaylistmodal{{ song }}" tabindex="-1" aria-labelledby="myAddSongModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="">
+            <form method="post" action="{% url 'user:add_song_popup' %}">
                 {% csrf_token %}
 
                 <div class="modal-header">
@@ -12,8 +12,8 @@
                 </div>
             
                 <div class="modal-body">
-                    <input type="hidden" id="track_id{{ song.0 }}" name="track_id" value="{{ song.1 }}">
-                    <select name="playlist_id" id="playlist_id{{ song.0 }}">
+                    <input type="hidden" id="track_id{{ song }}" name="track_id" value="{{ song }}">
+                    <select name="playlist_id" id="playlist_id{{ song }}">
                         {% for playlist in playlists %}
                             <!-- Don't allow a user to add a song to the My Liked Songs playlist -->
                             {% if playlist != loggedin.liked_songs_playlist_fk %}
@@ -21,15 +21,15 @@
                             {% endif %}
                         {% endfor %}
                     </select>
-                    <div class="alert{{ song.0 }} alert alert-success" role="alert" style="display: none">
+                    <div class="alert{{ song }} alert alert-success" role="alert" style="display: none">
                         Song successfully added to playlist!
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary popupbtn{{ song.0 }}" style="display: block">Submit</button>
-                    <button id="load{{ song.0 }}" class="btn btn-primary" type="button" disabled style="display: none">
+                    <button type="submit" class="btn btn-primary popupbtn{{ song }}" style="display: block">Submit</button>
+                    <button id="load{{ song }}" class="btn btn-primary" type="button" disabled style="display: none">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     </button>
                 </div>
@@ -40,16 +40,15 @@
 </div>
 
 <script>
-    $('.popupbtn{{ song.0 }}').click(function(e) {
-        $('#load{{ song.0 }}').show();
-        $('.popupbtn{{ song.0 }}').hide();
+    $('.popupbtn{{ song }}').click(function(e) {
+        $('#load{{ song }}').show();
+        $('.popupbtn{{ song}}').hide();
         e.preventDefault();
-        var song = $('#track_id{{ song.0 }}').val();
-        var playlist = $('#playlist_id{{ song.0 }}').val();
-        var location = $('#location').val();
+        var song = $('#track_id{{ song }}').val();
+        var playlist = $('#playlist_id{{ song }}').val();
         $.ajax({
             type: 'POST',
-            url: '/user/addsong/' + location,
+            url: '{% url "user:add_song_popup"  "results" %}',
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 track_id: song,
@@ -58,24 +57,11 @@
             success: function(json){
                 if (json['status'] == 'ok') {
                     setTimeout(function() {
-                        $('#load{{ song.0 }}').hide();
-                        $('.popupbtn{{ song.0 }}').show();
-                        $('.alert{{ song.0 }}').show();
-
+                        $('#load{{ song }}').hide();
+                        $('.popupbtn{{ song }}').show();
+                        $('.alert{{ song }}').show();
                     }, 2000);
                 }
-                if (json['status'] == 'reload') {
-                    setTimeout(function() {
-                        $('#load{{ song.0 }}').hide();
-                        $('.popupbtn{{ song.0 }}').show();
-                        $('.alert{{ song.0 }}').show();
-                        window.history.back();
-                    }, 2000);
-                    setTimeout(function() {
-                        window.location.reload(true);
-                    }, 4000);
-                }
-
 
             },
             error: function(xhr, errmsg, err) {}

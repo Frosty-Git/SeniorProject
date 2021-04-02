@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load widget_tweaks %}
 
 {% block title %} Feed {% endblock %}
 
@@ -9,20 +10,27 @@
 
     <h1 style="text-align: center;">Social Feed</h1>
 
-    <form class='post_form' method='POST' action='/feed/create_post/'>
-        {% csrf_token %}
-        {{ postform }}
-        <input type='submit' value='Create Post' class='post_form'>
-    </form>
-
-
-    <h4>Posts</h4>
 
 <div class="w3-row-padding" style="margin-top:2%;">
     <div class="w3-col m3 w3-center">
-        <p>you can put stuff in here (this is a flex column)</p>
+        <h4>Filter Feed</h4>
+        <div class="btn-group-vertical">
+            <button type="button" class="btn btn-secondary">Social Posts</button>
+            <button type="button" class="btn btn-secondary">Song Posts</button>
+            <button type="button" class="btn btn-secondary">Playlist Posts</button>
+            <button type="button" class="btn btn-secondary">Popularity</button>
+        </div>
     </div>
     <div class="w3-col m6 w3-center">
+        
+        <form class='post_form' method='POST' action='/feed/create_post/'>
+            {% csrf_token %}
+            {% render_field postform.text class="form-control" id="text" rows="3" placeholder="Create a post..." %}
+            </br>
+            <input type='submit' value='Share' class='post_form btn btn-secondary' style='float: right;'>
+        </form>
+        </br>
+        <h4>Posts</h4>
         <div class="container feed_table" style="overflow-y: scroll; height: 560px;">
             {% for post, vote in post_list.items %}
                 <div class="row" style="padding-top: 10px;  margin-bottom: -10px; z-index: -1;">

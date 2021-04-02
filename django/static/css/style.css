@@ -24,6 +24,12 @@ body {
     white-space: nowrap;
 }
 
+/* Columns in the edit playlist popup page*/
+.epc {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+
 /* Used to create spacing in the recommender tables */
 .recCol {
     padding: 20px 20px 20px 20px;

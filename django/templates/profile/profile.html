@@ -72,7 +72,7 @@
                 </div>
             {% endif %}
             {% if profile.user.id == user.id %}
-                <a class="btn btn-dark" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
+                <a class="btn btn-success" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
             {% else %}
                 {% if nofollow %}
 

@@ -498,8 +498,9 @@ def rm_from_liked_songs(user_profile, track):
     liked_songs_playlist = user_profile.liked_songs_playlist_fk
     # This will only be one song since a user cannot manually add songs to the playlist,
     # so there is no issue of a duplicate playlist/song match
-    sop = SongOnPlaylist.objects.get(playlist_from=liked_songs_playlist, spotify_id=song)
-    sop.delete()
+    sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist, spotify_id=song).first()
+    if sop is not None:
+        sop.delete()
 
 def get_top_artists_by_name(user_id):
     """
@@ -580,5 +581,3 @@ def get_top_artists_by_name(user_id):
 #     top_5_genres = [key for key, val in most_common]
 
 #     return top_5_genres
-
-
