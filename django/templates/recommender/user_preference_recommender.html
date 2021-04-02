@@ -12,48 +12,164 @@
     <iframe src='https://open.spotify.com/embed/track/{{ track }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
 {% endfor %} -->
 
-<table class="center">
+<table class="center" style="width:85%">
     <tr>
         <td class="recCol">
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.0 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
             <table>
                 <tr>
                     <td>
-                        
+                        Like/Dislike
                     </td>
                     <td>
-
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.0 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.0 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.0 %}
                     </td>
                 </tr>
             </table>
         </td>
         <td class="recCol"> 
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.1 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        Like/Dislike
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.1 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.1 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.1 %}
+                    </td>
+                </tr>
+            </table>
         </td>
         <td class="recCol">
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.2 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        Like/Dislike
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.2 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.2 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.2 %}
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>
         <td class="recCol">
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.3 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        Like/Dislike
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.3 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.3 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.3 %}
+                    </td>
+                </tr>
+            </table>
         </td>
         <td class="recCol">
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.4 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        Like/Dislike
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.4 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.4 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.4 %}
+                    </td>
+                </tr>
+            </table>
         </td>
         <td class="recCol">
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.5 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        Like/Dislike
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.5 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.5 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.5 %}
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>
         <td class="recCol">
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.6 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        Like/Dislike
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.6 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.6 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.6 %}
+                    </td>
+                </tr>
+            </table>
         </td>
         <td class="recCol">
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.7 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        Like/Dislike
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.7 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.7 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.7 %}
+                    </td>
+                </tr>
+            </table>
         </td>
         <td class="recCol">
             <iframe src='https://open.spotify.com/embed/track/{{ track_ids.8 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <table>
+                <tr>
+                    <td>
+                        Like/Dislike
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track_ids.8 }}">Add to Playlist</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track_ids.8 }}">Share</button>
+                        {% include 'social_feed/popup_songpost.html' with song=track_ids.8 %}
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>
