@@ -69,10 +69,10 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'recommender:about' %}">About</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'recommender:survey' %}">Survey</a>
-                  </li>
                   {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'recommender:survey' %}">Survey</a>
+                    </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
                     </li>
