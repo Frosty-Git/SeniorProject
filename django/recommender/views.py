@@ -112,12 +112,12 @@ def results(request):
                 song_list_2 = song_vote_dictionary(songs_votes, track2_ids)
                 song_list_3 = song_vote_dictionary(songs_votes, track3_ids)
 
-                top_artists = get_top_artists_by_name(user_id)
-                top_artists_ids = get_top_artists_by_id(user_id)
-                top_artists_features = get_artists_features(top_artists_ids)
-                top_artists_genres = get_artists_genres(top_artists_ids)
-
-                genre_seeds_v = genre_seeds()
+                # These will only work if you have at least one liked song
+                # top_artists = get_top_artists_by_name(user_id)
+                # top_artists_ids = get_top_artists_by_id(user_id)
+                # top_artists_features = get_artists_features(top_artists_ids)
+                # top_artists_genres = get_artists_genres(top_artists_ids)
+                # genre_seeds_v = genre_seeds()
 
                 context = {
                     'term' : term,
@@ -137,11 +137,11 @@ def results(request):
                     'song_list_1': song_list_1,
                     'song_list_2': song_list_2,
                     'song_list_3': song_list_3,
-                    'top_artists': top_artists,
-                    'top_artists_ids': top_artists_ids,
-                    'top_artists_features': top_artists_features,
-                    'top_artists_genres': top_artists_genres,
-                    'genre_seeds': genre_seeds_v,
+                    # 'top_artists': top_artists,
+                    # 'top_artists_ids': top_artists_ids,
+                    # 'top_artists_features': top_artists_features,
+                    # 'top_artists_genres': top_artists_genres,
+                    # 'genre_seeds': genre_seeds_v,
                 }
                 return render(request, 'recommender/results.html', context)
 
@@ -186,22 +186,36 @@ def user_preference_recommender(request):
         'target_tempo'            : preferences.tempo,
         'target_valence'          : preferences.valence,
     }
-    recommendations = get_recommendation(request, limit, user_id, **pref_dict)
-    track_ids = []
-    for x in range(limit):
-        if x+1 > len(recommendations['tracks']):
-            break
-        track_ids.append(recommendations['tracks'][x]['id'])
+    
+    min_likes_met = False
+    liked_songs = user.liked_songs_playlist_fk
+    sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs)
+    if sop:
+        min_likes_met = True
 
-    playlists = get_user_playlists(user_id)
-    top_artists_ids = get_top_artists_by_id(user_id)
+    if min_likes_met:
+        recommendations = get_recommendation(request, limit, user_id, **pref_dict)
+        track_ids = []
+        for x in range(limit):
+            if x+1 > len(recommendations['tracks']):
+                break
+            track_ids.append(recommendations['tracks'][x]['id'])
+        playlists = get_user_playlists(user_id)
+        top_artists_ids = get_top_artists_by_id(user_id)
 
-    context = {
-        'track_ids' : track_ids,
-        'playlists': playlists,
-        'profile': user,
-        'top_artists_ids': top_artists_ids,
+        context = {
+            'track_ids' : track_ids,
+            'playlists': playlists,
+            'profile': user,
+            'top_artists_ids': top_artists_ids,
+            'min_likes_met': min_likes_met,
+        }
+    else:
+        context = {
+            'profile': user,
+            'min_likes_met': min_likes_met,
     }
+
     return render(request, 'recommender/user_preference_recommender.html', context)
 
 def song_vote_dictionary(songs_votes, tracks):

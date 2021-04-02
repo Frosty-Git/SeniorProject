@@ -12,6 +12,7 @@
     <iframe src='https://open.spotify.com/embed/track/{{ track }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
 {% endfor %} -->
 
+{% if min_likes_met %}
 <table class="center" style="width:85%">
     <tr>
         <td class="recCol">
@@ -196,5 +197,9 @@
         {% endif %}
     </tr>
 </table>
+{% else %}
+    <center><p>You have not liked any songs! Go like some songs in order to get recommendations!</p></center>
+    <center><a href="{% url 'recommender:home' %}">Home</a></center>
+{% endif %}
 
 {% endblock %}
