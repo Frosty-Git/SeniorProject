@@ -14,6 +14,7 @@
     {% else %}
         <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
     {% endif %}
+    <input type="hidden" id="location" name="location" value="playlists">
     <br>
     {% if playlist.image %}
         <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>

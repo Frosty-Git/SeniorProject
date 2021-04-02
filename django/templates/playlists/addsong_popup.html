@@ -3,7 +3,7 @@
 <div class="modal fade" id="addtoplaylistmodal{{ song.0 }}" tabindex="-1" aria-labelledby="myAddSongModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="{% url 'user:add_song_popup' %}">
+            <form method="post" action="">
                 {% csrf_token %}
 
                 <div class="modal-header">
@@ -46,9 +46,10 @@
         e.preventDefault();
         var song = $('#track_id{{ song.0 }}').val();
         var playlist = $('#playlist_id{{ song.0 }}').val();
+        var location = $('#location').val();
         $.ajax({
             type: 'POST',
-            url: '{% url "user:add_song_popup" %}',
+            url: '/user/addsong/' + location,
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 track_id: song,
@@ -60,8 +61,21 @@
                         $('#load{{ song.0 }}').hide();
                         $('.popupbtn{{ song.0 }}').show();
                         $('.alert{{ song.0 }}').show();
+
                     }, 2000);
                 }
+                if (json['status'] == 'reload') {
+                    setTimeout(function() {
+                        $('#load{{ song.0 }}').hide();
+                        $('.popupbtn{{ song.0 }}').show();
+                        $('.alert{{ song.0 }}').show();
+                        window.history.back();
+                    }, 2000);
+                    setTimeout(function() {
+                        window.location.reload(true);
+                    }, 4000);
+                }
+
 
             },
             error: function(xhr, errmsg, err) {}

@@ -148,7 +148,7 @@ def profile(request, user_id):
                 'follower_list': follower_list,
                 'is_following': bool_following,
                 'image': loggedin.profilepic,
-                'acousticness': all_prefs['acousticness']*100,
+                'acousticness': all_prefs['acousticness'],
                 'danceability': all_prefs['danceability'],
                 'energy': all_prefs['energy'],
                 'instrumentalness': all_prefs['instrumentalness'],
@@ -615,7 +615,7 @@ def get_songs_playlist(request, user_id, playlist_id):
                 if not playlist.is_private:
                     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
                     songs = sop_song_vote_array(matches, [])
-                    
+
                     context = {
                         'songs': songs,
                         'playlist': playlist,
@@ -652,7 +652,7 @@ def create_playlist_popup(request):
             # playlist = playlist_form.save(commit=False)
             return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
 
-def add_song_to_playlist(request):
+def add_song_to_playlist(request, location):
     """
     Adds a song to a playlist
     Last updated: 3/24/21 by Jacelynn Duranceau
@@ -666,7 +666,11 @@ def add_song_to_playlist(request):
         playlist = Playlist.objects.get(pk=playlist_id)
         new_song = SongOnPlaylist(playlist_from=playlist, spotify_id=song)
         new_song.save()
-        return JsonResponse({'status': 'ok'})
+
+        if location == 'playlists' or location == 'playlists':
+            return JsonResponse({'status': 'reload'})
+        else:
+            return JsonResponse({'status': 'ok'})
         # return redirect('/results/')
         #return redirect('/user/playlists/' + str(request.user.id))
         # return render(request, 'recommender/results.html')
