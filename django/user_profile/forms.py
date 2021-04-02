@@ -45,7 +45,7 @@ class SettingsForm(forms.ModelForm):
     class Meta:
         model = Settings
         widgets = {'private_profile': forms.CheckboxInput(attrs={'id': 'i_private_profile'})}
-        fields = ['private_profile', 'private_playlists', 'light_mode', 'explicit_music', 'live_music']
+        fields = ['private_profile', 'private_playlists', 'private_preferences', 'light_mode', 'explicit_music', 'live_music']
 
 
 class ExtendedUserChangeForm(UserChangeForm):
@@ -58,14 +58,15 @@ class ExtendedUserChangeForm(UserChangeForm):
         model = User
         fields = ('first_name', 'last_name', 'email',)
 
-
 class PlaylistForm(forms.ModelForm):
     name = forms.CharField(max_length=30)
     image = forms.ImageField(required=False)
+    description = forms.CharField(widget=forms.Textarea, required=False, max_length=299)
     date_created = datetime.datetime.now()
     is_private = forms.BooleanField(required=False)
+    is_shareable = forms.BooleanField(required=False, initial=True)
 
     class Meta:
         model = Playlist
-        fields = ('name', 'image', 'is_private')
+        fields = ('name', 'image', 'is_private', 'is_shareable')
 

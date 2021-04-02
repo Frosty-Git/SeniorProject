@@ -683,9 +683,6 @@ let questions = [
     false
     )
 
-
-
-
 ];
 
 

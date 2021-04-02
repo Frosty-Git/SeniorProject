@@ -1,7 +1,7 @@
 {% load static %}
 
 <!-- Included in Results -->
-<div class="modal fade" id="songpostmodal{{ track }}" tabindex="-1" aria-labelledby="mySongPostModalLabel" aria-hidden="true"  style="color:black">
+<div class="modal fade" id="songpostmodal{{ song }}" tabindex="-1" aria-labelledby="mySongPostModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form method="post" action="{% url 'feed:songpost' %}">
@@ -13,8 +13,8 @@
                 </div>
             
                 <div class="modal-body">
-                    <input type="hidden" id="track_id" name="track_id" value="{{ track }}">
-                    <center><iframe src="https://open.spotify.com/embed/track/{{ track }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></center>
+                    <input type="hidden" id="track_id" name="track_id" value="{{ song }}">
+                    <center><iframe src="https://open.spotify.com/embed/track/{{ song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></center>
                     <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
                 </div>
 

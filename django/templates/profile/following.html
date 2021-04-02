@@ -14,39 +14,48 @@
     } 
 </style>
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-    Following
+    <a href="{% url 'user:profile' profile.user.id %}">@{{ profile.user.username }}</a>'s Following
 </h1>
 
     <!--Note this will have to match for one single user - the logged in one!!-->
     <table style="width:90%; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
-        {% for user_to in following %}
+        {% for pair in following %}
+        <!-- pair is an array of [UserProfile, Boolean], where the Boolean is True if you follow the user -->
+        <!-- pair.0 is the UserProfile, pair.1 is True or False -->
         <tr>
             <td style="text-align: right;">
-                <a href="{% url 'user:profile' user_to.user.id %}">
-                    {% if user_to.profilepic %}
-                        <img src="{{ user_to.profilepic.url }}" alt="" width="80" height="80" class="d-inline-block align-top" style="border-radius: 50%;">
+                <a href="{% url 'user:profile' pair.0.user.id %}">
+                    {% if pair.0.profilepic %}
+                        <img src="{{ pair.0.profilepic.url }}" alt="" width="80" height="80" class="d-inline-block align-top" style="border-radius: 50%;">
                     {% else %}
                         <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" alt="" width="80" height="80" class="d-inline-block align-top" style="border-radius: 50%;">
                     {% endif %}
                 </a>
             </td>
             <td>
-                <a href="{% url 'user:profile' user_to.user.id %}">
+                <a href="{% url 'user:profile' pair.0.user.id %}">
                     <div class="user">
-                        {{ user_to }} 
+                        {{ pair.0 }} 
                     </div>
                 </a>
             </td>
             <td>
                 <!-- {{ follow.followers|intcomma }} followers -->
-                {{ user_to.num_followers }} followers
+                {{ pair.0.num_followers }} followers
             </td>
             <td>
-                <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id user_to.user.id%}" role="button"></a>
+                {% if pair.1 %}
+                    <!-- pair.1 is True, meaning you follow them, so create an unfollow button -->
+                    <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id pair.0.user.id%}" role="button"></a>
+                {% else %}
+                    <!-- pair.1 is False, meaning you don't follow them, so create a follow button -->
+                    <a class="btn followBtn" href="{% url 'user:follow' user.id pair.0.user.id%}" role="button"></a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
     </table>
     <a class="btn btn-primary" href="{% url 'user:user_list' %}" role="button">User List</a>
     <br>
+
 {% endblock %}

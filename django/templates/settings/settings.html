@@ -33,15 +33,15 @@
                         </div>
                     </th>
                     <th>
-                        Light Mode
+                        Private Preferences
                         <div class="help-tip" style="z-index: 999;">
-                            <p>If selected, the website's theme will be light, rather than dark.</p>
+                            <p>If selected, your preferences for music will not be visible to other users.</p>
                         </div>
                     </th>
                     <th>
-                        Explicit Music
+                        Light Mode
                         <div class="help-tip" style="z-index: 999;">
-                            <p>If selected, the website will recommend and play music that includes explicit lyrics.</p>
+                            <p>If selected, the website's theme will be light, rather than dark.</p>
                         </div>
                     </th>
                 </tr>
@@ -60,18 +60,24 @@
                     </td>
                     <td> 
                             <label class="switch">
-                                {{ settings_form.light_mode }}
+                                {{ settings_form.private_preferences }}
                                 <span class="slider round"></span>
                             </label>
                     </td>
                     <td>
-                            <label class="switch">
-                                {{ settings_form.explicit_music }}
-                                <span class="slider round"></span>
-                            </label>
+                        <label class="switch">
+                            {{ settings_form.light_mode }}
+                            <span class="slider round"></span>
+                        </label>
                     </td>
                 </tr>
                 <tr>
+                    <th>
+                        Explicit Music
+                        <div class="help-tip" style="z-index: 999;">
+                            <p>If selected, the website will recommend and play music that includes explicit lyrics.</p>
+                        </div>
+                    </th>
                     <th>
                         Live Music
                         <div class="help-tip" style="z-index: 999;">
@@ -90,23 +96,17 @@
                             <p>Hello!</p>
                         </div>
                     </th>
-                    <th>
-                        Setting
-                        <div class="help-tip" style="z-index: 999;">
-                            <p>Hello!</p>
-                        </div>
-                    </th>
                 </tr>
                 <tr>
                     <td>
                         <label class="switch">
-                            {{ settings_form.live_music }}
+                            {{ settings_form.explicit_music }}
                             <span class="slider round"></span>
                         </label>
                     </td>
                     <td>
                         <label class="switch">
-                            <input type="checkbox">
+                            {{ settings_form.live_music }}
                             <span class="slider round"></span>
                         </label>
                     </td>

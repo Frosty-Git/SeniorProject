@@ -1,4 +1,6 @@
 from django.db import models
+from user_profile.models import UserProfile
+
 
 class Musicdata(models.Model):
     acousticness = models.FloatField()
@@ -20,3 +22,5 @@ class Musicdata(models.Model):
     tempo = models.FloatField()
     valence = models.FloatField()
     year = models.IntegerField()
+
+
