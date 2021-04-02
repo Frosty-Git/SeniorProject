@@ -107,7 +107,12 @@ def search_artist_features(query, feature, high_or_low):
 def get_recommendation(limit, user_id, **kwargs):
     seed_artists = get_artists_ids_list(user_id)
     seed_genres = get_artists_genres(seed_artists)
-    recommendations = sp.recommendations(seed_artists=['4NHQUGzhtTLFvgF5SZesLK'], seed_genres=['alt_rock'], seed_tracks=['0c6xIDDpzE81m2q797ordA'], limit=limit, country=None, **kwargs)
+    recommendations = sp.recommendations(seed_artists=seed_artists,
+                                        seed_genres=seed_genres, 
+                                        seed_tracks=['0c6xIDDpzE81m2q797ordA'], 
+                                        limit=limit,
+                                        country=None,
+                                        **kwargs)
     return recommendations
 
 def get_artists(track):
