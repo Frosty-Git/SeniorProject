@@ -269,7 +269,7 @@ def get_top_track(request):
         spotify_manager.token_check(request)
         spotify = spotipy.Spotify(auth=user.access_token)
         top_track_id = spotify.current_user_top_tracks(limit=1, offset=0, time_range='long_term')
-        return top_track_id[0]['tracks']['items']['id']
+        return top_track_id['items'][0]['id']
     else:
         liked_songs_playlist = user.liked_songs_playlist_fk
         sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist).first()
