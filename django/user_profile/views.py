@@ -794,6 +794,8 @@ def link_spotify(request):
     if they are currently not logged in.
     Last updated: 3/31/2021 Joe Frost, Tucker Elliott
     """
+    # spotify = spotify_manager.create_spotify()
+    spotify_manager = SpotifyManager()
     spotify = spotify_manager.create_spotify()
     spotify.me()
     return redirect('/')
