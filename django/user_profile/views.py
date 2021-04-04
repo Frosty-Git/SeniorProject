@@ -794,8 +794,6 @@ def link_spotify(request):
     if they are currently not logged in.
     Last updated: 3/31/2021 Joe Frost, Tucker Elliott
     """
-    # spotify = spotify_manager.create_spotify()
-    spotify_manager = SpotifyManager()
     spotify = spotify_manager.create_spotify()
     spotify.me()
     return redirect('/')
@@ -811,7 +809,6 @@ def save_token_redirect(request):
     """
     spotify = spotify_manager.create_spotify()
     cached_token = spotify_manager.auth_manager.get_access_token(request.GET.__getitem__('code'))
-    test = request.session.get('_auth_user_id')
     if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
         user = UserProfile.objects.get(user=request.user.id)
         user.spotify_user_id = spotify.me().get('id')
