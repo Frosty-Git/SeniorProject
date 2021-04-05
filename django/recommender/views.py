@@ -582,9 +582,10 @@ def get_top_artists_by_name(user_id):
     top_3_artists = [key for key, val in most_common]
 
     return top_3_artists
-def update_database_with_preferences(danceability, acousticness, energy, instrumentalness, 
-                                        speechiness, loudness, tempo, valence):
-    if request.method = 'POST':
+    
+# def update_database_with_preferences(danceability, acousticness, energy, instrumentalness, 
+#                                         speechiness, loudness, tempo, valence):
+#     if request.method = 'POST':
         
 
 # def get_top_artists_by_id(user_id):
