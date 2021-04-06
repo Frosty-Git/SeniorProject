@@ -266,11 +266,10 @@ input:checked+.slider:before {
 /* Survey Page
    Source: https://www.w3schools.com/howto/howto_css_center_button.asp
 */
-.vertical-center {
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+.center {
+    margin-left: 35%;
+    margin-right: 30%;
+    width: 100%;  
+    line-height: 160%;
 }
 /* End Survey Page */
