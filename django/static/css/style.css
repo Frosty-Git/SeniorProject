@@ -262,3 +262,15 @@ input:checked+.slider:before {
     background: #727272;
 }
 /* End Custom Scrollbar */
+
+/* Survey Page
+   Source: https://www.w3schools.com/howto/howto_css_center_button.asp
+*/
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+/* End Survey Page */
