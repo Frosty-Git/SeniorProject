@@ -262,3 +262,14 @@ input:checked+.slider:before {
     background: #727272;
 }
 /* End Custom Scrollbar */
+
+/* Survey Page
+   Source: https://www.w3schools.com/howto/howto_css_center_button.asp
+*/
+.center {
+    margin-left: 35%;
+    margin-right: 30%;
+    width: 100%;  
+    line-height: 160%;
+}
+/* End Survey Page */

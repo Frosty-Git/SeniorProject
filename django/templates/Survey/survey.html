@@ -16,71 +16,70 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <center>
-<h3>Survey</h3>
+<h3 style="font-size: 400%;">Survey</h3>
 </center>
 <br>
 <!-- Survey Created by James, Kevin and Alex -->
-<div>
+<div class="center" style="font-size: 110%;">
   <p id="question"></p>
-<form action id = "multiple_choice_form" >
-  <div class = "form-check">
-    <input class="form-check-input" type="radio" name="Form1" id="i1" checked value = 1>
-    <label class="form-check-label" for="i1" id="option0"></label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="radio" name="Form1" id="i2" value = 2>
-    <label class="form-check-label" for="i2" id ="option1"></label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="radio" name="Form1" id="i3" value = 3>
-    <label class="form-check-label" for="i3" id="option2"></label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="radio" name="Form1" id="i4" value = 4>
-    <label class="form-check-label" for="i4" id="option3"></label>
-  </div>
+  <form action id = "multiple_choice_form" >
+    <div class = "form-check">
+      <input class="form-check-input" type="radio" name="Form1" id="i1" checked value = 1>
+      <label class="form-check-label" for="i1" id="option0"></label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="Form1" id="i2" value = 2>
+      <label class="form-check-label" for="i2" id ="option1"></label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="Form1" id="i3" value = 3>
+      <label class="form-check-label" for="i3" id="option2"></label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="Form1" id="i4" value = 4>
+      <label class="form-check-label" for="i4" id="option3"></label>
+    </div>
     <div class="form-check">
       <input class="form-check-input" type="radio" name="Form1" id="i5" value = 5 >
-      <label class="form-check-label" for="i5" id="option4">
-        
-</label>
-<script type ="text/javascript" src="{% static 'js/question.js' %}">
-</script>
-<script>
- $(document).ready(function() {
-   $("#submit").click(function(){
-      let answer_value = document.querySelector('input[name="Form1"]:checked').value;
-      increment_and_reload(answer_value);
-    console.log(document.getElementById("danceability").value);
-    console.log(document.getElementById("acousticness").value);
-    console.log(document.getElementById("energy").value);
-    console.log(document.getElementById("instrumentalness").value);
-    console.log(document.getElementById("speechiness").value);
-    console.log(document.getElementById("loudness").value);
-    console.log(document.getElementById("tempo").value);
-    console.log(document.getElementById("valence").value);
-   })
- })
- $(document).ready(function() {
-   $("#multiple_choice_form").click(function(){
-    
-      
-      })
-   })
- 
-</script>
-  </div>
+      <label class="form-check-label" for="i5" id="option4"></label>
+      <script type ="text/javascript" src="{% static 'js/question.js' %}"></script>
+      <script>
+        $(document).ready(function() {
+          $("#submit").click(function(){
+              let answer_value = document.querySelector('input[name="Form1"]:checked').value;
+              increment_and_reload(answer_value);
+            console.log(document.getElementById("danceability").value);
+            console.log(document.getElementById("acousticness").value);
+            console.log(document.getElementById("energy").value);
+            console.log(document.getElementById("instrumentalness").value);
+            console.log(document.getElementById("speechiness").value);
+            console.log(document.getElementById("loudness").value);
+            console.log(document.getElementById("tempo").value);
+            console.log(document.getElementById("valence").value);
+          })
+        })
+        $(document).ready(function() {
+          $("#multiple_choice_form").click(function(){
+            
+              
+          })
+        })
+      </script>
+    </div>
+    <br>
+    <div style="margin-left: 10%;">
+      <button type="button" id = "submit" class="btn btn-success" style="height: 50px; width: 110px">Submit</button>
+    </div>
+    <input type="hidden"  step ="1" id = "danceability" name = "user" value= 0>
+    <input type="hidden"  step ="1" id = "acousticness" name = "user" value= 0>
+    <input type="hidden"  step ="1" id = "energy" name = "user" value= 0>
+    <input type="hidden"  step ="1" id = "instrumentalness" name = "user" value= 0>
+    <input type="hidden" step ="1" id = "speechiness" name = "user" value= 0>
+    <input type="hidden" step ="1" id = "loudness" name = "user" value= 0>
+    <input type="hidden" step ="1" id = "tempo" name = "user" value= 0>
+    <input type="hidden" step ="1" id = "valence" name = "user" value= 0>
+  </form>
 </div>
-<button type="button"  id = "submit" class="btn btn-success" >Submit</button>
-<input type="hidden"  step ="1" id = "danceability" name = "user" value= 0>
-<input type="hidden"  step ="1" id = "acousticness" name = "user" value= 0>
-<input type="hidden"  step ="1" id = "energy" name = "user" value= 0>
-<input type="hidden"  step ="1" id = "instrumentalness" name = "user" value= 0>
-<input type="hidden" step ="1" id = "speechiness" name = "user" value= 0>
-<input type="hidden" step ="1" id = "loudness" name = "user" value= 0>
-<input type="hidden" step ="1" id = "tempo" name = "user" value= 0>
-<input type="hidden" step ="1" id = "valence" name = "user" value= 0>
-</form>
 {% if artist_id %}
 <div id="artistCarousel" class="carousel slide" data-bs-interval="false">
   <div class="carousel-inner">
