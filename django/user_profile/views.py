@@ -934,3 +934,4 @@ def profile_privacy(user_id):
     settings = Settings.objects.get(user_profile_fk=user)
     profile_privacy = settings.private_profile
     return profile_privacy
+

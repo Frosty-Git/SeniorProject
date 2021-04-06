@@ -582,6 +582,10 @@ def get_top_artists_by_name(user_id):
     top_3_artists = [key for key, val in most_common]
 
     return top_3_artists
+
+# This is a sample page for our css styles!
+def sample(request):
+    return render(request, 'css_sample.html', {})
     
 # def update_database_with_preferences(danceability, acousticness, energy, instrumentalness, 
 #                                         speechiness, loudness, tempo, valence):

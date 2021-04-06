@@ -18,5 +18,6 @@ urlpatterns = [
     path('get_artist/' , views.get_artist_from_passed_value, name ='get_artist'),
     path('song_upvote/', views.song_upvote, name='song_upvote'),
     path('song_downvote/', views.song_downvote, name='song_downvote'),
-    path('recommendations/', views.user_preference_recommender, name='user_preference_recommender')
+    path('recommendations/', views.user_preference_recommender, name='user_preference_recommender'),
+    path('sample/', views.sample, name='sample'),
 ]

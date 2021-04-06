@@ -29,6 +29,7 @@ urlpatterns = [
     path('save_token_redirect/', views.save_token_redirect, name='save_token_redirect'),  
     path('reset_preferences/', views.reset_preferences, name='reset_preferences'),
     path('delete_account/', views.delete_account, name='delete_account'),
+    
     #path('', views.save_token_redirect, name='save_token_redirect'),
     #path('playlist/<playlist_id>', views.create_playlist, name='create_playlist'),
     # path('num_followers/<user_id>', views.num_followers, name='num_followers')
