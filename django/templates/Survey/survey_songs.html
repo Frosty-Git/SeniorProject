@@ -61,6 +61,20 @@
 
 <h3>Pick 5 Songs</h3>
 
+<table>
+{% for track in track_ids %}
+  <tr>
+    <td>
+      {{track}}
+      <iframe src="https://open.spotify.com/embed/track/{{ track }}" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    </td>
+  </tr>
+{% endfor %}
+</table>
+
+
+
+
 
 <form name="artistForm" method="post">
   {% csrf_token %}

@@ -92,7 +92,7 @@ class GenresStack:
     def get_genre_name(self, genre):
         return str(self.genres_names[genre])
 
-    def toString(self):
+    def genresToString(self):
         return str(self.genres_stack)
 
     def artistsToString(self):

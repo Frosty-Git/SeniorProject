@@ -596,7 +596,12 @@ def create_genre_stack(request):
     """
     """
     genres = request.POST.getlist('checked_list[]')
-    new_genre_stack = GenresStack("", "")
+    
+    genres_stack = ""
+    artists_list = ""
+    songs_list = ""
+    
+    new_genre_stack = GenresStack(genres_stack, artists_list)
     for genre in genres:
         new_genre_stack.push(genre)
     # return redirect('recommender:survey_artists', genre_stack=new_genre_stack.toString())
@@ -604,15 +609,16 @@ def create_genre_stack(request):
     # link = "survey_artists/" + new_genre_stack.toString()
     # data = json.dumps({'url' : link})
     # return HttpResponse(data)
-    link = 'survey_artists/' + new_genre_stack.toString()
+    link = 'survey_artists/' + new_genre_stack.genresToString()
     response = {'stack' : link}
     return JsonResponse(response)
-
 
 def survey_artists(request, genre_stack):
     genres = request.POST.getlist('checked_list[]')
     new_genre_stack = GenresStack(genre_stack, "")
     genre = new_genre_stack.pop()
+    
+    # Getting the artist ids from Spotify
     if len(genre) > 0:
         playlist_id = new_genre_stack.get_playlist_id(genre)
         track_items = get_playlist_items(playlist_id)
@@ -628,11 +634,9 @@ def survey_artists(request, genre_stack):
 
         # randomly pick 15 of those artists and put them in the context
         # for the artist choices.
-
         # Artist ids
         artists = np.random.permutation(list(dicti.keys()))[:15] 
 
-        # artists = random.sample(dicti.keys(), k=15)
         artist_ids = [] 
         artist_names = []
         for artist in artists:
@@ -643,7 +647,7 @@ def survey_artists(request, genre_stack):
             'artist_ids' : artist_ids,
             'artist_names' : artist_names,
             'genre' : new_genre_stack.get_genre_name(genre),
-            'genre_stack': new_genre_stack.toString(),
+            'genre_stack': new_genre_stack.genresToString(),
         }
         return render(request, 'Survey/survey_artists.html', context)
     else:
@@ -655,57 +659,60 @@ def send_artists(request, genre_stack):
     artists = request.POST.getlist('artist_id_list[]')
     new_genre_stack = GenresStack(genre_stack, artists)
     artists_string = new_genre_stack.artistsToString()
-    link = 'survey_songs/' + artists_string
+    link = 'survey_songs/' + new_genre_stack.genresToString() + '/' + artists_string
     response = {'redirect' : link}
     return JsonResponse(response)
 
 def survey_songs(request, genre_stack, artists):
     """
     """
-    artists = request.POST.getlist('artist_id_list[]') 
+    artists = request.POST.getlist('artist_id_list[]')
     print(artists)
-    return redirect('/')
-    # track_ids = []
-    # art_extreme_tracks = []
 
-    # features = [
-    #     'danceability',
-    #     'acousticness',
-    #     'energy',
-    #     'instrumentalness',
-    #     'speechiness',
-    #     'loudness',
-    #     'tempo',
-    #     'valence',
-    # ]
+    songs_list = [] 
+    
 
-    # # if genre_stack has next - Joe|| I'm checking if it's empty, same difference but it'll work if we need to pop for some reason. - James
-    # # if not genre_stack.isEmpty: || On second thought, does it not make more sense to only check if artists isn't empty?
-    # if len(artists) != 0:
-    #     # for each around the artists
-    #     for artist in artists:
-    #         for feature in features:
-    #             art_extreme_tracks.append(search_artist_features(artist, feature, True))     # max value for whatever the current feature is
-    #             art_extreme_tracks.append(search_artist_features(artist, feature, False))    # min value
-    #     # call James function to get song ids and append to song list
-    #         track_ids.append(np.random.sample(art_extreme_tracks, 5))
-    #         art_extreme_tracks = []
-    #     # grab a random 5 of the most extreme tracks. May need to be updated to check for duplicates but at this moment I'm not sure how best to do that. - James
+    track_ids = []
+    art_extreme_tracks = []
 
-    # # render survey_artists and context of song list
-    #     # context = {
+    features = [
+        'danceability',
+        'acousticness',
+        'energy',
+        'instrumentalness',
+        'speechiness',
+        'loudness',
+        'tempo',
+        'valence',
+    ]
 
-    #     #     'track_ids': track_ids
+    # if genre_stack has next - Joe|| I'm checking if it's empty, same difference but it'll work if we need to pop for some reason. - James
+    # if not genre_stack.isEmpty: || On second thought, does it not make more sense to only check if artists isn't empty?
+    if len(artists) != 0:
+        # for each around the artists
+        for artist in artists:
+            for feature in features:
+                max_feat = search_artist_features(artist, feature, True)
+                min_feat = search_artist_features(artist, feature, False)
+                if not art_extreme_tracks.includes(max_feat):
+                    art_extreme_tracks.append(max_feat)     # max value for whatever the current feature is
+                if not art_extreme_tracks.include(min_feat):
+                    art_extreme_tracks.append(min_feat)     # min value    
 
-    #     # }
-    #     # return render(request, 'Survey/survey_songs.html', context)
+            if len(art_exteme_tracks) > 5:
+                # grab a random 5 of the most extreme tracks
+                track_ids.append(np.random.sample(art_extreme_tracks, 5))
+            else:
+                track_ids.extend(art_extreme_tracks)
+            art_extreme_tracks = []
 
+    #render survey_artists and context of song list
+    context = {
+        'track_ids': track_ids,
+        'genres_stack': genre_stack,
+    }
+    return render(request, 'Survey/survey_songs.html', context)
 
-    # context = {
-
-    #     'track_ids': track_ids
-    # }
-    # return render(request, 'Survey/survey_songs.html', context)
 
 
 # Alt-rock → alternative rock
