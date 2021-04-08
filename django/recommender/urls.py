@@ -20,4 +20,8 @@ urlpatterns = [
     path('song_downvote/', views.song_downvote, name='song_downvote'),
     path('recommendations/', views.user_preference_recommender, name='user_preference_recommender'),
     path('sample/', views.sample, name='sample'),
+    path('survey_genres/', views.survey_genres, name='survey_genres'),
+    path('survey_artists/<genres>', views.survey_artists, name='survey_artists'),
+    path('create_genre_stack/', views.create_genre_stack, name='create_genre_stack'),
+
 ]
