@@ -614,9 +614,10 @@ def create_genre_stack(request):
     return JsonResponse(response)
 
 def survey_artists(request, genre_stack):
-    genres = request.POST.getlist('checked_list[]')
     new_genre_stack = GenresStack(genre_stack, "")
     genre = new_genre_stack.pop()
+    print("HEEEERRRRREE" + new_genre_stack.genresToString())
+    print('STACKKKKKKKKK ' + str(new_genre_stack.genres_stack))
     
     # Getting the artist ids from Spotify
     if len(genre) > 0:
@@ -659,61 +660,102 @@ def send_artists(request, genre_stack):
     artists = request.POST.getlist('artist_id_list[]')
     new_genre_stack = GenresStack(genre_stack, artists)
     artists_string = new_genre_stack.artistsToString()
-    link = 'survey_songs/' + new_genre_stack.genresToString() + '/' + artists_string
+    link = 'survey_songs/' + new_genre_stack.genresToString() + '/' + artists_string 
     response = {'redirect' : link}
     return JsonResponse(response)
 
-def survey_songs(request, genre_stack, artists):
+def survey_songs(request, genre_stack, artists_string):
     """
     """
-    artists = request.POST.getlist('artist_id_list[]')
-    print(artists)
+    if '*' in artists_string:
+        artists = artists_string.split('*')
+        # Last result is an empty string, so pop it off
+        artists.pop()
 
     songs_list = [] 
-    
-
     track_ids = []
-    art_extreme_tracks = []
+    track_names = []
+    # art_extreme_tracks = []
 
-    features = [
-        'danceability',
-        'acousticness',
-        'energy',
-        'instrumentalness',
-        'speechiness',
-        'loudness',
-        'tempo',
-        'valence',
-    ]
+    # features = [
+    #     'danceability',
+    #     'acousticness',
+    #     'energy',
+    #     'instrumentalness',
+    #     'speechiness',
+    #     'loudness',
+    #     'tempo',
+    #     'valence',
+    # ]
 
     # if genre_stack has next - Joe|| I'm checking if it's empty, same difference but it'll work if we need to pop for some reason. - James
     # if not genre_stack.isEmpty: || On second thought, does it not make more sense to only check if artists isn't empty?
     if len(artists) != 0:
         # for each around the artists
         for artist in artists:
-            for feature in features:
-                max_feat = search_artist_features(artist, feature, True)
-                min_feat = search_artist_features(artist, feature, False)
-                if not art_extreme_tracks.includes(max_feat):
-                    art_extreme_tracks.append(max_feat)     # max value for whatever the current feature is
-                if not art_extreme_tracks.include(min_feat):
-                    art_extreme_tracks.append(min_feat)     # min value    
-
-            if len(art_exteme_tracks) > 5:
-                # grab a random 5 of the most extreme tracks
-                track_ids.append(np.random.sample(art_extreme_tracks, 5))
+            tracks = get_top_tracks(artist)
+            if len(tracks) > 5:
+                track_ids.extend(random.sample(tracks, 5))
             else:
-                track_ids.extend(art_extreme_tracks)
-            art_extreme_tracks = []
+                track_ids.extend(tracks)
+
+            # for feature in features:
+            #     max_feat = search_artist_features(artist, feature, True)
+            #     print("MAX")
+            #     print(max_feat)
+            #     min_feat = search_artist_features(artist, feature, False)
+            #     print("MIN")
+            #     print(min_feat)
+            #     if max_feat not in art_extreme_tracks:
+            #         art_extreme_tracks.append(max_feat)     # max value for whatever the current feature is
+            #     if min_feat not in art_extreme_tracks:
+            #         art_extreme_tracks.append(min_feat)     # min value    
+
+            # if len(art_extreme_tracks) > 5:
+            #     # grab a random 5 of the most extreme tracks
+            #     var = random.sample(art_extreme_tracks, 5)
+            #     print("++++++++++++++++++++++++++++++")
+            #     print(var)
+            #     track_ids.extend(random.sample(art_extreme_tracks, 5))
+            # else:
+            #     idk = art_extreme_tracks
+            #     print("kjsdhfkjhkfdhsjkdhgkjhdsfghsdkgbsdfgjhbdg")
+            #     print(idk)
+            #     track_ids.extend(art_extreme_tracks)
+            # art_extreme_tracks = []
+
+    # print("======================================")
+    # print(track_ids)
 
     #render survey_artists and context of song list
+
+    for track in track_ids:
+        track_names.append(get_song_name(track))
+
+    artist_names = []
+    for artist_id in artists:
+        artist_names.append(get_artist_name(artist_id))
+
     context = {
         'track_ids': track_ids,
-        'genres_stack': genre_stack,
+        'track_names': track_names,
+        'genre_stack': genre_stack,
+        'artist_names': artist_names,
     }
     return render(request, 'Survey/survey_songs.html', context)
 
-
+def check_remaining(request, genre_stack):
+    # songs = request.POST.getlist('song_id_list[]')
+    new_genre_stack = GenresStack(genre_stack, [])
+    if genre_stack == "*":
+        link = ''
+        response = {'redirect' : link}
+        return JsonResponse(response)
+    else:
+        link = 'survey_artists/' + new_genre_stack.genresToString()
+        response = {'redirect' : link}
+        return JsonResponse(response)
+        
 
 # Alt-rock → alternative rock
 # Alternative

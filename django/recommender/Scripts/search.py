@@ -92,9 +92,9 @@ def search_artist_features(query, feature, high_or_low):
         level = song_feats[0].get(feature)
 
         if current_min is None:
-             current_min = level
+            current_min = level
         if current_max is None:
-             current_max = level
+            current_max = level
         
         if current_min >= level:
             low_song = songs[X]['id']
@@ -107,6 +107,14 @@ def search_artist_features(query, feature, high_or_low):
         return high_song
     else:
         return low_song
+
+def get_top_tracks(artist_id):
+    tracks = sp.artist_top_tracks('spotify:artist:'+artist_id)['tracks']
+    all_tracks = []
+    for track in tracks:
+        all_tracks.append(track['id'])
+
+    return all_tracks
         
 def get_recommendation(request, limit, user_id, **kwargs):
     seed_artists = get_top_artists_by_id(user_id)
@@ -237,6 +245,13 @@ def get_song_name(track):
     Gets the name of a song based on its id
     """
     name = sp.track(track)['name']
+    return name
+
+def get_artist_name(artist_id):
+    """
+    Gets the name of an artist based on their id
+    """
+    name = sp.artist(artist_id)['name']
     return name
 
 def get_track(track):

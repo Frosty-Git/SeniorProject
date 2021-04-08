@@ -22,7 +22,8 @@ urlpatterns = [
     path('sample/', views.sample, name='sample'),
     path('survey_genres/', views.survey_genres, name='survey_genres'),
     path('survey_artists/<genre_stack>/', views.survey_artists, name='survey_artists'),
-    path('survey_songs/<genre_stack>/<artists>', views.survey_songs, name='survey_songs'),
+    path('survey_songs/<genre_stack>/<artists_string>', views.survey_songs, name='survey_songs'),
     path('create_genre_stack/', views.create_genre_stack, name='create_genre_stack'),
     path('send_artists/<genre_stack>', views.send_artists, name='send_artists'),
+    path('check_remaining/<genre_stack>', views.check_remaining, name='check_remaining'),
 ]

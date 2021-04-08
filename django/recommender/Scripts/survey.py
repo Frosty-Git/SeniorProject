@@ -63,18 +63,22 @@ class GenresStack:
     def pop(self):
         if '*' in self.genres_stack:
             genres = self.genres_stack.split('*') # 'rock*pop*country*' becomes ['rock', 'pop', 'country', '']
-            print("Genres " + str(genres))
             # Last result is an empty string, so pop twice
             genres.pop() # ['rock', 'pop', 'country']
             genre_popped = genres.pop()  # 'country'
-            print("Popped " + genre_popped)
-            self.genre_stack = ""
-            for genre in genres:
-                self.genre_stack = self.genre_stack + (genre + "*")
+            new_genres = ""
             
+            if len(genres) > 0:
+                for genre in genres:
+                    new_genres = new_genres + (genre + "*")
+                self.genres_stack = new_genres
+            else:
+                self.genres_stack = "*"    
+    
             return genre_popped
 
         else:
+            self.genres_stack = "*"
             return ""
 
     def push(self, genre):
@@ -100,3 +104,9 @@ class GenresStack:
         for artist in list(self.artists_list):
             artists_string = artists_string + (artist + "*")
         return artists_string
+    
+    def artistsToList(self, artists_string):
+        if '*' in artists_string:
+            artists = artists_string.split('*')
+            # Last result is an empty string, so pop it off
+            return artists.pop()
