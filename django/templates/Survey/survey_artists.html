@@ -60,7 +60,7 @@
 <br>
 
 
-
+<h3>Pick up to 3 artists you like for the genre {{ genre }}.</h3>
 <form name="artistForm" method="post">
   <table>
     <tr>
@@ -175,6 +175,7 @@
   <div style="margin-left: 10%;">
     <button type="button" id="submit" class="btn artistBtn" style="height: 50px; width: 110px">Submit</button>
   </div>
+  <p id="gs">{{genre_stack}}</p>
   <script>
     $('.artistBtn').click(function(e) {
         let artist_ids = [];
@@ -183,13 +184,24 @@
         });
         if (artist_ids.length >= 1) {
             console.log(artist_ids);
+            gs = document.getElementById("gs").innerHTML;
+            console.log(gs);
             $.ajax({
                 type: 'POST',
-                url: '{% url "recommender:create_genre_stack" %}',
+                url: '{% url "recommender:send_artists" genre_stack %}',
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     artist_id_list: artist_ids,
                 },
+                success: function(response) {
+                  let url = response.redirect;
+                  //console.log(genre_stack)
+                  // let string = '{% url "recommender:survey_artists" '
+                  let s = "/"
+                  window.location.href = s.concat(url);
+                  // string = "http://localhost:8000/survey_artists/"
+                  // window.location.href = string.concat(genre_stack)
+                }
             });
         }
         else {

@@ -1,8 +1,9 @@
 # Authors: Tucker & Joe & Katie
 class GenresStack:
-    
-    def __init__(self, stack_string):
-        self.genres_stack = str(stack_string)
+    def __init__(self, genres_string, artists_string):
+        self.genres_stack = str(genres_string)
+        self.artists_list = list(artists_string)
+        self.songs_list = []
         self.genres_options = {
             'alternative': '37i9dQZF1DX9GRpeH4CL0S',
             'anime': '37i9dQZF1DWT8aqnwgRt92',
@@ -60,8 +61,8 @@ class GenresStack:
         }
 
     def pop(self):
-        if '3' in self.genres_stack:
-            genres = self.genres_stack.split('3') # 'rock3pop3country3' becomes ['rock', 'pop', 'country', '']
+        if '*' in self.genres_stack:
+            genres = self.genres_stack.split('*') # 'rock*pop*country*' becomes ['rock', 'pop', 'country', '']
             print("Genres " + str(genres))
             # Last result is an empty string, so pop twice
             genres.pop() # ['rock', 'pop', 'country']
@@ -69,7 +70,7 @@ class GenresStack:
             print("Popped " + genre_popped)
             self.genre_stack = ""
             for genre in genres:
-                self.genre_stack = self.genre_stack + (genre + "3")
+                self.genre_stack = self.genre_stack + (genre + "*")
             
             return genre_popped
 
@@ -77,7 +78,7 @@ class GenresStack:
             return ""
 
     def push(self, genre):
-        self.genres_stack = self.genres_stack + (genre + "3")
+        self.genres_stack = self.genres_stack + (genre + "*")
 
     def isEmpty(self):
         result = False
@@ -94,4 +95,8 @@ class GenresStack:
     def toString(self):
         return str(self.genres_stack)
 
-    
+    def artistsToString(self):
+        artists_string = ""
+        for artist in list(self.artists_list):
+            artists_string = artists_string + (artist + "*")
+        return artists_string
