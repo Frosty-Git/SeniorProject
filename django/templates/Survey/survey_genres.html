@@ -57,6 +57,7 @@
 
 <h3>Pick up to 3 genres you like.</h3>
 <form name="genreForm" method="post">
+  {% csrf_token %}
   <table>
     <tr>
       <td>
