@@ -191,7 +191,7 @@
                 </div>  
     
                 <div class="modal-footer">
-                    {% if nofollow %}
+                    {% if nofollow == 'nofollow' %}
                     {% else %}
                         <textarea id="comment_text{{ post.id }}" class="form-control" aria-label="With textarea" name="comment_text"></textarea>
                         <button id="close" type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>

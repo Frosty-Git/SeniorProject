@@ -48,11 +48,6 @@
                 </h5>
             {% endif %}
 
-            <h6 style="padding-bottom:20px; font-size: 13px;">
-                DOB: {{ profile.birthdate }}
-                (<span id="age"></span>)
-            </h6>
-
             {% if profile.likes or profile.dislikes or is_following %}
                 <div class="container" style="margin-left:auto; margin-right:auto; text-align:center">
                     <table style="margin-left:auto; margin-right:auto;">
@@ -72,7 +67,7 @@
                 </div>
             {% endif %}
             {% if profile.user.id == user.id and not profile.linked_to_spotify %}
-                <a class="btn btn-success" href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
+                <a class="btn spotify"  href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
             {% else %}
                 {% if nofollow %}
 
@@ -329,9 +324,9 @@
 </div> 
 
 <script type="text/javascript" src="{% static 'js/profile.js' %}"></script>
-<script>
+<!-- <script>
     let birthday = new Date("{{ profile.birthdate|date:'F j, Y' }}");
     document.getElementById("age").innerHTML = get_age(birthday);
-</script>
+</script> -->
 {% include 'social_feed/popup_createpost.html' %}  
 {% endblock %}
