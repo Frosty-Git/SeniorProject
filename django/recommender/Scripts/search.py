@@ -275,3 +275,6 @@ def get_top_track(request):
         sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist).first()
         spotify_id = sop.spotify_id.spotify_id
         return spotify_id
+
+def get_playlist_items(playlist_id):
+    return sp.playlist_items(playlist_id, fields=None, limit=2, offset=0, market=None, additional_types=('track', 'episode'))['items']

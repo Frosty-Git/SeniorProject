@@ -1,5 +1,4 @@
 from django.db import models
-from user_profile.models import UserProfile
 
 
 class Musicdata(models.Model):
@@ -24,3 +23,22 @@ class Musicdata(models.Model):
     year = models.IntegerField()
 
 
+class GenreArtist(models.Model):
+    id = models.TextField(primary_key=True)
+    artists = models.TextField()
+    acousticness = models.FloatField()
+    danceability = models.FloatField()
+    duration_ms = models.FloatField()
+    energy = models.FloatField()
+    instrumentalness = models.FloatField()
+    liveness = models.FloatField()
+    loudness = models.FloatField()
+    speechiness = models.FloatField()
+    tempo = models.FloatField()
+    valence = models.FloatField()
+    popularity = models.FloatField()
+    key = models.FloatField()
+    mode = models.FloatField()
+    count = models.FloatField()
+    genres = models.TextField(null=True, blank=True)
+    
