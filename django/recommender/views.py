@@ -666,7 +666,6 @@ def send_artists(request, genre_stack):
 
 def survey_songs(request, genre_stack, artists):
     """
-    Joe Frost, James Cino
     """
     artists = request.POST.getlist('artist_id_list[]') 
     print(artists)
