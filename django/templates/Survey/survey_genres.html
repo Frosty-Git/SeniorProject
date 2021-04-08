@@ -211,6 +211,15 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     checked_list: checked,
                 },
+                success: function(response) {
+                  let url = response.stack;
+                  //console.log(genre_stack)
+                  // let string = '{% url "recommender:survey_artists" '
+                  let s = "/"
+                  window.location.href = s.concat(url);
+                  // string = "http://localhost:8000/survey_artists/"
+                  // window.location.href = string.concat(genre_stack)
+                }
             });
         }
         else {

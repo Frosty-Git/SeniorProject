@@ -1,8 +1,8 @@
 # Authors: Tucker & Joe & Katie
 class GenresStack:
     
-    def __init__(self):
-        self.genres_stack = ""
+    def __init__(self, stack_string):
+        self.genres_stack = str(stack_string)
         self.genres_options = {
             'alternative': '37i9dQZF1DX9GRpeH4CL0S',
             'anime': '37i9dQZF1DWT8aqnwgRt92',
@@ -31,11 +31,53 @@ class GenresStack:
             'soul' : '37i9dQZF1DWULEW2RfoSCi',
         }
 
+        self.genres_names = {
+            'alternative': 'Alternative',
+            'anime': 'Anime',
+            'blues': 'Blues',
+            'rock': 'Classic Rock',
+            'classical' : 'Classical',
+            'country' : 'Country',
+            'disco' : 'Disco',
+            'electronic' : 'Electronic',
+            'emo' : 'Emo',
+            'folk' : 'Folk',
+            'gospel' : 'Gospel',
+            'grunge' : 'Grunge',
+            'hard-rock' : 'Hard Rock',
+            'hip-hop' : 'Hip Hop',
+            'indie' : 'Indie',
+            'jazz' : 'Jazz',
+            'k-pop' : 'K-pop',
+            'latin' : 'Latin',
+            'metal' : 'Metal',
+            'opera' : 'Opera',
+            'pop' : 'Pop',
+            'punk' : 'Punk',
+            'r-n-b' : 'R&B',
+            'reggae' : 'Reggae',
+            'soul' : 'Soul',
+        }
+
     def pop(self):
-        return self.genres_stack.pop()
+        if '3' in self.genres_stack:
+            genres = self.genres_stack.split('3') # 'rock3pop3country3' becomes ['rock', 'pop', 'country', '']
+            print("Genres " + str(genres))
+            # Last result is an empty string, so pop twice
+            genres.pop() # ['rock', 'pop', 'country']
+            genre_popped = genres.pop()  # 'country'
+            print("Popped " + genre_popped)
+            self.genre_stack = ""
+            for genre in genres:
+                self.genre_stack = self.genre_stack + (genre + "3")
+            
+            return genre_popped
+
+        else:
+            return ""
 
     def push(self, genre):
-        self.genres_stack.append("/" + genre)
+        self.genres_stack = self.genres_stack + (genre + "3")
 
     def isEmpty(self):
         result = False
@@ -45,3 +87,11 @@ class GenresStack:
 
     def get_playlist_id(self, genre):
         return self.genres_options[genre]
+
+    def get_genre_name(self, genre):
+        return str(self.genres_names[genre])
+
+    def toString(self):
+        return str(self.genres_stack)
+
+    

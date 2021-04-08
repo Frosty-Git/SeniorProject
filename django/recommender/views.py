@@ -596,55 +596,66 @@ def create_genre_stack(request):
     """
     """
     genres = request.POST.getlist('checked_list[]')
-    genre_stack = GenresStack()
+    new_genre_stack = GenresStack("")
     for genre in genres:
-        genre_stack.push(genre)
-    return redirect('/survey_artists/', genre_stack=genre_stack)
-    # survey_artists(request, genre_stack)
+        new_genre_stack.push(genre)
+    # return redirect('recommender:survey_artists', genre_stack=new_genre_stack.toString())
+    # return redirect('survey_artists', genre_stack=genre_stack)
+    # link = "survey_artists/" + new_genre_stack.toString()
+    # data = json.dumps({'url' : link})
+    # return HttpResponse(data)
+    link = 'survey_artists/' + new_genre_stack.toString()
+    response = {'stack' : link}
+    return JsonResponse(response)
 
-def survey_artists(request):
+
+def survey_artists(request, genre_stack):
     genres = request.POST.getlist('checked_list[]')
-    genre_stack = GenresStack()
-    for genre in genres:
-        genre_stack.push(genre)
+    new_genre_stack = GenresStack(genre_stack)
+    genre = new_genre_stack.pop()
+    if len(genre) > 0:
+        playlist_id = new_genre_stack.get_playlist_id(genre)
+        track_items = get_playlist_items(playlist_id)
+        dicti = {}
+        for track_item in track_items:
+            artists = track_item['track']['album']['artists']
+            for artist in artists:
+                artist_name = artist['name']
+                artist_id = artist['id']
+                if artist_name != "Various Artists":
+                    if not artist_id in dicti:
+                        dicti[artist_id] = artist_name
 
-def survey_artists_loop(request, genre_stack):
-    # get the top 30 artists for the genre from the spotify playlists data
-    genre = genre_stack.pop()
-    playlist_id = genre_stack.get_playlist_id(genre)
-    track_items = get_playlist_items(playlist_id)[0]
-    dicti = {}
-    for track in track_items:
-        artists = track_items['track']['album']['artists']
+        # randomly pick 15 of those artists and put them in the context
+        # for the artist choices.
+
+        # Artist ids
+        artists = np.random.permutation(list(dicti.keys()))[:15] 
+
+        # artists = random.sample(dicti.keys(), k=15)
+        artist_ids = [] 
+        artist_names = []
         for artist in artists:
-            artist_name = artist['name']
-            artist_id = artist['id']
-            if artist_name != "Various Artists":
-                if not artist_id in dicti:
-                    dicti[artist_id] = artist_name
+            artist_ids.append(artist)
+            artist_names.append(dicti[artist])
 
-    # randomly pick 15 of those artists and put them in the context
-    # for the artist choices.
-
-    artists = np.random.permutation(list(dicti.keys()))[:15] 
-
-    final_15_artists = {}
-    # artists = random.sample(dicti.keys(), k=15) 
-    for artist in artists:
-        final_15_artists[artist] = dicti[artist]
-
-    context = {
-        'final_artists': final_15_artists
-    }
-    print("We About to Render Guys!")
-    return render(request, 'Survey/survey_artists.html', context)
+        context = {
+            'artist_ids' : artist_ids,
+            'artist_names' : artist_names,
+            'genre' : new_genre_stack.get_genre_name(genre),
+            'genre_stack': new_genre_stack.toString(),
+        }
+        return render(request, 'Survey/survey_artists.html', context)
+    else:
+        # Change to recommender
+        return HttpResponseRedirect('/')
+        # return render(request, "Survey/survey_artists.html", {})
 
 def survey_songs(request, genre_stack):
     """
     Joe Frost, James Cino
     """
-    
-    artists = request.POST.get("final_artists") 
+    artists = request.POST.get('artist_id_list[]') 
     track_ids = []
     art_extreme_tracks = []
 
@@ -658,7 +669,6 @@ def survey_songs(request, genre_stack):
         'tempo',
         'valence',
     ]
-
 
     # if genre_stack has next - Joe|| I'm checking if it's empty, same difference but it'll work if we need to pop for some reason. - James
     # if not genre_stack.isEmpty: || On second thought, does it not make more sense to only check if artists isn't empty?

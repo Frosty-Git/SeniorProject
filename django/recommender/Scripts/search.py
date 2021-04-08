@@ -277,4 +277,4 @@ def get_top_track(request):
         return spotify_id
 
 def get_playlist_items(playlist_id):
-    return sp.playlist_items(playlist_id, fields=None, limit=2, offset=0, market=None, additional_types=('track', 'episode'))['items']
+    return sp.playlist_items(playlist_id, fields=None, limit=50, offset=0, market=None, additional_types=('track', 'episode'))['items']
