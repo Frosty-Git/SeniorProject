@@ -652,13 +652,8 @@ def survey_artists(request, genre_stack):
         # return render(request, "Survey/survey_artists.html", {})
 
 def send_artists(request, genre_stack):
-    print("Entering Send Artists")
-    print(genre_stack)
     artists = request.POST.getlist('artist_id_list[]')
-    if isinstance(artists, list):
-        print("true")
     new_genre_stack = GenresStack(genre_stack, artists)
-    print(artists)
     artists_string = new_genre_stack.artistsToString()
     link = 'survey_songs/' + artists_string
     response = {'redirect' : link}
