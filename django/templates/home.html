@@ -21,7 +21,7 @@
     </center>
     <br>
     <center>
-        <form class='ourSearchForm' method='POST' action='results/'>
+        <form class='ourSearchForm' method='POST' action='results/' style="color: #f5f7fa;">
             {% csrf_token %}
             {{ ourSearchForm.term }}
             <input type='submit' value='Search' class='ourSearchForm'>
