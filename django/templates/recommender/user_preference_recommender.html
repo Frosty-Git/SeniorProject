@@ -8,7 +8,7 @@
 <center><h1>My Recommendations</h1></center>
 <br>
 
-{% if min_likes_met %}
+{% if min_likes_met and profile.survey_taken %}
 <table class="center">
 {% for song, vote in track_ids.items %}
     <tr>
@@ -78,9 +78,27 @@
         {% endif %}
     </tr>
 </table>
-{% else %}
+{% endif %}
+
+<center><h3>Artists Like Your Top Artist {{ top_artist_name }}:</h3></center>
+<table>
+{% for artist_id in related_artists %}
+    <tr>
+        <td>
+            <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+        </td>
+    </tr>
+{% endfor %}
+</table>
+
+{% if not min_likes_met %}
     <center><p>You have not liked any songs! Go like some songs in order to get recommendations!</p></center>
     <center><a href="{% url 'recommender:home' %}" style="color: #f5f7fa;">Home</a></center>
+{% endif %}
+   
+{% if not profile.survey_taken %}
+    <center><p>You have not yet taken the survey! Take it so that you can get better recommendations.</p></center>
+    <center><a href="{% url 'recommender:survey_genres' %}" style="color: #f5f7fa;">Survey</a></center>
 {% endif %}
 
 {% endblock %}

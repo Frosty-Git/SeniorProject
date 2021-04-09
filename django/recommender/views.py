@@ -14,7 +14,12 @@ from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
 from social_feed.models import *
 from social_feed.views import *
+from django.contrib import messages
 from collections import Counter
+import random
+from random import sample
+from recommender.Scripts.survey import GenresStack
+from recommender.Scripts.search import get_playlist_items
 
 #----Dr Baliga's Code----
 
@@ -196,7 +201,8 @@ def user_preference_recommender(request):
         min_likes_met = True
 
     if min_likes_met:
-        recommendations = get_recommendation(request, limit, user_id, **pref_dict)
+        results = get_recommendation(request, limit, user_id, **pref_dict)
+        recommendations = results['recommendations']
         track_ids = []
         for x in range(limit):
             if x+1 > len(recommendations['tracks']):
@@ -216,6 +222,8 @@ def user_preference_recommender(request):
             'top_artists_ids': top_artists_ids,
             'min_likes_met': min_likes_met,
             'location': 'recommender',
+            'related_artists': results['related_artists_ids'],
+            'top_artist_name': results['top_artist']
         }
     else:
         context = {
@@ -582,6 +590,279 @@ def get_top_artists_by_name(user_id):
     top_3_artists = [key for key, val in most_common]
 
     return top_3_artists
+
+def survey_genres(request):
+    """
+    """
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    if user.survey_taken:
+        messages.warning(request, ('Warning: Taking the survey again will reset your preferences!'))
+    return render(request, 'Survey/survey_genres.html', {})
+
+def create_genre_stack(request):
+    """
+    """
+    genres = request.POST.getlist('checked_list[]')
+    genres_stack = ""
+    artists_list = ""
+    songs_list = "*"
+    new_genre_stack = GenresStack(genres_stack, artists_list, songs_list)
+    
+    user_id = request.user.id
+    profile = UserProfile.objects.get(pk=user_id)
+    prefs = Preferences.objects.get(user_profile_fk=profile)
+    genre_prefs_list = ""
+    for genre in genres:
+        new_genre_stack.push(genre)
+        genre_prefs_list += (genre + "*")
+
+    prefs.genres = str(genre_prefs_list)
+    prefs.save()
+    
+    link = 'survey_artists/' + new_genre_stack.genresToString() + '/' + new_genre_stack.songs_list
+    response = {'stack' : link}
+    return JsonResponse(response)
+
+def survey_artists(request, genre_stack, songs_list):
+    new_genre_stack = GenresStack(genre_stack, "", songs_list)
+    genre = new_genre_stack.pop()
+    
+    # Getting the artist ids from Spotify
+    if len(genre) > 0:
+        playlist_id = new_genre_stack.get_playlist_id(genre)
+        track_items = get_playlist_items(playlist_id)
+        dicti = {}
+        for track_item in track_items:
+            artists = track_item['track']['album']['artists']
+            for artist in artists:
+                artist_name = artist['name']
+                artist_id = artist['id']
+                if artist_name != "Various Artists":
+                    if not artist_id in dicti:
+                        dicti[artist_id] = artist_name
+
+        # randomly pick 15 of those artists and put them in the context
+        # for the artist choices.
+        # Artist ids
+        artists = np.random.permutation(list(dicti.keys()))[:15] 
+
+        artist_ids = [] 
+        artist_names = []
+        for artist in artists:
+            artist_ids.append(artist)
+            artist_names.append(dicti[artist])
+
+        context = {
+            'artist_ids' : artist_ids,
+            'artist_names' : artist_names,
+            'genre' : new_genre_stack.get_genre_name(genre),
+            'genre_stack': new_genre_stack.genresToString(),
+            'songs_list': songs_list,
+        }
+        return render(request, 'Survey/survey_artists.html', context)
+    else:
+        # Change to recommender
+        return HttpResponseRedirect('/')
+        # return render(request, "Survey/survey_artists.html", {})
+
+def send_artists(request, genre_stack, songs_list):
+    artists = request.POST.getlist('artist_id_list[]')
+    new_genre_stack = GenresStack(genre_stack, artists, songs_list)
+    artists_string = new_genre_stack.artistsToString()
+    link = 'survey_songs/' + new_genre_stack.genresToString() + '/' + artists_string + '/' + songs_list
+    response = {'redirect' : link}
+    return JsonResponse(response)
+
+def survey_songs(request, genre_stack, artists_string, songs_list):
+    """
+    """
+    if '*' in artists_string:
+        artists = artists_string.split('*')
+        # Last result is an empty string, so pop it off
+        artists.pop()
+
+    track_ids = []
+    track_names = []
+    # art_extreme_tracks = []
+
+    # features = [
+    #     'danceability',
+    #     'acousticness',
+    #     'energy',
+    #     'instrumentalness',
+    #     'speechiness',
+    #     'loudness',
+    #     'tempo',
+    #     'valence',
+    # ]
+
+    # if genre_stack has next - Joe|| I'm checking if it's empty, same difference but it'll work if we need to pop for some reason. - James
+    # if not genre_stack.isEmpty: || On second thought, does it not make more sense to only check if artists isn't empty?
+    if len(artists) != 0:
+        # for each around the artists
+        for artist in artists:
+            tracks = get_top_tracks(artist)
+            if len(tracks) > 5:
+                track_ids.extend(random.sample(tracks, 5))
+            else:
+                track_ids.extend(tracks)
+
+            # for feature in features:
+            #     max_feat = search_artist_features(artist, feature, True)
+            #     print("MAX")
+            #     print(max_feat)
+            #     min_feat = search_artist_features(artist, feature, False)
+            #     print("MIN")
+            #     print(min_feat)
+            #     if max_feat not in art_extreme_tracks:
+            #         art_extreme_tracks.append(max_feat)     # max value for whatever the current feature is
+            #     if min_feat not in art_extreme_tracks:
+            #         art_extreme_tracks.append(min_feat)     # min value    
+
+            # if len(art_extreme_tracks) > 5:
+            #     # grab a random 5 of the most extreme tracks
+            #     var = random.sample(art_extreme_tracks, 5)
+            #     print("++++++++++++++++++++++++++++++")
+            #     print(var)
+            #     track_ids.extend(random.sample(art_extreme_tracks, 5))
+            # else:
+            #     idk = art_extreme_tracks
+            #     print("kjsdhfkjhkfdhsjkdhgkjhdsfghsdkgbsdfgjhbdg")
+            #     print(idk)
+            #     track_ids.extend(art_extreme_tracks)
+            # art_extreme_tracks = []
+
+    # print("======================================")
+    # print(track_ids)
+
+    #render survey_artists and context of song list
+
+    for track in track_ids:
+        track_names.append(get_song_name(track))
+
+    artist_names = []
+    for artist_id in artists:
+        artist_names.append(get_artist_name(artist_id))
+
+    context = {
+        'track_ids': track_ids,
+        'track_names': track_names,
+        'genre_stack': genre_stack,
+        'artist_names': artist_names,
+        'songs_list': songs_list
+    }
+    return render(request, 'Survey/survey_songs.html', context)
+
+def check_remaining(request, genre_stack, songs_list):
+    new_songs = request.POST.getlist('song_id_list[]')
+    artist_list = ""
+    # Convert the list of song ids into a string
+    # songs_string = ""
+    # if len(songs_list) > 0:
+    #     for song in songs_list:
+    #         songs_string = songs_string + (song + "*")
+    # else: 
+    #     songs_string = "*"
+    new_genre_stack = GenresStack(genre_stack, artist_list, songs_list)
+    
+    new_genre_stack.extendSongList(new_songs)
+
+
+    if genre_stack == "*":
+        link = 'survey_final/' + new_genre_stack.songs_list
+    else:
+        link = 'survey_artists/' + new_genre_stack.genresToString() + '/' + new_genre_stack.songs_list
+        
+    response = {'redirect' : link}
+    return JsonResponse(response)
+        
+def survey_final(request, songs_list):
+    genre_stack = ""
+    artist_list = ""
+    new_genre_stack = GenresStack(genre_stack, artist_list, songs_list)
+    print(new_genre_stack.songs_list)
+    tracks = new_genre_stack.songsToList()
+    print(tracks)
+    NUM_TRACKS = len(tracks)
+    save_songs(tracks)
+
+    # User Preferences:
+    danceability = 0
+    acousticness = 0
+    energy = 0
+    instrumentalness = 0
+    speechiness = 0
+    loudness = 0
+    tempo = 0
+    valence = 0
+
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    prefs = Preferences.objects.get(user_profile_fk=user)
+    user.survey_taken = True
+    user.save()
+
+    for track in tracks:
+        features = get_audio_features([track])[0]
+        danceability += features.get('danceability')
+        tempo += features.get('tempo')
+        energy += features.get('energy')
+        instrumentalness += features.get('instrumentalness')
+        loudness += features.get('loudness')
+        valence += features.get('valence')
+        speechiness += features.get('speechiness')
+        acousticness += features.get('acousticness')
+        new_song = SongId.objects.get(pk=track)
+        vote = SongToUser(user_from=user, songid_to=new_song, vote='Like')
+        vote.save()
+        add_to_liked_songs(user, track)
+
+    prefs.danceability = danceability / NUM_TRACKS
+    prefs.acousticness = acousticness / NUM_TRACKS
+    prefs.energy = energy / NUM_TRACKS
+    prefs.instrumentalness = instrumentalness / NUM_TRACKS
+    prefs.speechiness = speechiness / NUM_TRACKS
+    prefs.loudness = loudness / NUM_TRACKS
+    prefs.tempo = tempo / NUM_TRACKS
+    prefs.valence = valence / NUM_TRACKS
+    prefs.save()
+
+
+    return redirect('/recommendations')
+
+    #return render(request, "Survey/test.html")
+
+# Alt-rock → alternative rock
+# Alternative
+# Anime
+# Classical
+# Country
+# Disco
+# Electronic
+# Emo
+# Folk
+# Funk
+# Gospel
+# Grunge
+# Hard-rock → hard rock
+# Hip-hop → hip hop
+# Indie
+# Jazz
+# K-pop
+# Latin
+# Metal
+# Pop
+# Punk
+# R-n-b → r&b
+# Reggae
+# Rock
+# Soul
+
+
+
+
+
 
 # This is a sample page for our css styles!
 def sample(request):

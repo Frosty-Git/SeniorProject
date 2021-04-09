@@ -20,4 +20,11 @@ urlpatterns = [
     path('song_downvote/', views.song_downvote, name='song_downvote'),
     path('recommendations/', views.user_preference_recommender, name='user_preference_recommender'),
     path('sample/', views.sample, name='sample'),
+    path('survey_genres/', views.survey_genres, name='survey_genres'),
+    path('survey_artists/<genre_stack>/<songs_list>', views.survey_artists, name='survey_artists'),
+    path('survey_songs/<genre_stack>/<artists_string>/<songs_list>', views.survey_songs, name='survey_songs'),
+    path('create_genre_stack/', views.create_genre_stack, name='create_genre_stack'),
+    path('send_artists/<genre_stack>/<songs_list>', views.send_artists, name='send_artists'),
+    path('check_remaining/<genre_stack>/<songs_list>', views.check_remaining, name='check_remaining'),
+    path('survey_final/<songs_list>', views.survey_final, name='survey_final'),
 ]
