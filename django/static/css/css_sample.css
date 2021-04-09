@@ -6,31 +6,17 @@ body {
 h1 {
     color: #f5f7fa;
     font-size: 500%;
-    -webkit-text-stroke-color: black;
-    -webkit-text-stroke-width: 2px;
-    font-family: 'Montserrat', sans-serif;
+    /* -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 2px; */
+    font-family: 'Lato', sans-serif;
     font-weight: 400;
 }
 
-h2 {
+h2, h3, h4, h5, h6, p {
     color: #f5f7fa;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;  
+    font-family: "Lato" , sans-serif;  
 }
 
-h3 {
-    color: #f5f7fa;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;  
-}
-
-h4 {
-    color: #f5f7fa;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;  
-}
-
-p {
-    color: #f5f7fa;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;  
-}
 
 ul {
     color: #f5f7fa;
@@ -45,19 +31,36 @@ li {
 }
 
 button {
-
+    color: black;
 }
 
 hr {
-    
+    color: #f5f7fa;
+}
+
+a {
+    color: #f5f7fa;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #f99108;
 }
 
 .navbar {
     background-color: #1F2933;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;  
+    font-family: "Lato" , sans-serif;
 }
 
 .navbar-brand {
     color: #f99108;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;  
+    font-family: "Lato" , sans-serif;  
+}
+
+.accent {
+    color: #f99108;
+}
+
+.spotify {
+    background-color: #1DB954;
 }

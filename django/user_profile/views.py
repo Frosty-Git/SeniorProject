@@ -128,7 +128,7 @@ def profile(request, user_id):
             'valence': all_prefs['valence'],
             'private_prefs': all_prefs['private_prefs'],
             'private_profile': is_profile_private,
-            'nofollow': 'nofollow',
+            'nofollow': 'profile',
         }
     else:
         if request.user.id is not None:

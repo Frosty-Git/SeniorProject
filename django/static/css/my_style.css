@@ -1,7 +1,7 @@
-.theme_background {
+/* .theme_background {
     background-color:#343a40;
     color: ghostwhite;
-}
+} */
 
 .my_profile {
     /* background-color: darkslateblue;  */
@@ -22,7 +22,7 @@
     padding-right: 10px;
 }
 
-.profilelink a:hover {
+/* .profilelink a:hover {
     color:lightpink;
 }
 
@@ -33,7 +33,7 @@
 
 .header a:hover {
     color:lightpink;
-}
+} */
 
 
 .sidenav {

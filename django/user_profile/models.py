@@ -14,7 +14,6 @@ class UserProfile(models.Model):
                                 on_delete=models.CASCADE,
                                 primary_key=True,
                                 related_name='profile')
-    birthdate = models.DateField(blank=True, null=True)
     description = models.TextField(blank=True, null=True, max_length=100)
     likes = models.TextField(blank=True, null=True, max_length=50)
     dislikes = models.TextField(blank=True, null=True, max_length=50)

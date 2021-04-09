@@ -31,14 +31,13 @@ class ExtendedUserCreationForm(UserCreationForm):
 
 class UserProfileForm(forms.ModelForm):
     profilepic = forms.ImageField(required=False)
-    birthdate = forms.DateField()
     description = forms.CharField(widget=forms.Textarea, required=False, max_length=100)
     likes = forms.CharField(widget=forms.Textarea, required=False, max_length=50)
     dislikes = forms.CharField(widget=forms.Textarea, required=False, max_length=50)
 
     class Meta:
         model = UserProfile
-        fields = ('birthdate', 'description', 'likes', 'dislikes', 'profilepic')
+        fields = ('description', 'likes', 'dislikes', 'profilepic')
 
 
 class SettingsForm(forms.ModelForm):
