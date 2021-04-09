@@ -5,6 +5,7 @@ from user_profile.models import *
 from collections import Counter
 import re
 from recommender.Scripts.spotify_manager import SpotifyManager
+import random
 
 client_cred.setup()
 auth_manager = SpotifyClientCredentials()
@@ -118,16 +119,23 @@ def get_top_tracks(artist_id):
         
 def get_recommendation(request, limit, user_id, **kwargs):
     seed_artists = get_top_artists_by_id(user_id)
-    top_genre = get_artists_genres(seed_artists)
+    profile = UserProfile.objects.get(pk=user_id)
+    prefs = Preferences.objects.get(user_profile_fk=profile)
+    genres_list = prefs.genres.split('*')
+    genres = genres_list[:-1]
+    genre = random.sample(genres, 1)
+    related_artists_ids = get_related_artists(seed_artists[0])
+    # top_genre = get_artists_genres(seed_artists)
     track = get_top_track(request)
     # 3 artists, 1 genre, 1 track
     recommendations = sp.recommendations(seed_artists=seed_artists,
-                                        seed_genres=[top_genre], 
+                                        seed_genres=[genre[0]], 
                                         seed_tracks=[track], 
                                         limit=limit,
                                         country=None,
                                         **kwargs)
-    return recommendations
+    results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations}
+    return results
 
 def get_top_artists_by_id(user_id):
     """
@@ -187,6 +195,19 @@ def get_artists_genres(artist_id_list):
 # def match(input_string, string_list):
 #     words = re.findall(r'\w+', input_string)
 #     return [word for word in words if word in string_list]
+
+def get_related_artists(artist_id):
+    """
+    Returns 5 random artists related to an artist.
+    Last updated: 4/8/21 by Jacelynn Duranceau
+    """
+    artists = sp.artist_related_artists(artist_id)['artists']
+    all_artists = []
+    for artist in artists:
+        all_artists.append(artist['id'])
+    random_artists = random.sample(all_artists, 5)
+    return random_artists
+    
 
 def get_artists(track):
     """

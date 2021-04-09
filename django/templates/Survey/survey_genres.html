@@ -7,7 +7,7 @@
 {% block content %}
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -195,7 +195,7 @@
     </tr>
   </table>
   <div style="margin-left: 10%;">
-    <button type="button" id="submit" class="btn genreBtn" style="height: 50px; width: 110px">Submit</button>
+    <button type="button" id="submit" class="btn btn-dark genreBtn" style="height: 50px; width: 110px">Submit</button>
   </div>
   <script>
     $('.genreBtn').click(function(e) {

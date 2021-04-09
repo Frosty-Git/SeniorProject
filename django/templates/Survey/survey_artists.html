@@ -179,7 +179,6 @@
   <div>
     <button type="button" onClick="history.go(0);" class="btn btn-dark" style="height: 50px; width: 110px">Refresh Options</button>
   </div>
-  <p id="gs" hidden>{{genre_stack}}</p>
   <script>
     $('.artistBtn').click(function(e) {
         let artist_ids = [];
@@ -188,11 +187,9 @@
         });
         if (artist_ids.length >= 1) {
             console.log(artist_ids);
-            gs = document.getElementById("gs").innerHTML;
-            console.log(gs);
             $.ajax({
                 type: 'POST',
-                url: '{% url "recommender:send_artists" genre_stack %}',
+                url: '{% url "recommender:send_artists" genre_stack songs_list %}',
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     artist_id_list: artist_ids,

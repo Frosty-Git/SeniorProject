@@ -200,12 +200,11 @@
     {% endif %}
   </table>
   <div style="margin-left: 10%;">
-    <button type="button" id="submit" class="btn songBtn" style="height: 50px; width: 110px">Submit</button>
+    <button type="button" id="submit" class="btn btn-dark songBtn" style="height: 50px; width: 110px">Submit</button>
   </div>
   <div>
     <button type="button" onClick="history.go(0);" class="btn btn-dark" style="height: 50px; width: 110px">Refresh Options</button>
   </div>
-  <p id="gs" hidden>{{genre_stack}}</p>
   <script>
     $('.songBtn').click(function(e) {
         let song_ids = [];
@@ -213,12 +212,9 @@
             song_ids.push($(this).val());
         });
         if (song_ids.length >= 1) {
-            console.log(song_ids);
-            gs = document.getElementById("gs").innerHTML;
-            console.log(gs);
             $.ajax({
                 type: 'POST',
-                url: '{% url "recommender:check_remaining" genre_stack %}',
+                url: '{% url "recommender:check_remaining" genre_stack songs_list %}',
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     song_id_list: song_ids,

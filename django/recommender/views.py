@@ -14,6 +14,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
 from social_feed.models import *
 from social_feed.views import *
+from django.contrib import messages
 from collections import Counter
 import random
 from random import sample
@@ -200,7 +201,8 @@ def user_preference_recommender(request):
         min_likes_met = True
 
     if min_likes_met:
-        recommendations = get_recommendation(request, limit, user_id, **pref_dict)
+        results = get_recommendation(request, limit, user_id, **pref_dict)
+        recommendations = results['recommendations']
         track_ids = []
         for x in range(limit):
             if x+1 > len(recommendations['tracks']):
@@ -220,6 +222,7 @@ def user_preference_recommender(request):
             'top_artists_ids': top_artists_ids,
             'min_likes_met': min_likes_met,
             'location': 'recommender',
+            'related_artists': results['related_artists_ids']
         }
     else:
         context = {
@@ -590,34 +593,39 @@ def get_top_artists_by_name(user_id):
 def survey_genres(request):
     """
     """
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    if user.survey_taken:
+        messages.warning(request, ('Warning: Taking the survey again will reset your preferences!'))
     return render(request, 'Survey/survey_genres.html', {})
 
 def create_genre_stack(request):
     """
     """
     genres = request.POST.getlist('checked_list[]')
-    
     genres_stack = ""
     artists_list = ""
-    songs_list = ""
+    songs_list = "*"
+    new_genre_stack = GenresStack(genres_stack, artists_list, songs_list)
     
-    new_genre_stack = GenresStack(genres_stack, artists_list)
+    user_id = request.user.id
+    profile = UserProfile.objects.get(pk=user_id)
+    prefs = Preferences.objects.get(user_profile_fk=profile)
+    genre_prefs_list = ""
     for genre in genres:
         new_genre_stack.push(genre)
-    # return redirect('recommender:survey_artists', genre_stack=new_genre_stack.toString())
-    # return redirect('survey_artists', genre_stack=genre_stack)
-    # link = "survey_artists/" + new_genre_stack.toString()
-    # data = json.dumps({'url' : link})
-    # return HttpResponse(data)
-    link = 'survey_artists/' + new_genre_stack.genresToString()
+        genre_prefs_list += (genre + "*")
+
+    prefs.genres = str(genre_prefs_list)
+    prefs.save()
+    
+    link = 'survey_artists/' + new_genre_stack.genresToString() + '/' + new_genre_stack.songs_list
     response = {'stack' : link}
     return JsonResponse(response)
 
-def survey_artists(request, genre_stack):
-    new_genre_stack = GenresStack(genre_stack, "")
+def survey_artists(request, genre_stack, songs_list):
+    new_genre_stack = GenresStack(genre_stack, "", songs_list)
     genre = new_genre_stack.pop()
-    print("HEEEERRRRREE" + new_genre_stack.genresToString())
-    print('STACKKKKKKKKK ' + str(new_genre_stack.genres_stack))
     
     # Getting the artist ids from Spotify
     if len(genre) > 0:
@@ -649,6 +657,7 @@ def survey_artists(request, genre_stack):
             'artist_names' : artist_names,
             'genre' : new_genre_stack.get_genre_name(genre),
             'genre_stack': new_genre_stack.genresToString(),
+            'songs_list': songs_list,
         }
         return render(request, 'Survey/survey_artists.html', context)
     else:
@@ -656,15 +665,15 @@ def survey_artists(request, genre_stack):
         return HttpResponseRedirect('/')
         # return render(request, "Survey/survey_artists.html", {})
 
-def send_artists(request, genre_stack):
+def send_artists(request, genre_stack, songs_list):
     artists = request.POST.getlist('artist_id_list[]')
-    new_genre_stack = GenresStack(genre_stack, artists)
+    new_genre_stack = GenresStack(genre_stack, artists, songs_list)
     artists_string = new_genre_stack.artistsToString()
-    link = 'survey_songs/' + new_genre_stack.genresToString() + '/' + artists_string 
+    link = 'survey_songs/' + new_genre_stack.genresToString() + '/' + artists_string + '/' + songs_list
     response = {'redirect' : link}
     return JsonResponse(response)
 
-def survey_songs(request, genre_stack, artists_string):
+def survey_songs(request, genre_stack, artists_string, songs_list):
     """
     """
     if '*' in artists_string:
@@ -672,7 +681,6 @@ def survey_songs(request, genre_stack, artists_string):
         # Last result is an empty string, so pop it off
         artists.pop()
 
-    songs_list = [] 
     track_ids = []
     track_names = []
     # art_extreme_tracks = []
@@ -741,21 +749,88 @@ def survey_songs(request, genre_stack, artists_string):
         'track_names': track_names,
         'genre_stack': genre_stack,
         'artist_names': artist_names,
+        'songs_list': songs_list
     }
     return render(request, 'Survey/survey_songs.html', context)
 
-def check_remaining(request, genre_stack):
-    # songs = request.POST.getlist('song_id_list[]')
-    new_genre_stack = GenresStack(genre_stack, [])
+def check_remaining(request, genre_stack, songs_list):
+    new_songs = request.POST.getlist('song_id_list[]')
+    artist_list = ""
+    # Convert the list of song ids into a string
+    # songs_string = ""
+    # if len(songs_list) > 0:
+    #     for song in songs_list:
+    #         songs_string = songs_string + (song + "*")
+    # else: 
+    #     songs_string = "*"
+    new_genre_stack = GenresStack(genre_stack, artist_list, songs_list)
+    
+    new_genre_stack.extendSongList(new_songs)
+
+
     if genre_stack == "*":
-        link = ''
-        response = {'redirect' : link}
-        return JsonResponse(response)
+        link = 'survey_final/' + new_genre_stack.songs_list
     else:
-        link = 'survey_artists/' + new_genre_stack.genresToString()
-        response = {'redirect' : link}
-        return JsonResponse(response)
+        link = 'survey_artists/' + new_genre_stack.genresToString() + '/' + new_genre_stack.songs_list
         
+    response = {'redirect' : link}
+    return JsonResponse(response)
+        
+def survey_final(request, songs_list):
+    genre_stack = ""
+    artist_list = ""
+    new_genre_stack = GenresStack(genre_stack, artist_list, songs_list)
+    print(new_genre_stack.songs_list)
+    tracks = new_genre_stack.songsToList()
+    print(tracks)
+    NUM_TRACKS = len(tracks)
+    save_songs(tracks)
+
+    # User Preferences:
+    danceability = 0
+    acousticness = 0
+    energy = 0
+    instrumentalness = 0
+    speechiness = 0
+    loudness = 0
+    tempo = 0
+    valence = 0
+
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    prefs = Preferences.objects.get(user_profile_fk=user)
+    user.survey_taken = True
+    user.save()
+
+    for track in tracks:
+        features = get_audio_features([track])[0]
+        danceability += features.get('danceability')
+        tempo += features.get('tempo')
+        energy += features.get('energy')
+        instrumentalness += features.get('instrumentalness')
+        loudness += features.get('loudness')
+        valence += features.get('valence')
+        speechiness += features.get('speechiness')
+        acousticness += features.get('acousticness')
+        new_song = SongId.objects.get(pk=track)
+        vote = SongToUser(user_from=user, songid_to=new_song, vote='Like')
+        vote.save()
+        add_to_liked_songs(user, track)
+
+    prefs.danceability = danceability / NUM_TRACKS
+    prefs.acousticness = acousticness / NUM_TRACKS
+    prefs.energy = energy / NUM_TRACKS
+    prefs.instrumentalness = instrumentalness / NUM_TRACKS
+    prefs.speechiness = speechiness / NUM_TRACKS
+    prefs.loudness = loudness / NUM_TRACKS
+    prefs.tempo = tempo / NUM_TRACKS
+    prefs.valence = valence / NUM_TRACKS
+    prefs.save()
+
+
+    return redirect('/recommendations')
+
+    #return render(request, "Survey/test.html")
 
 # Alt-rock → alternative rock
 # Alternative
@@ -782,15 +857,6 @@ def check_remaining(request, genre_stack):
 # Reggae
 # Rock
 # Soul
-
-
-
-
-
-
-
-
-
 
 
 

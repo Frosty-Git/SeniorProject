@@ -42,6 +42,7 @@ class UserProfile(models.Model):
                                         related_name='songs_liked',
                                         symmetrical=False)
     liked_songs_playlist_fk = models.ForeignKey('Playlist', on_delete=models.CASCADE, null=True, blank=True)
+    survey_taken = models.BooleanField(default=False)
     
     def __str__(self):
         return self.user.username
@@ -75,6 +76,7 @@ class Preferences(models.Model):
     Last updated: 3/30/21 by Marc Colin, Jacelynn Duranceau, Katie Lee
     """
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
+    genres = models.TextField(blank=True, null=True)
     # 0 to 1
     acousticness = models.FloatField(blank=True, default=0.5, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
     # 0 to 1
@@ -91,6 +93,7 @@ class Preferences(models.Model):
     tempo = models.FloatField(blank=True, default=100, validators=[MinValueValidator(50.0), MaxValueValidator(150.0)])
     # 0 to 1
     valence = models.FloatField(blank=True, default=0.5, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+
 
     def __str__(self):
         return "Preferences"

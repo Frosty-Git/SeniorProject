@@ -1,9 +1,9 @@
 # Authors: Tucker & Joe & Katie
 class GenresStack:
-    def __init__(self, genres_string, artists_string):
+    def __init__(self, genres_string, artists_string, songs_string):
         self.genres_stack = str(genres_string)
         self.artists_list = list(artists_string)
-        self.songs_list = []
+        self.songs_list = str(songs_string)
         self.genres_options = {
             'alternative': '37i9dQZF1DX9GRpeH4CL0S',
             'anime': '37i9dQZF1DWT8aqnwgRt92',
@@ -110,3 +110,36 @@ class GenresStack:
             artists = artists_string.split('*')
             # Last result is an empty string, so pop it off
             return artists.pop()
+
+    def songsToString(self):
+        songs_string = ""
+        if len(self.songs_list) > 0:
+            for song in list(self.songs_list):
+                songs_string = songs_string + (song + "*")
+        else: 
+            songs_string = "*"
+        return songs_string
+    
+    def songsToList(self):
+        if '*' in self.songs_list:
+            songs = self.songs_list.split('*')
+            # Last result is an empty string, so pop it off
+            songs = songs[:-1]
+            result = songs
+            print("RESUTL " + str(result))
+            return result
+
+    def extendSongList(self, new_list):
+        print("ENTERING EXTENDSONGLIST")
+        print(new_list)
+        if isinstance(new_list,list):
+            print("true")
+        else:
+            print("false")
+        print(self.songs_list)
+        if '*' == self.songs_list[0]:
+            self.songs_list = ""
+        for new_song in new_list:
+            self.songs_list = self.songs_list + (new_song + "*")
+        print('FINAL LIST ' + str(self.songs_list))
+        
