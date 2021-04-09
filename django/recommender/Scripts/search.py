@@ -134,7 +134,8 @@ def get_recommendation(request, limit, user_id, **kwargs):
                                         limit=limit,
                                         country=None,
                                         **kwargs)
-    results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations}
+    top_artist_name = get_artist_name(seed_artists[0])
+    results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
     return results
 
 def get_top_artists_by_id(user_id):

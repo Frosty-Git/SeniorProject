@@ -222,7 +222,8 @@ def user_preference_recommender(request):
             'top_artists_ids': top_artists_ids,
             'min_likes_met': min_likes_met,
             'location': 'recommender',
-            'related_artists': results['related_artists_ids']
+            'related_artists': results['related_artists_ids'],
+            'top_artist_name': results['top_artist']
         }
     else:
         context = {
