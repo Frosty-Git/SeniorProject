@@ -875,7 +875,7 @@ def reset_preferences(request):
     prefs.tempo = 100
     prefs.valence = 0.5
     prefs.save()
-    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://127.0.0.1:8000/survey/'>Survey</a>."))
+    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://127.0.0.1:8000/survey_genres/'>Survey</a>."))
     # return redirect('/survey/')
     return redirect('/user/update_profile/#/')
 
