@@ -468,10 +468,12 @@ def get_playlists(request, user_id):
     # Check to see you are accessing the playlist page that is your own.
     if request.user == User.objects.get(pk=user_id):
         you = UserProfile.objects.get(pk=request.user.id)
-        playlists = Playlist.objects.filter(user_profile_fk=you)
+        orig_playlists = Playlist.objects.filter(user_profile_fk=you)
         playlistform = PlaylistForm()
         private_profile = profile_privacy(user_id)
         following_status = is_following(request.user.id, user_id)
+        matches = FollowedPlaylist.objects.filter(user_from=you)
+        playlists = playlist_vote_dict(matches, orig_playlists)
         context = {
             'playlists': playlists,
             'playlistform': playlistform,
@@ -485,9 +487,12 @@ def get_playlists(request, user_id):
         if request.user.id is not None:
             other_user = UserProfile.objects.get(pk=user_id)
             private_profile = profile_privacy(user_id)
+            you = UserProfile.objects.get(pk=request.user.id)
             following_status = is_following(request.user.id, other_user.user.id)
             if following_status or not private_profile:
-                playlists = Playlist.objects.filter(user_profile_fk=other_user)
+                orig_playlists = Playlist.objects.filter(user_profile_fk=other_user)
+                matches = FollowedPlaylist.objects.filter(user_from=you)
+                playlists = playlist_vote_dict(matches, orig_playlists)
                 context = {
                     'playlists': playlists,
                     'profile': other_user,
@@ -505,7 +510,8 @@ def get_playlists(request, user_id):
             other_user = UserProfile.objects.get(pk=user_id)
             private_profile = profile_privacy(user_id)
             if not private_profile:
-                playlists = Playlist.objects.filter(user_profile_fk=other_user)
+                orig_playlists = Playlist.objects.filter(user_profile_fk=other_user)
+                playlists = playlist_vote_dict([], orig_playlists)
                 context = {
                     'playlists': playlists,
                     'profile': other_user,
@@ -515,6 +521,18 @@ def get_playlists(request, user_id):
             else:
                 return redirect('/')
 
+def playlist_vote_dict(matches, orig_playlists):
+    """
+    """
+    playlists = {}
+    for playlist in orig_playlists:
+        love = False
+        for match in matches:
+            if playlist == match.playlist_to:
+                love = True
+                break
+        playlists[playlist] = love
+    return playlists
 
 def sop_song_vote_array(matches, songs_votes):
     """
@@ -936,3 +954,22 @@ def profile_privacy(user_id):
     profile_privacy = settings.private_profile
     return profile_privacy
 
+
+def playlist_vote(request):
+    """
+    Counts upvotes for playlists
+    Last updated: 4/10/21 by Marc Colin, Katie Lee, Joe Frost
+    """
+    playlist_id = request.POST.get('playlist')
+    user = UserProfile.objects.get(pk=request.user.id)
+    if playlist_id:
+        playlist = Playlist.objects.get(pk=playlist_id)
+        vote = FollowedPlaylist.objects.filter(user_from=user, playlist_to=playlist).first()
+        if vote is None:
+            up = FollowedPlaylist(user_from=user, playlist_to=playlist)
+            up.save()
+            return JsonResponse({'status':'ok'})
+        else:
+            vote.delete()
+            return JsonResponse({'status':'undo_upvote'})
+    return JsonResponse({'status':'ko'})

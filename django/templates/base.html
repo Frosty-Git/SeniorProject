@@ -63,16 +63,16 @@
                       Top
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <li><a class="dropdown-item" href="{% url 'recommender:top-tracks' %}">Top Tracks</a></li>
-                      <li><a class="dropdown-item" href="#">Top Playlists</a></li>
+                      <li><a class="dropdown-item" href="{% url 'recommender:top_tracks' %}">Top Tracks</a></li>
+                      <li><a class="dropdown-item" href="{% url 'recommender:top_playlists' %}">Top Playlists</a></li>
                     </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'recommender:about' %}">About</a>
                   </li>
                   {% if user.is_authenticated %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'recommender:survey_genres' %}">Survey</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'recommender:user_preference_recommender' %}">Explore</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
@@ -80,10 +80,10 @@
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'user:get_playlists' user.id %}">Playlists</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'recommender:user_preference_recommender' %}">Recommendations</a>
-                    </li>
                   {% endif %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recommender:about' %}">About</a>
+                  </li>
                 </ul>
                 <form class="d-flex" method="POST" action="{% url 'recommender:results' %}" style="text-align: center; margin: auto">
                   {% csrf_token %}

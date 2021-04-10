@@ -10,7 +10,7 @@ urlpatterns = [
     path('results/', views.results, name='results'),
     path('about/', views.about, name='about'),
     path('survey/', views.survey, name='survey'),
-    path('top-tracks/', views.top_tracks, name='top-tracks'),
+    path('top_tracks/', views.top_tracks, name='top_tracks'),
     path('artist/', views.searchArtist_get, name='artist'),
     path('artistp/', views.searchArtist_post, name='artistp'),
     path('song/', views.searchSong_get, name='song'),
@@ -27,4 +27,5 @@ urlpatterns = [
     path('send_artists/<genre_stack>/<songs_list>', views.send_artists, name='send_artists'),
     path('check_remaining/<genre_stack>/<songs_list>', views.check_remaining, name='check_remaining'),
     path('survey_final/<songs_list>', views.survey_final, name='survey_final'),
+    path('top_playlists/', views.top_playlists, name='top_playlists'),
 ]
