@@ -320,7 +320,7 @@ def search_users(term, requesting_user):
     Last updated: 3/24/21 by Jacelynn Duranceau
     """
     regex = '.*'+term+'.*'
-    users = User.objects.filter(username__regex=regex)[:15]
+    users = User.objects.filter(username__iregex=regex)[:15]
     user_profiles = []
     for user in users:
         # Makes it so that you don't show up in the search results

@@ -30,6 +30,7 @@ urlpatterns = [
     path('reset_preferences/', views.reset_preferences, name='reset_preferences'),
     path('delete_account/', views.delete_account, name='delete_account'),
     path('playlist_vote/', views.playlist_vote, name='playlist_vote'),
+    path('follow_page/<user_id>', views.following_page, name='follow_page'),
 
     
     #path('', views.save_token_redirect, name='save_token_redirect'),
