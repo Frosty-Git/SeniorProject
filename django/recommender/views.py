@@ -20,6 +20,10 @@ import random
 from random import sample
 from recommender.Scripts.survey import GenresStack
 from recommender.Scripts.search import get_playlist_items
+from datetime import datetime, timedelta
+import pytz
+from django.db.models import Count
+
 
 #----Dr Baliga's Code----
 
@@ -925,3 +929,24 @@ def sample(request):
 #     top_5_genres = [key for key, val in most_common]
 
 #     return top_5_genres
+
+def top_playlists(request):
+    days_to_subtract = 7
+    num_top_playlists = 10
+    top_playlists = {}
+    
+    # Get all of the likes for the playlists from the past week
+    d = datetime.now(pytz.utc)- timedelta(days=days_to_subtract)
+    top_playlists_query = FollowedPlaylist.objects.filter(date_created__gte = d).values('playlist_to_id').annotate(total=Count('playlist_to_id')).order_by('-total')[:num_top_playlists]
+    
+    # The query results are a list of dicts.
+    # Convert the query results into a single dict
+    for dicti in top_playlists_query:
+        playlist = Playlist.objects.get(pk=dicti['playlist_to_id'])
+        top_playlists[playlist] = dicti['total']
+    
+    context = {
+        'top_playlists' : top_playlists,
+    }
+
+    return render(request, 'recommender/top_playlists.html', context)

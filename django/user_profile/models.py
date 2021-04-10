@@ -108,7 +108,6 @@ class Playlist(models.Model):
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None) # Who created the playlist
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='images/', null=True, verbose_name="", blank=True) # Pillow
-    upvotes = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     date_last_updated = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)

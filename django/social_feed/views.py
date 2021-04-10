@@ -282,6 +282,7 @@ def popup_playlistpost(request):
 
 def check_posts(profile, song, vote):
     """
+    If a user already liked a songpost of the same song, it won't change preferences
     """
     posts = PostUserVote.objects.filter(user_from=profile).values('post_to_id', 'vote')
     # Returns an empty array if the user has not liked anyything yet
