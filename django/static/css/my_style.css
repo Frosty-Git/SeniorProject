@@ -126,3 +126,23 @@
     border: transparent;
     color: white;
 }
+
+.searchbar table {
+    background-color: lightblue;
+    border: 3px #1F2933 solid;
+    width:100%;
+}
+
+.navsearch {
+    z-index: 1; 
+    position: fixed; 
+    margin-left: 53.5%;
+}
+
+.searchbar hr {
+    color:#1F2933;
+}
+
+.searchbar td, th {
+    padding:1%;
+}
