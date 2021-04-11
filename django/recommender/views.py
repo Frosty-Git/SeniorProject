@@ -22,7 +22,7 @@ from recommender.Scripts.survey import GenresStack
 from recommender.Scripts.search import get_playlist_items
 from datetime import datetime, timedelta
 import pytz
-from django.db.models import Count
+from django.db.models import Count, Q
 
 
 #----Dr Baliga's Code----
@@ -319,8 +319,9 @@ def search_users(term, requesting_user):
     too.
     Last updated: 3/24/21 by Jacelynn Duranceau
     """
-    regex = '.*'+term+'.*'
-    users = User.objects.filter(username__iregex=regex)[:15]
+    # regex = '.*'+term+'.*'
+    # users = User.objects.filter(username__iregex=regex)[:15]
+    users = User.objects.filter(Q(username__icontains=term) | Q(first_name__icontains=term) | Q(last_name__icontains=term))[:15]
     user_profiles = []
     for user in users:
         # Makes it so that you don't show up in the search results

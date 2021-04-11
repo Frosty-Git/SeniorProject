@@ -23,6 +23,8 @@ from recommender.Scripts.spotify_manager import SpotifyManager
 import os
 from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -255,10 +257,18 @@ def following_page(request, user_id):
     """
     if request.user == User.objects.get(pk=user_id):
         you = UserProfile.objects.get(pk=user_id)
-        following = you.users_followed.all()
         following_arr = []
-        follower_ids = FollowedUser.objects.filter(user_to=you).values('user_from') # Returns dictionary of ids
         followers_arr = []
+        url_parameter = request.GET.get("q")
+
+        if url_parameter:
+            search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
+            follower_ids = FollowedUser.objects.filter(Q(user_to=you) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
+            following = you.users_followed.filter(user_id__in=search_users)
+        else:
+            follower_ids = FollowedUser.objects.filter(user_to=you).values('user_from') # Returns dictionary of ids
+            following = you.users_followed.all()
+
         for user_profile in following:
             determination = is_following(request.user.id, user_profile.user.id)
             following_arr.append([user_profile, determination])
@@ -268,6 +278,21 @@ def following_page(request, user_id):
                 person = UserProfile.objects.get(pk=id)
                 determination = is_following(request.user.id, id)
                 followers_arr.append([person, determination])
+
+        if request.is_ajax():
+            following_html = render_to_string(
+            template_name="profile/following_partial.html", 
+            context={"following": following_arr})
+
+            followers_html = render_to_string(
+            template_name="profile/followers_partial.html", 
+            context={"followers": followers_arr})
+
+            data_dict = {
+                "followers_h": followers_html,
+                "following_h": following_html,
+            }
+            return JsonResponse(data=data_dict, safe=False)
 
         context = {
             'profile': you,
@@ -477,12 +502,13 @@ def display_followers(request, user_id):
                 # return redirect('/user/profile/' + str(user_id))
                 return redirect('/')
 
-def unfollow(request, user_id, who):
+def unfollow(request, who):
     """
     Deletes the link in the bridging table between yourself and the person you
     want to unfollow.
     Last updated: 3/19/21 by Jacelynn Duranceau
     """
+    user_id = request.user.id
     loggedin = UserProfile.objects.get(pk=user_id)
     loggedin.num_following -= 1
     loggedin.save()
@@ -494,12 +520,13 @@ def unfollow(request, user_id, who):
     url = '/user/follow_page/' + user_id
     return redirect(url)
 
-def follow(request, user_id, who):
+def follow(request, who):
     """
     Creates the link in the bridging table between yourself and the person you
     want to follow.
     Last updated: 3/19/21 by Katie Lee, Jacelynn Duranceau
     """
+    user_id = request.user.id
     loggedin = UserProfile.objects.get(pk=user_id)
     loggedin.num_following += 1
     loggedin.save()
