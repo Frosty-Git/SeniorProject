@@ -45,7 +45,7 @@
     let ajax_call = function (endpoint, request_parameters) {
         $.getJSON(endpoint, request_parameters)
             .done(response => {
-                // fade out the artists_div, then:
+                // fade out the table, then:
                 following_table.fadeTo('fast', 0).promise().then(() => {
                     // replace the HTML contents
                     following_table.html(response['following_h'])

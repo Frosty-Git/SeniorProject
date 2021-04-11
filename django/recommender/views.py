@@ -23,6 +23,7 @@ from recommender.Scripts.search import get_playlist_items
 from datetime import datetime, timedelta
 import pytz
 from django.db.models import Count, Q
+from django.template.loader import render_to_string
 
 
 #----Dr Baliga's Code----
@@ -69,10 +70,34 @@ def searchform_get(request):
 # Home Page
 def home(request):
     ourSearchForm = OurSearchForm()
+    url_parameter = request.GET.get("q")
+    track_searches = []
+    artist_searches = []
+    album_searches = []
+    
+    if url_parameter:
+        track_searches = livesearch_tracks(url_parameter)
+        artist_searches = livesearch_artists(url_parameter)
+        album_searches = livesearch_albums(url_parameter)
+    
+    if request.is_ajax():
+        livesearch_html = render_to_string(
+        template_name="recommender/livesearch.html", 
+        context={"track_searches": track_searches,
+                "artist_searches": artist_searches,
+                "album_searches": album_searches})
+
+        data_dict = {
+            "livesearch_h": livesearch_html,
+        }
+        return JsonResponse(data=data_dict, safe=False)
 
     context={
         'name': 'PengBeats',
         'ourSearchForm': ourSearchForm,
+        'track_searches': track_searches,
+        'artist_searches': artist_searches,
+        'album_searches': album_searches,
     }
     return render(request, 'home.html', context)
 

@@ -86,11 +86,13 @@
                     <a class="nav-link" href="{% url 'recommender:about' %}">About</a>
                   </li>
                 </ul>
-                <form class="d-flex" method="POST" action="{% url 'recommender:results' %}" style="text-align: center; margin: auto">
-                  {% csrf_token %}
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="term" style="color: black; width: 350px;">
-                  <button class="btn btn-outline-light" type="submit">Search</button>
-                </form>
+                {% if request.get_full_path != "/" %}
+                  <form class="d-flex" method="POST" action="{% url 'recommender:results' %}" style="text-align: center; margin: auto">
+                    {% csrf_token %}
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="term" style="color: black; width: 350px;">
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                  </form>
+                {% endif %}
                 {% if user.is_authenticated %}
                   <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ user.username }}

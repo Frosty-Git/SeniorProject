@@ -74,9 +74,9 @@
 
                 {% else %}
                     {% if is_following %}
-                        <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
+                        <a class="btn unfollowBtn" href="{% url 'user:unfollow' profile.user.id%}" role="button"></a>
                     {% elif not is_following %}
-                        <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
+                        <a class="btn followBtn" href="{% url 'user:follow' profile.user.id%}" role="button"></a>
                     {% else %}
 
                     {% endif %}

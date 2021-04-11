@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}PengBeats | Home{% endblock %}
 
@@ -23,13 +24,57 @@
     <center>
         <form class='ourSearchForm' method='POST' action='results/' style="color: #f5f7fa;">
             {% csrf_token %}
-            {{ ourSearchForm.term }}
-            <input type='submit' value='Search' class='ourSearchForm'>
+            <div class="input-group mb-3" style="max-width:40%; margin-left:auto; margin-right:auto" >
+                {% render_field ourSearchForm.term class="form-control" type="text" placeholder="Search.." aria-describedby="button-addon2" id="searchterm" %}
+                <button class="btn btn-outline-light" type="button" id="button-addon2">Search</button>
+            </div>
+            <!-- {{ ourSearchForm.term }}
+            <input type='submit' value='Search' class='ourSearchForm'> -->
+            <div id="livesearch" style="width:40%; text-align: left;">
+                {% include 'recommender/livesearch.html' %}  
+            </div>
         </form>
-
-        <br>
-        <p>We have not created anything yet. We will have a search feature and stuff on it.</p>
         <br>
     </center>
 <br>
+<script>
+    const user_input = $('#searchterm');
+    const search_div = $('#livesearch');
+    const endpoint = '/';
+    const delay_by_in_ms = 300;
+    let scheduled_function = false;
+
+    let ajax_call = function (endpoint, request_parameters) {
+        $.getJSON(endpoint, request_parameters)
+            .done(response => {
+                // fade out the search_div, then:
+                search_div.fadeTo('fast', 0).promise().then(() => {
+                    // replace the HTML contents
+                    search_div.html(response['livesearch_h'])
+                    // fade-in the div with new contents
+                    search_div.fadeTo('fast', 1)    
+                })
+
+            })
+    }
+    user_input.on('keyup', function () {
+
+        const request_parameters = {
+            q: $(this).val() // value of user_input: the HTML element with ID user-input
+        }
+
+        // if scheduled_function is NOT false, cancel the execution of the function
+        if (scheduled_function) {
+            clearTimeout(scheduled_function)
+        }
+
+        // setTimeout returns the ID of the function to be executed
+        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, endpoint, request_parameters)
+    })
+    headers.hide();
+    
+    window.onload = function() {
+        document.getElementById('searchterm').value = '';
+    }
+</script>
 {% endblock %}

@@ -315,3 +315,70 @@ def get_top_track(request):
 
 def get_playlist_items(playlist_id):
     return sp.playlist_items(playlist_id, fields=None, limit=50, offset=0, market=None, additional_types=('track', 'episode'))['items']
+
+
+def livesearch_tracks(query):
+    """
+    Just testing stuff - Katie
+    """
+    searches={}
+    result = sp.search(q=query, limit=3, offset=0, type='track', market=None)
+    for x in range(5):
+        new_list = []
+        if x+1 > len(result['tracks']['items']):
+            break
+        new_list.append(result['tracks']['items'][x]['name'])
+        new_list.append(result['tracks']['items'][x]['artists'][0]['name'])
+        new_list.append(result['tracks']['items'][x]['album']['images'][2]['url'])
+        searches[result['tracks']['items'][x]['id']] = new_list
+    return searches
+
+def livesearch_artists(query):
+    """
+    Just testing stuff - Katie
+    """
+    searches={}
+    result = sp.search(q=query, limit=2, offset=0, type='artist', market=None)
+    for x in range(5):
+        new_list = []
+        if x+1 > len(result['artists']['items']):
+            break
+        new_list.append(result['artists']['items'][x]['name'])
+        try:
+            picture = result['artists']['items'][x]['images'][0]['url']
+        except:
+            picture = None
+        new_list.append(picture)
+        searches[result['artists']['items'][x]['id']] = new_list
+    return searches
+
+def livesearch_albums(query):
+    """
+    Just testing stuff - Katie
+    """
+    searches={}
+    result = sp.search(q=query, limit=2, offset=0, type='album', market=None)
+    for x in range(5):
+        new_list = []
+        if x+1 > len(result['albums']['items']):
+            break
+        new_list.append(result['albums']['items'][x]['name'])
+        new_list.append(result['albums']['items'][x]['artists'][0]['name'])
+        try:
+            picture = result['albums']['items'][x]['images'][0]['url']
+        except:
+            picture = None
+        new_list.append(picture)
+        searches[result['albums']['items'][x]['id']] = new_list
+    return searches
+
+"""
+FOR SHELL TESTING PURPOSES:
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
+import recommender.Scripts.client_credentials as client_cred
+client_cred.setup()
+auth_manager = SpotifyClientCredentials()
+sp = spotipy.Spotify(auth_manager=auth_manager)
+from recommender.views import *
+"""
