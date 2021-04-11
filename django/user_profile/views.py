@@ -251,6 +251,7 @@ def settings_save(request, user_id):
     else:
         raise Http404('Form not valid')
 
+
 @require_GET
 def following_page(request, user_id):
     """
@@ -307,10 +308,17 @@ def following_page(request, user_id):
             private_profile = profile_privacy(user_id)
             following_status = is_following(request.user.id, other_user.user.id)
             if following_status or not private_profile:
-                following = other_user.users_followed.all()
                 following_arr = []
-                follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
                 followers_arr = []
+                url_parameter = request.GET.get("q")
+
+                if url_parameter:
+                    search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
+                    follower_ids = FollowedUser.objects.filter(Q(user_to=other_user) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
+                    following = other_user.users_followed.filter(user_id__in=search_users)
+                else:
+                    follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
+                    following = other_user.users_followed.all()
 
                 for user_profile in following:
                     determination = is_following(request.user.id, user_profile.user.id)
@@ -321,6 +329,21 @@ def following_page(request, user_id):
                         person = UserProfile.objects.get(pk=id)
                         determination = is_following(request.user.id, id)
                         followers_arr.append([person, determination])
+
+                if request.is_ajax():
+                    following_html = render_to_string(
+                    template_name="profile/following_partial.html", 
+                    context={"following": following_arr})
+
+                    followers_html = render_to_string(
+                    template_name="profile/followers_partial.html", 
+                    context={"followers": followers_arr})
+
+                    data_dict = {
+                        "followers_h": followers_html,
+                        "following_h": following_html,
+                    }
+                    return JsonResponse(data=data_dict, safe=False)
 
                 context = {
                     'following': following_arr,
@@ -337,19 +360,42 @@ def following_page(request, user_id):
             other_user = UserProfile.objects.get(pk=user_id)
             private_profile = profile_privacy(user_id)
             if not private_profile:
-                following = other_user.users_followed.all()
                 following_arr = []
-                follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
                 followers_arr = []
+                url_parameter = request.GET.get("q")
+
+                if url_parameter:
+                    search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
+                    follower_ids = FollowedUser.objects.filter(Q(user_to=other_user) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
+                    following = other_user.users_followed.filter(user_id__in=search_users)
+                else:
+                    follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
+                    following = other_user.users_followed.all()
 
                 for user_profile in following:
+                    determination = False
                     following_arr.append([user_profile, determination])
                 
                 for user in follower_ids:
                     for id in user.values():
                         person = UserProfile.objects.get(pk=id)
-                        determination = is_following(request.user.id, id)
+                        determination = False
                         followers_arr.append([person, determination])
+
+                if request.is_ajax():
+                    following_html = render_to_string(
+                    template_name="profile/following_partial.html", 
+                    context={"following": following_arr})
+
+                    followers_html = render_to_string(
+                    template_name="profile/followers_partial.html", 
+                    context={"followers": followers_arr})
+
+                    data_dict = {
+                        "followers_h": followers_html,
+                        "following_h": following_html,
+                    }
+                    return JsonResponse(data=data_dict, safe=False)
 
                 context = {
                     'following': following_arr,

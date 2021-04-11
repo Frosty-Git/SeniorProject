@@ -178,7 +178,7 @@
                 {% if not private_prefs%}
                 <!-- Ensure the public profile or person you are following has allowed their preferences to be visible, even to followers -->
                     <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
-                        <h2 style="font-family: 'Noto Sans JP', sans-serif;">Music Preferences</h2>
+                        <h2>Music Preferences</h2>
                 
                         <table class="center">
                             <tr>
@@ -296,7 +296,7 @@
     
 
     <div class="w3-col m2 w3-center header">
-        <h2><a href="{% url 'user:following' profile.user.id %}" style="font-family: 'Noto Sans JP', sans-serif;text-decoration: none;">Following</a></h2>
+        <h2><a href="{% url 'user:follow_page' profile.user.id %}" style="text-decoration: none;">Following</a></h2>
         <table style="display: inline-block; text-align: left;">
         {% for follower in follower_list %}
             <tr>

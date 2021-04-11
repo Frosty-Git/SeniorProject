@@ -23,12 +23,14 @@
             <a href="{% url 'user:follow_page' pair.0.user.id %}">{{ pair.0.num_followers }} followers</a>
         </td>
         <td>
-            {% if pair.1 %}
-                <!-- pair.1 is True, meaning you follow them, so create an unfollow button -->
-                <a class="btn unfollowBtn" href="{% url 'user:unfollow' pair.0.user.id%}" role="button"></a>
-            {% else %}
-                <!-- pair.1 is False, meaning you don't follow them, so create a follow button -->
-                <a class="btn followBtn" href="{% url 'user:follow' pair.0.user.id%}" role="button"></a>
+            {% if user.is_authenticated %}
+                {% if pair.1 %}
+                    <!-- pair.1 is True, meaning you follow them, so create an unfollow button -->
+                    <a class="btn unfollowBtn" href="{% url 'user:unfollow' pair.0.user.id%}" role="button"></a>
+                {% else %}
+                    <!-- pair.1 is False, meaning you don't follow them, so create a follow button -->
+                    <a class="btn followBtn" href="{% url 'user:follow' pair.0.user.id%}" role="button"></a>
+                {% endif %}
             {% endif %}
         </td>
     </tr>
