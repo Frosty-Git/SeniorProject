@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}PengBeats | Custom Recommender {% endblock %}
+
+{% block content %}
+
+<h1>Custom Recommender</h1>
+<form name="recForm" method="post">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>
+                <h2>Artists</h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>Genre</h2>
+                <select name="genre" id="genre">
+                    <option value="blues">Blues</option>
+                    <option value="alternative">Alternative</option>
+                    <option value="anime">Anime</option>
+                    <option value="classical">Classical</option>
+                    <option value="country">Country</option>
+                    <option value="disco">Disco</option>
+                    <option value="electronic">Electronic</option>
+                    <option value="emo">Emo</option>
+                    <option value="folk">Folk</option>
+                    <option value="opera">Opera</option>
+                    <option value="gospel">Gospel</option>
+                    <option value="grunge">Grunge</option>
+                    <option value="hard-rock">Hard Rock</option>
+                    <option value="hip-hop">Hip Hop</option>
+                    <option value="indie">Indie</option>
+                    <option value="jazz">Jazz</option>
+                    <option value="k-pop">K-pop</option>
+                    <option value="latin">Latin</option>
+                    <option value="metal">Metal</option>
+                    <option value="pop">Pop</option>
+                    <option value="punk">Punk</option>
+                    <option value="r-n-b">R&B</option>
+                    <option value="reggae">Reggae</option>
+                    <option value="rock">Rock</option>
+                    <option value="soul">Soul</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h2>Track</h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" id="submit" class="btn btn-dark genreBtn" style="height: 50px; width: 110px">Get Recommendations!</button>
+            </td>
+        </tr>   
+    </table>
+</form>
+
+{% endblock %}
