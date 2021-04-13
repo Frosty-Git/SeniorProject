@@ -217,11 +217,12 @@
                 <tbody>
                     <tr>
                     {% for artist in artists1 %}
-        
                         <td>
                             <div class='embed-container'>
                                 <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                             </div>
+                            <a class="btn btn-dark" href="{% url 'recommender:artist_top_tracks' artist %}" role="button">Show Top Songs</a>
+                            <a class="btn btn-dark" href="{% url 'recommender:related_artists' artist %}" role="button">Show Related Artists</a>
                         </td>
         
                     {% endfor %}

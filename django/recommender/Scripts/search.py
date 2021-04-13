@@ -124,7 +124,7 @@ def get_recommendation(request, limit, user_id, **kwargs):
     genres_list = prefs.genres.split('*')
     genres = genres_list[:-1]
     genre = random.sample(genres, 1)
-    related_artists_ids = get_related_artists(seed_artists[0])
+    related_artists_ids = get_related_artists(seed_artists[0], 5)
     # top_genre = get_artists_genres(seed_artists)
     track = get_top_track(request)
     # 3 artists, 1 genre, 1 track
@@ -197,19 +197,29 @@ def get_artists_genres(artist_id_list):
 #     words = re.findall(r'\w+', input_string)
 #     return [word for word in words if word in string_list]
 
-def get_related_artists(artist_id):
+def get_related_artists(artist_id, num):
     """
-    Returns 5 random artists related to an artist.
+    Returns 5 random artists related to an artist. Max number is 20.
     Last updated: 4/8/21 by Jacelynn Duranceau
     """
     artists = sp.artist_related_artists(artist_id)['artists']
     all_artists = []
     for artist in artists:
         all_artists.append(artist['id'])
-    random_artists = random.sample(all_artists, 5)
+    random_artists = random.sample(all_artists, num)
     return random_artists
-    
 
+def get_all_related_artists(artist_id):
+    """
+    Returns all artists related to an artist.
+    Last updated: 4/12/21 by Jacelynn Duranceau
+    """
+    artists = sp.artist_related_artists(artist_id)['artists']
+    all_artists = []
+    for artist in artists:
+        all_artists.append(artist['id'])
+    return all_artists
+    
 def get_artists(track):
     """
     Gets the artists of a song as a string list

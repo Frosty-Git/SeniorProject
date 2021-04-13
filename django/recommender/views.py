@@ -950,3 +950,29 @@ def top_playlists(request):
     }
 
     return render(request, 'recommender/top_playlists.html', context)
+
+def related_artists(request, artist_id):
+    """
+    Gets artists related to an artist. 
+    Last updated: 4/12/21 by Jacelynn Duranceau
+    """
+    related_artists = get_all_related_artists(artist_id)
+    name = get_artist_name(artist_id)
+    context = {
+        'related_artists': related_artists,
+        'name': name,
+    }
+    return render(request, 'recommender/related_artists.html', context)
+
+def artist_top_tracks(request, artist_id):
+    """
+    Gets the top tracks of an artist 
+    Last updated: 4/12/21 by Jacelynn Duranceau
+    """
+    top_tracks = get_top_tracks(artist_id)
+    name = get_artist_name(artist_id)
+    context = {
+        'top_tracks': top_tracks,
+        'name': name,
+    }
+    return render(request, 'recommender/artist_top_tracks.html', context)
