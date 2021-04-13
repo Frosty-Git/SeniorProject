@@ -28,4 +28,6 @@ urlpatterns = [
     path('check_remaining/<genre_stack>/<songs_list>', views.check_remaining, name='check_remaining'),
     path('survey_final/<songs_list>', views.survey_final, name='survey_final'),
     path('top_playlists/', views.top_playlists, name='top_playlists'),
+    path('related_artists/<artist_id>', views.related_artists, name='related_artists'),
+    path('artist_top_tracks/<artist_id>', views.artist_top_tracks, name='artist_top_tracks'),
 ]

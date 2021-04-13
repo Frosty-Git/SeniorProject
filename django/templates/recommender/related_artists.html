@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %} Related Artists {% endblock %}
+
+{% block content %}
+
+<!-- <p>{{ track_ids }}</p> -->
+
+<center><h3>Artists Like {{ name }}:</h3></center>
+{% if related_artists %}
+<table>
+{% for artist_id in related_artists %}
+    <tr>
+        <td>
+            <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+            <a class="btn btn-dark" href="{% url 'recommender:artist_top_tracks' artist_id %}" role="button">Show Top Songs</a>
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{% else %}
+<p>No related artists!</p>
+{% endif %}
+
+
+{% endblock %}
