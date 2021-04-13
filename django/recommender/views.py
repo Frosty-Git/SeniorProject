@@ -22,7 +22,8 @@ from recommender.Scripts.survey import GenresStack
 from recommender.Scripts.search import get_playlist_items
 from datetime import datetime, timedelta
 import pytz
-from django.db.models import Count
+from django.db.models import Count, Q
+from django.template.loader import render_to_string
 
 
 #----Dr Baliga's Code----
@@ -69,10 +70,34 @@ def searchform_get(request):
 # Home Page
 def home(request):
     ourSearchForm = OurSearchForm()
+    url_parameter = request.GET.get("q")
+    track_searches = []
+    artist_searches = []
+    album_searches = []
+    
+    if url_parameter:
+        track_searches = livesearch_tracks(url_parameter)
+        artist_searches = livesearch_artists(url_parameter)
+        album_searches = livesearch_albums(url_parameter)
+    
+    if request.is_ajax():
+        livesearch_html = render_to_string(
+        template_name="recommender/livesearch.html", 
+        context={"track_searches": track_searches,
+                "artist_searches": artist_searches,
+                "album_searches": album_searches})
+
+        data_dict = {
+            "livesearch_h": livesearch_html,
+        }
+        return JsonResponse(data=data_dict, safe=False)
 
     context={
         'name': 'PengBeats',
         'ourSearchForm': ourSearchForm,
+        'track_searches': track_searches,
+        'artist_searches': artist_searches,
+        'album_searches': album_searches,
     }
     return render(request, 'home.html', context)
 
@@ -319,8 +344,9 @@ def search_users(term, requesting_user):
     too.
     Last updated: 3/24/21 by Jacelynn Duranceau
     """
-    regex = '.*'+term+'.*'
-    users = User.objects.filter(username__regex=regex)[:15]
+    # regex = '.*'+term+'.*'
+    # users = User.objects.filter(username__iregex=regex)[:15]
+    users = User.objects.filter(Q(username__icontains=term) | Q(first_name__icontains=term) | Q(last_name__icontains=term))[:15]
     user_profiles = []
     for user in users:
         # Makes it so that you don't show up in the search results

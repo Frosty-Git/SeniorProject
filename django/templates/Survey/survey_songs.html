@@ -203,9 +203,16 @@
     <button type="button" id="submit" class="btn btn-dark songBtn" style="height: 50px; width: 110px">Submit</button>
   </div>
   <div>
-    <button type="button" onClick="history.go(0);" class="btn btn-dark" style="height: 50px; width: 110px">Refresh Options</button>
+    <button type="button" class="btn btn-dark refreshBtn" style="height: 50px; width: 110px">Refresh Options</button>
   </div>
   <script>
+    $('.refreshBtn').click(function(e) {
+      $('input[name="song"]').each(function() {
+        this.checked = false;
+      });
+      location.reload(true);
+    })
+
     $('.songBtn').click(function(e) {
         let song_ids = [];
         $.each($("input[name='song']:checked"), function() {

@@ -13,8 +13,8 @@ urlpatterns = [
     path('settings_save/<user_id>', views.settings_save, name='settings_save'),
     path('following/<user_id>', views.display_following, name='following'),
     path('followers/<user_id>', views.display_followers, name='followers'),
-    path('unfollow/<user_id>/<who>', views.unfollow, name='unfollow'),
-    path('follow/<user_id>/<who>', views.follow, name='follow'),
+    path('unfollow/<who>', views.unfollow, name='unfollow'),
+    path('follow/<who>', views.follow, name='follow'),
     path('update_profile/', views.update_profile, name='update_profile'),
     path('user_list/', views.user_list, name='user_list'),
     path('playlists/<user_id>', views.get_playlists, name='get_playlists'),
@@ -30,6 +30,7 @@ urlpatterns = [
     path('reset_preferences/', views.reset_preferences, name='reset_preferences'),
     path('delete_account/', views.delete_account, name='delete_account'),
     path('playlist_vote/', views.playlist_vote, name='playlist_vote'),
+    path('follow_page/<user_id>', views.following_page, name='follow_page'),
 
     
     #path('', views.save_token_redirect, name='save_token_redirect'),

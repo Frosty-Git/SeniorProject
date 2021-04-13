@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}PengBeats | Home{% endblock %}
 
@@ -16,20 +17,26 @@
     {% endif %}
 
     <center>
-        <img src="{% static 'images/penguin.png' type='image/png' %}" class="img-fluid" alt="..." width="200" height="200">
+        <img src="{% static 'images/penguin.png' type='image/png' %}" class="img-fluid" alt="..." width="150" height="150">
         <h1>{{ name }}</h1>
     </center>
     <br>
     <center>
         <form class='ourSearchForm' method='POST' action='results/' style="color: #f5f7fa;">
             {% csrf_token %}
-            {{ ourSearchForm.term }}
-            <input type='submit' value='Search' class='ourSearchForm'>
+            <div class="input-group mb-3" style="max-width:40%; margin-left:auto; margin-right:auto" >
+                {% render_field ourSearchForm.term class="form-control" type="text" placeholder="Search.." aria-describedby="button-addon2" id="searchterm" %}
+                <button class="btn btn-outline-light" type="button" id="button-addon2">Search</button>
+            </div>
+            <!-- {{ ourSearchForm.term }}
+            <input type='submit' value='Search' class='ourSearchForm'> -->
+            <div id="livesearch" style="width:40%; text-align: left;">
+                {% include 'recommender/livesearch.html' %}  
+            </div>
         </form>
-
-        <br>
-        <p>We have not created anything yet. We will have a search feature and stuff on it.</p>
         <br>
     </center>
 <br>
+<script src="{% static 'js/livesearch.js' %}"></script>
+
 {% endblock %}

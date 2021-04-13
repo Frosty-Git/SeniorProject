@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %} {{ profile.user.username }}'s Following {% endblock %}
+
+{% block content %}
+<style>
+    td{
+        text-align: center;
+        padding: 1%;
+    } 
+</style>
+<h2 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+    <a href="{% url 'user:profile' profile.user.id %}">@{{ profile.user.username }}</a>'s Following
+</h2>
+<input type="hidden" id="user_id" value="{{ profile.user.id }}">
+<form style="width:20%; float: right;" class="user_search">
+    <input type="text" class="form-control" placeholder="Search username" aria-label="Username" aria-describedby="basic-addon1" id="id_username">
+</form>
+<div class="w3-row-padding" style="margin-top:2%">
+    <div class="w3-col m6 w3-center">
+        <h3>Following</h3>
+        <table style="margin-left: auto; margin-right: auto;width:100%" id="following_replaceable">
+            {% include 'profile/following_partial.html' with you=you %}
+        </table>
+    </div>
+    <div class="w3-col m6 w3-center header">
+        <h3>Followers</h3>
+        <table style="margin-left: auto; margin-right: auto;width:100%" id="followers_replaceable">
+            {% include 'profile/followers_partial.html' with you=you %}
+        </table>
+    </div>
+</div>
+
+<script>
+    const user_input = $('#id_username');
+    let user_id = $('#user_id').val();
+    const following_table = $('#following_replaceable');
+    const followers_table = $('#followers_replaceable');
+    const endpoint = '/user/follow_page/' + user_id;
+    const delay_by_in_ms = 300;
+    let scheduled_function = false;
+
+    let ajax_call = function (endpoint, request_parameters) {
+        $.getJSON(endpoint, request_parameters)
+            .done(response => {
+                // fade out the table, then:
+                following_table.fadeTo('fast', 0).promise().then(() => {
+                    // replace the HTML contents
+                    following_table.html(response['following_h'])
+                    // fade-in the div with new contents
+                    following_table.fadeTo('fast', 1)
+                })
+                followers_table.fadeTo('fast', 0).promise().then(() => {
+                    // replace the HTML contents
+                    followers_table.html(response['followers_h'])
+                    // fade-in the div with new contents
+                    followers_table.fadeTo('fast', 1)
+                })
+            })
+    }
+    user_input.on('keyup', function () {
+
+        const request_parameters = {
+            q: $(this).val() // value of user_input: the HTML element with ID user-input
+        }
+
+        // if scheduled_function is NOT false, cancel the execution of the function
+        if (scheduled_function) {
+            clearTimeout(scheduled_function)
+        }
+
+        // setTimeout returns the ID of the function to be executed
+        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, endpoint, request_parameters)
+    })
+
+    window.onload = function() {
+        document.getElementById('id_username').value = '';
+    }
+</script>
+{% endblock %}

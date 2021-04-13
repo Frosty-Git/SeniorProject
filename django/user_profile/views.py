@@ -22,6 +22,9 @@ import recommender.Scripts.client_credentials as client_cred
 from recommender.Scripts.spotify_manager import SpotifyManager
 import os
 from django.core.cache import cache
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -248,6 +251,165 @@ def settings_save(request, user_id):
     else:
         raise Http404('Form not valid')
 
+
+@require_GET
+def following_page(request, user_id):
+    """
+    """
+    if request.user == User.objects.get(pk=user_id):
+        you = UserProfile.objects.get(pk=user_id)
+        following_arr = []
+        followers_arr = []
+        url_parameter = request.GET.get("q")
+
+        if url_parameter:
+            search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
+            follower_ids = FollowedUser.objects.filter(Q(user_to=you) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
+            following = you.users_followed.filter(user_id__in=search_users)
+        else:
+            follower_ids = FollowedUser.objects.filter(user_to=you).values('user_from') # Returns dictionary of ids
+            following = you.users_followed.all()
+
+        for user_profile in following:
+            determination = is_following(request.user.id, user_profile.user.id)
+            following_arr.append([user_profile, determination])
+
+        for user in follower_ids:
+            for id in user.values():
+                person = UserProfile.objects.get(pk=id)
+                determination = is_following(request.user.id, id)
+                followers_arr.append([person, determination])
+
+        if request.is_ajax():
+            following_html = render_to_string(
+            template_name="profile/following_partial.html", 
+            context={"following": following_arr})
+
+            followers_html = render_to_string(
+            template_name="profile/followers_partial.html", 
+            context={"followers": followers_arr})
+
+            data_dict = {
+                "followers_h": followers_html,
+                "following_h": following_html,
+            }
+            return JsonResponse(data=data_dict, safe=False)
+
+        context = {
+            'profile': you,
+            'following': following_arr,
+            'followers': followers_arr,
+        }
+        return render(request, 'profile/follow.html', context)
+    else:
+        # You are accessing someone else's following page while logged in
+        if request.user.id is not None:
+            other_user = UserProfile.objects.get(pk=user_id)
+            private_profile = profile_privacy(user_id)
+            following_status = is_following(request.user.id, other_user.user.id)
+            if following_status or not private_profile:
+                following_arr = []
+                followers_arr = []
+                url_parameter = request.GET.get("q")
+
+                if url_parameter:
+                    search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
+                    follower_ids = FollowedUser.objects.filter(Q(user_to=other_user) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
+                    following = other_user.users_followed.filter(user_id__in=search_users)
+                else:
+                    follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
+                    following = other_user.users_followed.all()
+
+                for user_profile in following:
+                    determination = is_following(request.user.id, user_profile.user.id)
+                    following_arr.append([user_profile, determination])
+
+                for user in follower_ids:
+                    for id in user.values():
+                        person = UserProfile.objects.get(pk=id)
+                        determination = is_following(request.user.id, id)
+                        followers_arr.append([person, determination])
+
+                if request.is_ajax():
+                    following_html = render_to_string(
+                    template_name="profile/following_partial.html", 
+                    context={"following": following_arr})
+
+                    followers_html = render_to_string(
+                    template_name="profile/followers_partial.html", 
+                    context={"followers": followers_arr})
+
+                    data_dict = {
+                        "followers_h": followers_html,
+                        "following_h": following_html,
+                    }
+                    return JsonResponse(data=data_dict, safe=False)
+
+                context = {
+                    'following': following_arr,
+                    'profile': other_user,
+                    'private_profile': private_profile,
+                    'following_status': following_status,
+                    'followers': followers_arr,
+                }
+                return render(request, 'profile/follow.html', context)
+            else:
+                return redirect('/user/follow/' + str(request.user.id))
+        # You are accessing someone else's following page while not logged in
+        else:
+            other_user = UserProfile.objects.get(pk=user_id)
+            private_profile = profile_privacy(user_id)
+            if not private_profile:
+                following_arr = []
+                followers_arr = []
+                url_parameter = request.GET.get("q")
+
+                if url_parameter:
+                    search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
+                    follower_ids = FollowedUser.objects.filter(Q(user_to=other_user) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
+                    following = other_user.users_followed.filter(user_id__in=search_users)
+                else:
+                    follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
+                    following = other_user.users_followed.all()
+
+                for user_profile in following:
+                    determination = False
+                    following_arr.append([user_profile, determination])
+                
+                for user in follower_ids:
+                    for id in user.values():
+                        person = UserProfile.objects.get(pk=id)
+                        determination = False
+                        followers_arr.append([person, determination])
+
+                if request.is_ajax():
+                    following_html = render_to_string(
+                    template_name="profile/following_partial.html", 
+                    context={"following": following_arr})
+
+                    followers_html = render_to_string(
+                    template_name="profile/followers_partial.html", 
+                    context={"followers": followers_arr})
+
+                    data_dict = {
+                        "followers_h": followers_html,
+                        "following_h": following_html,
+                    }
+                    return JsonResponse(data=data_dict, safe=False)
+
+                context = {
+                    'following': following_arr,
+                    'profile': other_user,
+                    'private_profile': private_profile,
+                    'followers': followers_arr,
+                }
+                return render(request, 'profile/follow.html', context)
+            else:
+                # Redirect to the user's profile of whom you were trying to view the 
+                # following list for. Not currently working
+                # return redirect('/user/profile/' + str(user_id))
+                return redirect('/')
+
 @require_GET
 def display_following(request, user_id):
     """
@@ -386,12 +548,13 @@ def display_followers(request, user_id):
                 # return redirect('/user/profile/' + str(user_id))
                 return redirect('/')
 
-def unfollow(request, user_id, who):
+def unfollow(request, who):
     """
     Deletes the link in the bridging table between yourself and the person you
     want to unfollow.
     Last updated: 3/19/21 by Jacelynn Duranceau
     """
+    user_id = request.user.id
     loggedin = UserProfile.objects.get(pk=user_id)
     loggedin.num_following -= 1
     loggedin.save()
@@ -400,15 +563,16 @@ def unfollow(request, user_id, who):
     to_unfollow.save()
     user_to_unfollow = FollowedUser.objects.get(user_from = user_id, user_to = who)
     user_to_unfollow.delete()
-    url = '/user/following/' + user_id
+    url = '/user/follow_page/' + user_id
     return redirect(url)
 
-def follow(request, user_id, who):
+def follow(request, who):
     """
     Creates the link in the bridging table between yourself and the person you
     want to follow.
     Last updated: 3/19/21 by Katie Lee, Jacelynn Duranceau
     """
+    user_id = request.user.id
     loggedin = UserProfile.objects.get(pk=user_id)
     loggedin.num_following += 1
     loggedin.save()
@@ -417,7 +581,7 @@ def follow(request, user_id, who):
     to_follow.save()
     user_to_follow = FollowedUser(user_from=loggedin, user_to=to_follow)
     user_to_follow.save()
-    url = '/user/following/' + user_id
+    url = '/user/follow_page/' + user_id
     return redirect(url)
 
 

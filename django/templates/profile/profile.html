@@ -21,7 +21,7 @@
         {% endif %}
 
         <div>
-            <h2 style="font-family: 'Noto Sans JP', sans-serif;">
+            <h2>
                 <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
                 {% if profile.user.id == user.id or not private_profile or is_following %}
                 {% elif private_profile%}
@@ -65,6 +65,7 @@
                         </tr>
                     </table>
                 </div>
+                <br>
             {% endif %}
             {% if profile.user.id == user.id and not profile.linked_to_spotify %}
                 <a class="btn spotify"  href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
@@ -73,9 +74,9 @@
 
                 {% else %}
                     {% if is_following %}
-                        <a class="btn unfollowBtn" href="{% url 'user:unfollow' user.id profile.user.id%}" role="button"></a>
+                        <a class="btn unfollowBtn" href="{% url 'user:unfollow' profile.user.id%}" role="button"></a>
                     {% elif not is_following %}
-                        <a class="btn followBtn" href="{% url 'user:follow' user.id profile.user.id%}" role="button"></a>
+                        <a class="btn followBtn" href="{% url 'user:follow' profile.user.id%}" role="button"></a>
                     {% else %}
 
                     {% endif %}
@@ -87,7 +88,7 @@
 
         {% if profile.user.id == user.id %}
         <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
-            <h2 style="font-family: 'Noto Sans JP', sans-serif;">Music Preferences</h2>
+            <h2>Music Preferences</h2>
     
             <table class="center">
                 <tr>
@@ -177,7 +178,7 @@
                 {% if not private_prefs%}
                 <!-- Ensure the public profile or person you are following has allowed their preferences to be visible, even to followers -->
                     <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
-                        <h2 style="font-family: 'Noto Sans JP', sans-serif;">Music Preferences</h2>
+                        <h2>Music Preferences</h2>
                 
                         <table class="center">
                             <tr>
@@ -275,7 +276,7 @@
         <div style="border-bottom: white double;">
             <div class="w3-row">
                 <div class="w3-col s6">
-                    <h2 style="text-align: left; font-family: 'Noto Sans JP', sans-serif;"><a href="{% url 'feed:feed' %}">Feed</a></h2>
+                    <h2 style="text-align: left;"><a href="{% url 'feed:feed' %}">Feed</a></h2>
                 </div>
                 {% if profile.user.id == user.id %}
                 <div class="w3-col s6" style="padding-top: 10px;">
@@ -295,7 +296,7 @@
     
 
     <div class="w3-col m2 w3-center header">
-        <h2><a href="{% url 'user:following' profile.user.id %}" style="font-family: 'Noto Sans JP', sans-serif;text-decoration: none;">Following</a></h2>
+        <h2><a href="{% url 'user:follow_page' profile.user.id %}" style="text-decoration: none;">Following</a></h2>
         <table style="display: inline-block; text-align: left;">
         {% for follower in follower_list %}
             <tr>
@@ -312,10 +313,8 @@
             </tr>
         {% endfor %}
         </table>
-    </div>
-
-    <div class="w3-col m2 w3-center header">
-        <h2 style="font-family: 'Noto Sans JP', sans-serif;">Playlists</h2>
+        <br><br>
+        <h2>Playlists</h2>
         <a href="{% url 'user:get_playlists' profile.user.id %}">
             @{{ profile.user.username }}'s Playlists
         </a>

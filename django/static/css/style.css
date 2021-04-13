@@ -210,7 +210,7 @@ input:checked+.slider:before {
    Source: https://stackoverflow.com/questions/54241934/changing-button-text-on-hover
 */
 .unfollowBtn {
-    width: 55%;
+    /* width: 55%; */
     color: white;
     background-color: #343a40;
     border: 1px solid black;
@@ -233,7 +233,7 @@ input:checked+.slider:before {
 .followBtn {
     color: black;
     background-color: darkgrey;
-    width: 55%;
+    /* width: 55%; */
     border: 1px solid black;
     border-radius: 4px;
 }
