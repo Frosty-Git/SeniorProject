@@ -182,7 +182,7 @@
                                             </table>
                                         </div>
                                     {% empty %}
-                                        <div id="no_comment{{ post.id }}"><h6>There are no comments.</h6></div>
+                                        <div id="no_comment{{ post.id }}"><p>There are no comments.</p></div>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -195,8 +195,8 @@
                     {% else %}
                         <textarea id="comment_text{{ post.id }}" class="form-control" aria-label="With textarea" name="comment_text"></textarea>
                         <button id="close" type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="commentbtn{{ post.id }} btn btn-primary" style="display: block">Comment</button>
-                        <button id="load{{ post.id }}" class="btn btn-primary" type="button" disabled style="display: none">
+                        <button type="submit" class="commentbtn{{ post.id }} btn btn-dark" style="display: block">Comment</button>
+                        <button id="load{{ post.id }}" class="btn btn-dark" type="button" disabled style="display: none">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         </button>
                     {% endif %}

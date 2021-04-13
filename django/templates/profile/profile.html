@@ -7,14 +7,6 @@
 
 {% block content %}
 
-<style>
-    .center {
-        margin-left: 35%;
-        margin-right: 30%;
-        width: 100%;  
-        line-height: 160%;
-    }
-</style>
 <div class="w3-row-padding" style="margin-top:2%">
     <div class="w3-col m4 w3-center my_profile">
         {% if profile.profilepic %}
@@ -28,31 +20,23 @@
         {% endif %}
 
         <div>
-            <h2>
+            <p style="font-size:xx-large; font-weight:800;">
                 <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
                 {% if profile.user.id == user.id or not private_profile or is_following %}
                 {% elif private_profile%}
                     <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
                 {% endif %}
-            </h2>
-            <p style="margin-top: -10px; color:lightgray">
-                @{{ profile.user.username }}
             </p>
-            <p>
-                {% if profile.user.id == user.id or not private_profile or is_following %}
-                    <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
-                    <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
-                {% elif private_profile%}
-                    <p>{{ profile.num_followers }} Followers {{ profile.num_following }} Following</p>
-                {% endif %}
+            <p style="margin-top:-20px;">
+                @{{ profile.user.username }}
             </p>
         </div>
 
         {% if profile.user.id == user.id or not private_profile or is_following %}
             {% if profile.description %}
-                <h5 style="font-size: 20px;">
+                <p style="font-size: 20px;">
                     {{ profile.description }}
-                </h5>
+                </p>
             {% endif %}
 
             {% if profile.likes or profile.dislikes or is_following %}
@@ -74,6 +58,14 @@
                 </div>
                 <br>
             {% endif %}
+            <p>
+                {% if profile.user.id == user.id or not private_profile or is_following %}
+                    <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
+                    <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
+                {% elif private_profile%}
+                    <p>{{ profile.num_followers }} Followers {{ profile.num_following }} Following</p>
+                {% endif %}
+            </p>
             {% if profile.user.id == user.id and not profile.linked_to_spotify %}
                 <a class="btn spotify"  href="{% url 'user:link_spotify' %}" role="button">Link Spotify</a>
             {% else %}
@@ -94,7 +86,7 @@
         <br><br>
 
         {% if profile.user.id == user.id %}
-        <div class="center" style="width: 350px; text-align: center;">
+        <div class="center" style="text-align: center;">
             <h2>Music Preferences</h2>
     
             <table class="center">
@@ -184,7 +176,7 @@
             {% if not private_profile or is_following %}
                 {% if not private_prefs %}
                 <!-- Ensure the public profile or person you are following has allowed their preferences to be visible, even to followers -->
-                    <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
+                    <div class= "center" style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
                         <h2>Music Preferences</h2>
                 
                         <table class="center">
