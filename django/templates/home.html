@@ -26,7 +26,7 @@
             {% csrf_token %}
             <div class="input-group mb-3" style="max-width:40%; margin-left:auto; margin-right:auto" >
                 {% render_field ourSearchForm.term class="form-control" type="text" placeholder="Search.." aria-describedby="button-addon2" id="searchterm" %}
-                <button class="btn btn-outline-light" type="button" id="button-addon2">Search</button>
+                <button class="btn btn-outline-light" type="submit" id="button-addon2">Search</button>
             </div>
             <!-- {{ ourSearchForm.term }}
             <input type='submit' value='Search' class='ourSearchForm'> -->
