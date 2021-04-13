@@ -7,7 +7,14 @@
 
 {% block content %}
 
-
+<style>
+    .center {
+        margin-left: 35%;
+        margin-right: 30%;
+        width: 100%;  
+        line-height: 160%;
+    }
+</style>
 <div class="w3-row-padding" style="margin-top:2%">
     <div class="w3-col m4 w3-center my_profile">
         {% if profile.profilepic %}
@@ -87,7 +94,7 @@
         <br><br>
 
         {% if profile.user.id == user.id %}
-        <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
+        <div class="center" style="width: 350px; text-align: center;">
             <h2>Music Preferences</h2>
     
             <table class="center">
@@ -175,7 +182,7 @@
          </div>
         {% else %}
             {% if not private_profile or is_following %}
-                {% if not private_prefs%}
+                {% if not private_prefs %}
                 <!-- Ensure the public profile or person you are following has allowed their preferences to be visible, even to followers -->
                     <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
                         <h2>Music Preferences</h2>

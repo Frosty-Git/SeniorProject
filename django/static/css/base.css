@@ -34,3 +34,12 @@ a:hover {
 a {
     text-decoration: none;
 }
+
+.modal-content  {
+    background-color: #a0bed9;
+}
+
+.modal-title {
+    color: #001629;
+    font-size: 200%;
+}
