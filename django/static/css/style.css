@@ -1,7 +1,7 @@
-body {
+/* body {
     background-color: darkgrey;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+} */
 
 .post {
     list-style-type: none;
@@ -266,10 +266,5 @@ input:checked+.slider:before {
 /* Survey Page
    Source: https://www.w3schools.com/howto/howto_css_center_button.asp
 */
-.center {
-    margin-left: 35%;
-    margin-right: 30%;
-    width: 100%;  
-    line-height: 160%;
-}
+
 /* End Survey Page */

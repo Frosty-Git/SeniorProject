@@ -12,7 +12,7 @@
     .help.tip { position: absolute;}
 </style>
     {% if user.id == userobj.id %}
-        <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+        <h1>
             Settings
         </h1>
         <form method='post' action="{% url 'user:settings_save' user.id %}">

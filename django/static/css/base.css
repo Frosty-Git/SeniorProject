@@ -1,0 +1,36 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: #d9dadc; /* Baby Penguin White */
+    background-color: #323F4B;
+}
+
+.navbar {
+    background-color: #1F2933;
+}
+
+.pengbeatslogo {
+    font-family: "Comic Sans MS", "Comic Sans";
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #f99108;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.accent {
+    color: #f99108;
+}
+
+.spotify {
+    background-color: #1ed761; /* Spotify Green */
+}
+
+a:hover {
+    color: #f99108;
+}
+
+a {
+    text-decoration: none;
+}

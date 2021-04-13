@@ -23,10 +23,11 @@
 
         <!-- Imported Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Lato" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css2?family=Lato" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
 
         <!-- CSS -->
-        <link rel="stylesheet" href="{% static 'css/css_sample.css' %}">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
         <!-- JS -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -47,7 +48,7 @@
         <!-- Bootstrap Navbar -->
           <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-              <a class="navbar-brand" href="{% url 'recommender:home' %}">
+              <a class="navbar-brand pengbeatslogo" href="{% url 'recommender:home' %}">
                 <img src="{% static 'images/penguin.png' type='image/png' %}" alt="" width="30" height="30" class="d-inline-block align-top">
                 PengBeats
               </a>
