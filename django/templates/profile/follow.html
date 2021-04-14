@@ -15,20 +15,26 @@
     <a href="{% url 'user:profile' profile.user.id %}">@{{ profile.user.username }}</a>'s Following
 </h2>
 <input type="hidden" id="user_id" value="{{ profile.user.id }}">
-<form style="width:20%; float: right;" class="user_search">
+<form style="width:30%; margin-left: auto; margin-right: auto;" class="user_search">
     <input type="text" class="form-control" placeholder="Search username" aria-label="Username" aria-describedby="basic-addon1" id="id_username">
 </form>
 <div class="w3-row-padding" style="margin-top:2%">
-    <div class="w3-col m6 w3-center">
+    <div class="w3-col m4 w3-center">
         <h3>Following</h3>
         <table style="margin-left: auto; margin-right: auto;width:100%" id="following_replaceable">
-            {% include 'profile/following_partial.html' with you=you %}
+            {% include 'profile/following_partial.html' %}
         </table>
     </div>
-    <div class="w3-col m6 w3-center header">
+    <div class="w3-col m4 w3-center header">
         <h3>Followers</h3>
         <table style="margin-left: auto; margin-right: auto;width:100%" id="followers_replaceable">
-            {% include 'profile/followers_partial.html' with you=you %}
+            {% include 'profile/followers_partial.html' %}
+        </table>
+    </div>
+    <div class="w3-col m4 w3-center header">
+        <h3>Other Users</h3>
+        <table style="margin-left: auto; margin-right: auto;width:100%" id="others_replaceable">
+            {% include 'profile/other_users_partial.html' %}
         </table>
     </div>
 </div>
@@ -38,6 +44,7 @@
     let user_id = $('#user_id').val();
     const following_table = $('#following_replaceable');
     const followers_table = $('#followers_replaceable');
+    const others_table = $('#others_replaceable');
     const endpoint = '/user/follow_page/' + user_id;
     const delay_by_in_ms = 300;
     let scheduled_function = false;
@@ -57,6 +64,12 @@
                     followers_table.html(response['followers_h'])
                     // fade-in the div with new contents
                     followers_table.fadeTo('fast', 1)
+                })
+                others_table.fadeTo('fast', 0).promise().then(() => {
+                    // replace the HTML contents
+                    others_table.html(response['others_h'])
+                    // fade-in the div with new contents
+                    others_table.fadeTo('fast', 1)
                 })
             })
     }
