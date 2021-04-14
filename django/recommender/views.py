@@ -19,7 +19,6 @@ from collections import Counter
 import random
 from random import sample
 from recommender.Scripts.survey import GenresStack
-from recommender.Scripts.search import get_playlist_items
 from datetime import datetime, timedelta
 import pytz
 from django.db.models import Count, Q

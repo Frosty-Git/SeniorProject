@@ -24,11 +24,13 @@
 
 <br>
 
-<table class="center" style="width:70%;">
+<table class="center" style="width:95%;">
     <tr>        
         <th></th>
         <th style="text-align: center;">Title</th>
         <th style="text-align: center;">Date Last Updated</th>
+        <th style="text-align: center;"># of Songs</th>
+        <th style="text-align: center;">Duration</th>
     </tr>
     <!-- You are viewing your own playlists -->
     {% if profile.user.id == user.id %}
@@ -52,6 +54,8 @@
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
+                <td>numsongs here</td>
+                <td>duration here</td>
                 {% if playlist != profile.liked_songs_playlist_fk%}
                     {% if not playlist.is_private %}
                     <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
@@ -125,6 +129,8 @@
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
+                <td>numsongs here</td>
+                <td>duration here</td>
                 {% if user.is_authenticated %}
                     {% if playlist != profile.liked_songs_playlist_fk %}
                         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">

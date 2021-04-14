@@ -89,14 +89,28 @@
 
 {% endif %}
 
-<table class="center" style="width:40%;">
+<table class="center" style="width:90%;">
     {% for song in songs %}
-    <!-- song.0 is the id into the SongOnPlaylist table, song.1 is the song id, and song.3 is the current vote on the song (like/disklike) -->
-    <!-- song.3 is a list, however, that contains the boolean values for a like or a dislike -->
+    <!-- Example song: [23, '3DamFFqW32WihKkTVlwTYQ', [False, False], 'https://i.scdn.co/image/ab67616d0000b273785d4e702802da500fc78b32', 'Fireflies', 'Owl City', 'Ocean Eyes', '3:48'] -->
+    <!-- song.0 is the id into the SongOnPlaylist table -->
+    <!-- song.1 is the song id -->
+    <!-- song.2 is a list that contains the boolean values for a like or a dislike -->
+    <!-- song.3 is the album art for a track -->
+    <!-- song.4 is the title of the track -->
+    <!-- song.5 is the artist of the track -->
+    <!-- song.6 is the album of the track -->
+    <!-- song.7 is the duration of the track -->
+    <tr>
+        <th></th>
+        <th style="text-align: center;">Album</th>
+        <th style="text-align: center;">Duration</th>
+    </tr>
     <tr style="border-bottom: 1px solid black;">
-        <td class="centered-column" style="width:400px; padding-top:8px; padding-bottom: 8px;">
+        <td class="centered-column" style="width:200px; padding-top:8px; padding-bottom: 8px;">
             <iframe src='https://open.spotify.com/embed/track/{{ song.1 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
         </td>
+        <td style="text-align: center;">{{song.6}}</td>
+        <td style="text-align: center;">{{song.7}}</td>
         <!-- You are logged in -->
         {% if user.is_authenticated %}
         <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">

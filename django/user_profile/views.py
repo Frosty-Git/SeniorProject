@@ -25,6 +25,7 @@ from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.template.loader import render_to_string
+from recommender.Scripts.search import *
 
 # Create your views here.
 
@@ -735,10 +736,27 @@ def get_songs_playlist(request, user_id, playlist_id):
 
         songs = sop_song_vote_array(matches, songs_votes)
         
+        for song in songs:
+            track_id = song[1]
+            album_image = get_album_image(track_id)
+            song.extend([album_image])
+            song_name = get_song_name(track_id)
+            song.extend([song_name])
+            artists = get_artists(track_id)
+            song.extend([artists])
+            album = get_song_album(track_id)
+            song.extend([album])
+            duration = get_song_duration(track_id)
+            convertedDuration = convertMs(duration)
+            song.extend([convertedDuration])
+
+        print(songs)
+
         private_profile = profile_privacy(user_id)
         following_status = is_following(request.user.id, user_id)
 
         playlists = get_user_playlists(request.user.id)
+        
 
         context = {
             'songs': songs,
@@ -1137,3 +1155,34 @@ def playlist_vote(request):
             vote.delete()
             return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
+
+def get_playlist_duration(playlist_id):
+    """
+    Gets the total duration for a playlist based on each song in it.
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    playlist = Playlist.objects.get(pk=playlist_id)
+    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+
+def get_num_playlist_songs(playlist_id):
+    """
+    Gets the total number of songs in a playlist.
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    playlist = Playlist.objects.get(pk=playlist_id)
+    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+    num_songs = len(matches)
+    return num_songs
+
+def convertMs(ms):
+    seconds=(ms/1000)%60
+    seconds = int(seconds)
+    minutes=(ms/(1000*60))%60
+    minutes = int(minutes)
+    hours=(ms/(1000*60*60))%24
+    hours = int(hours)
+    if hours > 0:
+        result = ("%d:%d:%d" % (hours, minutes, seconds))
+    else:
+        result = ("%d:%d" % (minutes, seconds))
+    return result

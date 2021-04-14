@@ -274,13 +274,6 @@ def get_artists_ids_list(track):
         artist_names.append(dicti['id'])
 
     return artist_names
-        
-def get_song_name(track):
-    """
-    Gets the name of a song based on its id
-    """
-    name = sp.track(track)['name']
-    return name
 
 def get_artist_name(artist_id):
     """
@@ -389,6 +382,37 @@ def livesearch_albums(query):
         new_list.append(picture)
         searches[result['albums']['items'][x]['id']] = new_list
     return searches
+
+def get_song_duration(track_id):
+    """
+    Gets the length of a song in ms.
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    info = get_track(track_id)
+    duration = info['duration_ms']
+    return duration
+
+def get_song_album(track_id):
+    """
+    Gets the name of the album a song appears on
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    info = get_track(track_id)
+    album = info['album']['name']
+    return album
+
+def get_song_name(track):
+    """
+    Gets the name of a song based on its id
+    """
+    info = get_track(track)
+    name = info['name']
+    return name
+
+def get_album_image(track):
+    info = get_track(track)
+    album_image = info['album']['images'][0]['url']
+    return album_image
 
 """
 FOR SHELL TESTING PURPOSES:
