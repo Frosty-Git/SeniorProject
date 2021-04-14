@@ -13,7 +13,8 @@ class SpotifyManager:
         client_cred.setup()
         self.scope = ('user-read-recently-played user-top-read user-read-playback-position '
             'playlist-modify-public playlist-modify-private playlist-read-private '
-            'playlist-read-collaborative user-library-modify user-library-read')
+            'playlist-read-collaborative user-library-modify user-library-read '
+            'streaming user-read-email user-read-private')
         self.auth_manager = spotipy.oauth2.SpotifyOAuth(scope=self.scope, show_dialog=True, redirect_uri='http://localhost:8000/user/save_token_redirect')
 
     def create_spotify(self):

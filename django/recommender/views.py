@@ -74,6 +74,10 @@ def home(request):
     track_searches = []
     artist_searches = []
     album_searches = []
+    profile = None
+    if request.user.id is not None:
+        user_id = request.user.id
+        profile = UserProfile.objects.get(pk=user_id)
     
     if url_parameter:
         track_searches = livesearch_tracks(url_parameter)
@@ -98,6 +102,7 @@ def home(request):
         'track_searches': track_searches,
         'artist_searches': artist_searches,
         'album_searches': album_searches,
+        'profile': profile
     }
     return render(request, 'home.html', context)
 

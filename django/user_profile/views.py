@@ -345,12 +345,16 @@ def following_page(request, user_id):
                     }
                     return JsonResponse(data=data_dict, safe=False)
 
+                your_id = request.user.id
+                your_profile = UserProfile.objects.get(pk=your_id)
+
                 context = {
                     'following': following_arr,
                     'profile': other_user,
                     'private_profile': private_profile,
                     'following_status': following_status,
                     'followers': followers_arr,
+                    'your_profile': your_profile,
                 }
                 return render(request, 'profile/follow.html', context)
             else:
@@ -397,6 +401,7 @@ def following_page(request, user_id):
                     }
                     return JsonResponse(data=data_dict, safe=False)
 
+                # Don't return your_profile since you aren't logged in
                 context = {
                     'following': following_arr,
                     'profile': other_user,
@@ -451,11 +456,16 @@ def display_following(request, user_id):
                 # following = FollowedUser.objects.filter(user_from=user_id)
                 # get_list = FollowedUser.objects.get(user_from=user_id)
                 #following = get_list.user_to
+
+                your_id = request.user.id
+                your_profile = UserProfile.objects.get(pk=your_id)
+
                 context = {
                     'following': following_arr,
                     'profile': other_user,
                     'private_profile': private_profile,
                     'following_status': following_status,
+                    'your_profile': your_profile,
                 }
                 return render(request, 'profile/following.html', context)
             else:
@@ -469,6 +479,7 @@ def display_following(request, user_id):
                 following_arr = []
                 for user_profile in following:
                     following_arr.append([user_profile, determination])
+                # Don't return your_profile since you aren't logged in
                 context = {
                     'following': following_arr,
                     'profile': other_user,
@@ -518,9 +529,14 @@ def display_followers(request, user_id):
                         person = UserProfile.objects.get(pk=id)
                         determination = is_following(request.user.id, id)
                         followers_arr.append([person, determination])
+
+                your_id = request.user.id
+                your_profile = UserProfile.objects.get(pk=your_id)
+
                 context = {
                     'profile': other_user,
                     'followers': followers_arr,
+                    'your_profile': your_profile,
                 }
                 return render(request, 'profile/followers.html', context)
             else:
@@ -537,6 +553,7 @@ def display_followers(request, user_id):
                         person = UserProfile.objects.get(pk=id)
                         determination = is_following(request.user.id, id)
                         followers_arr.append([person, determination])
+                # You are not logged in so don't return your_profile
                 context = {
                     'profile': other_user,
                     'followers': followers_arr,
