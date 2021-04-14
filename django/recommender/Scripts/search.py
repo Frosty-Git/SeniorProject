@@ -199,7 +199,7 @@ def get_artists_genres(artist_id_list):
 
 def get_related_artists(artist_id, num):
     """
-    Returns 5 random artists related to an artist. Max number is 20.
+    Returns random artists related to an artist. Max number is 20.
     Last updated: 4/8/21 by Jacelynn Duranceau
     """
     artists = sp.artist_related_artists(artist_id)['artists']

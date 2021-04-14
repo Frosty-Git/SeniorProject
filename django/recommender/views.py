@@ -982,7 +982,11 @@ def artist_info(request, artist_id):
     Gets artists related to an artist and his/her top songs. 
     Last updated: 4/12/21 by Jacelynn Duranceau
     """
-    related_artists = get_all_related_artists(artist_id)
+    all_related_artists = get_all_related_artists(artist_id)
+    if len(all_related_artists) > 12:
+        related_artists = random.sample(all_related_artists, k=12)
+    else:
+        related_artists = all_related_artists
     top_tracks = get_top_tracks(artist_id)
     name = get_artist_name(artist_id)
     artist_image = get_artist_image(artist_id)
@@ -999,7 +1003,7 @@ def artist_info(request, artist_id):
             'artist_image': artist_image,
             'playlists': playlists,
             'profile': profile,
-            'location': 'artist_page'
+            'location': 'artist_page',
         }
     else:
         context = {
