@@ -54,8 +54,8 @@
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
-                <td>numsongs here</td>
-                <td>duration here</td>
+                <td style="text-align: center;">numsongs here</td>
+                <td style="text-align: center;">duration here</td>
                 {% if playlist != profile.liked_songs_playlist_fk%}
                     {% if not playlist.is_private %}
                     <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
@@ -129,8 +129,8 @@
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.date_last_updated }}</td>
-                <td>numsongs here</td>
-                <td>duration here</td>
+                <td style="text-align: center;">numsongs here</td>
+                <td style="text-align: center;">duration here</td>
                 {% if user.is_authenticated %}
                     {% if playlist != profile.liked_songs_playlist_fk %}
                         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
