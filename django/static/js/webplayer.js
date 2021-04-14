@@ -61,10 +61,10 @@ window.onSpotifyWebPlaybackSDKReady = () => {
             });
         };
 
-        play({
-            playerInstance: player,
-            spotify_uri: 'spotify:track:6Dma0t0hOe6Bd6u5YRKF3n',
-        });
+        // play({
+        //     playerInstance: player,
+        //     spotify_uri: 'spotify:track:6Dma0t0hOe6Bd6u5YRKF3n',
+        // });
 
         setInterval(function() {
             player.getCurrentState().then(state => {

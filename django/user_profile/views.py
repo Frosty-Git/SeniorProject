@@ -107,6 +107,7 @@ def profile(request, user_id):
     if request.user == User.objects.get(pk=user_id):
         profile = UserProfile.objects.get(pk=user_id)
         posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+        playlists = Playlist.objects.filter(user_profile_fk=profile, is_private=False, is_shareable=True).order_by('-date_last_updated')[:5]
         follower_list = profile.users_followed.all()[:5]
         votes = PostUserVote.objects.filter(user_from=profile).values()
         postform = PostForm()
@@ -119,16 +120,23 @@ def profile(request, user_id):
             'follower_list': follower_list,
             'post_list': post_list,
             'image': profile.profilepic,
+            'playlists': playlists,
             'acousticness': all_prefs['acousticness'],
+            'acousticness_adjusted': all_prefs['acousticness_adjusted'],
             'danceability': all_prefs['danceability'],
+            'danceability_adjusted': all_prefs['danceability_adjusted'],
             'energy': all_prefs['energy'],
+            'energy_adjusted': all_prefs['energy_adjusted'],
             'instrumentalness': all_prefs['instrumentalness'],
+            'instrumentalness_adjusted': all_prefs['instrumentalness_adjusted'],
             'speechiness': all_prefs['speechiness'],
+            'speechiness_adjusted': all_prefs['speechiness_adjusted'],
             'loudness': all_prefs['loudness'],
             'loudness_adjusted': all_prefs['loudness_adjusted'],
             'tempo': all_prefs['tempo'],
             'tempo_adjusted': all_prefs['tempo_adjusted'],
             'valence': all_prefs['valence'],
+            'valence_adjusted': all_prefs['valence_adjusted'],
             'private_prefs': all_prefs['private_prefs'],
             'private_profile': is_profile_private,
             'nofollow': 'profile',
@@ -142,6 +150,7 @@ def profile(request, user_id):
             profile = UserProfile.objects.get(pk=user_id)
             posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
             follower_list = profile.users_followed.all()[:5]
+            playlists = Playlist.objects.filter(user_profile_fk=profile, is_private=False, is_shareable=True).order_by('-date_last_updated')[:5]
             post_list = vote_dictionary(votes, posts)
             is_profile_private = profile_privacy(user_id)
             following_status = is_following(request.user.id, user_id)
@@ -153,23 +162,31 @@ def profile(request, user_id):
                 'is_following': bool_following,
                 'image': loggedin.profilepic,
                 'acousticness': all_prefs['acousticness'],
+                'acousticness_adjusted': all_prefs['acousticness_adjusted'],
                 'danceability': all_prefs['danceability'],
+                'danceability_adjusted': all_prefs['danceability_adjusted'],
                 'energy': all_prefs['energy'],
+                'energy_adjusted': all_prefs['energy_adjusted'],
                 'instrumentalness': all_prefs['instrumentalness'],
+                'instrumentalness_adjusted': all_prefs['instrumentalness_adjusted'],
                 'speechiness': all_prefs['speechiness'],
+                'speechiness_adjusted': all_prefs['speechiness_adjusted'],
                 'loudness': all_prefs['loudness'],
                 'loudness_adjusted': all_prefs['loudness_adjusted'],
                 'tempo': all_prefs['tempo'],
                 'tempo_adjusted': all_prefs['tempo_adjusted'],
                 'valence': all_prefs['valence'],
+                'valence_adjusted': all_prefs['valence_adjusted'],
                 'private_prefs': all_prefs['private_prefs'],
                 'private_profile': is_profile_private,
+                'playlists': playlists
             }
         else:
             profile = UserProfile.objects.get(pk=user_id)
             posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
             follower_list = profile.users_followed.all()[:5]
             is_profile_private = profile_privacy(user_id)
+            playlists = Playlist.objects.filter(user_profile_fk=profile, is_private=False, is_shareable=True).order_by('-date_last_updated')[:5]
 
             nli_post_list = []
             for post in posts:
@@ -182,17 +199,24 @@ def profile(request, user_id):
                 'follower_list': follower_list,
                 'nofollow': 'nofollow',
                 'acousticness': all_prefs['acousticness'],
+                'acousticness_adjusted': all_prefs['acousticness_adjusted'],
                 'danceability': all_prefs['danceability'],
+                'danceability_adjusted': all_prefs['danceability_adjusted'],
                 'energy': all_prefs['energy'],
+                'energy_adjusted': all_prefs['energy_adjusted'],
                 'instrumentalness': all_prefs['instrumentalness'],
+                'instrumentalness_adjusted': all_prefs['instrumentalness_adjusted'],
                 'speechiness': all_prefs['speechiness'],
+                'speechiness_adjusted': all_prefs['speechiness_adjusted'],
                 'loudness': all_prefs['loudness'],
                 'loudness_adjusted': all_prefs['loudness_adjusted'],
                 'tempo': all_prefs['tempo'],
                 'tempo_adjusted': all_prefs['tempo_adjusted'],
                 'valence': all_prefs['valence'],
+                'valence_adjusted': all_prefs['valence_adjusted'],
                 'private_prefs': all_prefs['private_prefs'],
                 'private_profile': is_profile_private,
+                'playlists': playlists
             }
     return render(request, 'profile/profile.html', context)
 
@@ -634,13 +658,6 @@ def update_profile(request):
         profile_form = UserProfileForm(instance=obj)
     return render(request, 'settings/update_profile.html', {'form': form, 'profile_form': profile_form})
 
-def user_list(request):
-    """
-    TEMPORARY just to see what users are in the system 
-    """
-    user_list = UserProfile.objects.exclude(pk=request.user.id)
-    return render(request, 'profile/user_list.html', {'user_list': user_list})
-
 def get_playlists(request, user_id):
     """
     Gets all playlists for a user.
@@ -1031,10 +1048,15 @@ def get_preferences(user_id):
     private_prefs = settings.private_preferences
     prefs = Preferences.objects.get(user_profile_fk=user)
     acousticness = prefs.acousticness
+    acousticness_adjusted = acousticness * 100
     danceability = prefs.danceability
+    danceability_adjusted = danceability * 100
     energy = prefs.energy
+    energy_adjusted = energy * 100
     instrumentalness = prefs.instrumentalness
+    instrumentalness_adjusted = instrumentalness * 100
     speechiness = prefs.speechiness
+    speechiness_adjusted = speechiness * 100
     loudness = prefs.loudness
     # This value is negative and cannot be shown properly on the template 
     # in a progress bar unless adjusted to be a positive. So, for the progress bar
@@ -1043,18 +1065,25 @@ def get_preferences(user_id):
     tempo = prefs.tempo
     tempo_adjusted = tempo - 50
     valence = prefs.valence
+    valence_adjusted = valence * 100
     user_prefs = {
         'private_prefs': private_prefs,
         'acousticness': acousticness,
+        'acousticness_adjusted': acousticness_adjusted,
         'danceability': danceability,
+        'danceability_adjusted': danceability_adjusted,
         'energy': energy,
+        'energy_adjusted': energy_adjusted,
         'instrumentalness': instrumentalness,
+        'instrumentalness_adjusted': instrumentalness_adjusted,
         'speechiness': speechiness,
+        'speechiness_adjusted': speechiness_adjusted,
         'loudness': loudness,
         'loudness_adjusted': loudness_adjusted,
         'tempo': tempo,
         'tempo_adjusted': tempo_adjusted,
         'valence': valence,
+        'valence_adjusted': valence_adjusted,
     }
     return user_prefs
 
