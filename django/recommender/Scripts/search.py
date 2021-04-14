@@ -124,7 +124,7 @@ def get_recommendation(request, limit, user_id, **kwargs):
     genres_list = prefs.genres.split('*')
     genres = genres_list[:-1]
     genre = random.sample(genres, 1)
-    related_artists_ids = get_related_artists(seed_artists[0], 5)
+    related_artists_ids = get_related_artists(seed_artists[0], 6)
     # top_genre = get_artists_genres(seed_artists)
     track = get_top_track(request)
     # 3 artists, 1 genre, 1 track
@@ -206,7 +206,10 @@ def get_related_artists(artist_id, num):
     all_artists = []
     for artist in artists:
         all_artists.append(artist['id'])
-    random_artists = random.sample(all_artists, num)
+    if len(all_artists) > num:
+        random_artists = random.sample(all_artists, num)
+    else:
+        random_artists = all_artists
     return random_artists
 
 def get_all_related_artists(artist_id):

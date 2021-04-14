@@ -15,7 +15,7 @@
 </center>
 <br>
 {% if user.is_authenticated %}
-<table class="center" style="width: 80%;"><track>
+<table class="center" style="width: 80%;"><tr>
 {% for song, vote in top_tracks.items %}
         <td style="padding-bottom: 50px; padding-right: 15px; padding-left: 15px;">
             <ul class="songItem">
@@ -59,8 +59,7 @@
                     </div>
                 </li>
             </ul>
-        </td>
-        
+        </td>     
         {% if forloop.last %}
             </tr>
         {% else %}
