@@ -10,6 +10,10 @@
 
 {% if min_likes_met and profile.survey_taken %}
 <table class="center">
+    <div style="margin-left: 40%;">
+        <!-- <button type="button" class="btn btn-outline-light" onClick="window.location.reload();">Refresh Recommendations</button> -->
+        <a href="http://localhost:8000/recommendations/" class="btn btn-outline-light">Refresh Recommendations</a>
+    </div>  
 {% for song, vote in track_ids.items %}
     <tr>
         <td class="recCol"> 
