@@ -25,7 +25,6 @@ import pytz
 from django.db.models import Count, Q
 from django.template.loader import render_to_string
 
-
 #----Dr Baliga's Code----
 
 def find_albums(artist, from_year = None, to_year = None):
