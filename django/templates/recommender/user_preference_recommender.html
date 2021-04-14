@@ -43,10 +43,12 @@
                 {% include 'recommender/song_vote_script.html' %}
             </div>
         </td>
-        <td class="recCol">
-            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
-            {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location%}
-        </td>
+        {% if playlists.count > 1 %}
+            <td class="recCol">
+                <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
+                {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location%}
+            </td>
+        {% endif %}
         <td>
             <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
             {% include 'social_feed/popup_songpost.html' with song=song %}
@@ -78,8 +80,8 @@
         {% endif %}
     </tr>
 </table>
-{% endif %}
 
+<br>
 <center><h3>Artists Like Your Top Artist {{ top_artist_name }}:</h3></center>
 <table>
 {% for artist_id in related_artists %}
@@ -90,6 +92,7 @@
     </tr>
 {% endfor %}
 </table>
+{% endif %}
 
 {% if not min_likes_met %}
     <center><p>You have not liked any songs! Go like some songs in order to get recommendations!</p></center>

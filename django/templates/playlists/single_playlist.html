@@ -127,12 +127,14 @@
                 {% include 'playlists/playlist_vote_script.html' %}
             </div>
         </td>
-        <td>
-            <div class="btn-group" role="group" onclick="addModalClick('{{ song.0 }}')" style="margin-left:auto; margin-right: auto; display:flex">
-                <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song.0 }}">Add to Playlist</button>
-            </div>
-            {% include 'playlists/addsong_popup.html' with playlists=playlists loggedin=loggedin %}
-        </td>
+        {% if playlists.count > 1 %}
+            <td>
+                <div class="btn-group" role="group" onclick="addModalClick('{{ song.0 }}')" style="margin-left:auto; margin-right: auto; display:flex">
+                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song.0 }}">Add to Playlist</button>
+                </div>
+                {% include 'playlists/addsong_popup.html' with playlists=playlists loggedin=loggedin %}
+            </td>
+        {% endif %}
         <script>
             var addPlaylistModal = document.getElementById('addtoplaylistmodal{{ song.0 }}');
             function addModalClick(id) {

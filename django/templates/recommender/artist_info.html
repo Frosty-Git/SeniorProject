@@ -49,9 +49,11 @@
                         </button>
                         {% include 'recommender/song_vote_script.html' %}
                         
-                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
-                        {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location%}
-                        
+                        {% if playlists.count > 1 %}
+                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
+                            {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location%}
+                        {% endif %}
+
                         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
                         {% include 'social_feed/popup_songpost.html' with song=song %}
                     </div>
