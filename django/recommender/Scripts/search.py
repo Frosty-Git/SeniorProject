@@ -283,8 +283,13 @@ def get_artist_name(artist_id):
     """
     Gets the name of an artist based on their id
     """
+    print(sp.artist(artist_id))
     name = sp.artist(artist_id)['name']
     return name
+
+def get_artist_image(artist_id):
+    image = sp.artist(artist_id)['images'][0]['url']
+    return image
 
 def get_track(track):
     """
