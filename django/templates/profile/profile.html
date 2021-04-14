@@ -322,9 +322,5 @@
 </div> 
 
 <script type="text/javascript" src="{% static 'js/profile.js' %}"></script>
-<!-- <script>
-    let birthday = new Date("{{ profile.birthdate|date:'F j, Y' }}");
-    document.getElementById("age").innerHTML = get_age(birthday);
-</script> -->
 {% include 'social_feed/popup_createpost.html' %}  
 {% endblock %}

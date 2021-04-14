@@ -34,16 +34,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         $('#songprogress').attr('max', state['duration']);
     });
 
-    setInterval(function() {
-        player.getCurrentState().then(state => {
-            // if(!state) {
-            //     clearInterval(progressBar);
-            //     return;
-            // }
-            $('#songprogress').attr('value', state['position']);
-            $('#songprogress').text(state['position']);
-        })
-    }, 500);
+
 
     // Ready
     player.addListener('ready', ({ device_id }) => {
@@ -75,17 +66,24 @@ window.onSpotifyWebPlaybackSDKReady = () => {
             spotify_uri: 'spotify:track:6Dma0t0hOe6Bd6u5YRKF3n',
         });
 
+        setInterval(function() {
+            player.getCurrentState().then(state => {
+                $('#songprogress').attr('value', state['position']);
+                $('#songprogress').text(state['position']);
+            })
+        }, 500);
+
         $('#shuffle').click(function(e) {
 
             player.getCurrentState().then(state => {
                 let is_shuffle_true = state['shuffle'];
                 fetch(`https://api.spotify.com/v1/me/player/shuffle?state=${is_shuffle_true}&device_id=${device_id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${access_token}`
-                },
-            });
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access_token}`
+                    },
+                });
     
                 if(is_shuffle_true) {
                     $(this).html('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">'
