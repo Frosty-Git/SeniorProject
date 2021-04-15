@@ -1257,13 +1257,8 @@ def get_playlist_duration(playlist_id):
     Gets the total duration for a playlist based on each song in it.
     Last updated: 4/14/21 by Jacelynn Duranceau
     """
-    print("HERE")
     playlist = Playlist.objects.get(pk=playlist_id)
     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values('spotify_id_id')
-    print("~~~~~~~~~~~~~~~~~~~~~")
-    print(matches)
-    print("~~~~~~~~~~~~~~~~~~~~~~~~")
-    print("\n")
     duration = 0
     for song in matches:
         track_id = song['spotify_id_id']
