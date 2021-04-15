@@ -6,6 +6,7 @@ let scheduled_function = false;
 
 window.onload = function() {
     document.getElementById('searchterm').value = '';
+    document.getElementById('dummy').reset();
 }
 
 let ajax_call = function (endpoint, request_parameters) {

@@ -78,11 +78,12 @@ def home(request):
     artist_searches = []
     album_searches = []
     profile = None
-    
+
     if request.user.id is not None:
         user_id = request.user.id
         profile = UserProfile.objects.get(pk=user_id)
-        spotify_manager.token_check(request)
+        if profile.linked_to_spotify:
+            spotify_manager.token_check(request)
     
     if url_parameter:
         track_searches = livesearch_tracks(url_parameter)

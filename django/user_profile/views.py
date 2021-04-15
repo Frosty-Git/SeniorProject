@@ -1081,6 +1081,7 @@ def save_token_redirect(request):
     if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
         user = UserProfile.objects.get(user=request.user.id)
         user.spotify_user_id = spotify.me().get('id')
+        user.is_premium = True if spotify.me().get('product') == 'premium' else False
         user.access_token = cached_token['access_token']
         user.refresh_token = cached_token['refresh_token']
         user.expires_at = cached_token['expires_at']

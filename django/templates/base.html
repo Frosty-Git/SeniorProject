@@ -1,5 +1,4 @@
 {% load static %}
-{% load widget_tweaks %}
 <!DOCTYPE html>
 <html>
 
@@ -39,8 +38,6 @@
             crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/shortcuts/infinite.min.js"></script>
 
     </head>
 
@@ -117,86 +114,88 @@
         <!-- End Bootstrap Navbar -->
 
         <div class="container" style="z-index: -1;" id="basecontainer">
-            {% load static %}
             {% block content %}
             {% endblock %}
         </div>
         <br><br>
         <br><br>
-        <script id="scriptcontainer"></script>
-        {% if user.is_authenticated or profile %}
-          <nav class="navbar fixed-bottom">
-            <div class="w3-row" style="width: 100%;">
-              <div class="w3-col m3 ">
-                <table>
-                  <tr>
-                    <td>
-                      <img id="albumpic" src="" height="60" width="60">
-                    </td>
-                    <td>
-                      <div style="text-align: left;">
-                        <label for='songtitle'><b>Currently playing:</b></label><br>
-                        <span style="text-align: left; font-size: small;" id="songtitle"></span><br>
-                        <span style="text-align: left; font-size: x-small;" id="artistname"></span>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <div class="w3-col m6  w3-center">
-                <table class="center" style="width:100%; text-align: center;">
-                  <tr>
-                    <td>
-                      <div class="btn-group" style=" text-align: center;" role="group">
-                        <button id="shuffle" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
-                            <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
-                          </svg>
-                        </button>
-                        <button id="prevTrack" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
-                            <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
-                          </svg>
-                        </button>
-                        <button id="playpauseBtn" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                            <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"/>
-                          </svg>
-                        </button>
-                        <button id="nextTrack" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
-                            <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
-                          </svg>
-                        </button>
-                        <button id="repeat" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                            <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                            <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <progress style="width:80%;" id="songprogress" value="" max=""></progress>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <div class="w3-col m3 w3-red w3-center">
+       
+        {% if profile %}
+          {% if profile.linked_to_spotify and profile.is_premium %}
+            <nav class="navbar fixed-bottom" style="display: none;">
+              <div class="w3-row" style="width: 100%;">
+                <div class="w3-col m3 ">
+                  <table>
+                    <tr>
+                      <td>
+                        <img id="albumpic" src="" height="60" width="60">
+                      </td>
+                      <td>
+                        <div style="text-align: left;">
+                          <label for='songtitle'><b>Currently playing:</b></label><br>
+                          <span style="text-align: left; font-size: small;" id="songtitle"></span><br>
+                          <span style="text-align: left; font-size: x-small;" id="artistname"></span>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="w3-col m6  w3-center">
+                  <table class="center" style="width:100%; text-align: center;">
+                    <tr>
+                      <td>
+                        <div class="btn-group" style=" text-align: center;" role="group">
+                          <button id="shuffle" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shuffle" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
+                              <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
+                            </svg>
+                          </button>
+                          <button id="prevTrack" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                              <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+                            </svg>
+                          </button>
+                          <button id="playpauseBtn" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16">
+                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                              <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"/>
+                            </svg>
+                          </button>
+                          <button id="nextTrack" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+                              <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+                            </svg>
+                          </button>
+                          <button id="repeat" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                              <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                              <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <form id="dummy">
+                          <input type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max="" min="0">
+                        </form>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="w3-col m3 w3-red w3-center">
 
-              </div>
-            </div> 
-          </nav>
-          <input hidden id='access_token' value='{{ profile.access_token }}'>
+                </div>
+              </div> 
+            </nav>
+            <input hidden id='access_token' value='{{ profile.access_token }}'>
 
-          <script src="https://sdk.scdn.co/spotify-player.js"></script>
-          <script src="{% static 'js/webplayer.js' %}"></script>
+            <script src="https://sdk.scdn.co/spotify-player.js"></script>
+            <script src="{% static 'js/webplayer.js' %}"></script>
+          {% endif %}
         {% endif %}
-        <script src="{% static 'js/livesearch.js' %}"></script>
         <script>
           let previousURL;
           function pageClick(url) {
@@ -216,6 +215,7 @@
               location.reload();
             }
           }
+
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
