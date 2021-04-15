@@ -1,5 +1,6 @@
 {% load static %}
 {% if track_searches %}
+
 <table>
     <tr><th>Songs</th></tr>
 {% for id, track_info in track_searches.items %}
@@ -7,8 +8,29 @@
     and the album image of the track (track_info.2) -->
     <tr>
         <td><img src="{{ track_info.2 }}" class="img-fluid" alt="..." width="30" height="30"></td>
-        <td>{{ track_info.0 }}  -  {{ track_info.1 }}</td>
+        <td>
+            <button id="track{{ id }}" value='{{ id }}' type="button" class="btn" style="color:#d9dadc">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                </svg>
+            </button> {{ track_info.0 }}  -  {{ track_info.1 }}</td>
+        <script>
+            $('#track{{ id }}').click(function(e) {
+                let track_id = $(this).val();
+                $.ajax({
+                    url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
+                    type: "PUT",
+                    data: '{"uris": ["spotify:track:'+ track_id +'"]}',
+                    beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + profile_token );},
+                    success: function(data) { 
+                        console.log(data)
+                    }
+                });
+            });
+        </script>
     </tr>
+    
 {% endfor %}
     <tr><td><hr class="solid"></td></tr>
     <tr><th>Artists</th></tr>

@@ -73,10 +73,12 @@ def searchform_get(request):
 def home(request):
     ourSearchForm = OurSearchForm()
     url_parameter = request.GET.get("q")
+    action = request.GET.get('action')
     track_searches = []
     artist_searches = []
     album_searches = []
     profile = None
+    
     if request.user.id is not None:
         user_id = request.user.id
         profile = UserProfile.objects.get(pk=user_id)
@@ -86,8 +88,8 @@ def home(request):
         track_searches = livesearch_tracks(url_parameter)
         artist_searches = livesearch_artists(url_parameter)
         album_searches = livesearch_albums(url_parameter)
-    
-    if request.is_ajax():
+        
+    if request.is_ajax() and action == 'livesearch':
         livesearch_html = render_to_string(
         template_name="recommender/livesearch.html", 
         context={"track_searches": track_searches,
@@ -108,6 +110,8 @@ def home(request):
         'profile': profile
     }
     return render(request, 'home.html', context)
+
+    
 
 # Search Results Page
 def results(request):

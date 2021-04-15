@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 <!DOCTYPE html>
 <html>
 
@@ -84,7 +85,7 @@
                     </li>
                   {% endif %}
                   <li class="nav-item">
-                    <a class="nav-link" onClick="pageClick('/about/')"  id="aboutpage">About</a>
+                    <a class="nav-link" onClick="pageClick('/about/')">About</a>
                   </li>
                 </ul>
                 {% if request.get_full_path != "/" %}
@@ -100,8 +101,6 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
                     <li><a class="dropdown-item" href="{% url 'user:profile' user.id %}">Profile</a></li>
-                    <!-- <li><a class="dropdown-item" href="{% url 'user:following' user.id %}">Following</a></li>
-                    <li><a class="dropdown-item" href="{% url 'user:followers' user.id %}">Followers</a></li> -->
                     <li><a class="dropdown-item" href="{% url 'user:follow_page' user.id %}">Following</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:update_profile' %}">Settings</a></li>
                     <li><hr class="dropdown-divider"></li>
@@ -118,12 +117,13 @@
         <!-- End Bootstrap Navbar -->
 
         <div class="container" style="z-index: -1;" id="basecontainer">
+            {% load static %}
             {% block content %}
             {% endblock %}
         </div>
         <br><br>
         <br><br>
-        
+        <script id="scriptcontainer"></script>
         {% if user.is_authenticated or profile %}
           <nav class="navbar fixed-bottom">
             <div class="w3-row" style="width: 100%;">
@@ -196,21 +196,29 @@
           <script src="https://sdk.scdn.co/spotify-player.js"></script>
           <script src="{% static 'js/webplayer.js' %}"></script>
         {% endif %}
+        <script src="{% static 'js/livesearch.js' %}"></script>
         <script>
+          let previousURL;
           function pageClick(url) {
-            $('#basecontainer').load(url + ' #basecontainer');
-            $('title').load(url)
-            history.pushState({}, '', url);
+            previousURL = location.pathname;
+            console.log('URL ' + url);
+            console.log('PREVURL ' + previousURL);
+            $('#basecontainer').load(url + ' #basecontainer', function (responseText) {
+              var title = responseText.match(/<title>([^<]*)/)[1];
+              document.title = title;
+              history.pushState({}, '', url);
+            })
           }
 
           window.onpopstate = function(event) {
             if(event) {
-              location.reload(); 
+              console.log(event);
+              location.reload();
             }
           }
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
       </body>
 
 </html>
