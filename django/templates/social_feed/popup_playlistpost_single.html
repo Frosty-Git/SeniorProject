@@ -1,7 +1,7 @@
 {% load static %}
 
 <!-- Included in playlists.html and single_playlist.html -->
-<div class="modal fade" id="playlistpostmodal{{ playlist.0 }}" tabindex="-1" aria-labelledby="myPlaylistPostModalLabel" aria-hidden="true"  style="color:black">
+<div class="modal fade" id="playlistpostmodal{{ playlist.id }}" tabindex="-1" aria-labelledby="myPlaylistPostModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form method="post" action="{% url 'feed:playlistpost' %}">
@@ -17,10 +17,10 @@
             
                 <div class="modal-body">
                     {% if not private_profile %}
-                        <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.0 }}">
+                        <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
                         Say something:
                         <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
-                        Playlist to share: <a href="{% url 'user:get_songs_playlist' user_id playlist.0 %}" target="_blank">{{ name }}</a>
+                        Playlist to share: <a href="{% url 'user:get_songs_playlist' user_id playlist.id %}" target="_blank">{{ playlist.name }}</a>
                     {% elif private_profile %}
                     You cannot share this playlist because your profile is currently private. Your profile's privacy takes precedence, so your playlist
                     cannot be shared even though it is not set to private itself.
