@@ -273,3 +273,20 @@ input:checked+.slider:before {
 */
 
 /* End Survey Page */
+
+/* Start playlist page */
+.playlistDropdownItem {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.playlistDropdownMenu {
+    background-color: rgba(160, 190, 217, 0.5);
+    width: 10vh;
+}
+
+.btn-dark {
+    background-color: #1F2933;
+    font-weight: bold;
+}
+

@@ -11,7 +11,7 @@
         padding: 1%;
     } 
 </style>
-<h2 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+<h2 style="text-align: center; margin-top: 2%;">
     <a href="{% url 'user:profile' profile.user.id %}">@{{ profile.user.username }}</a>'s Following
 </h2>
 <input type="hidden" id="user_id" value="{{ profile.user.id }}">
