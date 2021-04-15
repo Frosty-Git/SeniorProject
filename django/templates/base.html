@@ -181,9 +181,18 @@
                         <form id="dummy">
                           <table style="width: 100%;">
                             <tr>
-                              <td><span style="font-size: x-small; float:right; position:fixed; margin-top:auto;margin-bottom: auto;" id="currentTime"></span></td>
+                              <style>
+                                span {
+                                  font-size: x-small;
+                                  position:fixed; 
+                                  margin-top:auto;
+                                  margin-bottom: auto;
+
+                                }
+                              </style>
+                              <td><span style="margin-bottom:20px; margin-right:-40px" id="currentTime"></span></td>
                               <td><input type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max="" min="0"></td>
-                              <td><span id="totalTime" style="font-size: x-small; float:left;position:fixed; margin-top:auto;margin-bottom: auto;"></span></td>
+                              <td><span style="margin-bottom:20px; margin-left:-40px" id="totalTime" ></span></td>
                             </tr>
                           </table>
                         </form>
