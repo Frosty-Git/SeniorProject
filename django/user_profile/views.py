@@ -25,6 +25,7 @@ from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.template.loader import render_to_string
+from recommender.Scripts.search import *
 
 # Create your views here.
 
@@ -637,9 +638,29 @@ def get_playlists(request, user_id):
         private_profile = profile_privacy(user_id)
         following_status = is_following(request.user.id, user_id)
         matches = FollowedPlaylist.objects.filter(user_from=you)
+
+        all_playlists = []
+        for playlist in orig_playlists:
+            playlist_info = []
+            playlist_info.extend([playlist.id])
+            playlist_info.extend([playlist.name])
+            playlist_info.extend([playlist.image])
+            playlist_info.extend([playlist.is_private])
+            playlist_info.extend([playlist.is_shareable])
+            playlist_info.extend([playlist.date_last_updated])
+            vote = get_playlist_vote(you, playlist)
+            playlist_info.extend([vote])
+            duration = get_playlist_duration(playlist.id)
+            playlist_info.extend([duration])
+            num_songs = get_num_playlist_songs(playlist.id)
+            playlist_info.extend([str(num_songs)])
+            all_playlists.append(playlist_info)
+
+        print(all_playlists)    
+
         playlists = playlist_vote_dict(matches, orig_playlists)
         context = {
-            'playlists': playlists,
+            'playlists': all_playlists,
             'playlistform': playlistform,
             'profile': you,
             'private_profile': private_profile,
@@ -657,8 +678,27 @@ def get_playlists(request, user_id):
                 orig_playlists = Playlist.objects.filter(user_profile_fk=other_user)
                 matches = FollowedPlaylist.objects.filter(user_from=you)
                 playlists = playlist_vote_dict(matches, orig_playlists)
+
+                all_playlists = []
+                for playlist in orig_playlists:
+                    playlist_info = []
+                    playlist_info.extend([playlist.id])
+                    playlist_info.extend([playlist.name])
+                    playlist_info.extend([playlist.image])
+                    playlist_info.extend([playlist.is_private])
+                    playlist_info.extend([playlist.is_shareable])
+                    playlist_info.extend([playlist.date_last_updated])
+                    vote = get_playlist_vote(you, playlist)
+                    playlist_info.extend([vote])
+                    duration = get_playlist_duration(playlist.id)
+                    playlist_info.extend([duration])
+                    num_songs = get_num_playlist_songs(playlist.id)
+                    playlist_info.extend([str(num_songs)])
+                    all_playlists.append(playlist_info)
+
+
                 context = {
-                    'playlists': playlists,
+                    'playlists': all_playlists,
                     'profile': other_user,
                     'private_profile': private_profile,
                     'following_status': following_status,
@@ -676,8 +716,26 @@ def get_playlists(request, user_id):
             if not private_profile:
                 orig_playlists = Playlist.objects.filter(user_profile_fk=other_user)
                 playlists = playlist_vote_dict([], orig_playlists)
+
+                all_playlists = []
+                for playlist in orig_playlists:
+                    playlist_info = []
+                    playlist_info.extend([playlist.id])
+                    playlist_info.extend([playlist.name])
+                    playlist_info.extend([playlist.image])
+                    playlist_info.extend([playlist.is_private])
+                    playlist_info.extend([playlist.is_shareable])
+                    playlist_info.extend([playlist.date_last_updated])
+                    vote = None
+                    playlist_info.extend([vote])
+                    duration = get_playlist_duration(playlist.id)
+                    playlist_info.extend([duration])
+                    num_songs = get_num_playlist_songs(playlist.id)
+                    playlist_info.extend([str(num_songs)])
+                    all_playlists.append(playlist_info)
+
                 context = {
-                    'playlists': playlists,
+                    'playlists': all_playlists,
                     'profile': other_user,
                     'private_profile': private_profile,
                 }
@@ -697,6 +755,19 @@ def playlist_vote_dict(matches, orig_playlists):
                 break
         playlists[playlist] = love
     return playlists
+
+def get_playlist_vote(your_profile, playlist):
+    """
+    Tells whether you have liked a playlist or not
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    matches = FollowedPlaylist.objects.filter(user_from=your_profile)
+    love = False
+    for match in matches:
+        if playlist == match.playlist_to:
+            love = True
+            break
+    return love
 
 def sop_song_vote_array(matches, songs_votes):
     """
@@ -735,10 +806,25 @@ def get_songs_playlist(request, user_id, playlist_id):
 
         songs = sop_song_vote_array(matches, songs_votes)
         
+        for song in songs:
+            track_id = song[1]
+            album_image = get_album_image(track_id)
+            song.extend([album_image])
+            song_name = get_song_name(track_id)
+            song.extend([song_name])
+            artists = get_artists(track_id)
+            song.extend([artists])
+            album = get_song_album(track_id)
+            song.extend([album])
+            duration = get_song_duration(track_id)
+            convertedDuration = convertMs(duration)
+            song.extend([convertedDuration])
+
         private_profile = profile_privacy(user_id)
         following_status = is_following(request.user.id, user_id)
 
         playlists = get_user_playlists(request.user.id)
+        
 
         context = {
             'songs': songs,
@@ -766,6 +852,20 @@ def get_songs_playlist(request, user_id, playlist_id):
                     songs_votes = SongToUser.objects.filter(user_from=you).values('songid_to_id', 'vote')
 
                     songs = sop_song_vote_array(matches, songs_votes)
+
+                    for song in songs:
+                        track_id = song[1]
+                        album_image = get_album_image(track_id)
+                        song.extend([album_image])
+                        song_name = get_song_name(track_id)
+                        song.extend([song_name])
+                        artists = get_artists(track_id)
+                        song.extend([artists])
+                        album = get_song_album(track_id)
+                        song.extend([album])
+                        duration = get_song_duration(track_id)
+                        convertedDuration = convertMs(duration)
+                        song.extend([convertedDuration])
 
                     my_user_id = request.user.id
                     loggedin = UserProfile.objects.get(pk=my_user_id)
@@ -798,6 +898,20 @@ def get_songs_playlist(request, user_id, playlist_id):
                 if not playlist.is_private:
                     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
                     songs = sop_song_vote_array(matches, [])
+
+                    for song in songs:
+                        track_id = song[1]
+                        album_image = get_album_image(track_id)
+                        song.extend([album_image])
+                        song_name = get_song_name(track_id)
+                        song.extend([song_name])
+                        artists = get_artists(track_id)
+                        song.extend([artists])
+                        album = get_song_album(track_id)
+                        song.extend([album])
+                        duration = get_song_duration(track_id)
+                        convertedDuration = convertMs(duration)
+                        song.extend([convertedDuration])
 
                     context = {
                         'songs': songs,
@@ -1137,3 +1251,51 @@ def playlist_vote(request):
             vote.delete()
             return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
+
+def get_playlist_duration(playlist_id):
+    """
+    Gets the total duration for a playlist based on each song in it.
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    print("HERE")
+    playlist = Playlist.objects.get(pk=playlist_id)
+    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values('spotify_id_id')
+    print("~~~~~~~~~~~~~~~~~~~~~")
+    print(matches)
+    print("~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("\n")
+    duration = 0
+    for song in matches:
+        track_id = song['spotify_id_id']
+        duration += get_song_duration(track_id)   
+    convertedDuration = convertMs(duration)
+    return convertedDuration
+
+def get_num_playlist_songs(playlist_id):
+    """
+    Gets the total number of songs in a playlist.
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    playlist = Playlist.objects.get(pk=playlist_id)
+    matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values('spotify_id_id').values()
+    num_songs = len(matches)
+    return num_songs
+
+def convertMs(ms):
+    """
+    Converts milliseconds to hours, minutes, seconds
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    seconds=(ms/1000)%60
+    seconds = int(seconds)
+    minutes=(ms/(1000*60))%60
+    minutes = int(minutes)
+    hours=(ms/(1000*60*60))%24
+    hours = int(hours)
+    if hours > 0:
+        result = ("%d:%d:%d" % (hours, minutes, seconds))
+    else:
+        result = ("%d:%d" % (minutes, seconds))
+        if ms == 0:
+            result = "0:00"
+    return result

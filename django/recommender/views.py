@@ -19,7 +19,6 @@ from collections import Counter
 import random
 from random import sample
 from recommender.Scripts.survey import GenresStack
-from recommender.Scripts.search import get_playlist_items
 from datetime import datetime, timedelta
 import pytz
 from django.db.models import Count, Q
@@ -977,28 +976,39 @@ def top_playlists(request):
 
     return render(request, 'recommender/top_playlists.html', context)
 
-def related_artists(request, artist_id):
+def artist_info(request, artist_id):
     """
-    Gets artists related to an artist. 
+    Gets artists related to an artist and his/her top songs. 
     Last updated: 4/12/21 by Jacelynn Duranceau
     """
-    related_artists = get_all_related_artists(artist_id)
-    name = get_artist_name(artist_id)
-    context = {
-        'related_artists': related_artists,
-        'name': name,
-    }
-    return render(request, 'recommender/related_artists.html', context)
-
-def artist_top_tracks(request, artist_id):
-    """
-    Gets the top tracks of an artist 
-    Last updated: 4/12/21 by Jacelynn Duranceau
-    """
+    all_related_artists = get_all_related_artists(artist_id)
+    if len(all_related_artists) > 12:
+        related_artists = random.sample(all_related_artists, k=12)
+    else:
+        related_artists = all_related_artists
     top_tracks = get_top_tracks(artist_id)
     name = get_artist_name(artist_id)
-    context = {
-        'top_tracks': top_tracks,
-        'name': name,
-    }
-    return render(request, 'recommender/artist_top_tracks.html', context)
+    artist_image = get_artist_image(artist_id)
+    user_id = request.user.id
+    if user_id is not None:
+        playlists = get_user_playlists(user_id)
+        profile = UserProfile.objects.get(pk=user_id)
+        songs_votes = SongToUser.objects.filter(user_from=profile).values('songid_to_id', 'vote')
+        song_list = song_vote_dictionary(songs_votes, top_tracks)
+        context = {
+            'related_artists': related_artists,
+            'top_tracks': song_list,
+            'name': name,
+            'artist_image': artist_image,
+            'playlists': playlists,
+            'profile': profile,
+            'location': 'artist_page',
+        }
+    else:
+        context = {
+            'related_artists': related_artists,
+            'top_tracks': top_tracks,
+            'name': name,
+            'artist_image': artist_image,
+        }
+    return render(request, 'recommender/artist_info.html', context)

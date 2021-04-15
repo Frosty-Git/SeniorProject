@@ -124,7 +124,7 @@ def get_recommendation(request, limit, user_id, **kwargs):
     genres_list = prefs.genres.split('*')
     genres = genres_list[:-1]
     genre = random.sample(genres, 1)
-    related_artists_ids = get_related_artists(seed_artists[0], 5)
+    related_artists_ids = get_related_artists(seed_artists[0], 6)
     # top_genre = get_artists_genres(seed_artists)
     track = get_top_track(request)
     # 3 artists, 1 genre, 1 track
@@ -199,14 +199,17 @@ def get_artists_genres(artist_id_list):
 
 def get_related_artists(artist_id, num):
     """
-    Returns 5 random artists related to an artist. Max number is 20.
+    Returns random artists related to an artist. Max number is 20.
     Last updated: 4/8/21 by Jacelynn Duranceau
     """
     artists = sp.artist_related_artists(artist_id)['artists']
     all_artists = []
     for artist in artists:
         all_artists.append(artist['id'])
-    random_artists = random.sample(all_artists, num)
+    if len(all_artists) > num:
+        random_artists = random.sample(all_artists, num)
+    else:
+        random_artists = all_artists
     return random_artists
 
 def get_all_related_artists(artist_id):
@@ -271,20 +274,18 @@ def get_artists_ids_list(track):
         artist_names.append(dicti['id'])
 
     return artist_names
-        
-def get_song_name(track):
-    """
-    Gets the name of a song based on its id
-    """
-    name = sp.track(track)['name']
-    return name
 
 def get_artist_name(artist_id):
     """
     Gets the name of an artist based on their id
     """
+    print(sp.artist(artist_id))
     name = sp.artist(artist_id)['name']
     return name
+
+def get_artist_image(artist_id):
+    image = sp.artist(artist_id)['images'][0]['url']
+    return image
 
 def get_track(track):
     """
@@ -381,6 +382,37 @@ def livesearch_albums(query):
         new_list.append(picture)
         searches[result['albums']['items'][x]['id']] = new_list
     return searches
+
+def get_song_duration(track_id):
+    """
+    Gets the length of a song in ms.
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    info = get_track(track_id)
+    duration = info['duration_ms']
+    return duration
+
+def get_song_album(track_id):
+    """
+    Gets the name of the album a song appears on
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
+    info = get_track(track_id)
+    album = info['album']['name']
+    return album
+
+def get_song_name(track):
+    """
+    Gets the name of a song based on its id
+    """
+    info = get_track(track)
+    name = info['name']
+    return name
+
+def get_album_image(track):
+    info = get_track(track)
+    album_image = info['album']['images'][0]['url']
+    return album_image
 
 """
 FOR SHELL TESTING PURPOSES:
