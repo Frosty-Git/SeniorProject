@@ -8,7 +8,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
 
-<h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+<h1 style="text-align: center; margin-top: 2%;">
     {% if profile.user.id == user.id %}
         My Playlist:
     {% else %}
@@ -40,8 +40,8 @@
             </td>
             {% if profile.linked_to_spotify %}
             <td>
-                <div class="center" style="width:175px; text-align:center;">
-                    <a class="btn btn-success" href="{% url 'user:export_to_spotify' playlist.id %}" role="button">Export to Spotify</a>
+                <div class="center" style="width:200px; text-align:center;">
+                    <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export to Spotify</span></a>
                 </div>
             </td>
             {% endif %}
@@ -61,7 +61,7 @@
             <td colspan="2">
                 <div class="center" style="width:100px; text-align:center; margin-top:10px;">
                     <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
-                    {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
+                    {% include 'social_feed/popup_playlistpost_single.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
                 </div>
             </td>
         </tr>
@@ -89,14 +89,28 @@
 
 {% endif %}
 
-<table class="center" style="width:40%;">
+<table class="center" style="width:90%;">
+    <tr>
+        <th></th>
+        <th style="text-align: center;"><h6>Album</h6></th>
+        <th style="text-align: center;"><h6>Duration</h6></th>
+    </tr>
     {% for song in songs %}
-    <!-- song.0 is the id into the SongOnPlaylist table, song.1 is the song id, and song.3 is the current vote on the song (like/disklike) -->
-    <!-- song.3 is a list, however, that contains the boolean values for a like or a dislike -->
+    <!-- Example song: [23, '3DamFFqW32WihKkTVlwTYQ', [False, False], 'https://i.scdn.co/image/ab67616d0000b273785d4e702802da500fc78b32', 'Fireflies', 'Owl City', 'Ocean Eyes', '3:48'] -->
+    <!-- song.0 is the id into the SongOnPlaylist table -->
+    <!-- song.1 is the song id -->
+    <!-- song.2 is a list that contains the boolean values for a like or a dislike -->
+    <!-- song.3 is the album art for a track -->
+    <!-- song.4 is the title of the track -->
+    <!-- song.5 is the artist of the track -->
+    <!-- song.6 is the album of the track -->
+    <!-- song.7 is the duration of the track -->
     <tr style="border-bottom: 1px solid black;">
-        <td class="centered-column" style="width:400px; padding-top:8px; padding-bottom: 8px;">
+        <td class="centered-column" style="width:200px; padding-top:8px; padding-bottom: 8px;">
             <iframe src='https://open.spotify.com/embed/track/{{ song.1 }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
         </td>
+        <td style="text-align: center;">{{song.6}}</td>
+        <td style="text-align: center;">{{song.7}}</td>
         <!-- You are logged in -->
         {% if user.is_authenticated %}
         <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
@@ -127,12 +141,14 @@
                 {% include 'playlists/playlist_vote_script.html' %}
             </div>
         </td>
-        <td>
-            <div class="btn-group" role="group" onclick="addModalClick('{{ song.0 }}')" style="margin-left:auto; margin-right: auto; display:flex">
-                <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song.0 }}">Add to Playlist</button>
-            </div>
-            {% include 'playlists/addsong_popup.html' with playlists=playlists loggedin=loggedin %}
-        </td>
+        {% if playlists.count > 1 %}
+            <td>
+                <div class="btn-group" role="group" onclick="addModalClick('{{ song.0 }}')" style="margin-left:auto; margin-right: auto; display:flex">
+                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song.0 }}">Add to Playlist</button>
+                </div>
+                {% include 'playlists/addsong_popup.html' with playlists=playlists loggedin=loggedin %}
+            </td>
+        {% endif %}
         <script>
             var addPlaylistModal = document.getElementById('addtoplaylistmodal{{ song.0 }}');
             function addModalClick(id) {
@@ -144,6 +160,10 @@
                 window.history.replaceState({}, "", "{% url 'user:get_songs_playlist' profile.user.id playlist.id %}")
             })
         </script>
+                <td>
+                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song.1 }}">Share</button>
+                    {% include 'social_feed/popup_songpost.html' with song=song.1 %}
+                </td>
         {% endif %}
         <!-- This playlist is yours, so you can delete songs from it -->
         {% if profile.user.id == user.id and playlist != profile.liked_songs_playlist_fk %}

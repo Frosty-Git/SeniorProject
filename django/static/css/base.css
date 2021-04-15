@@ -27,6 +27,16 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #1ed761; /* Spotify Green */
 }
 
+.spBtnText {
+    vertical-align: middle;
+    color: #1F2933;
+    font-weight: bold;
+}
+
+.spotify:hover .spBtnText{
+    color: white;
+}
+
 a:hover {
     color: #f99108;
 }

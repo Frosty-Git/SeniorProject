@@ -3,7 +3,12 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 } */
 
+/* Both of the 2 following classes are used to remove bullet points in lists */
 .post {
+    list-style-type: none;
+}
+
+.songItem {
     list-style-type: none;
 }
 
