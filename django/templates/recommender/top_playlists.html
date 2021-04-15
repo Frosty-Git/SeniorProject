@@ -5,6 +5,12 @@
 {% block title %}PengBeats | Top Playlists{% endblock %}
 
 {% block content %}
+
+<link rel="stylesheet" href="{% static 'css/top-playlists.css' %}">
+
+<center><h1>Top Playlists</h1></center>
+<center><p>Listen to the top playlists for the past week by users like you</p></center>
+
 <ol>
     {% for playlist, total in top_playlists.items %}
         <li>
