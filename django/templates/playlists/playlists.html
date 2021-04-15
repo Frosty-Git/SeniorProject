@@ -27,10 +27,10 @@
 <table class="center" style="width:95%;">
     <tr>        
         <th></th>
-        <th style="text-align: center;">Title</th>
-        <th style="text-align: center;">Date Last Updated</th>
-        <th style="text-align: center;">Duration</th>
-        <th style="text-align: center;"># of Songs</th>
+        <th style="text-align: center;"><h6>Title</h6></th>
+        <th style="text-align: center;"><h6>Date Last Updated</h6></th>
+        <th style="text-align: center;"><h6>Duration</h6></th>
+        <th style="text-align: center;"><h6># of Songs</h6></th>
     </tr>
     <!-- You are viewing your own playlists -->
     {% if profile.user.id == user.id %}
@@ -64,8 +64,8 @@
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">{{ playlist.5 }}</td>
-                <td style="text-align: center;">{{playlist.7}}</td>
-                <td style="text-align: center;">{{playlist.8}}</td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px; text-align: center;">{{playlist.7}}</td>
+                <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px; text-align: center;">{{playlist.8}}</td>
                 {% if playlist.0 != profile.liked_songs_playlist_fk.id %}
 
                     {% if not playlist.3 %}
@@ -93,7 +93,7 @@
                     <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;"></td>
                 {% endif %}
 
-                <td class="buttons">
+                <td class="buttons centered-column">
                     <div class="btn-group dropend" style="float:right;margin-left:-20px">
                         <a class="nav-link link-light" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
