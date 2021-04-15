@@ -281,7 +281,7 @@ input:checked+.slider:before {
 }
 
 .playlistDropdownMenu {
-    background-color: rgba(160, 190, 217, 0.5);
+    background-color: rgba(160, 190, 217, 0.25);
     width: 10vh;
 }
 
