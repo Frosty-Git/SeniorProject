@@ -24,6 +24,10 @@ import pytz
 from django.db.models import Count, Q
 from django.template.loader import render_to_string
 
+
+# global variables for spotify manager
+spotify_manager = SpotifyManager()
+
 #----Dr Baliga's Code----
 
 def find_albums(artist, from_year = None, to_year = None):
@@ -69,16 +73,24 @@ def searchform_get(request):
 def home(request):
     ourSearchForm = OurSearchForm()
     url_parameter = request.GET.get("q")
+    action = request.GET.get('action')
     track_searches = []
     artist_searches = []
     album_searches = []
+    profile = None
+
+    if request.user.id is not None:
+        user_id = request.user.id
+        profile = UserProfile.objects.get(pk=user_id)
+        if profile.linked_to_spotify:
+            spotify_manager.token_check(request)
     
     if url_parameter:
         track_searches = livesearch_tracks(url_parameter)
         artist_searches = livesearch_artists(url_parameter)
         album_searches = livesearch_albums(url_parameter)
-    
-    if request.is_ajax():
+        
+    if request.is_ajax() and action == 'livesearch':
         livesearch_html = render_to_string(
         template_name="recommender/livesearch.html", 
         context={"track_searches": track_searches,
@@ -96,8 +108,11 @@ def home(request):
         'track_searches': track_searches,
         'artist_searches': artist_searches,
         'album_searches': album_searches,
+        'profile': profile
     }
     return render(request, 'home.html', context)
+
+    
 
 # Search Results Page
 def results(request):

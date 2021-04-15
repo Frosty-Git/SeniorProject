@@ -108,6 +108,7 @@ def profile(request, user_id):
     if request.user == User.objects.get(pk=user_id):
         profile = UserProfile.objects.get(pk=user_id)
         posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
+        playlists = Playlist.objects.filter(user_profile_fk=profile, is_private=False, is_shareable=True).order_by('-date_last_updated')[:5]
         follower_list = profile.users_followed.all()[:5]
         votes = PostUserVote.objects.filter(user_from=profile).values()
         postform = PostForm()
@@ -120,16 +121,23 @@ def profile(request, user_id):
             'follower_list': follower_list,
             'post_list': post_list,
             'image': profile.profilepic,
+            'playlists': playlists,
             'acousticness': all_prefs['acousticness'],
+            'acousticness_adjusted': all_prefs['acousticness_adjusted'],
             'danceability': all_prefs['danceability'],
+            'danceability_adjusted': all_prefs['danceability_adjusted'],
             'energy': all_prefs['energy'],
+            'energy_adjusted': all_prefs['energy_adjusted'],
             'instrumentalness': all_prefs['instrumentalness'],
+            'instrumentalness_adjusted': all_prefs['instrumentalness_adjusted'],
             'speechiness': all_prefs['speechiness'],
+            'speechiness_adjusted': all_prefs['speechiness_adjusted'],
             'loudness': all_prefs['loudness'],
             'loudness_adjusted': all_prefs['loudness_adjusted'],
             'tempo': all_prefs['tempo'],
             'tempo_adjusted': all_prefs['tempo_adjusted'],
             'valence': all_prefs['valence'],
+            'valence_adjusted': all_prefs['valence_adjusted'],
             'private_prefs': all_prefs['private_prefs'],
             'private_profile': is_profile_private,
             'nofollow': 'profile',
@@ -143,6 +151,7 @@ def profile(request, user_id):
             profile = UserProfile.objects.get(pk=user_id)
             posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
             follower_list = profile.users_followed.all()[:5]
+            playlists = Playlist.objects.filter(user_profile_fk=profile, is_private=False, is_shareable=True).order_by('-date_last_updated')[:5]
             post_list = vote_dictionary(votes, posts)
             is_profile_private = profile_privacy(user_id)
             following_status = is_following(request.user.id, user_id)
@@ -154,23 +163,31 @@ def profile(request, user_id):
                 'is_following': bool_following,
                 'image': loggedin.profilepic,
                 'acousticness': all_prefs['acousticness'],
+                'acousticness_adjusted': all_prefs['acousticness_adjusted'],
                 'danceability': all_prefs['danceability'],
+                'danceability_adjusted': all_prefs['danceability_adjusted'],
                 'energy': all_prefs['energy'],
+                'energy_adjusted': all_prefs['energy_adjusted'],
                 'instrumentalness': all_prefs['instrumentalness'],
+                'instrumentalness_adjusted': all_prefs['instrumentalness_adjusted'],
                 'speechiness': all_prefs['speechiness'],
+                'speechiness_adjusted': all_prefs['speechiness_adjusted'],
                 'loudness': all_prefs['loudness'],
                 'loudness_adjusted': all_prefs['loudness_adjusted'],
                 'tempo': all_prefs['tempo'],
                 'tempo_adjusted': all_prefs['tempo_adjusted'],
                 'valence': all_prefs['valence'],
+                'valence_adjusted': all_prefs['valence_adjusted'],
                 'private_prefs': all_prefs['private_prefs'],
                 'private_profile': is_profile_private,
+                'playlists': playlists
             }
         else:
             profile = UserProfile.objects.get(pk=user_id)
             posts = Post.objects.filter(user_profile_fk=profile).order_by('-date_last_updated')
             follower_list = profile.users_followed.all()[:5]
             is_profile_private = profile_privacy(user_id)
+            playlists = Playlist.objects.filter(user_profile_fk=profile, is_private=False, is_shareable=True).order_by('-date_last_updated')[:5]
 
             nli_post_list = []
             for post in posts:
@@ -183,17 +200,24 @@ def profile(request, user_id):
                 'follower_list': follower_list,
                 'nofollow': 'nofollow',
                 'acousticness': all_prefs['acousticness'],
+                'acousticness_adjusted': all_prefs['acousticness_adjusted'],
                 'danceability': all_prefs['danceability'],
+                'danceability_adjusted': all_prefs['danceability_adjusted'],
                 'energy': all_prefs['energy'],
+                'energy_adjusted': all_prefs['energy_adjusted'],
                 'instrumentalness': all_prefs['instrumentalness'],
+                'instrumentalness_adjusted': all_prefs['instrumentalness_adjusted'],
                 'speechiness': all_prefs['speechiness'],
+                'speechiness_adjusted': all_prefs['speechiness_adjusted'],
                 'loudness': all_prefs['loudness'],
                 'loudness_adjusted': all_prefs['loudness_adjusted'],
                 'tempo': all_prefs['tempo'],
                 'tempo_adjusted': all_prefs['tempo_adjusted'],
                 'valence': all_prefs['valence'],
+                'valence_adjusted': all_prefs['valence_adjusted'],
                 'private_prefs': all_prefs['private_prefs'],
                 'private_profile': is_profile_private,
+                'playlists': playlists
             }
     return render(request, 'profile/profile.html', context)
 
@@ -253,46 +277,82 @@ def settings_save(request, user_id):
         raise Http404('Form not valid')
 
 
+def following_helper(url_parameter, user, request_id):
+    """
+    """
+    following_arr = []
+    followers_arr = []
+    others_arr = []
+    if url_parameter:
+        search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
+        follower_ids = FollowedUser.objects.filter(Q(user_to=user) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
+        following = user.users_followed.filter(user_id__in=search_users)
+        following_ids = following.values('user_id')
+        other_users = UserProfile.objects.filter(Q(pk__in=search_users) & ~Q(pk__in=follower_ids) & ~Q(pk__in=following_ids))
+    else:
+        follower_ids = FollowedUser.objects.filter(user_to=user).values('user_from') # Returns dictionary of ids
+        following = user.users_followed.all()
+        other_users = []
+
+    for user_profile in following:
+        determination = is_following(request_id, user_profile.user.id)
+        following_arr.append([user_profile, determination])
+
+    for user in follower_ids:
+        for id in user.values():
+            person = UserProfile.objects.get(pk=id)
+            determination = is_following(request_id, id)
+            followers_arr.append([person, determination])
+    
+    for user_profile in other_users:
+        determination = is_following(request_id, user_profile.user.id)
+        others_arr.append([user_profile, determination])
+    
+    all_arrs = {
+        'others_arr': others_arr,
+        'following_arr': following_arr,
+        'followers_arr': followers_arr
+    }
+
+    return all_arrs
+
 @require_GET
 def following_page(request, user_id):
     """
     """
     if request.user == User.objects.get(pk=user_id):
         you = UserProfile.objects.get(pk=user_id)
-        following_arr = []
-        followers_arr = []
         url_parameter = request.GET.get("q")
 
-        if url_parameter:
-            search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
-            follower_ids = FollowedUser.objects.filter(Q(user_to=you) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
-            following = you.users_followed.filter(user_id__in=search_users)
-        else:
-            follower_ids = FollowedUser.objects.filter(user_to=you).values('user_from') # Returns dictionary of ids
-            following = you.users_followed.all()
+        all_arrs = following_helper(url_parameter, you, user_id)
+        following_arr = all_arrs['following_arr']
+        followers_arr = all_arrs['followers_arr']
+        others_arr = all_arrs['others_arr']
 
-        for user_profile in following:
-            determination = is_following(request.user.id, user_profile.user.id)
-            following_arr.append([user_profile, determination])
-
-        for user in follower_ids:
-            for id in user.values():
-                person = UserProfile.objects.get(pk=id)
-                determination = is_following(request.user.id, id)
-                followers_arr.append([person, determination])
 
         if request.is_ajax():
             following_html = render_to_string(
             template_name="profile/following_partial.html", 
-            context={"following": following_arr})
+            context={"following": following_arr,
+                    'loggedin': True,
+                    'user_id': user_id})
 
             followers_html = render_to_string(
             template_name="profile/followers_partial.html", 
-            context={"followers": followers_arr})
+            context={"followers": followers_arr,
+                    'loggedin': True,
+                    'user_id': user_id})
+
+            others_html = render_to_string(
+            template_name="profile/other_users_partial.html", 
+            context={"others": others_arr,
+                    'loggedin': True,
+                    'user_id': user_id})
 
             data_dict = {
                 "followers_h": followers_html,
                 "following_h": following_html,
+                "others_h": others_html,
             }
             return JsonResponse(data=data_dict, safe=False)
 
@@ -300,6 +360,9 @@ def following_page(request, user_id):
             'profile': you,
             'following': following_arr,
             'followers': followers_arr,
+            'others': others_arr,
+            'loggedin': True,
+            'user_id': user_id
         }
         return render(request, 'profile/follow.html', context)
     else:
@@ -309,40 +372,39 @@ def following_page(request, user_id):
             private_profile = profile_privacy(user_id)
             following_status = is_following(request.user.id, other_user.user.id)
             if following_status or not private_profile:
-                following_arr = []
-                followers_arr = []
                 url_parameter = request.GET.get("q")
+                your_id = request.user.id
+                your_profile = UserProfile.objects.get(pk=your_id)
 
-                if url_parameter:
-                    search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
-                    follower_ids = FollowedUser.objects.filter(Q(user_to=other_user) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
-                    following = other_user.users_followed.filter(user_id__in=search_users)
-                else:
-                    follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
-                    following = other_user.users_followed.all()
+                all_arrs = following_helper(url_parameter, other_user, your_id)
+                following_arr = all_arrs['following_arr']
+                followers_arr = all_arrs['followers_arr']
+                others_arr = all_arrs['others_arr']
 
-                for user_profile in following:
-                    determination = is_following(request.user.id, user_profile.user.id)
-                    following_arr.append([user_profile, determination])
-
-                for user in follower_ids:
-                    for id in user.values():
-                        person = UserProfile.objects.get(pk=id)
-                        determination = is_following(request.user.id, id)
-                        followers_arr.append([person, determination])
 
                 if request.is_ajax():
                     following_html = render_to_string(
                     template_name="profile/following_partial.html", 
-                    context={"following": following_arr})
+                    context={"following": following_arr,
+                            'loggedin': True,
+                            'user_id': your_id})
 
                     followers_html = render_to_string(
                     template_name="profile/followers_partial.html", 
-                    context={"followers": followers_arr})
+                    context={"followers": followers_arr,
+                            'loggedin': True,
+                            'user_id': your_id})
+
+                    others_html = render_to_string(
+                    template_name="profile/other_users_partial.html", 
+                    context={"others": others_arr,
+                            'loggedin': True,
+                            'user_id': your_id})
 
                     data_dict = {
                         "followers_h": followers_html,
                         "following_h": following_html,
+                        "others_h": others_html,
                     }
                     return JsonResponse(data=data_dict, safe=False)
 
@@ -352,6 +414,9 @@ def following_page(request, user_id):
                     'private_profile': private_profile,
                     'following_status': following_status,
                     'followers': followers_arr,
+                    'your_profile': your_profile,
+                    'loggedin': True,
+                    'user_id': your_id
                 }
                 return render(request, 'profile/follow.html', context)
             else:
@@ -363,15 +428,19 @@ def following_page(request, user_id):
             if not private_profile:
                 following_arr = []
                 followers_arr = []
+                others_arr = []
                 url_parameter = request.GET.get("q")
 
                 if url_parameter:
                     search_users = User.objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter)).values('id')[:15]
                     follower_ids = FollowedUser.objects.filter(Q(user_to=other_user) & Q(user_from_id__in=search_users)).values('user_from') # Returns dictionary of ids
                     following = other_user.users_followed.filter(user_id__in=search_users)
+                    following_ids = following.values('user_id')
+                    other_users = UserProfile.objects.filter(Q(pk__in=search_users) & ~Q(pk__in=follower_ids) & ~Q(pk__in=following_ids))
                 else:
                     follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
                     following = other_user.users_followed.all()
+                    other_users = []
 
                 for user_profile in following:
                     determination = False
@@ -382,6 +451,10 @@ def following_page(request, user_id):
                         person = UserProfile.objects.get(pk=id)
                         determination = False
                         followers_arr.append([person, determination])
+                
+                for user_profile in other_users:
+                    determination = False
+                    others_arr.append([user_profile, determination])
 
                 if request.is_ajax():
                     following_html = render_to_string(
@@ -392,17 +465,25 @@ def following_page(request, user_id):
                     template_name="profile/followers_partial.html", 
                     context={"followers": followers_arr})
 
+                    others_html = render_to_string(
+                    template_name="profile/other_users_partial.html", 
+                    context={"others": others_arr})
+
                     data_dict = {
                         "followers_h": followers_html,
                         "following_h": following_html,
+                        "others_h": others_html,
                     }
                     return JsonResponse(data=data_dict, safe=False)
 
+                # Don't return your_profile since you aren't logged in
                 context = {
                     'following': following_arr,
                     'profile': other_user,
                     'private_profile': private_profile,
                     'followers': followers_arr,
+                    'others': others_arr,
+                    'loggedin': False
                 }
                 return render(request, 'profile/follow.html', context)
             else:
@@ -452,11 +533,16 @@ def display_following(request, user_id):
                 # following = FollowedUser.objects.filter(user_from=user_id)
                 # get_list = FollowedUser.objects.get(user_from=user_id)
                 #following = get_list.user_to
+
+                your_id = request.user.id
+                your_profile = UserProfile.objects.get(pk=your_id)
+
                 context = {
                     'following': following_arr,
                     'profile': other_user,
                     'private_profile': private_profile,
                     'following_status': following_status,
+                    'your_profile': your_profile,
                 }
                 return render(request, 'profile/following.html', context)
             else:
@@ -470,6 +556,7 @@ def display_following(request, user_id):
                 following_arr = []
                 for user_profile in following:
                     following_arr.append([user_profile, determination])
+                # Don't return your_profile since you aren't logged in
                 context = {
                     'following': following_arr,
                     'profile': other_user,
@@ -519,9 +606,14 @@ def display_followers(request, user_id):
                         person = UserProfile.objects.get(pk=id)
                         determination = is_following(request.user.id, id)
                         followers_arr.append([person, determination])
+
+                your_id = request.user.id
+                your_profile = UserProfile.objects.get(pk=your_id)
+
                 context = {
                     'profile': other_user,
                     'followers': followers_arr,
+                    'your_profile': your_profile,
                 }
                 return render(request, 'profile/followers.html', context)
             else:
@@ -538,6 +630,7 @@ def display_followers(request, user_id):
                         person = UserProfile.objects.get(pk=id)
                         determination = is_following(request.user.id, id)
                         followers_arr.append([person, determination])
+                # You are not logged in so don't return your_profile
                 context = {
                     'profile': other_user,
                     'followers': followers_arr,
@@ -564,7 +657,7 @@ def unfollow(request, who):
     to_unfollow.save()
     user_to_unfollow = FollowedUser.objects.get(user_from = user_id, user_to = who)
     user_to_unfollow.delete()
-    url = '/user/follow_page/' + user_id
+    url = '/user/follow_page/' + str(user_id)
     return redirect(url)
 
 def follow(request, who):
@@ -582,7 +675,7 @@ def follow(request, who):
     to_follow.save()
     user_to_follow = FollowedUser(user_from=loggedin, user_to=to_follow)
     user_to_follow.save()
-    url = '/user/follow_page/' + user_id
+    url = '/user/follow_page/' + str(user_id)
     return redirect(url)
 
 
@@ -617,13 +710,6 @@ def update_profile(request):
         form = ExtendedUserChangeForm(instance=obj.user)
         profile_form = UserProfileForm(instance=obj)
     return render(request, 'settings/update_profile.html', {'form': form, 'profile_form': profile_form})
-
-def user_list(request):
-    """
-    TEMPORARY just to see what users are in the system 
-    """
-    user_list = UserProfile.objects.exclude(pk=request.user.id)
-    return render(request, 'profile/user_list.html', {'user_list': user_list})
 
 def get_playlists(request, user_id):
     """
@@ -1109,6 +1195,7 @@ def save_token_redirect(request):
     if(int(request.user.id) == int(request.session.get('_auth_user_id'))):
         user = UserProfile.objects.get(user=request.user.id)
         user.spotify_user_id = spotify.me().get('id')
+        user.is_premium = True if spotify.me().get('product') == 'premium' else False
         user.access_token = cached_token['access_token']
         user.refresh_token = cached_token['refresh_token']
         user.expires_at = cached_token['expires_at']
@@ -1128,10 +1215,15 @@ def get_preferences(user_id):
     private_prefs = settings.private_preferences
     prefs = Preferences.objects.get(user_profile_fk=user)
     acousticness = prefs.acousticness
+    acousticness_adjusted = acousticness * 100
     danceability = prefs.danceability
+    danceability_adjusted = danceability * 100
     energy = prefs.energy
+    energy_adjusted = energy * 100
     instrumentalness = prefs.instrumentalness
+    instrumentalness_adjusted = instrumentalness * 100
     speechiness = prefs.speechiness
+    speechiness_adjusted = speechiness * 100
     loudness = prefs.loudness
     # This value is negative and cannot be shown properly on the template 
     # in a progress bar unless adjusted to be a positive. So, for the progress bar
@@ -1140,18 +1232,25 @@ def get_preferences(user_id):
     tempo = prefs.tempo
     tempo_adjusted = tempo - 50
     valence = prefs.valence
+    valence_adjusted = valence * 100
     user_prefs = {
         'private_prefs': private_prefs,
         'acousticness': acousticness,
+        'acousticness_adjusted': acousticness_adjusted,
         'danceability': danceability,
+        'danceability_adjusted': danceability_adjusted,
         'energy': energy,
+        'energy_adjusted': energy_adjusted,
         'instrumentalness': instrumentalness,
+        'instrumentalness_adjusted': instrumentalness_adjusted,
         'speechiness': speechiness,
+        'speechiness_adjusted': speechiness_adjusted,
         'loudness': loudness,
         'loudness_adjusted': loudness_adjusted,
         'tempo': tempo,
         'tempo_adjusted': tempo_adjusted,
         'valence': valence,
+        'valence_adjusted': valence_adjusted,
     }
     return user_prefs
 

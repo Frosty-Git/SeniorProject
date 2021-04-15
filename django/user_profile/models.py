@@ -42,6 +42,7 @@ class UserProfile(models.Model):
                                         symmetrical=False)
     liked_songs_playlist_fk = models.ForeignKey('Playlist', on_delete=models.CASCADE, null=True, blank=True)
     survey_taken = models.BooleanField(default=False)
+    is_premium = models.BooleanField(default=False)
     
     def __str__(self):
         return self.user.username

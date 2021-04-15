@@ -7,7 +7,6 @@
 
 {% block content %}
 
-
 <div class="w3-row-padding" style="margin-top:2%">
     <div class="w3-col m4 w3-center my_profile">
         {% if profile.profilepic %}
@@ -21,31 +20,23 @@
         {% endif %}
 
         <div>
-            <h2>
+            <p style="font-size:xx-large; font-weight:800;">
                 <strong>{{ profile.user.first_name }} {{ profile.user.last_name }}</strong>
                 {% if profile.user.id == user.id or not private_profile or is_following %}
                 {% elif private_profile%}
                     <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
                 {% endif %}
-            </h2>
-            <p style="margin-top: -10px; color:lightgray">
-                @{{ profile.user.username }}
             </p>
-            <p>
-                {% if profile.user.id == user.id or not private_profile or is_following %}
-                    <a href="{% url 'user:followers' profile.user.id%}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
-                    <a href="{% url 'user:following' profile.user.id%}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
-                {% elif private_profile%}
-                    <p>{{ profile.num_followers }} Followers {{ profile.num_following }} Following</p>
-                {% endif %}
+            <p style="margin-top:-20px;">
+                @{{ profile.user.username }}
             </p>
         </div>
 
         {% if profile.user.id == user.id or not private_profile or is_following %}
             {% if profile.description %}
-                <h5 style="font-size: 20px;">
+                <p style="font-size: 20px;">
                     {{ profile.description }}
-                </h5>
+                </p>
             {% endif %}
 
             {% if profile.likes or profile.dislikes or is_following %}
@@ -67,6 +58,14 @@
                 </div>
                 <br>
             {% endif %}
+            <p>
+                {% if profile.user.id == user.id or not private_profile or is_following %}
+                    <a href="{% url 'user:follow_page' profile.user.id %}" style="padding-right: 5px;">{{ profile.num_followers }} Followers</a>
+                    <a href="{% url 'user:follow_page' profile.user.id %}" style="padding-left: 5px;">{{ profile.num_following }} Following</a>
+                {% elif private_profile%}
+                    <p>{{ profile.num_followers }} Followers {{ profile.num_following }} Following</p>
+                {% endif %}
+            </p>
             {% if profile.user.id == user.id and not profile.linked_to_spotify %}
                 <a class="btn spotify"  href="{% url 'user:link_spotify' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Link Spotify</span></a>
             {% else %}
@@ -86,189 +85,7 @@
         {% endif %}
         <br><br>
 
-        {% if profile.user.id == user.id %}
-        <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
-            <h2>Music Preferences</h2>
-    
-            <table class="center">
-                <tr>
-                    <td colspan="3">
-                        Acousticness: {{ acousticness }}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-right: 5px;"> 0 </td>
-                    <td><progress min="0" max="1" value="{{ acousticness }}"></progress></td>
-                    <td style="padding-left: 5px;"> 1 </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        Danceability: {{ danceability }}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-right: 5px;"> 0 </td>
-                    <td><progress min="0" max="1" value="{{ danceability }}"></progress></td>
-                    <td style="padding-left: 5px;"> 1 </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        Energy: {{ energy }}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-right: 5px;"> 0 </td>
-                    <td><progress min="0" max="1" value="{{ energy }}"></progress></td>
-                    <td style="padding-left: 5px;"> 1 </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        Instrumentalness: {{ instrumentalness}}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-right: 5px;"> 0 </td>
-                    <td><progress min="0" max="1" value="{{ instrumentalness }}"></progress></td>
-                    <td style="padding-left: 5px;"> 1 </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        Speechiness: {{ speechiness }}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-right: 5px;"> 0 </td>
-                    <td><progress min="0" max="1" value="{{ speechiness }}"></progress></td>
-                    <td style="padding-left: 5px;"> 1 </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        Loudness: {{ loudness }}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-right: 5px;"> -60 </td>
-                    <td><progress min="0" max="60" value="{{ loudness_adjusted }}"></progress></td>
-                    <td style="padding-left: 5px;"> 0 </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        Tempo: {{ tempo }}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-right: 5px;"> 50 </td>
-                    <td><progress min="0" max="100" value="{{ tempo_adjusted }}"></progress></td>
-                    <td style="padding-left: 5px;"> 150 </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        Valence: {{ valence }}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-right: 5px;"> 0 </td>
-                    <td><progress min="0" max="1" value="{{ valence }}"></progress></td>
-                    <td style="padding-left: 5px;"> 1 </td>
-                </tr>
-            </table>
-         </div>
-        {% else %}
-            {% if not private_profile or is_following %}
-                {% if not private_prefs%}
-                <!-- Ensure the public profile or person you are following has allowed their preferences to be visible, even to followers -->
-                    <div style="width: 350px; text-align: center; margin-right: auto;margin-left: auto;">
-                        <h2>Music Preferences</h2>
-                
-                        <table class="center">
-                            <tr>
-                                <td colspan="3">
-                                    Acousticness: {{ acousticness }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-right: 5px;"> 0 </td>
-                                <td><progress min="0" max="1" value="{{ acousticness }}"></progress></td>
-                                <td style="padding-left: 5px;"> 1 </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    Danceability: {{ danceability }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-right: 5px;"> 0 </td>
-                                <td><progress min="0" max="1" value="{{ danceability }}"></progress></td>
-                                <td style="padding-left: 5px;"> 1 </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    Energy: {{ energy }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-right: 5px;"> 0 </td>
-                                <td><progress min="0" max="1" value="{{ energy }}"></progress></td>
-                                <td style="padding-left: 5px;"> 1 </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    Instrumentalness: {{ instrumentalness}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-right: 5px;"> 0 </td>
-                                <td><progress min="0" max="1" value="{{ instrumentalness }}"></progress></td>
-                                <td style="padding-left: 5px;"> 1 </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    Speechiness: {{ speechiness }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-right: 5px;"> 0 </td>
-                                <td><progress min="0" max="1" value="{{ speechiness }}"></progress></td>
-                                <td style="padding-left: 5px;"> 1 </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    Loudness: {{ loudness }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-right: 5px;"> -60 </td>
-                                <td><progress min="0" max="60" value="{{ loudness_adjusted }}"></progress></td>
-                                <td style="padding-left: 5px;"> 0 </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    Tempo: {{ tempo }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-right: 5px;"> 50 </td>
-                                <td><progress min="0" max="100" value="{{ tempo_adjusted }}"></progress></td>
-                                <td style="padding-left: 5px;"> 150 </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    Valence: {{ valence }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-right: 5px;"> 0 </td>
-                                <td><progress min="0" max="1" value="{{ valence }}"></progress></td>
-                                <td style="padding-left: 5px;"> 1 </td>
-                            </tr>
-                        </table>
-                    </div>
-                {% endif %}
-            {% else %}
-                <!-- You're viewing someone else's profile, so don't show their preferences if they don't want you to be able to see them -->
-                <!-- or the person's profile is private so don't show them anyway -->
-            {% endif%}
-        {% endif %}
+        
     </div>
 
     {% if profile.user.id == user.id or not private_profile or is_following%}
@@ -311,21 +128,241 @@
                     <a href="{% url 'user:profile' follower.user.id %}">{{ follower.user.username }}</a>
                 </td>
             </tr>
+        {% empty %}
+            Not following anyone yet!
         {% endfor %}
         </table>
         <br><br>
-        <h2>Playlists</h2>
-        <a href="{% url 'user:get_playlists' profile.user.id %}">
-            @{{ profile.user.username }}'s Playlists
-        </a>
+
+        <h2><a href="{% url 'user:get_playlists' profile.user.id %}">Playlists</a></h2>
+        <ul class="list-group list-group-flush">
+            {% for playlist in playlists %}
+                {% if playlist != profile.liked_songs_playlist_fk %}
+                    <li class="list-group-item" style="background-color: transparent; color:#d9dadc; text-align: left;">
+                        {% if playlist.image %}
+                            <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">
+                                <img src="{{ playlist.image.url }}" width="20" height="20" style="border-radius: 50%;">
+                            </a>
+                        {% else %}
+                            <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">
+                                <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="20" height="20" style="border-radius: 50%;">
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">{{ playlist.name }}</a>
+                        <button style="float:right; color:#d9dadc; margin-top:-3%" class="btn playlistpostmodal{{ playlist.id }}" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+                                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                            </svg>
+                        </button>
+                    </li>
+                    {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+        {% if profile.user.id == user.id %}
+            <div class="accordion accordion-flush" id="accordionFlushExample" class="center" style="width:100%; color:#d9dadc; background-color: transparent;">
+                <div class="accordion-item" style="background-color: transparent; ">
+                <h2 class="accordion-header" id="flush-headingOne" style="color:#d9dadc"  >
+                    <button style="background-color: transparent;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        <h6>Music Prefs</h6>
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body center">
+                        <table class="center">
+                            <tr>
+                                <td colspan="3">
+                                    Acousticness: {{ acousticness|floatformat:2 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><input disabled type="range" min="0" max="100" value="{{ acousticness_adjusted }}" style="width:100%"></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Danceability: {{ danceability|floatformat:2 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><input disabled type="range" min="0" max="100" value="{{ danceability_adjusted }}" style="width:100%"></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Energy: {{ energy|floatformat:2 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><input disabled type="range" min="0" max="100" value="{{ energy_adjusted }}" style="width:100%"></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Instrumentalness: {{ instrumentalness|floatformat:2 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><input disabled type="range" min="0" max="100" value="{{ instrumentalness_adjusted }}" style="width:100%"></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Speechiness: {{ speechiness|floatformat:2 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><input disabled type="range" min="0" max="100" value="{{ speechiness_adjusted }}" style="width:100%"></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Loudness: {{ loudness|floatformat:2 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> -60 </td>
+                                <td><input disabled type="range" min="0" max="60" value="{{ loudness_adjusted }}" style="width:100%"></td>
+                                <td style="padding-left: 5px;"> 0 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Tempo: {{ tempo|floatformat:2 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 50 </td>
+                                <td><input disabled type="range" min="0" max="100" value="{{ tempo_adjusted }}" style="width:100%"></td>
+                                <td style="padding-left: 5px;"> 150 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    Valence: {{ valence|floatformat:2 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 5px;"> 0 </td>
+                                <td><input disabled type="range" min="0" max="100" value="{{ valence_adjusted }}" style="width:100%"></td>
+                                <td style="padding-left: 5px;"> 1 </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% if not private_profile or is_following %}
+                {% if not private_prefs %}
+                <!-- Ensure the public profile or person you are following has allowed their preferences to be visible, even to followers -->
+                    <div class="accordion accordion-flush" id="accordionFlushExample" class="center" style="width:100%; color:#d9dadc; background-color: transparent;">
+                        <div class="accordion-item" style="background-color: transparent; ">
+                        <h2 class="accordion-header" id="flush-headingOne" style="color:#d9dadc"  >
+                            <button style="background-color: transparent;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                <h6>Music Prefs</h6>
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body center">
+                                <table class="center">
+                                    <tr>
+                                        <td colspan="3">
+                                            Acousticness: {{ acousticness|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 5px;"> 0 </td>
+                                        <td><input disabled type="range" min="0" max="100" value="{{ acousticness_adjusted }}" style="width:100%"></td>
+                                        <td style="padding-left: 5px;"> 1 </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            Danceability: {{ danceability|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 5px;"> 0 </td>
+                                        <td><input disabled type="range" min="0" max="100" value="{{ danceability_adjusted }}" style="width:100%"></td>
+                                        <td style="padding-left: 5px;"> 1 </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            Energy: {{ energy|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 5px;"> 0 </td>
+                                        <td><input disabled type="range" min="0" max="100" value="{{ energy_adjusted }}" style="width:100%"></td>
+                                        <td style="padding-left: 5px;"> 1 </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            Instrumentalness: {{ instrumentalness|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 5px;"> 0 </td>
+                                        <td><input disabled type="range" min="0" max="100" value="{{ instrumentalness_adjusted }}" style="width:100%"></td>
+                                        <td style="padding-left: 5px;"> 1 </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            Speechiness: {{ speechiness|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 5px;"> 0 </td>
+                                        <td><input disabled type="range" min="0" max="100" value="{{ speechiness_adjusted }}" style="width:100%"></td>
+                                        <td style="padding-left: 5px;"> 1 </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            Loudness: {{ loudness|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 5px;"> -60 </td>
+                                        <td><input disabled type="range" min="0" max="60" value="{{ loudness_adjusted }}" style="width:100%"></td>
+                                        <td style="padding-left: 5px;"> 0 </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            Tempo: {{ tempo|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 5px;"> 50 </td>
+                                        <td><input disabled type="range" min="0" max="100" value="{{ tempo_adjusted }}" style="width:100%"></td>
+                                        <td style="padding-left: 5px;"> 150 </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            Valence: {{ valence|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 5px;"> 0 </td>
+                                        <td><input disabled type="range" min="0" max="100" value="{{ valence_adjusted }}" style="width:100%"></td>
+                                        <td style="padding-left: 5px;"> 1 </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- You're viewing someone else's profile, so don't show their preferences if they don't want you to be able to see them -->
+                <!-- or the person's profile is private so don't show them anyway -->
+            {% endif%}
+        {% endif %}
     </div>
     {% endif %}
 </div> 
 
 <script type="text/javascript" src="{% static 'js/profile.js' %}"></script>
-<!-- <script>
-    let birthday = new Date("{{ profile.birthdate|date:'F j, Y' }}");
-    document.getElementById("age").innerHTML = get_age(birthday);
-</script> -->
 {% include 'social_feed/popup_createpost.html' %}  
 {% endblock %}
