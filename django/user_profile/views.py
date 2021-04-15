@@ -1296,4 +1296,6 @@ def convertMs(ms):
         result = ("%d:%d:%d" % (hours, minutes, seconds))
     else:
         result = ("%d:%d" % (minutes, seconds))
+        if ms == 0:
+            result = "0:00"
     return result
