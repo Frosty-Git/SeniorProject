@@ -1,10 +1,11 @@
-.btn {
+.btn-results-artist {
     margin-top: 0.75rem;
 }
 h1, h3 {
     text-shadow: 0rem .3rem .2rem #1F2933 !important;
 }
 .carousel {
+    border-radius: 1vh;
     margin: 2vh 0vh 5vh 0vh;
     /* background-color: yellow; */
     width: 100%;
@@ -30,6 +31,7 @@ h1, h3 {
     overflow: hidden; 
     max-width: 100%;
     box-shadow: 0rem 0.3rem 0.1rem 0.01rem #1F2933;
+    border-radius: 0.5rem;
 } 
 .embed-container iframe, .embed-container object, .embed-container embed { 
     position: absolute; 
