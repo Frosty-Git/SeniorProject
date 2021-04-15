@@ -34,12 +34,14 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                         + '</svg>');
         }
         $('#songprogress').attr('max', state['duration']);
+        $('#totalTime').text(millisToMinutesAndSeconds(state['duration']));
     });
 
     setInterval(function() {
         player.getCurrentState().then(state => {
             if(state != null) {
                 $('#songprogress').attr('value', state['position']);
+                $('#currentTime').text(millisToMinutesAndSeconds(state['position']));
                 // $('#songprogress').text(state['position']);
             }
         })
@@ -151,3 +153,8 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
 };
 
+function millisToMinutesAndSeconds(millis) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+}

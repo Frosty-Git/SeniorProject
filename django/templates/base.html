@@ -179,7 +179,13 @@
                     <tr>
                       <td>
                         <form id="dummy">
-                          <input type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max="" min="0">
+                          <table style="width: 100%;">
+                            <tr>
+                              <td><span style="font-size: x-small; float:right; position:fixed; margin-top:auto;margin-bottom: auto;" id="currentTime"></span></td>
+                              <td><input type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max="" min="0"></td>
+                              <td><span id="totalTime" style="font-size: x-small; float:left;position:fixed; margin-top:auto;margin-bottom: auto;"></span></td>
+                            </tr>
+                          </table>
                         </form>
                       </td>
                     </tr>
@@ -198,23 +204,31 @@
         {% endif %}
         <script>
           let previousURL;
+          let data = '/static/js/livesearch.js';
+            // profile: '/static/js/profile.js',
+            // top_countries: '/static/js/top-countries.js',
+          
           function pageClick(url) {
             previousURL = location.pathname;
             console.log('URL ' + url);
             console.log('PREVURL ' + previousURL);
+            history.pushState($('form').serialize(), document.title, url);
+
             $('#basecontainer').load(url + ' #basecontainer', function (responseText) {
               var title = responseText.match(/<title>([^<]*)/)[1];
-              document.title = title;
-              history.pushState({}, '', url);
+              document.title = title; 
             })
+
+
           }
 
-          window.onpopstate = function(event) {
+          window.addEventListener("popstate", function(event) {
             if(event) {
               console.log(event);
-              location.reload();
+              // location.reload();
+              pageClick(previousURL);
             }
-          }
+          });
 
         </script>
 
