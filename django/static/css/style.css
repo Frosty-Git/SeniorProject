@@ -301,12 +301,14 @@ input:checked+.slider:before {
 
 .modalBtn {
     background-color: #1F2933;
+    border-color: #1F2933;
     color: #d9dadc;
     font-weight: bold;
 }
 
 .modalBtn:hover {
     border-color: #a0bed9;
+    background-color: #1F2933;
     color: #d9dadc;
 }
 
