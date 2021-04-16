@@ -14,17 +14,29 @@
 <ol>
     {% for playlist, total in top_playlists.items %}
         <li>
-            {% if playlist.image %}
-                <a href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
-                    <img src="{{ playlist.image.url }}" width="30px" height="30px" style="border-radius: 50%;">
-                </a>
-            {% else %}
-                <a href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
-                    <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="30px" height="30px" style="border-radius: 50%;">
-                </a>
-            {% endif %}
-            <a href='{% url "user:get_songs_playlist" playlist.user_profile_fk.user.id playlist.id %}'><b>{{ playlist.name }}</b></a> - 
-            <a href='{% url "user:profile" playlist.user_profile_fk.user.id %}'>{{ playlist.user_profile_fk.user.username }}</a>'s Playlist - ({{ total }}) </li>
+            <table>
+                <tr>
+                    <td>
+                        {% if playlist.image %}
+                            <a href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
+                                <img src="{{ playlist.image.url }}" width="30px" height="30px" style="border-radius: 50%;">
+                            </a>
+                        {% else %}
+                            <a href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
+                                <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="30px" height="30px" style="border-radius: 50%;">
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href='{% url "user:get_songs_playlist" playlist.user_profile_fk.user.id playlist.id %}'><b>{{ playlist.name }}</b></a> - 
+                    </td>
+                    <td>
+                        <a href='{% url "user:profile" playlist.user_profile_fk.user.id %}'>{{ playlist.user_profile_fk.user.username }}</a>'s Playlist - ({{ total }})
+                    </td>
+                </tr>
+            </table>
+        </li>
+
     {% endfor %}
 </ol>
 
