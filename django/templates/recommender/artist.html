@@ -41,15 +41,13 @@
                 <table class="table">
                     <tbody>
                         <tr>
-                        {% for track in highTracks1 %}
-                            {% with index=forloop.counter0 %}
+                        {% for track, feature in highTracks1.items %}
                             <td>
                                 <div class='embed-container'>
                                     <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                                 </div>
-                                <h4>{{ features.index }}</h4>>
+                                <h4>{{ feature }}</h4>>
                             </td>
-                            {% endwith %}
                         {% endfor %}
                         </tr>
                     </tbody>
@@ -61,14 +59,13 @@
                 <table class="table">
                     <tbody>
                         <tr>
-                        {% for track in highTracks2 %}
-            
+                            {% for track, feature in highTracks2.items %}
                             <td>
                                 <div class='embed-container'>
                                     <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                                 </div>
+                                <h4>{{ feature }}</h4>>
                             </td>
-
                         {% endfor %}
                         </tr>
                     </tbody>
@@ -101,14 +98,13 @@
             <table class="table">
                 <tbody>
                     <tr>
-                    {% for track in lowTracks1 %}
-        
+                        {% for track, feature in lowTracks1.items %}
                         <td>
                             <div class='embed-container'>
                                 <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                             </div>
+                            <h4>{{ feature }}</h4>>
                         </td>
-        
                     {% endfor %}
                     </tr>
                 </tbody>
@@ -120,14 +116,13 @@
             <table class="table">
                 <tbody>
                     <tr>
-                    {% for track in lowTracks2 %}
-        
+                        {% for track, feature in lowTracks1.items %}
                         <td>
                             <div class='embed-container'>
                                 <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                             </div>
+                            <h4>{{ feature }}</h4>>
                         </td>
-        
                     {% endfor %}
                     </tr>
                 </tbody>

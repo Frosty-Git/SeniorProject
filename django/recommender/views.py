@@ -440,15 +440,34 @@ def searchArtist_post(request):
             
             form = ArtistForm()
 
-            highTracks1 = list([highDance, highAcous, highLive, highInst])
-            highTracks2 = list([highSpeech, highLoud, highTempo, highVal]) 
-            lowTracks1 = list([lowDance, lowAcous, lowLive, lowInst])
-            lowTracks2 = list([lowSpeech, lowLoud, lowTempo, lowVal])
+            highTracks1 = {
+                highDance: features[1], 
+                highAcous: features[0],
+                highLive: features[2], 
+                highInst: features[3]
+            }
+            highTracks2 = {
+                highSpeech: features[4], 
+                highLoud: features[5], 
+                highTempo: features[6], 
+                highVal: features[7]
+            } 
+            lowTracks1 = {
+                lowDance: features[1], 
+                lowAcous: features[0], 
+                lowLive: features[2], 
+                lowInst: features[3]
+            }
+            lowTracks2 = {
+                lowSpeech: features[4], 
+                lowLoud: features[5], 
+                lowTempo: features[6], 
+                lowVal: features[7]
+            }
 
             context = {
                 'form': form,
                 'artist': id, 
-                'features': features,
                 'highTracks1': highTracks1,
                 'highTracks2': highTracks2, 
                 'lowTracks1': lowTracks1,
