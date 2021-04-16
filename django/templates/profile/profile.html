@@ -155,7 +155,7 @@
                             </svg>
                         </button>
                     </li>
-                    {% include 'social_feed/popup_playlistpost.html' with user_id=profile.user.id %}
+                    {% include 'social_feed/popup_playlistpost_single.html' with user_id=profile.user.id playlist=playlist %}
                 {% endif %}
             {% endfor %}
         </ul>

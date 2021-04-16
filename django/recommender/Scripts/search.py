@@ -333,8 +333,9 @@ def livesearch_tracks(query):
     Just testing stuff - Katie
     """
     searches={}
-    result = sp.search(q=query, limit=3, offset=0, type='track', market=None)
-    for x in range(5):
+    limit = 5
+    result = sp.search(q=query, limit=limit, offset=0, type='track', market=None)
+    for x in range(limit):
         new_list = []
         if x+1 > len(result['tracks']['items']):
             break
@@ -349,8 +350,9 @@ def livesearch_artists(query):
     Just testing stuff - Katie
     """
     searches={}
-    result = sp.search(q=query, limit=2, offset=0, type='artist', market=None)
-    for x in range(5):
+    limit = 3
+    result = sp.search(q=query, limit=limit, offset=0, type='artist', market=None)
+    for x in range(limit):
         new_list = []
         if x+1 > len(result['artists']['items']):
             break
@@ -368,8 +370,9 @@ def livesearch_albums(query):
     Just testing stuff - Katie
     """
     searches={}
-    result = sp.search(q=query, limit=2, offset=0, type='album', market=None)
-    for x in range(5):
+    limit = 3
+    result = sp.search(q=query, limit=limit, offset=0, type='album', market=None)
+    for x in range(limit):
         new_list = []
         if x+1 > len(result['albums']['items']):
             break

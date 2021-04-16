@@ -42,7 +42,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
             if(state != null) {
                 $('#songprogress').attr('value', state['position']);
                 $('#currentTime').text(millisToMinutesAndSeconds(state['position']));
-                // $('#songprogress').text(state['position']);
+                $('#songprogress').text(state['position']);
             }
         })
     }, 500);

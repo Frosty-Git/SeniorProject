@@ -257,7 +257,8 @@ def popup_songpost(request):
         if text is not None:
             song = SongPost(song=track, text=text, user_profile_fk=user, type_post="SongPost")
             song.save()
-            return redirect('/feed/')
+            return JsonResponse({'status': 'ok'})
+        return JsonResponse({'status': 'ko'})
     else:
         return render(request, 'social_feed/popup_songpost.html')
 
