@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-8">
                     <p style="text-align: left; font-size: medium;">{{ post.user_profile_fk.user.first_name }} {{ post.user_profile_fk.user.last_name }} 
-                        <span style="font-size: small; color:lightgray">@{{ post.user_profile_fk.user.username }}</span>
+                        <span style="font-size: small;">@{{ post.user_profile_fk.user.username }}</span>
                     </p>
                     <p style="word-break: break-all; text-align: left; font-size: 13px;" class='feed_post_text{{post.id}}'>{{ post.text }}</p>
                     {% if post.type_post == "SongPost" %}

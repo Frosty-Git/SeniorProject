@@ -139,21 +139,30 @@
             {% for playlist in playlists %}
                 {% if playlist != profile.liked_songs_playlist_fk %}
                     <li class="list-group-item" style="background-color: transparent; color:#d9dadc; text-align: left;">
-                        {% if playlist.image %}
-                            <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">
-                                <img src="{{ playlist.image.url }}" width="20" height="20" style="border-radius: 50%;">
-                            </a>
-                        {% else %}
-                            <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">
-                                <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="20" height="20" style="border-radius: 50%;">
-                            </a>
-                        {% endif %}
-                        <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">{{ playlist.name }}</a>
-                        <button style="float:right; color:#d9dadc; margin-top:-3%" class="btn playlistpostmodal{{ playlist.id }}" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
-                                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-                            </svg>
-                        </button>
+                        <div class="row">
+                            <div class="col-2">
+                                {% if playlist.image %}
+                                    <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">
+                                        <img src="{{ playlist.image.url }}" width="20" height="20" style="border-radius: 50%;">
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">
+                                        <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="20" height="20" style="border-radius: 50%;">
+                                    </a>
+                                {% endif %}
+                            </div>
+                        
+                            <div class="col-7">
+                                <a style="word-break: break-all;" href="{% url 'user:get_songs_playlist' profile.user.id playlist.id %}">{{ playlist.name }}</a>
+                            </div>
+                            <div class="col-3">
+                                <button style="float:right; color:#d9dadc; margin-top:-3%" class="btn playlistpostmodal{{ playlist.id }}" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+                                        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </li>
                     {% include 'social_feed/popup_playlistpost_single.html' with user_id=profile.user.id playlist=playlist %}
                 {% endif %}

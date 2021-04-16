@@ -4,7 +4,7 @@
 <div class="modal fade" id="songpostmodal{{ song }}" tabindex="-1" aria-labelledby="mySongPostModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="{% url 'feed:songpost' %}">
+            <form method="post" action="">
                 {% csrf_token %}
 
                 <div class="modal-header">
@@ -18,7 +18,7 @@
                     </div>
                     <input type="hidden" id="track_id" name="track_id" value="{{ song }}">
                     <center><iframe src="https://open.spotify.com/embed/track/{{ song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></center>
-                    <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
+                    <textarea required class="form-control" aria-label="With textarea" id="post_text{{ song }}" name="post_text"></textarea>
                 </div>
 
                 <div class="modal-footer">
@@ -35,14 +35,13 @@
 </div>
   
 <script>
-    document.getElementById("post_text").value = "";
 
     $('.popupsongbtn{{ song }}').click(function(e) {
         $('#load{{ song }}').show();
         $('.popupsongbtn{{ song}}').hide();
         e.preventDefault();
         var song = $('#track_id').val();
-        var text = $('#post_text').text();
+        var text = $('#post_text{{ song }}').val();
         $.ajax({
             type: 'POST',
             url: "{% url 'feed:songpost' %}",
@@ -57,7 +56,7 @@
                         $('#load{{ song }}').hide();
                         $('.popupsongbtn{{ song }}').show();
                         $('.alert{{ song }}').show();
-                        $('#post_text').hide();
+                        $('#post_text{{ song }}').hide();
                     }, 2000);
                 }
 
@@ -66,4 +65,8 @@
         })
         return false;
     })
+    window.onload = function() {
+        document.getElementById("post_text").value = "";
+    }
+    
 </script>
