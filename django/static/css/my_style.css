@@ -127,23 +127,18 @@
 
 
 
-#songprogress::-moz-range-track {
+/* #songprogress::-moz-range-track {
     width: 100%;
-    /* background-color: #eee;
-    border: 2px solid #ccc; */
     background-color: lightgray;
 }
 
 #songprogress::-moz-range-thumb {
     border-radius: 100%;
     background-color: lightgray;
-    /* border: 2px solid #1976D2;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25); */
 }
 
 #songprogress::-moz-range-progress {
-    /* border-radius: 10px 0 0 10px; */
     background-color: #a0bed9;
     border: 1px solid #a0bed9;
 }
-  
+   */
