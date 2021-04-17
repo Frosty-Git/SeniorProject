@@ -1,0 +1,54 @@
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+.carousel {
+    margin: 10vh 0vh 10vh 0vh;
+    /* background-color: yellow; */
+    width: 110%;
+}
+.carousel-control-prev {
+    /* background-color: red; */
+    width: 5%;
+}
+.carousel-control-next {
+    /* background-color: green; */
+    width: 5%;
+}
+
+.table {
+    padding-left: 5%;
+    padding-right: 5%;
+}
+.embed-container { 
+    position: relative;
+    padding-bottom: 120%;
+    height: 0; 
+    overflow: hidden; 
+    max-width: 100%; 
+} 
+.embed-container iframe, .embed-container object, .embed-container embed { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+}
+div.desktop-carousel {
+}
+@media only screen and (max-width: 600px) {
+    div.desktop-carousel {
+      display: none;
+    }
+}
+div.mobile-carousel {
+  }
+@media only screen and (min-width: 601px) {
+    div.mobile-carousel {
+      display: none;
+    }
+}
