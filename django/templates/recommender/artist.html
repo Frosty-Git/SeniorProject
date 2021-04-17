@@ -31,8 +31,6 @@
 <a class="btn btn-outline-light" href="{% url 'recommender:artist_info' artist %}" role="button" target="_blank">Artist Page</a>
 </center>                        
 
-<p>highTrack IDS: {{ highTracks1 }} {{ highTracks2 }}</p>
-
 <h3>High-Value Tracks:</h3>
     <div id="highTrackCarousel" class="carousel slide" data-bs-interval="false">
         <div class="carousel-inner">
@@ -41,11 +39,11 @@
                 <table class="table">
                     <tbody>
                         <tr>
-                        {% for track, feature in highTracks1.items %}
+                            {% for track, feature in highTracks1.items %}
                             <td>
-                                <div class='embed-container'>
-                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
-                                </div>
+                                
+                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
+                                
                                 <h4>{{ feature }}</h4>>
                             </td>
                         {% endfor %}
@@ -60,13 +58,13 @@
                     <tbody>
                         <tr>
                             {% for track, feature in highTracks2.items %}
-                            <td>
-                                <div class='embed-container'>
-                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
-                                </div>
-                                <h4>{{ feature }}</h4>>
-                            </td>
-                        {% endfor %}
+                        <td>
+                            
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
+                            
+                            <h4>{{ feature }}</h4>>
+                        </td>
+                    {% endfor %}
                         </tr>
                     </tbody>
                 </table>
@@ -87,10 +85,7 @@
 
 {% if lowTracks1 %}
 
-<p>LowTrack IDS: {{ lowTracks1 }} {{ lowTracks2 }}</p>
-
-
-<h3>Low-Value Tracks</h3>
+<h3>Lowest-Value Tracks:</h3>
 <div id="lowTrackCarousel" class="carousel slide" data-bs-interval="false">
     <div class="carousel-inner">
       <div class="carousel-item active" data-bs-interval="false">
@@ -100,9 +95,9 @@
                     <tr>
                         {% for track, feature in lowTracks1.items %}
                         <td>
-                            <div class='embed-container'>
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
-                            </div>
+                            
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
+                            
                             <h4>{{ feature }}</h4>>
                         </td>
                     {% endfor %}
@@ -116,11 +111,11 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        {% for track, feature in lowTracks1.items %}
+                        {% for track, feature in lowTracks2.items %}
                         <td>
-                            <div class='embed-container'>
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
-                            </div>
+                            
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
+                            
                             <h4>{{ feature }}</h4>>
                         </td>
                     {% endfor %}

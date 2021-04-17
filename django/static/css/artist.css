@@ -9,7 +9,7 @@ h2 {
 .carousel {
     margin: 10vh 0vh 10vh 0vh;
     /* background-color: yellow; */
-    width: 110%;
+    width: 105%;
 }
 .carousel-control-prev {
     /* background-color: red; */
@@ -32,23 +32,10 @@ h2 {
     max-width: 100%; 
 } 
 .embed-container iframe, .embed-container object, .embed-container embed { 
-    position: absolute; 
+    position: relative; 
     top: 0; 
     left: 0; 
     width: 100%; 
     height: 100%; 
 }
-div.desktop-carousel {
-}
-@media only screen and (max-width: 600px) {
-    div.desktop-carousel {
-      display: none;
-    }
-}
-div.mobile-carousel {
-  }
-@media only screen and (min-width: 601px) {
-    div.mobile-carousel {
-      display: none;
-    }
-}
+
