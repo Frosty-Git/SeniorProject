@@ -61,7 +61,7 @@
                     <a class="nav-link" href="{% url 'recommender:best' %}">Browse</a>
                   </li> -->
                   <li class="nav-item dropdown" >
-                    <a style="color: lightgrey; text-shadow: 2px 2px 5px rgb(0, 0, 0);" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a style="text-shadow: 2px 2px 5px rgb(0, 0, 0);" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Top
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -71,20 +71,20 @@
                   </li>
                   {% if user.is_authenticated %}
                     <li class="nav-item">
-                      <a style="color: lightgrey; text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:survey_genres' %}">Survey</a>
+                      <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:survey_genres' %}">Survey</a>
                     </li>
                     <li class="nav-item">
-                      <a style="color: lightgrey; text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:user_preference_recommender' %}">Explore</a>
+                      <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:user_preference_recommender' %}">Explore</a>
                     </li>
                     <li class="nav-item">
-                      <a style="color: lightgrey; text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
+                      <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
                     </li>
                     <li class="nav-item">
-                      <a style="color: lightgrey; text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'user:get_playlists' user.id %}">Playlists</a>
+                      <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'user:get_playlists' user.id %}">Playlists</a>
                     </li>
                   {% endif %}
                   <li class="nav-item">
-                    <a style="color: lightgrey; text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:about' %}">About</a>
+                    <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:about' %}">About</a>
                   </li>
                 </ul>
                 {% if request.get_full_path != "/" %}
