@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
 {% load widget_tweaks %}
-
+{% load static %}
 {% block content %}
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+
 <br>
 {% if form.errors %}
     {% for field in form %}
@@ -20,7 +24,7 @@
 {% endif %}
 
 
-<div class="container" style="width:300px; background-color:rgb(49, 50, 88); padding:20px">
+<div class="container2">
     <h1><center>Login</center></h1>
     <small><small><center>Please log in so we can recommend you better music!</center></small></small>
     <br>
@@ -38,7 +42,7 @@
 
 
             <br>
-            <center><button class="btn btn-primary" type="submit">Login</button>
+            <center><button class="btn btn-outline-light" type="submit">Login</button>
             <br><br>
         </form>
         Don't have an account? <a href="{% url 'user:signup' %}" target="blank"><br><strong>Register Here</strong></a>!</center>
