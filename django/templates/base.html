@@ -48,7 +48,7 @@
         <!-- Bootstrap Navbar -->
           <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-              <a class="navbar-brand pengbeatslogo" href="{% url 'recommender:home' %}" style="color: #f99108; text-shadow: 2px 2px 5px rgb(0, 0, 0);">
+              <a class="navbar-brand pengbeatslogo" href="{% url 'recommender:home' %}" style="color: #f99108;">
                 <img src="{% static 'images/penguin.png' type='image/png' %}" alt="" width="30" height="30" class="d-inline-block align-top">
                 PengBeats
               </a>
@@ -71,16 +71,16 @@
                   </li>
                   {% if user.is_authenticated %}
                     <li class="nav-item">
-                      <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:survey_genres' %}">Survey</a>
+                      <a class="nav-link" href="{% url 'recommender:survey_genres' %}">Survey</a>
                     </li>
                     <li class="nav-item">
-                      <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:user_preference_recommender' %}">Explore</a>
+                      <a class="nav-link" href="{% url 'recommender:user_preference_recommender' %}">Explore</a>
                     </li>
                     <li class="nav-item">
-                      <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
+                      <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
                     </li>
                     <li class="nav-item">
-                      <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'user:get_playlists' user.id %}">Playlists</a>
+                      <a class="nav-link" href="{% url 'user:get_playlists' user.id %}">Playlists</a>
                     </li>
                   {% endif %}
                   <li class="nav-item">
