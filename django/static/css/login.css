@@ -27,8 +27,9 @@ small, body {
     margin-left: auto;
     margin-right: auto;
     color:white;
+    font-family: 'Montserrat', sans-serif;
 }
-.button{
+.btn btn-outline-light{
     background-color: #456583;
     color: white;
     border-color: white
@@ -38,10 +39,12 @@ li{
     color:white;
     -webkit-text-stroke-width: 0.09px;
     -webkit-text-stroke-color: #323F4B;
+    font-family: 'Montserrat', sans-serif;
 }
 .form-text{
     color:white;
     -webkit-text-stroke-width: 0.09px;
     -webkit-text-stroke-color: #323F4B;
+    font-family: 'Montserrat', sans-serif;
     
 }
