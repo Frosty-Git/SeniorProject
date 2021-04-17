@@ -4,6 +4,7 @@ h1, h3 {
 .top-songs-by-country {
     margin: 1rem 2rem 2rem 0rem;
     float: right;
+    top: 0;
     position: -webkit-sticky;
     position: sticky;
 }
