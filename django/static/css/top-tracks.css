@@ -2,9 +2,9 @@ h1, h3 {
     text-shadow: 0rem .3rem .2rem #1F2933 !important;
 }
 .top-songs-by-country {
-    background-color: red;
     margin: 1rem 2rem 2rem 0rem;
     float: right;
+    top: 0;
     position: -webkit-sticky;
     position: sticky;
 }
@@ -15,4 +15,9 @@ h1, h3 {
 }
 .playlist {
     margin: .5rem .25rem .5rem .25rem;
+}
+.country {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #323F4B;
+    color: #d9dadc; /* Baby Penguin White */
 }
