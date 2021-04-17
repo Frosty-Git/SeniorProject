@@ -6,16 +6,12 @@
     color:white;
     width:600px;
 }
-.button{
+.btn btn-outline-light{
     background-color: #456583;
     color: white;
     border-color: white
 }
-.button2{
-    background-color: #456583;
-    color: white;
-    border-color:white
-}
+
 li{
     color:white;
     -webkit-text-stroke-width: 0.09px;
