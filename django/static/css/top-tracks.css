@@ -1,0 +1,18 @@
+h1, h3 {
+    text-shadow: 0rem .3rem .2rem #1F2933 !important;
+}
+.top-songs-by-country {
+    background-color: red;
+    margin: 1rem 2rem 2rem 0rem;
+    float: right;
+    position: -webkit-sticky;
+    position: sticky;
+}
+.genre-playlists {
+    margin: 1rem 0rem 2rem 0rem;
+    max-width: 0%;
+    float: left;
+}
+.playlist {
+    margin: .5rem .25rem .5rem .25rem;
+}

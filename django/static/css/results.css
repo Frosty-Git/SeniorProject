@@ -1,7 +1,16 @@
+.btn-results-artist {
+    margin-top: 0.75rem;
+}
+h1, h3 {
+    text-shadow: 0rem .3rem .2rem #1F2933 !important;
+}
 .carousel {
-    margin: 10vh 0vh 10vh 0vh;
+    border-radius: 1vh;
+    margin: 2vh 0vh 5vh 0vh;
     /* background-color: yellow; */
-    width: 110%;
+    width: 100%;
+    background-color: #425363;
+    box-shadow: .6rem .6rem .5rem .4rem #1F2933;
 }
 .carousel-control-prev {
     /* background-color: red; */
@@ -20,7 +29,9 @@
     padding-bottom: 120%;
     height: 0; 
     overflow: hidden; 
-    max-width: 100%; 
+    max-width: 100%;
+    box-shadow: 0rem 0.3rem 0.1rem 0.01rem #1F2933;
+    border-radius: 0.5rem;
 } 
 .embed-container iframe, .embed-container object, .embed-container embed { 
     position: absolute; 
@@ -28,18 +39,4 @@
     left: 0; 
     width: 100%; 
     height: 100%; 
-}
-div.desktop-carousel {
-}
-@media only screen and (max-width: 600px) {
-    div.desktop-carousel {
-      display: none;
-    }
-}
-div.mobile-carousel {
-  }
-@media only screen and (min-width: 601px) {
-    div.mobile-carousel {
-      display: none;
-    }
 }
