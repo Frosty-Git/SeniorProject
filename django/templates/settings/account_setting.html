@@ -3,13 +3,21 @@
 {% block title %} Settings | Account {% endblock %}
 
 {% block setting %}
-
-    <h2>Change Password</h2>
+    <h2><center>Change Password</center></h2>
+    <hr width=100% align=right>
+    <br>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <a href="{% url 'user:profile' user.id %}">Back</a>
-        <button type="submit">Submit</button>
+        <table style="margin-left: 20%;">
+            <tr>
+                <td style="padding: 16px;">
+                    <button type="submit" class="btn btn-outline-light">Submit</button>
+                </td>
+                <td>
+                    <a href="{% url 'user:profile' user.id %}" class="btn btn-outline-light">Back</a>
+                </td>
+            </tr>
+        </table>
     </form>
-
 {% endblock %}

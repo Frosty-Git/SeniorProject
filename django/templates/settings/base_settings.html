@@ -20,12 +20,14 @@
         {% endfor %}
     {% endif %}
 
-    <div class="sidenav">
+    <div class="sidenav" style="width: 105px; padding-top: 100px;">
         <ul class="list-group list-group-flush">
-            <li class="list-group-item disabled" aria-disabled="true"><b>Settings</b></li>
+            <center>
+            <li class="list-group-item disabled" aria-disabled="true" style="color:  #f99108;"><center><b>Settings</b></center></li>
             <li class="list-group-item" aria-current="true"><a href="{% url 'user:update_profile' %}">Profile</a></li>
             <li class="list-group-item"><a href="{% url 'user:settings' user.id %}">Privacy</a></li>
             <li class="list-group-item"><a href="{% url 'user:account_setting' %}">Account</a></li>
+            </center>
         </ul>
     </div>
 

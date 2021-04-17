@@ -12,7 +12,16 @@ body {
     font-family: "Comic Sans MS", "Comic Sans";
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
+    color: #f99108;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 270%;
+    text-shadow: 2px 2px 5px #252525;
+}
+
+h2, h3, h4, h5, h6 {
     color: #f99108;
     font-family: 'Oswald', sans-serif;
     text-transform: uppercase;

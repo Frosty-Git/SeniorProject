@@ -46,7 +46,7 @@
         <!-- Bootstrap Navbar -->
           <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-              <a class="navbar-brand pengbeatslogo" href="{% url 'recommender:home' %}">
+              <a class="navbar-brand pengbeatslogo" href="{% url 'recommender:home' %}" style="color: #f99108;">
                 <img src="{% static 'images/penguin.png' type='image/png' %}" alt="" width="30" height="30" class="d-inline-block align-top">
                 PengBeats
               </a>
@@ -58,7 +58,7 @@
                   <!-- <li class="nav-item">
                     <a class="nav-link" href="{% url 'recommender:best' %}">Browse</a>
                   </li> -->
-                  <li class="nav-item dropdown">
+                  <li class="nav-item dropdown" >
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Top
                     </a>
