@@ -84,7 +84,7 @@
                     </li>
                   {% endif %}
                   <li class="nav-item">
-                    <a style="text-shadow: 2px 2px 5px black;" class="nav-link" href="{% url 'recommender:about' %}">About</a>
+                    <a href="{% url 'recommender:about' %}">About</a>
                   </li>
                 </ul>
                 {% if request.get_full_path != "/" %}
@@ -95,7 +95,7 @@
                   </form>
                 {% endif %}
                 {% if user.is_authenticated %}
-                  <a style="text-shadow: 2px 2px 5px rgb(0, 0, 0);" class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ user.username }}
                   </a>
                   <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
