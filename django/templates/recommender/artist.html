@@ -31,8 +31,6 @@
 <a class="btn btn-outline-light" href="{% url 'recommender:artist_info' artist %}" role="button" target="_blank">Artist Page</a>
 </center>                        
 
-<p>highTrack IDS: {{ highTracks1 }} {{ highTracks2 }}</p>
-
 <h3>High-Value Tracks:</h3>
     <div id="highTrackCarousel" class="carousel slide" data-bs-interval="false">
         <div class="carousel-inner">
@@ -87,10 +85,7 @@
 
 {% if lowTracks1 %}
 
-<p>LowTrack IDS: {{ lowTracks1 }} {{ lowTracks2 }}</p>
-
-
-<h3>Low-Value Tracks</h3>
+<h3>Lowest-Value Tracks:</h3>
 <div id="lowTrackCarousel" class="carousel slide" data-bs-interval="false">
     <div class="carousel-inner">
       <div class="carousel-item active" data-bs-interval="false">

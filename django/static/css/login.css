@@ -11,7 +11,7 @@ small, body {
 
 .container2{
     width: 300px;
-    background-color: #456583;
+    background-color: rgba(160, 190, 217, 0.25);
     color:white;
     padding: 20px;
     margin-left: auto;
@@ -20,14 +20,6 @@ small, body {
     border-radius: 0.5rem;
 }
 
-.container2 {
-    width:300px;
-    background-color: #456583;
-    padding:20px;
-    margin-left: auto;
-    margin-right: auto;
-    color:white;
-}
 .button{
     background-color: #456583;
     color: white;
