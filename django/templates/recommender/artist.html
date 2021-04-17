@@ -1,25 +1,35 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %} Artist Search {% endblock %}
 
 {% block content %}
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/artist.css' %}">
+
 <form method='post' action="/artistp/">
     {% csrf_token %}
     <br>
-    <center>
+        <h1>Spotify Attribute Analyzer</h1>
         <h2>Artist Search</h2>
-    </center>
     <br>
     <div>
         Artist Name: {{ form.artist_name }}
     </div>
 
-    <button class="btn btn-success btn-lg" type="submit">Analyze</button>
+    <button class="btn btn-outline-light btn-lg" type="submit">Analyze</button>
 </form>
 <br>
 
 
 {% if highTracks1 %}
+
+<h2> Results for: {{ artist }}</h2>
+<center>
+<a class="btn btn-outline-light" href="{% url 'recommender:artist_info' artist %}" role="button" target="_blank">Artist Page</a>
+</center>                        
 
 <p>highTrack IDS: {{ highTracks1 }} {{ highTracks2 }}</p>
 
@@ -27,25 +37,17 @@
     <div id="highTrackCarousel" class="carousel slide" data-bs-interval="false">
         <div class="carousel-inner">
           <div class="carousel-item active" data-bs-interval="false">
-            <!-- <img src="..." class="d-block w-100" alt="..."> -->
             <div class="table">
                 <table class="table">
                     <tbody>
                         <tr>
-                        {% for track in highTracks1 %}
-            
+                        {% for track, feature in highTracks1.items %}
                             <td>
                                 <div class='embed-container'>
                                     <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                                 </div>
-                                <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
-                                {% include 'social_feed/popup_songpost.html' with track=track %}
-                                {% if playlists %}
-                                <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ track }}">Add to Playlist</button>
-                                {% include 'playlists/addsong_popup.html' with term=term%}
-                                {% endif %}
+                                <h4>{{ feature }}</h4>>
                             </td>
-            
                         {% endfor %}
                         </tr>
                     </tbody>
@@ -57,16 +59,13 @@
                 <table class="table">
                     <tbody>
                         <tr>
-                        {% for track in highTracks2 %}
-            
+                            {% for track, feature in highTracks2.items %}
                             <td>
                                 <div class='embed-container'>
                                     <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                                 </div>
-                                <button type="button" class="btn btn-secondary" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ track }}">Share</button>
-                                {% include 'social_feed/popup_songpost.html' with track=track %}
+                                <h4>{{ feature }}</h4>>
                             </td>
-
                         {% endfor %}
                         </tr>
                     </tbody>
@@ -95,19 +94,17 @@
 <div id="lowTrackCarousel" class="carousel slide" data-bs-interval="false">
     <div class="carousel-inner">
       <div class="carousel-item active" data-bs-interval="false">
-        <!-- <img src="..." class="d-block w-100" alt="..."> -->
         <div class="table">
             <table class="table">
                 <tbody>
                     <tr>
-                    {% for track in lowTracks1 %}
-        
+                        {% for track, feature in lowTracks1.items %}
                         <td>
                             <div class='embed-container'>
                                 <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                             </div>
+                            <h4>{{ feature }}</h4>>
                         </td>
-        
                     {% endfor %}
                     </tr>
                 </tbody>
@@ -119,14 +116,13 @@
             <table class="table">
                 <tbody>
                     <tr>
-                    {% for track in lowTracks2 %}
-        
+                        {% for track, feature in lowTracks1.items %}
                         <td>
                             <div class='embed-container'>
                                 <iframe src='https://open.spotify.com/embed/track/{{ track }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
                             </div>
+                            <h4>{{ feature }}</h4>>
                         </td>
-        
                     {% endfor %}
                     </tr>
                 </tbody>

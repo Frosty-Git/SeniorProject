@@ -5,6 +5,9 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
+<!-- CSS -->
+{%  load static %}
+<link rel="stylesheet" href="{% static 'css/sign_up.css' %}">
 <br>
 {% if form.errors %}
     {% for field in form %}
@@ -21,7 +24,7 @@
     {% endfor %}
 {% endif %}
 
-<div class="container" style="width:600px; background-color:rgb(49, 50, 88); padding:20px">
+<div class="container2" >
     <h1><center>Sign Up</center></h1>
     <small><small><center>Thank you for signing up! You won't regret this amazing decision &#128522;</center></small></small>
 
@@ -106,8 +109,8 @@
             </div>
 
             <br>
-            <button class="btn btn-primary" type="submit">Submit</button>&nbsp;&nbsp;
-            <input class="btn btn-danger" type="reset" value="Reset">
+            <button class="button" type="submit">Submit</button>&nbsp;&nbsp;
+            <input class="button2" type="reset" value="Reset">
         </form>
     </div>
 </div>

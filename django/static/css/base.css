@@ -45,7 +45,29 @@ a {
     text-decoration: none;
 }
 
+
 .playlist {
     box-shadow: 0rem 0.3rem 0.1rem 0.01rem #1F2933;
     border-radius: 0.5rem;
 }
+
+.modal-content  {
+    background-color: #a0bed9;
+}
+
+.modal-title {
+    color: #001629;
+    font-size: 200%;
+}
+
+.modalBtn {
+    background-color: #1F2933;
+    color: #d9dadc;
+}
+
+
+.accordion td {
+    font-size: small;
+}
+
+

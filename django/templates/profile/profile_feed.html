@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-8">
                     <p style="text-align: left; font-size: medium;">{{ post.user_profile_fk.user.first_name }} {{ post.user_profile_fk.user.last_name }} 
-                        <span style="font-size: small; color:lightgray">@{{ post.user_profile_fk.user.username }}</span>
+                        <span style="font-size: small;">@{{ post.user_profile_fk.user.username }}</span>
                     </p>
                     <p style="word-break: break-all; text-align: left; font-size: 13px;" class='post_text{{post.id}}'>{{ post.text }}</p>
                     {% if post.type_post == "SongPost" %}
@@ -25,9 +25,10 @@
                     {% if post.type_post == "PlaylistPost" %}
                         <a href="{% url 'user:profile' post.playlist.user_profile_fk.user.id %}">@{{ post.playlist.user_profile_fk.user.username }}</a>'s playlist: <a href="{% url 'user:get_songs_playlist' post.playlist.user_profile_fk.user.id post.playlist.id %}">{{ post.playlist.name }}</a>
                     {% endif %}
+
                 </div>
                 <div class="col-2">
-                    <span style="font-size: x-small; text-align: right;">{{ post.date_last_updated|naturaltime }}</span>
+                    <p style="font-size: x-small; text-align: right;word-break: break-all;">{{ post.date_last_updated|naturaltime }}</p>
                 </div>
             </div>
             <div class="row" style="border-bottom:1px solid white;">
@@ -92,7 +93,7 @@
                 </div>
                 <div class="col-8">
                     <p style="text-align: left; font-size: medium;">{{ post.user_profile_fk.user.first_name }} {{ post.user_profile_fk.user.last_name }} 
-                        <span style="font-size: small; color:lightgray">@{{ post.user_profile_fk.user.username }}</span>
+                        <span style="font-size: small;">@{{ post.user_profile_fk.user.username }}</span>
                     </p>
                     <p style="word-break: break-all; text-align: left; font-size: 13px;" class='feed_post_text{{post.id}}'>{{ post.text }}</p>
                     {% if post.type_post == "SongPost" %}
@@ -103,7 +104,7 @@
                     {% endif %}
                 </div>
                 <div class="col-2">
-                    <span style="font-size: x-small; text-align: right;" id='feed_date{{post.id}}'>{{ post.date_last_updated|naturaltime }}</span>
+                    <p style="font-size: x-small; text-align: right; word-wrap:break-word;" id='feed_date{{post.id}}'>{{ post.date_last_updated|naturaltime }}</p>
                 </div>
             </div>
             <div class="row" style="border-bottom:1px solid white;">
