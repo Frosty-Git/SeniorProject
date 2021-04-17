@@ -6,156 +6,167 @@
 
 {% block content %}
 
-<div>
-    <div>
-        <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbLRQDuF5jeBp" id="country-playlist" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+<link rel="stylesheet" href="{% static 'css/top-tracks.css' %}">
+
+<center><h1>Top Tracks</h1></center>
+<div class="top-songs-by-country"> 
+    <div class="embed-container">
+        <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbLRQDuF5jeBp" class="playlist" id="country-playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
     </div>
-    
-    <select class="country" id="country" name="country" onchange="setCountry()">
-        <option value="USA">United States of America</option>
-        <option value="Argentina">Argentina</option>
-        <option value="Australia">Australia</option>
-        <option value="Austria">Austria</option>
-        <option value="Belgium">Belgium</option>
-        <option value="Bolivia">Bolivia</option>
-        <option value="Brazil">Brazil</option>
-        <option value="Bulgaria">Bulgaria</option>
-        <option value="Canada">Canada</option>
-        <option value="Chile">Chile</option>
-        <option value="Colombia">Colombia</option>
-        <option value="Costa Rica">Costa Rica</option>
-        <option value="Czech Republic">Czech Republic</option>
-        <option value="Denmark">Denmark</option>
-        <option value="Dominican Republic">Dominican Republic</option>
-        <option value="Ecuador">Ecuador</option>
-        <option value="Egypt">Egypt</option>
-        <option value="El Salvador">El Salvador</option>
-        <option value="Estonia">Estonia</option>
-        <option value="Finland">Finland</option>
-        <option value="France">France</option>
-        <option value="Germany">Germany</option>
-        <option value="Greece">Greece</option>
-        <option value="Guatemala">Guatemala</option>
-        <option value="Honduras">Honduras</option>
-        <option value="Hong Kong">Hong Kong</option>
-        <option value="Hungary">Hungary</option>
-        <option value="Iceland">Iceland</option>
-        <option value="India">India</option>
-        <option value="Indonesia">Indonesia</option>
-        <option value="Ireland">Ireland</option>
-        <option value="Israel">Israel</option>
-        <option value="Italy">Italy</option>
-        <option value="Japan">Japan</option>
-        <option value="Latvia">Latvia</option>
-        <option value="Lithuania">Lithuania</option>
-        <option value="Luxembourg">Luxembourg</option>
-        <option value="Malaysia">Malaysia</option>
-        <option value="Mexico">Mexico</option>
-        <option value="Morocco">Morocco</option>
-        <option value="Netherlands">Netherlands</option>
-        <option value="New Zealand">New Zealand</option>
-        <option value="Nicaragua">Nicaragua</option>
-        <option value="Norway">Norway</option>
-        <option value="Panama">Panama</option>
-        <option value="Paraguay">Paraguay</option>
-        <option value="Peru">Peru</option>
-        <option value="Philippines">Philippines</option>
-        <option value="Poland">Poland</option>
-        <option value="Portugal">Portugal</option>
-        <option value="Romania">Romania</option>
-        <option value="Russia">Russia</option>
-        <option value="Saudi Arabia">Saudi Arabia</option>
-        <option value="Singapore">Singapore</option>
-        <option value="Slovakia">Slovakia</option>
-        <option value="South Africa">South Africa</option>
-        <option value="South Korea">South Korea</option>
-        <option value="Spain">Spain</option>
-        <option value="Sweden">Sweden</option>
-        <option value="Switzerland">Switzerland</option>
-        <option value="Taiwan">Taiwan</option>
-        <option value="Thailand">Thailand</option>
-        <option value="Turkey">Turkey</option>
-        <option value="Ukraine">Ukraine</option>
-        <option value="United Emirates">United Emirates</option>
-        <option value="UK">United Kingdom</option>
-        <option value="Uruguay">Uruguay</option>
-        <option value="Vietnam">Vietnam</option>
-    </select>
+    <div>
+        <select class="country form-select" id="country" name="country" onchange="setCountry()">
+            <option value="USA">United States of America</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Australia">Australia</option>
+            <option value="Austria">Austria</option>
+            <option value="Belgium">Belgium</option>
+            <option value="Bolivia">Bolivia</option>
+            <option value="Brazil">Brazil</option>
+            <option value="Bulgaria">Bulgaria</option>
+            <option value="Canada">Canada</option>
+            <option value="Chile">Chile</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Czech Republic">Czech Republic</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Dominican Republic">Dominican Republic</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Egypt">Egypt</option>
+            <option value="El Salvador">El Salvador</option>
+            <option value="Estonia">Estonia</option>
+            <option value="Finland">Finland</option>
+            <option value="France">France</option>
+            <option value="Germany">Germany</option>
+            <option value="Greece">Greece</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Honduras">Honduras</option>
+            <option value="Hong Kong">Hong Kong</option>
+            <option value="Hungary">Hungary</option>
+            <option value="Iceland">Iceland</option>
+            <option value="India">India</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Ireland">Ireland</option>
+            <option value="Israel">Israel</option>
+            <option value="Italy">Italy</option>
+            <option value="Japan">Japan</option>
+            <option value="Latvia">Latvia</option>
+            <option value="Lithuania">Lithuania</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Malaysia">Malaysia</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Morocco">Morocco</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="New Zealand">New Zealand</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Norway">Norway</option>
+            <option value="Panama">Panama</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Peru">Peru</option>
+            <option value="Philippines">Philippines</option>
+            <option value="Poland">Poland</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Romania">Romania</option>
+            <option value="Russia">Russia</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Slovakia">Slovakia</option>
+            <option value="South Africa">South Africa</option>
+            <option value="South Korea">South Korea</option>
+            <option value="Spain">Spain</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Taiwan">Taiwan</option>
+            <option value="Thailand">Thailand</option>
+            <option value="Turkey">Turkey</option>
+            <option value="Ukraine">Ukraine</option>
+            <option value="United Emirates">United Emirates</option>
+            <option value="UK">United Kingdom</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Vietnam">Vietnam</option>
+        </select>
+    </div>
 </div>
 
-
-<table>
-    <!-- Row 1 -->
-    <tr>
-        <!--  -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbLRQDuF5jeBp" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!--  -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbKuaTI1Z1Afx" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!--  -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbMDoHDwVN2tF" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!--  -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbLiRSasKsNU9" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>    
-        </td>
-        <!-- New Music Friday -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4JAvHpjipBk" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-    </tr>
-    <!-- Row 2 -->
-    <tr>
-        <!-- Pop -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!-- Rock Classics -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWXRqgorJj26U" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!-- Hip Hop -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUsuxWHRQd" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!-- Country -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX1lVhptIYRda" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!-- K-Pop -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-    </tr>
-    <!-- Row 3 -->
-    <tr>
-        <!-- Classical -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWWEJlAGA9gs0" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!-- Metal -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWTcqUzwhNmKv" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!-- Latin -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX10zKzsJ2jva" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!-- Christian -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcb6CQIjdqKy" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-        <!-- EDM -->
-        <td>
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4dyzvuaRJ0n" width="250" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        </td>
-    </tr>
-</table>
-
+<div class="container genre-playlists">
+    <table>
+        <!-- Row 1 -->
+        <tr>
+            <!-- Top 50 USA -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbLRQDuF5jeBp" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Viral 50 USA -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbKuaTI1Z1Afx" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Top 50 Global -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbMDoHDwVN2tF" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Viral 50 Global -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZEVXbLiRSasKsNU9" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>    
+            </td>   
+        </tr>
+        <!-- Row 2 -->
+        <tr>
+            <!-- Pop -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Rock Classics -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWXRqgorJj26U" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Hip Hop -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUsuxWHRQd" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Country -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX1lVhptIYRda" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+        </tr>
+        <!-- Row 3 -->
+        <tr>
+            <!-- K-Pop -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Metal -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWTcqUzwhNmKv" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Latin -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX10zKzsJ2jva" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Christian -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcb6CQIjdqKy" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+        </tr>
+        <!-- Row 4 -->
+        <tr>
+            <!-- New Music Friday -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4JAvHpjipBk" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Classical -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWWEJlAGA9gs0" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- EDM -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4dyzvuaRJ0n" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+            <!-- Emo -->
+            <td>
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX9wa6XirBPv8" class="playlist" width="240" height="350" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </td>
+        </tr>
+    </table>
+</div>
 <br>
 
 <script type="text/javascript" src="{% static 'js/top-countries.js' %}"></script>

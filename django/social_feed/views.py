@@ -253,6 +253,7 @@ def popup_songpost(request):
         user_id = request.user.id
         user = UserProfile.objects.get(pk=user_id)
         text = request.POST.get('post_text')
+        print(text)
         track = request.POST.get('track_id')
         if text is not None:
             song = SongPost(song=track, text=text, user_profile_fk=user, type_post="SongPost")
