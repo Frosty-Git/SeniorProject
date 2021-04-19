@@ -175,7 +175,7 @@
                                             <table>
                                                 <tr>
                                                     <td class="buttons">
-                                                        <a style="float:right" href="{% url 'feed:feed' %}">
+                                                        <a style="float:right" href="#">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-three-dots" viewBox="0 0 16 16">
                                                                 <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
                                                             </svg>
@@ -185,7 +185,7 @@
                                             </table>
                                         </div>
                                     {% empty %}
-                                        <div id="no_comment{{ post.id }}"><h6>There are no comments.</h6></div>
+                                        <div id="no_comment{{ post.id }}"><p>There are no comments.</p></div>
                                     {% endfor %}
                                 </div>
                             </div>
