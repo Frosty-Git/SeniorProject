@@ -1,0 +1,17 @@
+{% load static %}
+{% if track_searches %}
+<table>
+    {% for id, track_info in track_searches.items %}
+    <!-- track_info includes the track name (track_info.0), track artist (track_info.1), 
+        and the album image of the track (track_info.2) -->
+        <tr>
+            <td> 
+            {% if track_info.2 %}
+                <img src="{{ track_info.2 }}" class="img-fluid" alt="..." width="30" height="30" onclick="createCheckbox('{{ id }}', '{{ track_info.0 }}', 'track')">
+            {% endif %}
+            </td>
+            <td onclick="createCheckbox('{{ id }}', '{{ track_info.0 }}', 'track')">{{ track_info.0 }} - {{ track_info.1 }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endif %}

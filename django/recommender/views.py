@@ -1064,7 +1064,39 @@ def artist_info(request, artist_id):
     return render(request, 'recommender/artist_info.html', context)
 
 def custom_recommender(request):
-    context = {
+    url_parameter = request.GET.get("q")
+    action = request.GET.get('action')
+    artist_searches = []
+    track_searches = []
+    
+    if url_parameter:
+        if action == 'artist':
+            artist_searches = livesearch_artists(url_parameter)
+        else: # it's for a track
+            track_searches = livesearch_tracks(url_parameter)
+        
+    if request.is_ajax():
+        if action == 'artist':
+            artists_html = render_to_string(
+            template_name="recommender/custom_recommender_artist.html", 
+            context={"artist_searches": artist_searches,})
 
+            data_dict = {
+                "artist_h": artists_html,
+            }
+            return JsonResponse(data=data_dict, safe=False)
+        else: # it's for a track
+            tracks_html = render_to_string(
+            template_name="recommender/custom_recommender_track.html", 
+            context={"track_searches": track_searches,})
+
+            data_dict = {
+                "track_h": tracks_html,
+            }
+            return JsonResponse(data=data_dict, safe=False)
+
+    context = {
+        'artist_searches': artist_searches,
+        'track_searches': track_searches
     }
     return render(request, 'recommender/custom_recommender.html', context)
