@@ -740,6 +740,8 @@ def get_playlists(request, user_id):
             playlist_info.extend([duration])
             num_songs = get_num_playlist_songs(playlist.id)
             playlist_info.extend([str(num_songs)])
+            playlist_info.extend([playlist.is_imported])
+            playlist_info.extend([playlist.spotify_playlist_id])
             all_playlists.append(playlist_info)
 
         print(all_playlists)    
@@ -780,6 +782,8 @@ def get_playlists(request, user_id):
                     playlist_info.extend([duration])
                     num_songs = get_num_playlist_songs(playlist.id)
                     playlist_info.extend([str(num_songs)])
+                    playlist_info.extend([playlist.is_imported])
+                    playlist_info.extend([playlist.spotify_playlist_id])
                     all_playlists.append(playlist_info)
 
 

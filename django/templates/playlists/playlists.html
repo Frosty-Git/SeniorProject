@@ -45,16 +45,45 @@
         <!-- playlist.6 is the vote -->
         <!-- playlist.7 is the duration -->
         <!-- playlist.8 is the number of songs on the playlist -->
+        <!-- playlist.9 is True if exported, False if not -->
+        <!-- playlist.10 is the playlist's spotify ID if exported -->
             <tr style="border-bottom: 1px solid black;">
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-                    {% if playlist.2 %}
-                        <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
-                            <img src="{{ playlist.2.url }}" width="70px" height="70px" style="border-radius: 50%;">
-                        </a>
-                    {% else %}
-                        <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
-                            <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
-                        </a>
+                    {% if profile.is_premium and profile.linked_to_spotify %}
+                        {% if playlist.9 %}
+                            <button id="playlist{{ playlist.10 }}" value='{{ playlist.10 }}' type="button" class="btn" style="color:#d9dadc">
+                                {% if playlist.2 %}
+                                    <img src="{{ playlist.2.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                                {% else %}
+                                    <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                                {% endif %}
+                            </button>
+                            <script>
+                                $('#playlist{{ playlist.10 }}').click(function(e) {
+                                    let playlist_id = $(this).val();
+                                    $.ajax({
+                                        url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
+                                        type: "PUT",
+                                        data: '{"context_uri": "spotify:playlist:'+ playlist_id +'"}',
+                                        beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + profile_token );},
+                                        success: function(data) { 
+                                            console.log('is this the data ' + data);
+                                            $('.fixed-bottom').show();
+                                        }
+                                    });
+                                });
+                            </script> 
+                        {% else %}
+                            {% if playlist.2 %}
+                                <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
+                                    <img src="{{ playlist.2.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                                </a>
+                            {% else %}
+                                <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
+                                    <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                                </a>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
@@ -188,5 +217,11 @@
     </tr>
     {% endif %}
 </table>
+
+{% if profile %}
+    {% if profile.linked_to_spotify and profile.is_premium %}
+        {% include 'webplayer_footer.html' with profile=profile %}
+    {% endif %}
+{% endif %}
 
 {% endblock %}

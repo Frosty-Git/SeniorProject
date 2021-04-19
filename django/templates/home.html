@@ -36,7 +36,12 @@
         </form>
         <br>
     </center>
-<br>        
+<br> 
+{% if profile %}
+    {% if profile.linked_to_spotify and profile.is_premium %}
+        {% include 'webplayer_footer.html' with profile=profile %}
+    {% endif %}
+{% endif %}       
 <script src="{% static 'js/livesearch.js' %}"></script>
 
 {% endblock %}
