@@ -1012,3 +1012,9 @@ def artist_info(request, artist_id):
             'artist_image': artist_image,
         }
     return render(request, 'recommender/artist_info.html', context)
+
+def custom_recommender(request):
+    context = {
+
+    }
+    return render(request, 'recommender/custom_recommender.html', context)
