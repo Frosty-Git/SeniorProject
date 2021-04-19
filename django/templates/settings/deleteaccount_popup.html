@@ -10,13 +10,13 @@
 
                 <div class="modal-body">
                     <p>Doing so will permanently delete your account and all data associated with it from our site.
-                        <span style='color: #FF0000;'>This action <b>cannot</b> be undone.</span>
+                        <span style='color: #FF0000; font-weight: bold;'>This action cannot be undone.</span>
                     </p>  
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
-                    <a class="btn btn-dark" href="{% url 'user:delete_account' %}" role="button">Delete Account</a>
+                    <button type="button" class="btn btn-default modalClose" data-bs-dismiss="modal">Cancel</button>
+                    <a class="btn btn-dark modalBtn" href="{% url 'user:delete_account' %}" role="button">Delete Account</a>
                 </div>
         </div>
     </div>

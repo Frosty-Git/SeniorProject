@@ -237,12 +237,15 @@ def user_preference_recommender(request):
     }
     
     min_likes_met = False
+    survey_taken = False
     liked_songs = user.liked_songs_playlist_fk
     sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs)
     if sop:
         min_likes_met = True
+    if user.survey_taken:
+        survey_taken = True
 
-    if min_likes_met:
+    if min_likes_met and survey_taken:
         results = get_recommendation(request, limit, user_id, **pref_dict)
         recommendations = results['recommendations']
         track_ids = []
@@ -1059,3 +1062,9 @@ def artist_info(request, artist_id):
             'artist_image': artist_image,
         }
     return render(request, 'recommender/artist_info.html', context)
+
+def custom_recommender(request):
+    context = {
+
+    }
+    return render(request, 'recommender/custom_recommender.html', context)

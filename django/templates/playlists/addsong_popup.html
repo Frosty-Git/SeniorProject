@@ -12,8 +12,14 @@
                 </div>
             
                 <div class="modal-body">
+                    <center>
+                        <iframe src='https://open.spotify.com/embed/track/{{ song.1 }}' height="80"; class="wp-block-embed-spotify spRound" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>    
+                        <br>                            
+                        <p style="font-weight: bold;">Select a playlist to add your song to:</p>
+                    </center>
+
                     <input type="hidden" id="track_id{{ song.0 }}" name="track_id" value="{{ song.1 }}">
-                    <select name="playlist_id" id="playlist_id{{ song.0 }}">
+                    <select class="form-select" aria-label="Default select example" name="playlist_id" id="playlist_id{{ song.0 }}">
                         {% for playlist in playlists %}
                             <!-- Don't allow a user to add a song to the My Liked Songs playlist -->
                             {% if playlist != loggedin.liked_songs_playlist_fk %}
@@ -21,14 +27,15 @@
                             {% endif %}
                         {% endfor %}
                     </select>
+                    
                     <div class="alert{{ song.0 }} alert alert-success" role="alert" style="display: none">
                         Song successfully added to playlist!
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary popupbtn{{ song.0 }}" style="display: block">Submit</button>
+                    <button type="button" class="btn btn-default modalClose" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary popupbtn{{ song.0 }} modalBtn" style="display: block">Submit</button>
                     <button id="load{{ song.0 }}" class="btn btn-primary" type="button" disabled style="display: none">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     </button>

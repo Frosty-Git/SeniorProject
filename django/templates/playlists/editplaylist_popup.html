@@ -2,7 +2,7 @@
 <!-- Included in Single Playlist -->
 
 
-<div class="modal" id="editplaylistmodal{{ playlist.id}}" tabindex="-1" aria-labelledby="myEditPlaylistModalLabel" aria-hidden="true"  style="color:black">
+<div class="modal fade" id="editplaylistmodal{{ playlist.id}}" tabindex="-1" aria-labelledby="myEditPlaylistModalLabel" aria-hidden="true"  style="color:black">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <form method="post" action="{% url 'user:edit_playlist_popup' %}" enctype="multipart/form-data">
@@ -46,10 +46,8 @@
                     <p>If you make your playlist private, it will not be viewable or shareable by other users.</p>
                   </div>
                 </td>
-              </tr>
 
-              <tr>
-                <td class="epc">
+                <td class="epc center">
                   {% if playlist.is_shareable %}
                     <input type="checkbox" id="is_shareable_t" name="is_shareable_t" checked>
                     <label for="is_shareable_t">Shareable</label>
@@ -72,7 +70,7 @@
               </tr>
 
               <tr>
-                <td class="epc">
+                <td class="epc" style="text-align: justify;">
                     Note: Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible. Additionally,
                     your playlist privacy setting takes precedence over the shareability setting. If your playlist is shareable but private, you will still not be able to share it.
                 </td>
@@ -81,8 +79,8 @@
           </table>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-default modalClose" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary modalBtn">Update</button>
           </div>
         </div>
       </form>
