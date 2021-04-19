@@ -93,9 +93,11 @@ def search_artist_features(query, feature, high_or_low):
         level = song_feats[0].get(feature)
 
         if current_min is None:
-            current_min = level
+            if level is not None:
+                current_min = level
         if current_max is None:
-            current_max = level
+            if level is not None:
+                current_max = level
         
         if current_min >= level:
             low_song = songs[X]['id']
@@ -333,8 +335,9 @@ def livesearch_tracks(query):
     Just testing stuff - Katie
     """
     searches={}
-    result = sp.search(q=query, limit=3, offset=0, type='track', market=None)
-    for x in range(5):
+    limit = 5
+    result = sp.search(q=query, limit=limit, offset=0, type='track', market=None)
+    for x in range(limit):
         new_list = []
         if x+1 > len(result['tracks']['items']):
             break
@@ -349,8 +352,9 @@ def livesearch_artists(query):
     Just testing stuff - Katie
     """
     searches={}
-    result = sp.search(q=query, limit=2, offset=0, type='artist', market=None)
-    for x in range(5):
+    limit = 3
+    result = sp.search(q=query, limit=limit, offset=0, type='artist', market=None)
+    for x in range(limit):
         new_list = []
         if x+1 > len(result['artists']['items']):
             break
@@ -368,8 +372,9 @@ def livesearch_albums(query):
     Just testing stuff - Katie
     """
     searches={}
-    result = sp.search(q=query, limit=2, offset=0, type='album', market=None)
-    for x in range(5):
+    limit = 3
+    result = sp.search(q=query, limit=limit, offset=0, type='album', market=None)
+    for x in range(limit):
         new_list = []
         if x+1 > len(result['albums']['items']):
             break

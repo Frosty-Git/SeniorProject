@@ -6,7 +6,7 @@ class SearchForm(forms.Form):
     to_year = forms.IntegerField(required=False)
     
 class OurSearchForm(forms.Form):
-    term = forms.CharField(widget=forms.TextInput(attrs={'size':'50'}), required=False)
+    term = forms.CharField(widget=forms.TextInput(attrs={'size':'50'}))
 
 class ArtistForm(forms.Form):
     artist_name = forms.CharField(label='Artist name', max_length=100)

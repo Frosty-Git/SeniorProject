@@ -4,7 +4,7 @@
 <div class="modal fade" id="songpostmodal{{ song }}" tabindex="-1" aria-labelledby="mySongPostModalLabel" aria-hidden="true"  style="color:black">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="{% url 'feed:songpost' %}">
+            <form method="post" action="">
                 {% csrf_token %}
 
                 <div class="modal-header">
@@ -13,14 +13,20 @@
                 </div>
             
                 <div class="modal-body">
+                    <div class="alert{{ song }} alert alert-success" role="alert" style="display: none">
+                        Post has been created!
+                    </div>
                     <input type="hidden" id="track_id" name="track_id" value="{{ song }}">
                     <center><iframe src="https://open.spotify.com/embed/track/{{ song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></center>
-                    <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
+                    <textarea required class="form-control" aria-label="With textarea" id="post_text{{ song }}" name="post_text"></textarea>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn modalBtn popupsongbtn{{ song }}">Submit</button>
+                    <button id="load{{ song }}" class="btn btn-dark" type="button" disabled style="display: none">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    </button>
                 </div>
                 
             </form>
@@ -29,5 +35,38 @@
 </div>
   
 <script>
-    document.getElementById("post_text").value = "";
+
+    $('.popupsongbtn{{ song }}').click(function(e) {
+        $('#load{{ song }}').show();
+        $('.popupsongbtn{{ song}}').hide();
+        e.preventDefault();
+        var song = $('#track_id').val();
+        var text = $('#post_text{{ song }}').val();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'feed:songpost' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                track_id: song,
+                post_text: text,
+            },
+            success: function(json){
+                if (json['status'] == 'ok') {
+                    setTimeout(function() {
+                        $('#load{{ song }}').hide();
+                        $('.popupsongbtn{{ song }}').show();
+                        $('.alert{{ song }}').show();
+                        $('#post_text{{ song }}').hide();
+                    }, 2000);
+                }
+
+            },
+            error: function(xhr, errmsg, err) {}
+        })
+        return false;
+    })
+    window.onload = function() {
+        document.getElementById("post_text").value = "";
+    }
+    
 </script>

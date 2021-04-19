@@ -38,8 +38,6 @@
             crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/shortcuts/infinite.min.js"></script>
 
     </head>
 
@@ -48,7 +46,7 @@
         <!-- Bootstrap Navbar -->
           <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-              <a class="navbar-brand pengbeatslogo" href="{% url 'recommender:home' %}">
+              <a class="navbar-brand pengbeatslogo" href="{% url 'recommender:home' %}" style="color: #f99108;">
                 <img src="{% static 'images/penguin.png' type='image/png' %}" alt="" width="30" height="30" class="d-inline-block align-top">
                 PengBeats
               </a>
@@ -60,7 +58,7 @@
                   <!-- <li class="nav-item">
                     <a class="nav-link" href="{% url 'recommender:best' %}">Browse</a>
                   </li> -->
-                  <li class="nav-item dropdown">
+                  <li class="nav-item dropdown" >
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Top
                     </a>
@@ -100,8 +98,6 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
                     <li><a class="dropdown-item" href="{% url 'user:profile' user.id %}">Profile</a></li>
-                    <!-- <li><a class="dropdown-item" href="{% url 'user:following' user.id %}">Following</a></li>
-                    <li><a class="dropdown-item" href="{% url 'user:followers' user.id %}">Followers</a></li> -->
                     <li><a class="dropdown-item" href="{% url 'user:follow_page' user.id %}">Following</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:update_profile' %}">Settings</a></li>
                     <li><hr class="dropdown-divider"></li>
@@ -117,19 +113,49 @@
 
         <!-- End Bootstrap Navbar -->
 
-        <!-- {% if request.get_full_path != "/" %}
-          <div class="searchbar navsearch" id='livesearch'>
-            {% include 'recommender/livesearch.html' %}
-          </div>
-        {% endif %} -->
-        <!-- Django Templates Content -->
-        <div class="container" style="z-index: -1;">
-          {% block content %}
-          {% endblock %}
+        <div class="container" style="z-index: -1;" id="basecontainer">
+            {% block content %}
+            {% endblock %}
         </div>
-        
+        <br><br>
+        <br><br>
+       
+        {% if profile %}
+          {% if profile.linked_to_spotify and profile.is_premium %}
+            {% include 'webplayer_footer.html' with profile=profile %}
+          {% endif %}
+        {% endif %}
+        <!-- <script>
+          let previousURL;
+          let data = '/static/js/livesearch.js';
+            // profile: '/static/js/profile.js',
+            // top_countries: '/static/js/top-countries.js',
+          
+          function pageClick(url) {
+            previousURL = location.pathname;
+            console.log('URL ' + url);
+            console.log('PREVURL ' + previousURL);
+            history.pushState($('form').serialize(), document.title, url);
+
+            $('#basecontainer').load(url + ' #basecontainer', function (responseText) {
+              var title = responseText.match(/<title>([^<]*)/)[1];
+              document.title = title; 
+            })
+
+
+          }
+
+          window.addEventListener("popstate", function(event) {
+            if(event) {
+              console.log(event);
+              // location.reload();
+              pageClick(previousURL);
+            }
+          });
+
+        </script> -->
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-        <!-- <script src="{% static 'js/livesearch.js' %}"></script> -->
       </body>
 
 </html>

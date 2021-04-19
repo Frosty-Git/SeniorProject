@@ -4,36 +4,14 @@
 } */
 
 .my_profile {
-    /* background-color: darkslateblue;  */
-    /* box-shadow: 5px 10px 8px slategray */
     display: inline-block; 
     text-align: center;
-    /* border: 5px;
-    border-style: solid;
-    border-color: black; */
     padding: 10px;
-    /* position:absolute;
-    margin-left:70%;
-    right:10px;
-    top:10; */
 } 
 
 .my_profile th {
     padding-right: 10px;
 }
-
-/* .profilelink a:hover {
-    color:lightpink;
-}
-
-.header a {
-    text-decoration: none;
-    
-}
-
-.header a:hover {
-    color:lightpink;
-} */
 
 
 .sidenav {
@@ -146,3 +124,21 @@
 .searchbar td, th {
     padding:1%;
 }
+
+
+
+/* #songprogress::-moz-range-track {
+    width: 100%;
+    background-color: lightgray;
+}
+
+#songprogress::-moz-range-thumb {
+    border-radius: 100%;
+    background-color: lightgray;
+}
+
+#songprogress::-moz-range-progress {
+    background-color: #a0bed9;
+    border: 1px solid #a0bed9;
+}
+   */
