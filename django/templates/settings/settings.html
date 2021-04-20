@@ -14,48 +14,47 @@
         <h1>
             Settings
         </h1>
+        <br>
         <form method='post' action="{% url 'user:settings_save' user.id %}" class="settings-form">
             {% csrf_token %}
             <div style="text-align: center;">
-            <table style="width:100%; margin-top: 2%;">
-                <tr>
-                    <th class="col-heading">
-                        <h6>Private Profile</h6>
-                    </th>
-                    <th class="col-heading">
-                        <h6>Private Preferences</h6>
-                    </th>
-                    <th class="col-heading">
-                        <h6>Explicit Music</h6>
-                    </th>
-                </tr>
-                <tr>
-                    <td class="col">
-                        <label class="switch tooltip-custom" data-toggle="tooltip" data-placement="bottom" title="If selected, your profile visibility will be limited to users who follow you.">
-                            {{ settings_form.private_profile }}
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                    <td class="col"> 
-                            <label class="switch tooltip-custom" data-toggle="tooltip" data-placement="bottom" title="If selected, your song preferences will be private, even to those who follow you.">
-                                {{ settings_form.private_preferences }}
+                <table style="width:100%; margin-top: 2%;">
+                    <tr>
+                        <th class="col-heading">
+                            <h6>Private Profile</h6>
+                        </th>
+                        <th class="col-heading">
+                            <h6>Private Preferences</h6>
+                        </th>
+                        <th class="col-heading">
+                            <h6>Explicit Music</h6>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="col">
+                            <label class="switch tooltip-custom" data-toggle="tooltip" data-placement="bottom" title="If selected, your profile visibility will be limited to users who follow you.">
+                                {{ settings_form.private_profile }}
                                 <span class="slider round"></span>
                             </label>
-                    </td>
-                    <td class="col">
-                        <label class="switch tooltip-custom" data-toggle="tooltip" data-placement="bottom" title="If selected, you will receive recommendations for songs that are explicit.">
-                            {{ settings_form.explicit_music }}
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                </tr>
-            </table> 
-            <button class="btn btn-dark" type="submit">Save</button>
-        </div>
+                        </td>
+                        <td class="col"> 
+                                <label class="switch tooltip-custom" data-toggle="tooltip" data-placement="bottom" title="If selected, your song preferences will be private, even to those who follow you.">
+                                    {{ settings_form.private_preferences }}
+                                    <span class="slider round"></span>
+                                </label>
+                        </td>
+                        <td class="col">
+                            <label class="switch tooltip-custom" data-toggle="tooltip" data-placement="bottom" title="If selected, you will receive recommendations for songs that are explicit.">
+                                {{ settings_form.explicit_music }}
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                    </tr>
+                </table> 
+                <button class="btn btn-dark" type="submit">Save</button>
+            </div>
         </form>
         <br>
-        </tbody>
-        </table>
     {% else %}
         <p>You do not have permission to access this page!</p>
     {% endif%}
@@ -64,5 +63,4 @@
         $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
-
 {% endblock %}

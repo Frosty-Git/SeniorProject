@@ -77,6 +77,10 @@ a {
     font-size: 200%;
 }
 
+.modal-headings {
+    color: #001629;
+}
+
 .modalBtn {
     background-color: #1F2933;
     border-color: #1F2933;
@@ -102,7 +106,7 @@ a {
 
 /* Makes spotify widgets round */
 .spRound {
-    border-radius: 3px;
+    border-radius: 0.3rem;
 }
 
 .accordion td {
