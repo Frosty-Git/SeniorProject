@@ -57,14 +57,16 @@
             <td>
               <table style="width: 100%; display: inline-table;">
                 <tr>
-                  <td><span id="currentTime"></span></td>
+                  <td></td>
                   <td>
                     <form id="dummysong">
+                      <p id="currentTime"></p>
                       <input type="range" id="songprogress" value="" max="" min="0">
                         <!-- <progress type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max=""></progress> -->
+                      <span id="totalTime" style="padding-left:2%;"></span>
                     </form>
                   </td>
-                  <td><span id="totalTime" ></span></td>
+                  <td></td>
                 </tr>
               </table>
             </td>
@@ -84,14 +86,17 @@
                     <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
                   </svg>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="#">Menu item</a></li>
-                  <li><a class="dropdown-item" href="#">Menu item</a></li>
+                <ul class="dropdown-menu dropdown-menu-end" id="queuelist">
+                  <li><a class="dropdown-item" id="emptyqueue">Queue is empty</a></li>
+                  <li><a class="dropdown-item" id="showqueue">Up Next:</a></li>
+                  <li><hr class="dropdown-divider" id="divider"></li>
+                  <li><a class="dropdown-item" id="song1"></a></li>
+                  <li><a class="dropdown-item" id="song2"></a></li>
                 </ul>
               </div>
             </td>
             <td>
-              <div style="padding-bottom:5px; margin-right: -5%">
+              <div style="padding-bottom:5px; margin-right: -10px">
                 <button id="volumeBtn" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-volume-down-fill" viewBox="0 0 16 16">
                     <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>

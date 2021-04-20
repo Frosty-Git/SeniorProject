@@ -33,6 +33,23 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                         + '<path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"/>'
                         + '</svg>');
         }
+        let next_tracks = state['track_window']['next_tracks']['length'];
+        if(next_tracks != 0) {
+            $('#emptyqueue').hide();
+            $('#divider').show();
+            $('#showqueue').show();
+            $('#song1').show().html(state['track_window']['next_tracks'][0]['name'] + '<small style="font-size:x-small"> ' + state['track_window']['next_tracks'][0]['artists'][0]['name'] + '</small>');
+            if(next_tracks == 2) {
+                $('#song2').show().html(state['track_window']['next_tracks'][1]['name'] + '<small style="font-size:x-small"> ' + state['track_window']['next_tracks'][0]['artists'][0]['name'] + '</small>');
+            }
+        }
+        else {
+            $('#emptyqueue').show();
+            $('#divider').hide();
+            $('#showqueue').hide();
+            $('#song1').hide();
+            $('#song2').hide();
+        }
         
     });
 
@@ -206,6 +223,14 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                 console.log(`The volume of the player is ${prev_volume}%`);
             }
         })
+    });
+
+    $('#song1').click(function() {
+        player.nextTrack();
+    });
+    $('#song2').click(function() {
+        player.nextTrack();
+        player.nextTrack();
     });
 
 
