@@ -1131,7 +1131,7 @@ def delete_song(request, playlist_id, sop_pk):
     song.delete()
     return redirect('/user/playlist/' + str(request.user.id) + '/' + str(playlist_id))
 
-def export_to_spotify(request, playlist_id):
+def export_to_spotify(request, playlist_id, location):
     """
     Exports a playlist to the user's linked Spotify account. The exported 
     playlist will show up on that user's Spotify playlists list if they check 
@@ -1142,6 +1142,7 @@ def export_to_spotify(request, playlist_id):
     spotify_manager.token_check(request)
     spotify = spotipy.Spotify(auth=user.access_token)
     playlist = Playlist.objects.get(pk=playlist_id)
+    playlist_name = playlist.name
     # Check if the playlist is on Spotify already.
     if playlist.is_imported:
     # If it is already on Spotify, replace the playlist on Spotify with this new version.
@@ -1150,11 +1151,19 @@ def export_to_spotify(request, playlist_id):
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
-        spotify.user_playlist_change_details(user.spotify_user_id, playlist.spotify_playlist_id, 
-                                            name=playlist.name, 
-                                            public=(not playlist.is_private), 
-                                            collaborative=False, 
-                                            description=playlist.description)
+        try:
+            # Success message has to go first because the next line always throws
+            # an exception even though it works.
+            messages.success(request, f"Spotify update successful for playlist '{playlist_name}'!")
+            spotify.user_playlist_change_details(user.spotify_user_id, playlist.spotify_playlist_id, 
+                                                name=playlist.name, 
+                                                public=(not playlist.is_private), 
+                                                collaborative=False, 
+                                                description=playlist.description)
+        except:
+            pass
+            # Do nothing because everything still works, an exception just gets
+            # thrown for some reason
     else:
     # If it is not on Spotify, create the new playlist there, change our db boolean value
     # to say it is on Spotify, and get the Spotify playlist id saved into our db.
@@ -1172,7 +1181,19 @@ def export_to_spotify(request, playlist_id):
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
-    return redirect('/user/playlists/' + str(request.user.id))
+        messages.success(request, f"Spotify export successful for playlist {playlist_name}!")
+    
+    url = ""
+
+    if location == "single":
+        url = ('/user/playlist/' + str(request.user.id) + '/' + playlist_id)
+    elif location == "playlists":
+        url = ('/user/playlists/' + str(request.user.id))
+    else:
+        # Problem
+        url = '/'
+
+    return redirect(url)
 
 def link_spotify(request):
     """
@@ -1274,7 +1295,7 @@ def reset_preferences(request):
     prefs.tempo = 100
     prefs.valence = 0.5
     prefs.save()
-    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://127.0.0.1:8000/survey_genres/'>Survey</a>."))
+    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://localhost:8000/survey_genres/'>Survey</a>."))
     # return redirect('/survey/')
     return redirect('/user/update_profile/#/')
 

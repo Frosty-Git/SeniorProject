@@ -5,10 +5,20 @@
 
 {% block content %}
 
-{% if profile.linked_to_spotify and profile.is_premium %}
-    {% include 'playlists/single_playlist_premium.html' with songs=songs playlist=playlist private_profile=private_profile following_status=following_status loggedin=loggedin playlists=playlists %}
-{% else %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
 
+{% if profile.linked_to_spotify and profile.is_premium %}
+    
+    {% include 'playlists/single_playlist_premium.html' with songs=songs playlist=playlist private_profile=private_profile following_status=following_status loggedin=loggedin playlists=playlists %}
+
+{% else %}
 <h1 style="text-align: center; margin-top: 2%;">
     {% if profile.user.id == user.id %}
         My Playlist:
@@ -40,16 +50,17 @@
                 </div>
             </td>
             {% if profile.linked_to_spotify %}
+                <!-- If the playlist has not been exported, the button will say export -->
                 {% if not playlist.is_imported %}
-                        <td>
-                            <div class="center" style="width:150px; text-align:center;">
-                                <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
-                            </div>
-                        </td>
-                    <!-- The playlist has been exported, so the button will say update -->
+                    <td>
+                        <div class="center" style="width:150px; text-align:center;">
+                            <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
+                        </div>
+                    </td>
+                <!-- The playlist has been exported, so the button will say update -->
                 {% else %}
                     <div class="center" style="width:150px; text-align:center;">
-                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Update</span></a>
+                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Update</span></a>
                     </div>
                 {% endif %}
             {% endif %}
