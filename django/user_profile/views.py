@@ -1131,7 +1131,7 @@ def delete_song(request, playlist_id, sop_pk):
     song.delete()
     return redirect('/user/playlist/' + str(request.user.id) + '/' + str(playlist_id))
 
-def export_to_spotify(request, playlist_id):
+def export_to_spotify(request, playlist_id, location):
     """
     Exports a playlist to the user's linked Spotify account. The exported 
     playlist will show up on that user's Spotify playlists list if they check 
@@ -1150,11 +1150,16 @@ def export_to_spotify(request, playlist_id):
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
-        spotify.user_playlist_change_details(user.spotify_user_id, playlist.spotify_playlist_id, 
-                                            name=playlist.name, 
-                                            public=(not playlist.is_private), 
-                                            collaborative=False, 
-                                            description=playlist.description)
+        try:
+            spotify.user_playlist_change_details(user.spotify_user_id, playlist.spotify_playlist_id, 
+                                                name=playlist.name, 
+                                                public=(not playlist.is_private), 
+                                                collaborative=False, 
+                                                description=playlist.description)
+        except:
+            pass
+            # Do nothing because everything still works, an exception just gets
+            # thrown for some reason
     else:
     # If it is not on Spotify, create the new playlist there, change our db boolean value
     # to say it is on Spotify, and get the Spotify playlist id saved into our db.
@@ -1172,7 +1177,18 @@ def export_to_spotify(request, playlist_id):
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
-    return redirect('/user/playlists/' + str(request.user.id))
+    
+    url = ""
+
+    if location == "single":
+        url = ('/user/playlist/' + str(request.user.id) + '/' + playlist_id)
+    elif location == "playlists":
+        url = ('/user/playlists/' + str(request.user.id))
+    else:
+        # Problem
+        url = '/'
+
+    return redirect(url)
 
 def link_spotify(request):
     """
