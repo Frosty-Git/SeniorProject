@@ -1142,6 +1142,7 @@ def export_to_spotify(request, playlist_id, location):
     spotify_manager.token_check(request)
     spotify = spotipy.Spotify(auth=user.access_token)
     playlist = Playlist.objects.get(pk=playlist_id)
+    playlist_name = playlist.name
     # Check if the playlist is on Spotify already.
     if playlist.is_imported:
     # If it is already on Spotify, replace the playlist on Spotify with this new version.
@@ -1151,6 +1152,9 @@ def export_to_spotify(request, playlist_id, location):
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
         try:
+            # Success message has to go first because the next line always throws
+            # an exception even though it works.
+            messages.success(request, f"Spotify update successful for playlist '{playlist_name}'!")
             spotify.user_playlist_change_details(user.spotify_user_id, playlist.spotify_playlist_id, 
                                                 name=playlist.name, 
                                                 public=(not playlist.is_private), 
@@ -1177,6 +1181,7 @@ def export_to_spotify(request, playlist_id, location):
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
+        messages.success(request, f"Spotify export successful for playlist {playlist_name}!")
     
     url = ""
 
@@ -1290,7 +1295,7 @@ def reset_preferences(request):
     prefs.tempo = 100
     prefs.valence = 0.5
     prefs.save()
-    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://127.0.0.1:8000/survey_genres/'>Survey</a>."))
+    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://localhost:8000/survey_genres/'>Survey</a>."))
     # return redirect('/survey/')
     return redirect('/user/update_profile/#/')
 
