@@ -69,3 +69,7 @@ class PlaylistForm(forms.ModelForm):
         model = Playlist
         fields = ('name', 'image', 'is_private', 'is_shareable')
 
+    def __init__(self, *args, **kwargs):
+        super(PlaylistForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['style'] = 'width: 45%; height: 1.75rem; overflow: hidden'
+

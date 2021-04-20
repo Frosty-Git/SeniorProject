@@ -17,13 +17,13 @@
             <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
             <table class="center">
               <tr>
-                <td class="epc" colspan="2">
+                <td class="epc" colspan="2" style="text-align: center;">
                   {% if playlist != profile.liked_songs_playlist_fk %}
                     <h6 class="modal-headings">Playlist Name:</h6>
                     <input type="text" required class="form-control" aria-label="With textarea" maxlength="30" id="new_name" name="new_name" value="{{ playlist.name }}">
                     <br>
                     <h6 class="modal-headings">Playlist Image:</h6>
-                    <input type="file" id="img" name="img" accept="image/*">
+                      <input type="file" id="img" name="img" accept="image/*">
                     <br>
                   {% else %}
                     <h5 class="modal-headings">This is the default playlist for your liked songs.</h5>
