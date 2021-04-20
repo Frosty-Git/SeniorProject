@@ -744,7 +744,7 @@ def get_playlists(request, user_id):
             playlist_info.extend([playlist.spotify_playlist_id])
             all_playlists.append(playlist_info)
 
-        print(all_playlists)    
+        # print(all_playlists)    
 
         playlists = playlist_vote_dict(matches, orig_playlists)
         context = {
@@ -1047,9 +1047,9 @@ def add_song_to_playlist(request, location):
     if request.method == 'POST':
         # user_id = request.user.id
         # user = UserProfile.objects.get(pk=user_id)
-        print('is this working')
+        # print('is this working')
         track_term = request.POST.get('track_id')
-        print('track_term')
+        # print('track_term')
         song = SongId.objects.get(pk=track_term)
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
@@ -1384,6 +1384,7 @@ def convertMs(ms):
     Converts milliseconds to hours, minutes, seconds
     Last updated: 4/14/21 by Jacelynn Duranceau
     """
+    print("CONVERISON")
     seconds=(ms/1000)%60
     seconds = int(seconds)
     minutes=(ms/(1000*60))%60
@@ -1392,8 +1393,24 @@ def convertMs(ms):
     hours = int(hours)
     if hours > 0:
         result = ("%d:%d:%d" % (hours, minutes, seconds))
+        if seconds < 10:
+            result = convert_time(result)
     else:
         result = ("%d:%d" % (minutes, seconds))
+        if seconds < 10 and not (ms == 0):
+            result = convert_time(result)
         if ms == 0:
             result = "0:00"
     return result
+
+def convert_time(result):
+    """
+    Convert a time whose seconds has a value < 10 back into the proper format
+    """
+    results = list(result)
+    position = len(results) - 2
+    results.insert(-1, 0)
+    new_result = "" 
+    for c in results:
+        new_result += str(c) 
+    return new_result

@@ -84,6 +84,16 @@
                                 </a>
                             {% endif %}
                         {% endif %}
+                    {% else %}
+                        {% if playlist.2 %}
+                            <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
+                                <img src="{{ playlist.2.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                            </a>
+                        {% else %}
+                            <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
+                                <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                            </a>
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">

@@ -120,7 +120,7 @@ def get_top_tracks(artist_id):
     return all_tracks
         
 def get_recommendation(request, limit, user_id, **kwargs):
-    seed_artists = get_top_artists_by_id(user_id)
+    seed_artists = get_top_artists_by_id(request)
     profile = UserProfile.objects.get(pk=user_id)
     prefs = Preferences.objects.get(user_profile_fk=profile)
     genres_list = prefs.genres.split('*')
@@ -140,12 +140,36 @@ def get_recommendation(request, limit, user_id, **kwargs):
     results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
     return results
 
-def get_top_artists_by_id(user_id):
+def get_top_artists_by_id(request):
     """
-    Gets the top 3 artists ids from a user's liked songs
-    Last updated: 4/1/21 by Jacelynn Duranceau 
+    Gets the top 3 artists ids from a user's liked songs if not linked to spotify.
+    If linked, choose a random 3 of the top 8.
+    Last updated: 4/19/21 by Jacelynn Duranceau 
     """
+    user_id = request.user.id
     user = UserProfile.objects.get(pk=user_id)
+    if user.linked_to_spotify:
+        spotify_manager = SpotifyManager()
+        spotify_manager.token_check(request)
+        spotify = spotipy.Spotify(auth=user.access_token)
+        try:
+            top_artists = spotify.current_user_top_artists(limit=8, offset=0, time_range='long_term')['items']
+            random_artists = []
+            if len(top_artists) > 3:
+                random_artists = random.sample(top_artists, 3)['id']
+            else:
+                return random_artists[0]['id']
+            return random_artists
+        except: # A user doesn't even have 8 top artists to choose from
+            return get_top_pengbeats_artists(user)
+    else:
+        return get_top_pengbeats_artists(user)
+
+def get_top_pengbeats_artists(user):
+    """
+    Gets the top 3 artists for a user on Pengbeats
+    Last updated: 4/19/21 by Jacelynn Duranceau
+    """
     liked_songs = user.liked_songs_playlist_fk
     matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
     songs = []
@@ -311,7 +335,7 @@ def genre_seeds():
 def get_top_track(request):
     """
     Gets the top track of a user
-    Last updated: 4/1/21 by Tucker Elliott and Jacelynn Duranceau
+    Last updated: 4/19/21 by Jacelynn Duranceau and Tucker Elliott
     """
     user = UserProfile.objects.get(pk=request.user.id)
     if user.linked_to_spotify:
@@ -319,19 +343,25 @@ def get_top_track(request):
         spotify_manager.token_check(request)
         spotify = spotipy.Spotify(auth=user.access_token)
         try:
-            top_track_id = spotify.current_user_top_tracks(limit=5, offset=0, time_range='long_term')['items']
-            random_song = random.choice(top_track_id)['id']
+            top_tracks = spotify.current_user_top_tracks(limit=5, offset=0, time_range='long_term')['items']
+            random_song = random.choice(top_tracks)['id']
             return random_song
         except: # A user doesn't even have 5 top songs to choose from
-            liked_songs_playlist = user.liked_songs_playlist_fk
-            sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist).first()
-            spotify_id = sop.spotify_id.spotify_id
-            return spotify_id
+            return get_random_liked_pengbeats_song(user)
     else:
-        liked_songs_playlist = user.liked_songs_playlist_fk
-        sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist).first()
-        spotify_id = sop.spotify_id.spotify_id
-        return spotify_id
+        return get_random_liked_pengbeats_song(user)
+
+def get_random_liked_pengbeats_song(user):
+    """
+    Select a random track from a user's liked songs to be used as a parameter
+    in the recommender function
+    Last updated: 4/19/21 by Jacelynn Duranceau
+    """
+    liked_songs_playlist = user.liked_songs_playlist_fk
+    sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist)
+    random_song = random.choice(sop)
+    spotify_id = random_song.spotify_id.spotify_id
+    return spotify_id
 
 def get_playlist_items(playlist_id):
     return sp.playlist_items(playlist_id, fields=None, limit=50, offset=0, market=None, additional_types=('track', 'episode'))['items']
