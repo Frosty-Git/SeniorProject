@@ -141,9 +141,17 @@
                         </a>
                         <ul class="dropdown-menu playlistDropdownMenu" aria-labelledby="dropdownMenuButton" style="text-align: center;">
                             {% if profile.linked_to_spotify %}
-                                <li class="playlistDropdownItem">
-                                    <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.0  %}" role="button" style="width: 12vh;"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
-                                </li>
+                                <!-- If the playlist has not been exported, the button will say export -->
+                                {% if not playlist.9 %}
+                                    <li class="playlistDropdownItem">
+                                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.0  %}" role="button" style="width: 12vh;"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
+                                    </li>
+                                <!-- The playlist has been exported, so the button will say update -->
+                                {% else %}
+                                    <li class="playlistDropdownItem">
+                                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.0  %}" role="button" style="width: 12vh;"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Update</span></a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
                             {% if playlist.0 != profile.liked_songs_playlist_fk.id %}
                                 <li class="playlistDropdownItem">

@@ -1384,7 +1384,6 @@ def convertMs(ms):
     Converts milliseconds to hours, minutes, seconds
     Last updated: 4/14/21 by Jacelynn Duranceau
     """
-    print("CONVERISON")
     seconds=(ms/1000)%60
     seconds = int(seconds)
     minutes=(ms/(1000*60))%60
