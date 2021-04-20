@@ -92,6 +92,11 @@
     {% endif %}
 </table>
 {% endif %}
+{% if profile %}
+    {% if profile.linked_to_spotify and profile.is_premium %}
+        {% include 'webplayer_footer.html' with profile=profile %}
+    {% endif %}
+{% endif %}
 
 
 {% if profile.user.id != user.id and playlist.is_shareable %}
@@ -135,12 +140,12 @@
         <tr style="border-bottom: 1px solid black;">
             <!-- Album Cover Art -->
             <td style="text-align: center;">
-                <button id="track{{ song.1 }}" value='{{ song.1 }}' type="button" class="btn" style="color:#d9dadc">
+                <button id="trackelse{{ song.1 }}" value='{{ song.1 }}' type="button" class="btn" style="color:#d9dadc">
                     <img src="{{ song.3 }}" width="100px" height="100px">
                 </button>
             </td>
             <script>
-                $('#track{{ song.1 }}').click(function(e) {
+                $('#trackelse{{ song.1 }}').click(function(e) {
                     let track_id = $(this).val();
                     $.ajax({
                         url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
@@ -233,7 +238,11 @@
         </tr>
     {% endif %}
 </table>
-
+{% if loggedin %}
+    {% if loggedin.linked_to_spotify and loggedin.is_premium %}
+        {% include 'webplayer_footer.html' with profile=loggedin %}
+    {% endif %}
+{% endif %}
 
 <script>
     var editPlaylistModal = document.getElementById('editplaylistmodal{{ playlist.id }}');
@@ -247,8 +256,5 @@
     })
 
 </script>
-{% if profile %}
-    {% if profile.linked_to_spotify and profile.is_premium %}
-        {% include 'webplayer_footer.html' with profile=profile %}
-    {% endif %}
-{% endif %}       
+
+
