@@ -4,14 +4,6 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block setting %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
     <center><h1 style="margin-top: 2%">Edit Profile</h1></center>
     <div>
         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#resetprefsmodal">Reset Preferences</button>
