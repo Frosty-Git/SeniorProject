@@ -942,11 +942,6 @@ def survey_final(request, songs_list):
 
 
 
-
-# This is a sample page for our css styles!
-def sample(request):
-    return render(request, 'css_sample.html', {})
-    
 # def update_database_with_preferences(danceability, acousticness, energy, instrumentalness, 
 #                                         speechiness, loudness, tempo, valence):
 #     if request.method = 'POST':
