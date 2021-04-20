@@ -56,11 +56,8 @@ class Settings(models.Model):
     """
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
     private_profile = models.BooleanField(default=False)
-    private_playlists = models.BooleanField(default=False)  # will be removes
     private_preferences = models.BooleanField(default=False)
-    light_mode = models.BooleanField(default=False)
-    explicit_music = models.BooleanField(default=False)
-    live_music = models.BooleanField(default=False)
+    explicit_music = models.BooleanField(default=True)
     objects = models.Manager()
 
     def __str__(self):

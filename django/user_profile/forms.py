@@ -44,7 +44,7 @@ class SettingsForm(forms.ModelForm):
     class Meta:
         model = Settings
         widgets = {'private_profile': forms.CheckboxInput(attrs={'id': 'i_private_profile'})}
-        fields = ['private_profile', 'private_playlists', 'private_preferences', 'light_mode', 'explicit_music', 'live_music']
+        fields = ['private_profile', 'private_preferences', 'explicit_music']
 
 
 class ExtendedUserChangeForm(UserChangeForm):

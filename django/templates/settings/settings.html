@@ -11,9 +11,7 @@
     .help.tip { position: absolute;}
 </style>
     {% if user.id == userobj.id %}
-        <h1>
-            Settings
-        </h1>
+        <center><h1>Settings</h1></center>
         <br>
         <form method='post' action="{% url 'user:settings_save' user.id %}" class="settings-form">
             {% csrf_token %}
