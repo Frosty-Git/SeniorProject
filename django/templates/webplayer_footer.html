@@ -59,7 +59,7 @@
                 <tr>
                   <td></td>
                   <td>
-                    <form id="dummy">
+                    <form id="dummysong">
                       <span id="currentTime"></span>
                       <input type="range" style="width:80%; background-color: #1F2933; padding-left:24px; padding-right: 5px;" id="songprogress" value="" max="" min="0">
                         <!-- <progress type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max=""></progress> -->
@@ -86,7 +86,7 @@
               </div>
             </td>
             <td>
-              <form id="dummy">
+              <form id="dummyvolume">
                 <input style="width:80%;" type="range" id="volume" value="" max="100" min="0">
               </form>
             </td>
@@ -102,6 +102,7 @@
 <script src="{% static 'js/webplayer.js' %}"></script>
 <script>
   window.onload = function() {
-    document.getElementById('dummy').reset();
+    document.getElementById('dummysong').reset();
+    document.getElementById('dummyvolume').reset();
   }
 </script>
