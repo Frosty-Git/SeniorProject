@@ -1154,7 +1154,9 @@ def export_to_spotify(request, playlist_id, location):
         song_ids = []
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
+
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
+
         try:
             # Success message has to go first because the next line always throws
             # an exception even though it works.
@@ -1164,10 +1166,26 @@ def export_to_spotify(request, playlist_id, location):
                                                 public=(not playlist.is_private), 
                                                 collaborative=False, 
                                                 description=playlist.description)
-        except:
-            pass
-            # Do nothing because everything still works, an exception just gets
-            # thrown for some reason
+        except Exception as e:
+            # print("ERROR " + str(e))
+            # Status 403: Not allowed (playlist does not exist)
+            if "status: 403" in str(e):
+                # We have to make a new playlist
+                spotify.user_playlist_create(user=user.spotify_user_id,
+                                    name=playlist.name,
+                                    public=(not playlist.is_private),
+                                    collaborative=False,
+                                    description=playlist.description)
+                playlist.is_imported = True
+                new_playlist_id = spotify.user_playlists(user.spotify_user_id, limit=1, offset=0).get('items')[0].get('id')
+                playlist.spotify_playlist_id = new_playlist_id
+                playlist.save()
+                matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+                song_ids = []
+                for match in matches:
+                    song_ids.append('spotify:track:' + match.get('spotify_id_id'))
+                spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
+            
     else:
     # If it is not on Spotify, create the new playlist there, change our db boolean value
     # to say it is on Spotify, and get the Spotify playlist id saved into our db.

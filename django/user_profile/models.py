@@ -115,7 +115,7 @@ class Playlist(models.Model):
     is_shareable = models.BooleanField(default=True)
     is_imported = models.BooleanField(default=False) # Is imported to the linked Spotify account.
     spotify_playlist_id = models.CharField(default='No Link', max_length=255)
-    description = models.TextField(blank=True, null=True, max_length=299)
+    description = models.TextField(blank=False, null=False, max_length=299)
     # theme = models.TextField(null=True, blank=True)  # Genres
     # this_weeks_upvotes = models.IntegerField()
     # length = # Derived
