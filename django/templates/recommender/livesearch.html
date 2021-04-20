@@ -8,15 +8,18 @@
     and the album image of the track (track_info.2) -->
     <tr>
         <td> 
-            <button id="track{{ id }}" value='{{ id }}' type="button" class="btn" style="color:#d9dadc">
+            <button id="track{{ id }}" value='{{ id }}' type="button" class="btn">
+                {% if track_info.2 %}
                 <img src="{{ track_info.2 }}" class="img-fluid" alt="..." width="30" height="30">
+                {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                    </svg>
+                {% endif %}
             </button> 
         </td>
-        <td>{{ track_info.0 }}  -  {{ track_info.1 }}</td>
-                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
-                </svg> -->       
+        <td>{{ track_info.0 }}  -  {{ track_info.1 }}</td>  
         <script>
             $('#track{{ id }}').click(function(e) {
                 let track_id = $(this).val();
@@ -56,11 +59,33 @@
     and the album image (artist_info.2) -->
     <tr>
         <td>
-            {% if album_info.1 %}
-                <img src="{{ album_info.2 }}" class="img-fluid" alt="..." width="30" height="30">
-            {% endif %}
+            <button id="album{{ id }}" value='{{ id }}' type="button" class="btn">
+                {% if album_info.1 %}
+                    <img src="{{ album_info.2 }}" class="img-fluid" alt="..." width="30" height="30">
+                {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                    </svg>
+                {% endif %}
+            </button>
         </td>
         <td>{{ album_info.0 }}  -  {{ album_info.1 }}</td>
+        <script>
+            $('#album{{ id }}').click(function(e) {
+                let album_id = $(this).val();
+                $.ajax({
+                    url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
+                    type: "PUT",
+                    data: '{"context_uri": "spotify:album:'+ album_id +'"}',
+                    beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + profile_token );},
+                    success: function(data) { 
+                        console.log('is this the data ' + data)
+                        $('.fixed-bottom').show();
+                    }
+                });
+            });
+        </script>
     </tr>
 {% endfor %}
 </table>
