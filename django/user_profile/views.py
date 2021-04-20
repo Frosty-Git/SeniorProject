@@ -243,12 +243,13 @@ def vote_dictionary(votes, posts):
 
 
 @require_GET
-def display_settings(request, user_id):
+def display_settings(request):
     """
     Used to display the settings for a particular user. Loads in the current state
     of each field from the database.
     Last updated: 3/11/21 by Jacelynn Duranceau
     """
+    user_id = request.user.id
     userobj = User.objects.get(id=user_id)
     settings = Settings.objects.get(user_profile_fk=user_id)
     settings_form = SettingsForm(instance=settings)
@@ -271,8 +272,7 @@ def settings_save(request, user_id):
         setting.live_music = settings_form.cleaned_data.get('live_music')
         setting.save()
         messages.success(request, ('Settings have been updated!'))
-        url = '/user/settings/' + user_id
-        return redirect(url)
+        return redirect('/user/settings/')
     else:
         raise Http404('Form not valid')
 

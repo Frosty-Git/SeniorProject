@@ -85,7 +85,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #d9dadc;
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -101,10 +101,10 @@
     transition: .4s;
 }
 input:checked+.slider {
-    background-color: #212529;
+    background-color: #1F2933;
 }
 input:focus+.slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #1F2933;
 }
 input:checked+.slider:before {
     -webkit-transform: translateX(26px);
@@ -125,6 +125,26 @@ input:checked+.slider:before {
 /* Begin tooltip ((?) on Settings page)
    Source: https://tutorialzine.com/2014/07/css-inline-help-tips
 */
+.tooltip-inner {
+    background-color: #1F2933;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    color: #d9dadc; /* Baby Penguin White */
+}
+
+.tooltip.bs-tooltip-bottom .arrow:before {
+    border-right-color: #1F2933 !important;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    color: #d9dadc; /* Baby Penguin White */
+}
+
+  
+
+
+
+
+
 .help-tip {
     position: absolute;
     top: 0px;

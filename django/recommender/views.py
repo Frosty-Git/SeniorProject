@@ -255,31 +255,42 @@ def user_preference_recommender(request):
             results = get_recommendation(request, num_songs, user_id, **pref_dict)
             recommendations = results['recommendations']
             for x in range(num_songs):
-                if x+1 > len(recommendations['tracks']):
-                    break
-                track_id = recommendations['tracks'][x]['id']
-                save_songs([track_id])
-                match = SongToUser.objects.filter(user_from=user, songid_to=track_id).first()
-                if match is not None:
-                    if match.vote == 'Like' or match.vote == 'Dislike':
-                        # The user has already expressed a like or dislike for this
-                        # song, so don't recommend it
-                        issue = True
+                if len(track_ids) < 9:
+                    # print("HERE")
+                    if x+1 > len(recommendations['tracks']):
                         break
-                settings = Settings.objects.get(user_profile_fk=user)
-                if settings.explicit_music is False:
-                    track = SongId.objects.get(spotify_id=track_id)
-                    if track.explicit:
-                        # The user does not want songs recommended that are explicit
-                        # so don't recommend it
+                    track_id = recommendations['tracks'][x]['id']
+                    save_songs([track_id])
+                    match = SongToUser.objects.filter(user_from=user, songid_to=track_id).first()
+                    if match is not None:
+                        # print("match")
+                        if match.vote == 'Like' or match.vote == 'Dislike':
+                            # The user has already expressed a like or dislike for this
+                            # song, so don't recommend it
+                            issue = True
+                            # break
+                    settings = Settings.objects.get(user_profile_fk=user)
+                    if settings.explicit_music is False:
+                        # print("explicit")
+                        track = SongId.objects.get(spotify_id=track_id)
+                        if track.explicit:
+                            # print("track is explicit")
+                            # The user does not want songs recommended that are explicit
+                            # so don't recommend it
+                            issue = True
+                            # break
+                    if track_id in track_ids:
+                        # print("already there")
+                        # Don't put a song in the track_ids list if it's already there
                         issue = True
-                        break
-                if track_id in track_ids:
-                    # Don't put a song in the track_ids list if it's already there
-                    issue = True
+                        # break
+                    if not issue:
+                        # print("appended!")
+                        track_ids.append(track_id)
+                else:
+                    # print("HERE")
                     break
-
-                track_ids.append(track_id)
+                # print("len" + str(len(track_ids)))
             if not issue:
                 # No need to get more recommendations because we do not have explicit
                 # songs when we don't want them, and it is not returning songs that
@@ -288,15 +299,18 @@ def user_preference_recommender(request):
             else:
                 # Get more recommendations equivalent to the number of songs left
                 # needed in our list limit (of 9); we will loop again
-                num_songs = (limit - len(track_ids))
-        #     print(len(track_ids))
-        #     print(issue)
-        #     print(track_ids)
+                # num_songs = (limit - len(track_ids))
+                # loop = True
+                pass
 
-        # print("-------------------------")
-        # print(len(track_ids))
-        # print(track_ids)
-        # print("-------------------------")
+            print(len(track_ids))
+            print(issue)
+            print(track_ids)
+
+        print("-------------------------")
+        print(len(track_ids))
+        print(track_ids)
+        print("-------------------------")
 
         playlists = get_user_playlists(user_id)
         top_artists_ids = get_top_artists_by_id(request)

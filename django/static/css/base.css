@@ -66,6 +66,8 @@ a {
     border-radius: 0.5rem;
 }
 
+
+/* CSS for modal popups */
 .modal-content  {
     background-color: #a0bed9;
 }
@@ -95,7 +97,10 @@ a {
 .modalClose:hover {
     color: black;
 }
+/* End modal CSS */
 
+
+/* Makes spotify widgets round */
 .spRound {
     border-radius: 3px;
 }
