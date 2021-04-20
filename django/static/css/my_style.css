@@ -127,7 +127,7 @@
 
 
 
-/* #songprogress::-moz-range-track {
+#songprogress::-moz-range-track {
     width: 100%;
     background-color: lightgray;
 }
@@ -141,7 +141,7 @@
     background-color: #a0bed9;
     border: 1px solid #a0bed9;
 }
-   */
+  
 
 
 #currentTime, #totalTime {

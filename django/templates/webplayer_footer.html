@@ -57,26 +57,32 @@
             <td>
               <table style="width: 100%;">
                 <tr>
-                  <td><span style="margin-bottom:20px; margin-right:-40px" id="currentTime"></span></td>
+                  <td></td>
                   <td>
-                      <!-- <input type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max="" min="0"> -->
-                      <progress type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max=""></progress>
+                    <form id="dummy">
+                      <span id="currentTime"></span>
+                      <input type="range" style="width:80%; background-color: #1F2933; padding-left:24px; padding-right: 5px;" id="songprogress" value="" max="" min="0">
+                        <!-- <progress type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max=""></progress> -->
+                      <span id="totalTime" ></span>
+                    </form>
                   </td>
-                  <td><span style="margin-bottom:20px; margin-left:-40px" id="totalTime" ></span></td>
+                  <td></td>
                 </tr>
               </table>
             </td>
           </tr>
         </table>
       </div>
-      <div class="w3-col m3 w3-center">
+      <div class="w3-col m3 w3-red w3-center">
         <table class="center">
           <tr>
             <td>
               <div style="padding-bottom:5px">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-volume-down-fill" viewBox="0 0 16 16">
-                  <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>
-                </svg>
+                <button id="volumeBtn" class="btn btn-dark" type="button" style="background-color: transparent; border:transparent;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-volume-down-fill" viewBox="0 0 16 16">
+                    <path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>
+                  </svg>
+                </button>
               </div>
             </td>
             <td>
@@ -94,3 +100,8 @@
 
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
 <script src="{% static 'js/webplayer.js' %}"></script>
+<script>
+  window.onload = function() {
+    document.getElementById('dummy').reset();
+  }
+</script>
