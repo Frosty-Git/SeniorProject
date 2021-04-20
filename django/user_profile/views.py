@@ -52,7 +52,7 @@ def sign_up(request):
             pref.save()
             sett = Settings(user_profile_fk = profile, private_profile=False, private_preferences=False, explicit_music=True)
             sett.save()
-            liked_songs = Playlist(user_profile_fk=profile, name="Liked Songs")
+            liked_songs = Playlist(user_profile_fk=profile, name="Liked Songs", description="My Liked Songs")
             liked_songs.save()
             profile.liked_songs_playlist_fk = liked_songs
             profile.save()

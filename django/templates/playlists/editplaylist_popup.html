@@ -26,7 +26,7 @@
                     <input type="file" id="img" name="img" accept="image/*">
                     <br>
                   {% else %}
-                    <h5>This is the default playlist for your liked songs.</h5>
+                    <h5 class="modal-headings">This is the default playlist for your liked songs.</h5>
                     <input type="hidden" id="new_name" name="new_name" value="{{ playlist.name }}">
                     <input type="hidden" id="img" name="img" accept="image/*">
                     <br>
@@ -69,7 +69,7 @@
 
               <tr>
                 <td class="epc" style="text-align: justify;" colspan="2">
-                    Note: Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible. Additionally,
+                    <b>Note:</b> Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible. Additionally,
                     your playlist privacy setting takes precedence over the shareability setting. If your playlist is shareable but private, you will still not be able to share it.
                 </td>
               </tr>
