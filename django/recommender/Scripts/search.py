@@ -144,7 +144,7 @@ def get_top_artists_by_id(request):
     """
     Gets the top 3 artists ids from a user's liked songs if not linked to spotify.
     If linked, choose a random 3 of the top 8.
-    Last updated: 4/1/21 by Jacelynn Duranceau 
+    Last updated: 4/19/21 by Jacelynn Duranceau 
     """
     user_id = request.user.id
     user = UserProfile.objects.get(pk=user_id)
@@ -335,7 +335,7 @@ def genre_seeds():
 def get_top_track(request):
     """
     Gets the top track of a user
-    Last updated: 4/1/21 by Tucker Elliott and Jacelynn Duranceau
+    Last updated: 4/19/21 by Jacelynn Duranceau and Tucker Elliott
     """
     user = UserProfile.objects.get(pk=request.user.id)
     if user.linked_to_spotify:
@@ -355,6 +355,7 @@ def get_random_liked_pengbeats_song(user):
     """
     Select a random track from a user's liked songs to be used as a parameter
     in the recommender function
+    Last updated: 4/19/21 by Jacelynn Duranceau
     """
     liked_songs_playlist = user.liked_songs_playlist_fk
     sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist)
