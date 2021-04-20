@@ -91,12 +91,9 @@
         {% endif %}
     {% endif %}
 </table>
+
 {% endif %}
-{% if profile %}
-    {% if profile.linked_to_spotify and profile.is_premium %}
-        {% include 'webplayer_footer.html' with profile=profile %}
-    {% endif %}
-{% endif %}
+
 
 
 {% if profile.user.id != user.id and playlist.is_shareable %}
@@ -204,18 +201,19 @@
                     </div>
                     {% include 'playlists/addsong_popup.html' with playlists=playlists loggedin=loggedin %}
                 </td>
+                <script>
+                    var addPlaylistModal = document.getElementById('addtoplaylistmodal{{ song.0 }}');
+                    function addModalClick(id) {
+                        window.history.pushState({},"", "/profile/addtoplaylist_popup/" + id );
+                        addPlaylistModal.show();
+                    }  
+                
+                    addPlaylistModal.addEventListener('hidden.bs.modal', function (event) {
+                        window.history.replaceState({}, "", "{% url 'user:get_songs_playlist' profile.user.id playlist.id %}")
+                    })
+                </script>
             {% endif %}
-            <script>
-                var addPlaylistModal = document.getElementById('addtoplaylistmodal{{ song.0 }}');
-                function addModalClick(id) {
-                    window.history.pushState({},"", "/profile/addtoplaylist_popup/" + id );
-                    addPlaylistModal.show();
-                }  
-            
-                addPlaylistModal.addEventListener('hidden.bs.modal', function (event) {
-                    window.history.replaceState({}, "", "{% url 'user:get_songs_playlist' profile.user.id playlist.id %}")
-                })
-            </script>
+
                     <td>
                         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song.1 }}">Share</button>
                         {% include 'social_feed/popup_songpost.html' with song=song.1 %}
@@ -238,11 +236,6 @@
         </tr>
     {% endif %}
 </table>
-{% if loggedin %}
-    {% if loggedin.linked_to_spotify and loggedin.is_premium %}
-        {% include 'webplayer_footer.html' with profile=loggedin %}
-    {% endif %}
-{% endif %}
 
 <script>
     var editPlaylistModal = document.getElementById('editplaylistmodal{{ playlist.id }}');
@@ -256,5 +249,9 @@
     })
 
 </script>
-
+{% if loggedin %}
+    {% if loggedin.linked_to_spotify and loggedin.is_premium %}
+        {% include 'webplayer_footer.html' with profile=loggedin %}
+    {% endif %}
+{% endif %}
 
