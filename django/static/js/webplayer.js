@@ -5,7 +5,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     const player = new Spotify.Player({
         name: 'PengBeats Player',
         getOAuthToken: cb => { cb(token); },
-        volume: 0.5
+        volume: 0.1
     });
     
 
@@ -52,6 +52,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         console.log('Ready with Device ID', device_id);
         device = device_id;
         console.log('GOD I HOPE THIS WORKS' + device);
+
+        player.getVolume().then(volume => {
+            let volume_percentage = volume * 100;
+            $('#volume').val(volume_percentage);
+            console.log(`The volume of the player is ${volume_percentage}%`);
+        });
     
     });
 
@@ -149,6 +155,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                 }
             });
         });
+    });
+
+    $('#volume').mouseUp(function() {
+        let volume_value = $(this).val();
+        player.setVolume(volume_value/100);
+        console.log(`The volume of the player is ${volume_value}%`);
     });
 
 };

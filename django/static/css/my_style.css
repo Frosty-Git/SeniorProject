@@ -142,3 +142,16 @@
     border: 1px solid #a0bed9;
 }
    */
+
+
+#currentTime, #totalTime {
+    font-size: x-small;
+    position:fixed; 
+    margin-top:auto;
+    margin-bottom: auto;
+}
+
+.searchform_notrequired {
+    border: 0;
+    box-shadow: none;
+}
