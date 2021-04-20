@@ -281,7 +281,7 @@ def get_artist_name(artist_id):
     """
     Gets the name of an artist based on their id
     """
-    print(sp.artist(artist_id))
+    # print(sp.artist(artist_id))
     name = sp.artist(artist_id)['name']
     return name
 
@@ -318,8 +318,15 @@ def get_top_track(request):
         spotify_manager = SpotifyManager()
         spotify_manager.token_check(request)
         spotify = spotipy.Spotify(auth=user.access_token)
-        top_track_id = spotify.current_user_top_tracks(limit=1, offset=0, time_range='long_term')
-        return top_track_id['items'][0]['id']
+        try:
+            top_track_id = spotify.current_user_top_tracks(limit=5, offset=0, time_range='long_term')['items']
+            random_song = random.choice(top_track_id)['id']
+            return random_song
+        except: # A user doesn't even have 5 top songs to choose from
+            liked_songs_playlist = user.liked_songs_playlist_fk
+            sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist).first()
+            spotify_id = sop.spotify_id.spotify_id
+            return spotify_id
     else:
         liked_songs_playlist = user.liked_songs_playlist_fk
         sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs_playlist).first()
