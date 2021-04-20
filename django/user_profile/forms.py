@@ -44,7 +44,7 @@ class SettingsForm(forms.ModelForm):
     class Meta:
         model = Settings
         widgets = {'private_profile': forms.CheckboxInput(attrs={'id': 'i_private_profile'})}
-        fields = ['private_profile', 'private_playlists', 'private_preferences', 'light_mode', 'explicit_music', 'live_music']
+        fields = ['private_profile', 'private_preferences', 'explicit_music']
 
 
 class ExtendedUserChangeForm(UserChangeForm):
@@ -60,7 +60,7 @@ class ExtendedUserChangeForm(UserChangeForm):
 class PlaylistForm(forms.ModelForm):
     name = forms.CharField(max_length=30)
     image = forms.ImageField(required=False)
-    description = forms.CharField(widget=forms.Textarea, required=False, max_length=299)
+    description = forms.CharField(widget=forms.Textarea, required=True, max_length=299)
     date_created = datetime.datetime.now()
     is_private = forms.BooleanField(required=False)
     is_shareable = forms.BooleanField(required=False, initial=True)
@@ -68,4 +68,11 @@ class PlaylistForm(forms.ModelForm):
     class Meta:
         model = Playlist
         fields = ('name', 'image', 'is_private', 'is_shareable')
+
+    def __init__(self, *args, **kwargs):
+        super(PlaylistForm, self).__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['style'] = 'width: 100%; height: 1.75rem; overflow: hidden; border-radius: 0.3rem; border: none'
+        self.fields['name'].widget.attrs['style'] = 'width: 100%; 1.75rem; border-radius: 0.3rem; border: none'
+        self.fields['image'].widget.attrs['style'] = 'width: 50%'
+
 

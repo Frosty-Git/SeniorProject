@@ -1,12 +1,11 @@
-const user_input = $('#searchterm');
-const search_div = $('#livesearch');
-const endpoint = '/';
+const user_input = $('#artistterm');
+const search_div = $('#search_artists');
+const endpoint = '/custom_recommender/';
 const delay_by_in_ms = 300;
 let scheduled_function = false;
 
 window.onload = function() {
-    document.getElementById('searchterm').value = '';
-    document.getElementById('ourSearchForm').reset();
+    document.getElementById('artistterm').value = '';
 }
 
 let ajax_call = function (endpoint, request_parameters) {
@@ -15,7 +14,7 @@ let ajax_call = function (endpoint, request_parameters) {
             // fade out the search_div, then:
             search_div.fadeTo('fast', 0).promise().then(() => {
                 // replace the HTML contents
-                search_div.html(response['livesearch_h'])
+                search_div.html(response['artist_h'])
                 // fade-in the div with new contents
                 search_div.fadeTo('fast', 1)    
             })
@@ -26,7 +25,7 @@ user_input.on('keyup', function () {
 
     const request_parameters = {
         q: $(this).val(), // value of user_input: the HTML element with ID user-input
-        action: 'livesearch'
+        action: 'artist',
     }
 
     // if scheduled_function is NOT false, cancel the execution of the function

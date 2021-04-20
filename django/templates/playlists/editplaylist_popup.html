@@ -17,61 +17,63 @@
             <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
             <table class="center">
               <tr>
-                <td class="epc">
+                <td class="epc" colspan="2" style="text-align: center;">
                   {% if playlist != profile.liked_songs_playlist_fk %}
-                    Playlist Name:
+                    <h6 class="modal-headings">Playlist Name:</h6>
                     <input type="text" required class="form-control" aria-label="With textarea" maxlength="30" id="new_name" name="new_name" value="{{ playlist.name }}">
                     <br>
-                    Playlist Image:
-                    <input type="file" id="img" name="img" accept="image/*">
+                    <h6 class="modal-headings">Playlist Image:</h6>
+                      <input type="file" id="img" name="img" accept="image/*" style="width: 50%">
                     <br>
                   {% else %}
-                    <h5>This is the default playlist for your liked songs.</h5>
+                    <h5 class="modal-headings">This is the default playlist for your liked songs.</h5>
                     <input type="hidden" id="new_name" name="new_name" value="{{ playlist.name }}">
                     <input type="hidden" id="img" name="img" accept="image/*">
                     <br>
                   {% endif %}
                 </td>
               </tr>
-              <tr>
-                <td class="epc">
-                  {% if playlist.is_private %}
-                    <input type="checkbox" id="is_private_t" name="is_private_t" checked>
-                    <label for="is_private_t">Private</label>
-                  {% else %}
-                    <input type="checkbox" id="is_private_f" name="is_private_f">
-                    <label for="is_private_f">Private</label>
-                  {% endif %}
-                  <div class="help-tip" style="z-index: 999; top:147px; left: 300px;">
-                    <p>If you make your playlist private, it will not be viewable or shareable by other users.</p>
-                  </div>
-                </td>
-
-                <td class="epc center">
-                  {% if playlist.is_shareable %}
-                    <input type="checkbox" id="is_shareable_t" name="is_shareable_t" checked>
-                    <label for="is_shareable_t">Shareable</label>
-                  {% else %}
-                    <input type="checkbox" id="is_shareable_f" name="is_shareable_f">
-                    <label for="is_shareable_f">Shareable</label>
-                  {% endif %}
-                  <div class="help-tip" style="z-index: 999; top:190px; left: 305px;">
-                    <p>Shareable refers to whether or not other users can share your playlists. You can still share your own playlist
-                      regardless of this setting.</p>
-                  </div>
-                </td>
-              </tr>
 
               <tr>
-                <td class="epc">
-                    Description:
+                <td class="epc" colspan="2">
+                  <h6 class="modal-headings">Description:</h6>
                     <input type="text" required class="form-control" aria-label="With textarea" maxlength="299" id="new_description" name="new_description" value="{{ playlist.description }}">
                 </td>
               </tr>
 
+
               <tr>
-                <td class="epc" style="text-align: justify;">
-                    Note: Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible. Additionally,
+                <td colspan="2"><h6 class="modal-headings">Privacy:</h6></td>
+              </tr>
+              <tr>
+                <td class="epc" style="width: 50%;">
+                  <div class="tooltip-custom" data-toggle="tooltip" data-placement="top" title="If you make your playlist private, it will not be viewable or shareable by other users.">
+                    {% if playlist.is_private %}
+                      <input type="checkbox" id="is_private_t" name="is_private_t" class="editCheckbox" checked>
+                      <label for="is_private_t">Private</label>
+                    {% else %}
+                      <input type="checkbox" id="is_private_f" name="is_private_f">
+                      <label for="is_private_f">Private</label>
+                    {% endif %}
+                  </div>
+                </td>
+
+                <td class="epc" style="width: 50%;">
+                  <div class="tooltip-custom" data-toggle="tooltip" data-placement="top" title="Shareable refers to whether or not other users can share your playlists. You can still share your own playlist regardless of this setting.">
+                    {% if playlist.is_shareable %}
+                      <input type="checkbox" id="is_shareable_t" name="is_shareable_t" class="editCheckbox">
+                      <label for="is_shareable_t">Shareable</label>
+                    {% else %}
+                      <input type="checkbox" id="is_shareable_f" name="is_shareable_f">
+                      <label for="is_shareable_f">Shareable</label>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="epc" style="text-align: justify;" colspan="2">
+                    <b>Note:</b> Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible. Additionally,
                     your playlist privacy setting takes precedence over the shareability setting. If your playlist is shareable but private, you will still not be able to share it.
                 </td>
               </tr>
@@ -87,3 +89,9 @@
     </div>
   </div>
 </div>
+
+<script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>

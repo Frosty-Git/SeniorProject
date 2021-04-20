@@ -50,9 +50,9 @@ def sign_up(request):
             profile.save()
             pref = Preferences(user_profile_fk = profile)
             pref.save()
-            sett = Settings(user_profile_fk = profile, private_profile=False, private_playlists=False, light_mode=False, explicit_music=False, live_music=False)
+            sett = Settings(user_profile_fk = profile, private_profile=False, private_preferences=False, explicit_music=True)
             sett.save()
-            liked_songs = Playlist(user_profile_fk=profile, name="Liked Songs")
+            liked_songs = Playlist(user_profile_fk=profile, name="Liked Songs", description="My Liked Songs")
             liked_songs.save()
             profile.liked_songs_playlist_fk = liked_songs
             profile.save()
@@ -243,12 +243,13 @@ def vote_dictionary(votes, posts):
 
 
 @require_GET
-def display_settings(request, user_id):
+def display_settings(request):
     """
     Used to display the settings for a particular user. Loads in the current state
     of each field from the database.
     Last updated: 3/11/21 by Jacelynn Duranceau
     """
+    user_id = request.user.id
     userobj = User.objects.get(id=user_id)
     settings = Settings.objects.get(user_profile_fk=user_id)
     settings_form = SettingsForm(instance=settings)
@@ -264,15 +265,11 @@ def settings_save(request, user_id):
     settings_form = SettingsForm(request.POST, instance=setting)
     if settings_form.is_valid():
         setting.private_profile = settings_form.cleaned_data.get('private_profile')
-        setting.private_playlists = settings_form.cleaned_data.get('private_playlists')
         setting.private_preferences = settings_form.cleaned_data.get('private_preferences')
-        setting.light_mode = settings_form.cleaned_data.get('light_mode')
         setting.explicit_music = settings_form.cleaned_data.get('explicit_music')
-        setting.live_music = settings_form.cleaned_data.get('live_music')
         setting.save()
         messages.success(request, ('Settings have been updated!'))
-        url = '/user/settings/' + user_id
-        return redirect(url)
+        return redirect('/user/settings/')
     else:
         raise Http404('Form not valid')
 
@@ -740,15 +737,18 @@ def get_playlists(request, user_id):
             playlist_info.extend([duration])
             num_songs = get_num_playlist_songs(playlist.id)
             playlist_info.extend([str(num_songs)])
+            playlist_info.extend([playlist.is_imported])
+            playlist_info.extend([playlist.spotify_playlist_id])
             all_playlists.append(playlist_info)
 
-        print(all_playlists)    
+        # print(all_playlists)    
 
         playlists = playlist_vote_dict(matches, orig_playlists)
         context = {
             'playlists': all_playlists,
             'playlistform': playlistform,
             'profile': you,
+            'you': you,
             'private_profile': private_profile,
             'following_status': following_status,
         }
@@ -780,12 +780,15 @@ def get_playlists(request, user_id):
                     playlist_info.extend([duration])
                     num_songs = get_num_playlist_songs(playlist.id)
                     playlist_info.extend([str(num_songs)])
+                    playlist_info.extend([playlist.is_imported])
+                    playlist_info.extend([playlist.spotify_playlist_id])
                     all_playlists.append(playlist_info)
 
 
                 context = {
                     'playlists': all_playlists,
                     'profile': other_user,
+                    'you': you,
                     'private_profile': private_profile,
                     'following_status': following_status,
                 }
@@ -916,6 +919,7 @@ def get_songs_playlist(request, user_id, playlist_id):
             'songs': songs,
             'playlist': playlist,
             'profile': you,
+            'you': you,
             'private_profile': private_profile,
             'following_status': following_status,
             'loggedin': you,
@@ -961,6 +965,7 @@ def get_songs_playlist(request, user_id, playlist_id):
                         'songs': songs,
                         'playlist': playlist,
                         'profile': other_user,
+                        'you': you,
                         'private_profile': private_profile,
                         'following_status': following_status,
                         'playlists': playlists,
@@ -1043,9 +1048,9 @@ def add_song_to_playlist(request, location):
     if request.method == 'POST':
         # user_id = request.user.id
         # user = UserProfile.objects.get(pk=user_id)
-        print('is this working')
+        # print('is this working')
         track_term = request.POST.get('track_id')
-        print('track_term')
+        # print('track_term')
         song = SongId.objects.get(pk=track_term)
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
@@ -1127,7 +1132,7 @@ def delete_song(request, playlist_id, sop_pk):
     song.delete()
     return redirect('/user/playlist/' + str(request.user.id) + '/' + str(playlist_id))
 
-def export_to_spotify(request, playlist_id):
+def export_to_spotify(request, playlist_id, location):
     """
     Exports a playlist to the user's linked Spotify account. The exported 
     playlist will show up on that user's Spotify playlists list if they check 
@@ -1138,6 +1143,7 @@ def export_to_spotify(request, playlist_id):
     spotify_manager.token_check(request)
     spotify = spotipy.Spotify(auth=user.access_token)
     playlist = Playlist.objects.get(pk=playlist_id)
+    playlist_name = playlist.name
     # Check if the playlist is on Spotify already.
     if playlist.is_imported:
     # If it is already on Spotify, replace the playlist on Spotify with this new version.
@@ -1145,12 +1151,38 @@ def export_to_spotify(request, playlist_id):
         song_ids = []
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
+
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
-        spotify.user_playlist_change_details(user.spotify_user_id, playlist.spotify_playlist_id, 
-                                            name=playlist.name, 
-                                            public=(not playlist.is_private), 
-                                            collaborative=False, 
-                                            description=playlist.description)
+
+        try:
+            # Success message has to go first because the next line always throws
+            # an exception even though it works.
+            messages.success(request, f"Spotify update successful for playlist '{playlist_name}'!")
+            spotify.user_playlist_change_details(user.spotify_user_id, playlist.spotify_playlist_id, 
+                                                name=playlist.name, 
+                                                public=(not playlist.is_private), 
+                                                collaborative=False, 
+                                                description=playlist.description)
+        except Exception as e:
+            # print("ERROR " + str(e))
+            # Status 403: Not allowed (playlist does not exist)
+            if "status: 403" in str(e):
+                # We have to make a new playlist
+                spotify.user_playlist_create(user=user.spotify_user_id,
+                                    name=playlist.name,
+                                    public=(not playlist.is_private),
+                                    collaborative=False,
+                                    description=playlist.description)
+                playlist.is_imported = True
+                new_playlist_id = spotify.user_playlists(user.spotify_user_id, limit=1, offset=0).get('items')[0].get('id')
+                playlist.spotify_playlist_id = new_playlist_id
+                playlist.save()
+                matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
+                song_ids = []
+                for match in matches:
+                    song_ids.append('spotify:track:' + match.get('spotify_id_id'))
+                spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
+            
     else:
     # If it is not on Spotify, create the new playlist there, change our db boolean value
     # to say it is on Spotify, and get the Spotify playlist id saved into our db.
@@ -1168,7 +1200,19 @@ def export_to_spotify(request, playlist_id):
         for match in matches:
             song_ids.append('spotify:track:' + match.get('spotify_id_id'))
         spotify.playlist_replace_items(playlist.spotify_playlist_id, song_ids)
-    return redirect('/user/playlists/' + str(request.user.id))
+        messages.success(request, f"Spotify export successful for playlist {playlist_name}!")
+    
+    url = ""
+
+    if location == "single":
+        url = ('/user/playlist/' + str(request.user.id) + '/' + playlist_id)
+    elif location == "playlists":
+        url = ('/user/playlists/' + str(request.user.id))
+    else:
+        # Problem
+        url = '/'
+
+    return redirect(url)
 
 def link_spotify(request):
     """
@@ -1270,7 +1314,7 @@ def reset_preferences(request):
     prefs.tempo = 100
     prefs.valence = 0.5
     prefs.save()
-    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://127.0.0.1:8000/survey_genres/'>Survey</a>."))
+    messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://localhost:8000/survey_genres/'>Survey</a>."))
     # return redirect('/survey/')
     return redirect('/user/update_profile/#/')
 
@@ -1388,8 +1432,25 @@ def convertMs(ms):
     hours = int(hours)
     if hours > 0:
         result = ("%d:%d:%d" % (hours, minutes, seconds))
+        if seconds < 10:
+            result = convert_time(result)
     else:
         result = ("%d:%d" % (minutes, seconds))
+        if seconds < 10 and not (ms == 0):
+            result = convert_time(result)
         if ms == 0:
             result = "0:00"
     return result
+
+def convert_time(result):
+    """
+    Convert a time whose seconds has a value < 10 back into the proper format
+    Last updated: 4/19/21 by Jacelynn Duranceau
+    """
+    results = list(result)
+    position = len(results) - 2
+    results.insert(-1, 0)
+    new_result = "" 
+    for c in results:
+        new_result += str(c) 
+    return new_result

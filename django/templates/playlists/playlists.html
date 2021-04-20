@@ -5,6 +5,15 @@
 
 {% block content %}
 
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <h1 style="text-align: center; margin-top: 2%;">
     {% if profile.user.id == user.id %}
         My Playlists
@@ -45,16 +54,55 @@
         <!-- playlist.6 is the vote -->
         <!-- playlist.7 is the duration -->
         <!-- playlist.8 is the number of songs on the playlist -->
-            <tr style="border-bottom: 1px solid black;">
+        <!-- playlist.9 is True if exported, False if not -->
+        <!-- playlist.10 is the playlist's spotify ID if exported -->
+            <tr style="border-bottom: 1px solid #1F2933;">
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-                    {% if playlist.2 %}
-                        <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
-                            <img src="{{ playlist.2.url }}" width="70px" height="70px" style="border-radius: 50%;">
-                        </a>
+                    {% if profile.is_premium and profile.linked_to_spotify %}
+                        {% if playlist.9 %}
+                            <button id="playlist{{ playlist.10 }}" value='{{ playlist.10 }}' type="button" class="btn" style="color:#d9dadc">
+                                {% if playlist.2 %}
+                                    <img src="{{ playlist.2.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                                {% else %}
+                                    <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                                {% endif %}
+                            </button>
+                            <script>
+                                $('#playlist{{ playlist.10 }}').click(function(e) {
+                                    let playlist_id = $(this).val();
+                                    $.ajax({
+                                        url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
+                                        type: "PUT",
+                                        data: '{"context_uri": "spotify:playlist:'+ playlist_id +'"}',
+                                        beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + profile_token );},
+                                        success: function(data) { 
+                                            console.log('is this the data ' + data);
+                                            $('.fixed-bottom').show();
+                                        }
+                                    });
+                                });
+                            </script> 
+                        {% else %}
+                            {% if playlist.2 %}
+                                <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
+                                    <img src="{{ playlist.2.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                                </a>
+                            {% else %}
+                                <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
+                                    <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                                </a>
+                            {% endif %}
+                        {% endif %}
                     {% else %}
-                        <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
-                            <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
-                        </a>
+                        {% if playlist.2 %}
+                            <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
+                                <img src="{{ playlist.2.url }}" width="70px" height="70px" style="border-radius: 50%;">
+                            </a>
+                        {% else %}
+                            <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">
+                                <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="70px" height="70px" style="border-radius: 50%;">
+                            </a>
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
@@ -102,9 +150,17 @@
                         </a>
                         <ul class="dropdown-menu playlistDropdownMenu" aria-labelledby="dropdownMenuButton" style="text-align: center;">
                             {% if profile.linked_to_spotify %}
-                                <li class="playlistDropdownItem">
-                                    <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.0  %}" role="button" style="width: 12vh;"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
-                                </li>
+                                <!-- If the playlist has not been exported, the button will say export -->
+                                {% if not playlist.9 %}
+                                    <li class="playlistDropdownItem">
+                                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.0 'playlists' %}" role="button" style="width: 12vh;"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
+                                    </li>
+                                <!-- The playlist has been exported, so the button will say update -->
+                                {% else %}
+                                    <li class="playlistDropdownItem">
+                                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.0 'playlists' %}" role="button" style="width: 12vh;"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Update</span></a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
                             {% if playlist.0 != profile.liked_songs_playlist_fk.id %}
                                 <li class="playlistDropdownItem">
@@ -188,5 +244,11 @@
     </tr>
     {% endif %}
 </table>
+
+{% if profile %}
+    {% if profile.linked_to_spotify and profile.is_premium %}
+        {% include 'webplayer_footer.html' with profile=profile %}
+    {% endif %}
+{% endif %}
 
 {% endblock %}
