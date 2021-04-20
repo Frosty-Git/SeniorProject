@@ -751,6 +751,7 @@ def get_playlists(request, user_id):
             'playlists': all_playlists,
             'playlistform': playlistform,
             'profile': you,
+            'you': you,
             'private_profile': private_profile,
             'following_status': following_status,
         }
@@ -790,6 +791,7 @@ def get_playlists(request, user_id):
                 context = {
                     'playlists': all_playlists,
                     'profile': other_user,
+                    'you': you,
                     'private_profile': private_profile,
                     'following_status': following_status,
                 }
@@ -920,6 +922,7 @@ def get_songs_playlist(request, user_id, playlist_id):
             'songs': songs,
             'playlist': playlist,
             'profile': you,
+            'you': you,
             'private_profile': private_profile,
             'following_status': following_status,
             'loggedin': you,
@@ -965,6 +968,7 @@ def get_songs_playlist(request, user_id, playlist_id):
                         'songs': songs,
                         'playlist': playlist,
                         'profile': other_user,
+                        'you': you,
                         'private_profile': private_profile,
                         'following_status': following_status,
                         'playlists': playlists,
