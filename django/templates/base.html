@@ -71,8 +71,17 @@
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'recommender:survey_genres' %}">Survey</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'recommender:user_preference_recommender' %}">Explore</a>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownE" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Explore
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownE">
+                        <li><a class="dropdown-item" href="{% url 'recommender:user_preference_recommender' %}">My Recommendations</a></li>
+                        <li><a class="dropdown-item" href="{% url 'recommender:custom_recommender' %}">Custom Recommender</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="">Artist Analyzer</a></li>
+                        <li><a class="dropdown-item" href="">Song Analyzer</a></li>
+                      </ul>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
@@ -119,41 +128,6 @@
         </div>
         <br><br>
         <br><br>
-       
-        {% if profile %}
-          {% if profile.linked_to_spotify and profile.is_premium %}
-            {% include 'webplayer_footer.html' with profile=profile %}
-          {% endif %}
-        {% endif %}
-        <!-- <script>
-          let previousURL;
-          let data = '/static/js/livesearch.js';
-            // profile: '/static/js/profile.js',
-            // top_countries: '/static/js/top-countries.js',
-          
-          function pageClick(url) {
-            previousURL = location.pathname;
-            console.log('URL ' + url);
-            console.log('PREVURL ' + previousURL);
-            history.pushState($('form').serialize(), document.title, url);
-
-            $('#basecontainer').load(url + ' #basecontainer', function (responseText) {
-              var title = responseText.match(/<title>([^<]*)/)[1];
-              document.title = title; 
-            })
-
-
-          }
-
-          window.addEventListener("popstate", function(event) {
-            if(event) {
-              console.log(event);
-              // location.reload();
-              pageClick(previousURL);
-            }
-          });
-
-        </script> -->
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
       </body>

@@ -35,6 +35,7 @@ h2, h3, h4, h5, h6 {
 
 .spotify {
     background-color: #1ed761; /* Spotify Green */
+    font-weight: bold;
 }
 
 .spBtnText {
@@ -56,11 +57,18 @@ a {
 }
 
 
+.btn-dark {
+    background-color: #1F2933;
+    font-weight: bold;
+}
+
 .playlist {
     box-shadow: 0rem 0.3rem 0.1rem 0.01rem #1F2933;
     border-radius: 0.5rem;
 }
 
+
+/* CSS for modal popups */
 .modal-content  {
     background-color: #a0bed9;
 }
@@ -70,14 +78,39 @@ a {
     font-size: 200%;
 }
 
+.modal-headings {
+    color: #001629;
+}
+
 .modalBtn {
+    background-color: #1F2933;
+    border-color: #1F2933;
+    color: #d9dadc;
+    font-weight: bold;
+}
+
+.modalBtn:hover {
+    border-color: #a0bed9;
     background-color: #1F2933;
     color: #d9dadc;
 }
 
+.modalClose {
+    font-weight: bold;
+}
+
+.modalClose:hover {
+    color: black;
+}
+/* End modal CSS */
+
+
+/* Makes spotify widgets round */
+.spRound {
+    border-radius: 0.3rem;
+}
 
 .accordion td {
     font-size: small;
 }
-
 

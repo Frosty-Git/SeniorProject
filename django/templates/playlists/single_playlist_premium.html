@@ -1,27 +1,7 @@
-{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Playlist{% endblock %}
-
-{% block content %}
-
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-{% endif %}
-
-{% if you.linked_to_spotify and you.is_premium %}
-    
-    {% include 'playlists/single_playlist_premium.html' with songs=songs playlist=playlist private_profile=private_profile following_status=following_status loggedin=loggedin playlists=playlists %}
-
-{% else %}
-
 <h1 style="text-align: center; margin-top: 2%;">
-    {% if profile.user.id == you.user.id %}
+    {% if profile.user.id == user.id %}
         My Playlist:
     {% else %}
         <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
@@ -36,6 +16,29 @@
     {{ playlist.name }}
     {% if playlist.is_private %}
         <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
+    {% endif %}
+    {% if playlist.is_imported %}
+        <button id="playlist{{ playlist.spotify_playlist_id }}" value='{{ playlist.spotify_playlist_id }}' type="button" class="btn" style="color:#d9dadc">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+            </svg>
+        </button>
+        <script>
+            $('#playlist{{ playlist.spotify_playlist_id }}').click(function(e) {
+                let playlist_id = $(this).val();
+                $.ajax({
+                    url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
+                    type: "PUT",
+                    data: '{"context_uri": "spotify:playlist:'+ playlist_id +'"}',
+                    beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + profile_token );},
+                    success: function(data) { 
+                        console.log('is this the data ' + data);
+                        $('.fixed-bottom').show();
+                    }
+                });
+            });
+        </script> 
     {% endif %}
 </h1>
 
@@ -88,7 +91,9 @@
         {% endif %}
     {% endif %}
 </table>
+
 {% endif %}
+
 
 
 {% if profile.user.id != user.id and playlist.is_shareable %}
@@ -112,6 +117,8 @@
 <table class="center" style="width:90%;">
     <tr>
         <th></th>
+        <th style="text-align: center;"><h6>Title</h6></th>
+        <th style="text-align: center;"><h6>Artist</h6></th>
         <th style="text-align: center;"><h6>Album</h6></th>
         <th style="text-align: center;"><h6>Duration</h6></th>
     </tr>
@@ -126,12 +133,37 @@
         <!-- song.5 is the artist of the track -->
         <!-- song.6 is the album of the track -->
         <!-- song.7 is the duration of the track -->
+
         <tr style="border-bottom: 1px solid #1F2933;">
-            <td class="centered-column" style="width:200px; padding-top:8px; padding-bottom: 8px;">
-                <iframe src='https://open.spotify.com/embed/track/{{ song.1 }}' class="wp-block-embed-spotify spRound" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+            <!-- Album Cover Art -->
+            <td style="text-align: center;">
+                <button id="trackelse{{ song.1 }}" value='{{ song.1 }}' type="button" class="btn" style="color:#d9dadc">
+                    <img src="{{ song.3 }}" width="100px" height="100px">
+                </button>
             </td>
-            <td style="text-align: center;">{{song.6}}</td>
-            <td style="text-align: center;">{{song.7}}</td>
+            <script>
+                $('#trackelse{{ song.1 }}').click(function(e) {
+                    let track_id = $(this).val();
+                    $.ajax({
+                        url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
+                        type: "PUT",
+                        data: '{"uris": ["spotify:track:'+ track_id +'"]}',
+                        beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + profile_token );},
+                        success: function(data) { 
+                            console.log('is this the data ' + data)
+                            $('.fixed-bottom').show();
+                        }
+                    });
+                });
+            </script>
+            <!-- Song Title -->
+            <td style="text-align: center;">{{ song.4 }}</td>
+            <!-- Artist -->
+            <td style="text-align: center;">{{ song.5 }}</td>
+            <!-- Album -->
+            <td style="text-align: center;">{{ song.6 }}</td>
+            <!-- Duration -->
+            <td style="text-align: center;">{{ song.7 }}</td>
             <!-- You are logged in -->
             {% if user.is_authenticated %}
             <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
@@ -169,18 +201,19 @@
                     </div>
                     {% include 'playlists/addsong_popup.html' with playlists=playlists loggedin=loggedin %}
                 </td>
+                <script>
+                    var addPlaylistModal = document.getElementById('addtoplaylistmodal{{ song.0 }}');
+                    function addModalClick(id) {
+                        window.history.pushState({},"", "/profile/addtoplaylist_popup/" + id );
+                        addPlaylistModal.show();
+                    }  
+                
+                    addPlaylistModal.addEventListener('hidden.bs.modal', function (event) {
+                        window.history.replaceState({}, "", "{% url 'user:get_songs_playlist' profile.user.id playlist.id %}")
+                    })
+                </script>
             {% endif %}
-            <script>
-                var addPlaylistModal = document.getElementById('addtoplaylistmodal{{ song.0 }}');
-                function addModalClick(id) {
-                    window.history.pushState({},"", "/profile/addtoplaylist_popup/" + id );
-                    addPlaylistModal.show();
-                }  
-            
-                addPlaylistModal.addEventListener('hidden.bs.modal', function (event) {
-                    window.history.replaceState({}, "", "{% url 'user:get_songs_playlist' profile.user.id playlist.id %}")
-                })
-            </script>
+
                     <td>
                         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song.1 }}">Share</button>
                         {% include 'social_feed/popup_songpost.html' with song=song.1 %}
@@ -197,13 +230,12 @@
     {% else %}
         <br>
         <tr>
-            <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;" colspan="3">
+            <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;" colspan="5">
                 There are no songs in this playlist!
             </td>
         </tr>
     {% endif %}
 </table>
-
 
 <script>
     var editPlaylistModal = document.getElementById('editplaylistmodal{{ playlist.id }}');
@@ -217,6 +249,9 @@
     })
 
 </script>
-
+{% if loggedin %}
+    {% if loggedin.linked_to_spotify and loggedin.is_premium %}
+        {% include 'webplayer_footer.html' with profile=loggedin %}
+    {% endif %}
 {% endif %}
-{% endblock %}
+

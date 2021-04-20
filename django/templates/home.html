@@ -25,7 +25,7 @@
         <form id='ourSearchForm' method='POST' action='results/' style="color: #f5f7fa;">
             {% csrf_token %}
             <div class="input-group mb-3" style="max-width:40%; margin-left:auto; margin-right:auto" >
-                {% render_field ourSearchForm.term class="form-control" type="text" placeholder="Search..." aria-describedby="button-addon2" id="searchterm" %}
+                {% render_field ourSearchForm.term class="form-control searchform_notrequired" type="text" placeholder="Search..." aria-describedby="button-addon2" id="searchterm" %}
                 <button class="btn btn-outline-light" type="submit" id="button-addon2">Search</button>
             </div>
             <!-- {{ ourSearchForm.term }}
@@ -36,7 +36,12 @@
         </form>
         <br>
     </center>
-<br>        
+<br> 
+{% if profile %}
+    {% if profile.linked_to_spotify and profile.is_premium %}
+        {% include 'webplayer_footer.html' with profile=profile %}
+    {% endif %}
+{% endif %}       
 <script src="{% static 'js/livesearch.js' %}"></script>
 
 {% endblock %}

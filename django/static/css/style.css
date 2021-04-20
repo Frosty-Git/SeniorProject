@@ -85,7 +85,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #d9dadc;
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -101,10 +101,10 @@
     transition: .4s;
 }
 input:checked+.slider {
-    background-color: #212529;
+    background-color: #1F2933;
 }
 input:focus+.slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #1F2933;
 }
 input:checked+.slider:before {
     -webkit-transform: translateX(26px);
@@ -122,69 +122,21 @@ input:checked+.slider:before {
 
 
 
-/* Begin tooltip ((?) on Settings page)
-   Source: https://tutorialzine.com/2014/07/css-inline-help-tips
-*/
-.help-tip {
-    position: absolute;
-    top: 0px;
-    right: 17%;
-    text-align: center;
-    background-color: #212529;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
-    line-height: 26px;
-    cursor: default;
-}
-.help-tip:before {
-    content: '?';
+/* Begin tooltip CSS (seen on Settings page and in popups) */
+.tooltip-inner {
+    background-color: #1F2933;
+    font-family: 'Montserrat', sans-serif;
     font-weight: bold;
-    color: #fff;
-}
-.help-tip:hover p {
-    display: block;
-    transform-origin: 100% 0%;
-    -webkit-animation: fadeIn 0.3s ease-in-out;
-    animation: fadeIn 0.3s ease-in-out;
-}
-.help-tip p {
-    display: none;
-    text-align: left;
-    background-color: #1E2021;
-    padding: 20px;
-    width: 300px;
-    position: absolute;
-    border-radius: 3px;
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-    right: -4px;
-    color: #FFF;
-    font-size: 13px;
-    line-height: 1.4;
-}
-.help-tip p:before {
-    /* The pointer of the tooltip */
-    position: absolute;
-    content: '';
-    width: 0;
-    height: 0;
-    border: 6px solid transparent;
-    border-bottom-color: #1E2021;
-    right: 10px;
-    top: -12px;
+    color: #d9dadc; /* Baby Penguin White */
 }
 
-.help-tip p:after {
-    /* Prevents the tooltip from being hidden */
-    width: 100%;
-    height: 40px;
-    content: '';
-    position: absolute;
-    top: -40px;
-    left: 0;
+.tooltip.bs-tooltip-bottom .arrow:before {
+    border-right-color: #1F2933 !important;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    color: #d9dadc; /* Baby Penguin White */
 }
-/* End tooltip ((?) on settings page) */
+/* End tooltip */
 
 
 
@@ -273,3 +225,47 @@ input:checked+.slider:before {
 */
 
 /* End Survey Page */
+
+/* Start playlist page */
+.playlistDropdownItem {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.playlistDropdownMenu {
+    background-color: rgba(160, 190, 217, 0.25);
+    width: 10vh;
+}
+
+
+/* .checkbox {
+    margin: 0 0 1em 2em;
+  }
+  .checkbox .tag {
+    color: #595959;
+    display: block;
+    float: left;
+    font-weight: bold;
+    position: relative;
+    width: 120px;
+  }
+  .checkbox label {
+    display: inline;
+  }
+  .checkbox .editCheckbox {
+    display: none;
+  }
+  .editCheckbox + label:after {
+    background-color: #fafafa;
+    border: 1px solid #cacece;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    display: inline-block;
+    transition-duration: 0.3s;
+    width: 16px;
+    height: 16px;
+    content: '';
+    margin-left: 10px;
+  }
+  .editCheckbox:checked + label:after {
+    background-color: #595959;
+  } */

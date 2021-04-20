@@ -1,34 +1,95 @@
 {% extends 'settings/base_settings.html' %}
 
+{% load widget_tweaks %}
+
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/update_profile.css' %}">
 {% block title %}Edit Profile{% endblock %}
 
 {% block setting %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
     <center><h1 style="margin-top: 2%">Edit Profile</h1></center>
     <div>
         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#resetprefsmodal">Reset Preferences</button>
     </div>
     {% include 'settings/resetpreferences_popup.html' %}
-
+    <br>
     <div>
-        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#deleteaccountmodal">Delete Account</button>
+        <button type="button" class="btn btn btn-outline-danger" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#deleteaccountmodal">Delete Account</button>
     </div>
     {% include 'settings/deleteaccount_popup.html' %}
 
-    <form method="POST" enctype="multipart/form-data" action="/user/update_profile/">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ profile_form.as_p }}
+    <div class="form-group">
+        <form method="POST" enctype="multipart/form-data" action="/user/update_profile/">
+            {% csrf_token %}
+            <br>
+            <table>
+            <tr>
+                <div class="row">
+                    <div class="col">
+                        <span id="fname" class="form-label">
+                            First Name:
+                        </span>
+                        {% render_field form.first_name class="form-control is-required" id="email" placeholder="Email Adress" style="max-width:450px" %}
+                    </div>
+                    <div class="col">
+                        <span id="lname" class="form-label">
+                            Last Name:
+                        </span>
+                        {% render_field form.last_name class="form-control is-required" id="email" placeholder="Email Adress" style="max-width:450px" %}
+                    </div>
+                </div>
+            </tr>
+            <br>
+            <tr>
+                <div class="row">
+                    <div class="col">
+                        <span id="email_text" class="form-label">
+                            Email:
+                        </span>
+                        <p>{% render_field form.email class="form-control is-required" id="email" placeholder="Email Adress" style="max-width:450px" %} </p>
+                        <div id="email" class="form-text " style="font-style: italic;">e.g. JohnDoe@example.com</div>
+                    </div>
+                </div>
+            </tr>
+            <br>
+            <tr>
+            <div class="row">
+                <div class="col">
+                    <span id="profile_picture" class="form-label">
+                        Profile Picture:
+                    </span>
+                    <br>
+                    {% render_field profile_form.profilepic class="form-control" type="file" id="image" style="max-width:450px" %}
+                </div>
+                <div class="col">
+                    <span id="description_text" class="form-label">
+                         About Me:
+                    </span>
+                    {% render_field profile_form.description class="form-control" id="description" rows="3" style="max-width:450px" %}
+                </div>
+            </div>
+            <br>
+            <tr>
+                <div class="row">
+                    <div class="col">
+                        <span id="likes" class="form-label">
+                            What bands/genres do you like?
+                        </span>
+                        {% render_field profile_form.likes class="form-control" id="likes" rows="2" placeholder="e.g. I like The HU" style="max-width:450px" %}
+                    </div>
+                    <div class="col">
+                        <span id="dislikes" class="form-label">
+                            What bands/genres are you not fond of?
+                        </span>
+                        {% render_field profile_form.dislikes class="form-control" id="dislikes" rows="2" placeholder="e.g. Not a fan of Alabama Disco" style="max-width:450px" %}
+                    </div>
+                </div>
+            </tr>
+            </table>
+            <br>
 
-        <input class="btn btn-primary" type="submit" value="Submit">
-    </form>
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </form>
+    </div>
     <br>
 {% endblock %}

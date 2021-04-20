@@ -16,7 +16,7 @@
                     <div class="alert{{ song }} alert alert-success" role="alert" style="display: none">
                         Post has been created!
                     </div>
-                    <input type="hidden" id="track_id" name="track_id" value="{{ song }}">
+                    <input type="hidden" id="track_id{{ song }}" name="track_id{{ song }}" value="{{ song }}">
                     <center><iframe src="https://open.spotify.com/embed/track/{{ song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></center>
                     <textarea required class="form-control" aria-label="With textarea" id="post_text{{ song }}" name="post_text"></textarea>
                 </div>
@@ -40,7 +40,7 @@
         $('#load{{ song }}').show();
         $('.popupsongbtn{{ song}}').hide();
         e.preventDefault();
-        var song = $('#track_id').val();
+        var song = $('#track_id{{ song }}').val();
         var text = $('#post_text{{ song }}').val();
         $.ajax({
             type: 'POST',

@@ -13,12 +13,17 @@
         <tr>
             <td>
                 <h2>Artists</h2>
+                <input type="text" class="form-control" id="artistterm" placeholder="Search artists...">
+                <div id="search_artists" style="text-align: left;">
+                    {% include 'recommender/custom_recommender_artist.html' %}
+                </div>
+                <div id="final_artists"></div>
             </td>
         </tr>
         <tr>
             <td>
                 <h2>Genre</h2>
-                <select name="genre" id="genre">
+                <select class="form-select" name="genre" id="genre">
                     <option value="blues">Blues</option>
                     <option value="alternative">Alternative</option>
                     <option value="anime">Anime</option>
@@ -50,14 +55,31 @@
         <tr>
             <td>
                 <h2>Track</h2>
+                <input type="text" class="form-control" id="trackterm" placeholder="Search tracks...">
+                <div id="search_tracks" style="text-align: left;">
+                    {% include 'recommender/custom_recommender_track.html' %}
+                </div>
+                <div id="final_tracks"></div>
             </td>
         </tr>
         <tr>
             <td>
-                <button type="button" id="submit" class="btn btn-dark genreBtn" style="height: 50px; width: 110px">Get Recommendations!</button>
+                <button type="button" id="submit" class="btn btn-dark genreBtn">Get Recommendations!</button>
             </td>
         </tr>   
     </table>
 </form>
+<script src="{% static 'js/custom_recommender_artist.js' %}"></script>
+<script src="{% static 'js/custom_recommender_track.js' %}"></script>
+<script>
+    let tracks = [];
+    let artists = [];
+    function createCheckbox(id, name, type) {
+        if (type == 'artist') {
+
+        }
+    }
+</script>
+
 
 {% endblock %}

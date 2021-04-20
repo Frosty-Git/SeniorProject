@@ -16,7 +16,7 @@
         <td class="recCol"> 
             <ul class="songItem">
                 <li>
-                    <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="wp-block-embed-spotify" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+                    <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="wp-block-embed-spotify spRound" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
                 </li>
                 <li>
                     <div class="btn-group" >
@@ -46,7 +46,7 @@
                         {% include 'recommender/song_vote_script.html' %}
                     {% if playlists.count > 1 %}
                         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
-                        {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location%}
+                        {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location song=song %}
                     {% endif %}
                     <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
                     {% include 'social_feed/popup_songpost.html' with song=song %}
@@ -72,18 +72,18 @@
 <table class="center">
     <tr >
         <td class="recCol" style="text-align: center;">
-            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.0 }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.0 }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
             <a class="btn btn-dark" href="{% url 'recommender:artist_info' top_artists_ids.0 %}" role="button" target="_blank">Artist Page</a>
         </td>
         {% if top_artists_ids.1 %}
         <td class="recCol" style="text-align: center;">
-            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.1 }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.1 }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
             <a class="btn btn-dark" href="{% url 'recommender:artist_info' top_artists_ids.1 %}" role="button" target="_blank">Artist Page</a>
         </td>
         {% endif %}
         {% if top_artists_ids.2 %}
         <td class="recCol" style="text-align: center;">
-            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.2 }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.2 }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
             <a class="btn btn-dark" href="{% url 'recommender:artist_info' top_artists_ids.2 %}" role="button" target="_blank">Artist Page</a>
         </td>
         {% endif %}
@@ -97,7 +97,7 @@
         <td style="text-align: center; padding-bottom: 50px; padding-right: 15px; padding-left: 15px;">
             <ul class="songItem">
                 <li>
-                    <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+                    <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
                 </li>
                 <li>
                     <a class="btn btn-dark" href="{% url 'recommender:artist_info' artist_id %}" role="button" target="_blank">Artist Page</a>

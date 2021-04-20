@@ -9,8 +9,7 @@
     td{
         text-align: center;
         padding: 1%;
-        font-weight: bold;
-        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-weight: bold;;
     } 
 </style>
 <h1 style="text-align: center; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
@@ -18,7 +17,7 @@
 </h1>
 
     <!--Note this will have to match for one single user - the logged in one!!-->
-    <table style="width:90%; margin-top: 2%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;">
+    <table style="width:90%; margin-top: 2%;">
         {% for pair in following %}
         <!-- pair is an array of [UserProfile, Boolean], where the Boolean is True if you follow the user -->
         <!-- pair.0 is the UserProfile, pair.1 is True or False -->

@@ -29,4 +29,5 @@ urlpatterns = [
     path('survey_final/<songs_list>', views.survey_final, name='survey_final'),
     path('top_playlists/', views.top_playlists, name='top_playlists'),
     path('artist/<artist_id>', views.artist_info, name='artist_info'),
+    path('custom_recommender/', views.custom_recommender, name='custom_recommender'),
 ]
