@@ -126,6 +126,37 @@
 }
 
 
+#songprogress {
+    -webkit-appearance: none;
+    background-color: #1F2933;
+    width:80%;
+    /* padding-left:5%; padding-right: 1%; */
+}
+
+#songprogress::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background-color: lightgray;
+    border: none;
+    width: 100%;
+    height:10%;
+}
+
+#songprogress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    background-color: goldenrod;
+    border-radius: 50%;
+    margin-top: -8px;
+    height: 16px;
+    width: 16px;
+}
+
+#songprogress::-webkit-slider-thumb::before {
+    background-color: black;
+    width: 100%;
+    height:10%;
+}
+
 
 #songprogress::-moz-range-track {
     width: 100%;
@@ -137,11 +168,10 @@
     background-color: lightgray;
 }
 
-#songprogress::-moz-range-progress {
+#songprogress::-moz-range-progress  {
     background-color: #a0bed9;
     border: 1px solid #a0bed9;
 }
-  
 
 
 #currentTime, #totalTime {

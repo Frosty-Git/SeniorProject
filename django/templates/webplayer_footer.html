@@ -55,29 +55,40 @@
           </tr>
           <tr>
             <td>
-              <table style="width: 100%;">
+              <table style="width: 100%; display: inline-table;">
                 <tr>
-                  <td></td>
+                  <td><span id="currentTime"></span></td>
                   <td>
                     <form id="dummysong">
-                      <span id="currentTime"></span>
-                      <input type="range" style="width:80%; background-color: #1F2933; padding-left:5%; padding-right: 1%;" id="songprogress" value="" max="" min="0">
+                      <input type="range" id="songprogress" value="" max="" min="0">
                         <!-- <progress type="range" style="width:80%; background-color: #1F2933;" id="songprogress" value="" max=""></progress> -->
-                      <span id="totalTime" ></span>
                     </form>
                   </td>
-                  <td></td>
+                  <td><span id="totalTime" ></span></td>
                 </tr>
               </table>
             </td>
           </tr>
         </table>
       </div>
-      <div class="w3-col m3 w3-red w3-center">
+      <div class="w3-col m3 w3-center" style="margin-top: 2%; ">
         <table class="center">
           <tr>
             <td>
-
+              <div class="btn-group dropup" style=" text-align: center; padding-bottom:5px;">
+                <button id="queue" class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border:transparent;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
+                    <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+                    <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
+                    <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
+                    <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+                  </svg>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#">Menu item</a></li>
+                  <li><a class="dropdown-item" href="#">Menu item</a></li>
+                </ul>
+              </div>
             </td>
             <td>
               <div style="padding-bottom:5px; margin-right: -5%">
