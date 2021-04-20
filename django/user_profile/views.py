@@ -1406,6 +1406,7 @@ def convertMs(ms):
 def convert_time(result):
     """
     Convert a time whose seconds has a value < 10 back into the proper format
+    Last updated: 4/19/21 by Jacelynn Duranceau
     """
     results = list(result)
     position = len(results) - 2
