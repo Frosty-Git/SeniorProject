@@ -860,9 +860,9 @@ def survey_final(request, songs_list):
     genre_stack = ""
     artist_list = ""
     new_genre_stack = GenresStack(genre_stack, artist_list, songs_list)
-    print(new_genre_stack.songs_list)
+    # print(new_genre_stack.songs_list)
     tracks = new_genre_stack.songsToList()
-    print(tracks)
+    # print(tracks)
     NUM_TRACKS = len(tracks)
     save_songs(tracks)
 
