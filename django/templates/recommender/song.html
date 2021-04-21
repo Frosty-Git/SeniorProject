@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %} Song Search {% endblock %}
 
 {% block content %}
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/song.css' %}">
+
 <form method='post' action="/songp/">
     {% csrf_token %}
     <center>
     <br>
     
-        <h2>Song Search</h2>
+        <h1>Song Search</h1>
     
     <br>
     <div>

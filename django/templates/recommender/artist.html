@@ -9,6 +9,8 @@
 <!-- CSS -->
 <link rel="stylesheet" href="{% static 'css/artist.css' %}">
 
+<center>
+
 <form method='post' action="/artistp/">
     {% csrf_token %}
     <br>
@@ -22,7 +24,7 @@
     <button class="btn btn-outline-light btn-lg" type="submit">Analyze</button>
 </form>
 <br>
-
+</center>
 
 {% if highTracks1 %}
 
@@ -41,10 +43,8 @@
                         <tr>
                             {% for track, feature in highTracks1.items %}
                             <td>
-                                
                                     <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
-                                
-                                <h4>{{ feature }}</h4>>
+                                <h4>{{ feature }}</h4>
                             </td>
                         {% endfor %}
                         </tr>
@@ -62,7 +62,7 @@
                             
                                 <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
                             
-                            <h4>{{ feature }}</h4>>
+                            <h4>{{ feature }}</h4>
                         </td>
                     {% endfor %}
                         </tr>

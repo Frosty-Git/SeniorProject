@@ -2,9 +2,9 @@ h1 {
     text-align: center;
 }
 
-h2 {
+h2,h3,h4 {
     text-align: center;
-    text-shadow: 1rem 1rem 2.5px #1F2933;
+    text-shadow: 1px 1px 2.5px #1F2933;
 }
 
 .carousel {
@@ -40,3 +40,7 @@ h2 {
     height: 100%; 
 }
 
+.btn, .btn-outline-light, .btn-lg{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
