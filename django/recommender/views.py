@@ -1125,8 +1125,22 @@ def custom_recommender(request):
     if url_parameter:
         if action == 'artist':
             artist_searches = livesearch_artists(url_parameter)
+            # Replace the apostrophes because it breaks the custom recommender
+            for artist in artist_searches.items():
+                s_id = artist[0]
+                value = artist[1]
+                if "'" in value[0]:
+                    name = value[0]
+                    value[0] = name.replace("'", "\\'")
         else: # it's for a track
             track_searches = livesearch_tracks(url_parameter)
+            # Replace the apostrophes because it breaks the custom recommender
+            for track in track_searches.items():
+                s_id = track[0]
+                value = track[1]
+                if "'" in value[0]:
+                    name = value[0]
+                    value[0] = name.replace("'", "\\'")
         
     if request.is_ajax():
         if action == 'artist':
@@ -1229,12 +1243,43 @@ def cust_rec_results(request):
             # needed in our list limit (of 9); we will loop again
             pass
 
-    playlists = get_user_playlists(user_id)
-    top_artists_ids = get_top_artists_by_id(request)
+    # playlists = get_user_playlists(user_id)
+    # top_artists_ids = get_top_artists_by_id(request)
 
+    # songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+    # song_list = song_vote_dictionary(songs_votes, track_ids)
+
+    # context = {
+    #     'track_ids' : song_list,
+    #     # 'playlists': playlists,
+    #     # 'profile': user,
+    #     # # 'top_artists_ids': top_artists_ids,
+    #     # 'location': 'recommender',
+    #     # 'related_artists': results['related_artists_ids'],
+    #     # 'top_artist_name': results['top_artist']
+    # }
+
+    ugly_string = ""
+    for track in track_ids:
+        ugly_string += (track + "*")
+
+    print(ugly_string)
+
+    link = 'custom_results/' + ugly_string
+    response = {'redirect' : link}
+    return JsonResponse(response)
+    # return render(request, 'recommender/custom_recommender_results.html', context)
+
+def generate_results(request, track_string):
+    track_ids = track_string.split("*")
+    track_ids.pop() # Remove the empty string from the decoded fake 
+                    # query string :) 
+                    # PS: Stop using ajax to redirect please.
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    playlists = get_user_playlists(user_id)
     songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
     song_list = song_vote_dictionary(songs_votes, track_ids)
-
     context = {
         'track_ids' : song_list,
         'playlists': playlists,
@@ -1244,7 +1289,4 @@ def cust_rec_results(request):
         # 'related_artists': results['related_artists_ids'],
         # 'top_artist_name': results['top_artist']
     }
-
-
-    
     return render(request, 'recommender/custom_recommender_results.html', context)

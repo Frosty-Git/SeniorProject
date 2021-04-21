@@ -31,4 +31,5 @@ urlpatterns = [
     path('artist/<artist_id>', views.artist_info, name='artist_info'),
     path('custom_recommender/', views.custom_recommender, name='custom_recommender'),
     path('custom_rec/', views.cust_rec_results, name='cust_rec_results'),
+    path('custom_results/<track_string>', views.generate_results, name='generate_results'),
 ]

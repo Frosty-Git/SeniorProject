@@ -15,4 +15,12 @@
         </tr>
     {% endfor %}
 </table>
+
+<script>
+    function displayProperName(name){
+        fixedit = name.replace("\\", "");
+        return fixedit;
+    }
+</script>
+
 {% endif %}

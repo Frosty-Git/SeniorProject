@@ -310,50 +310,46 @@ function hasClass(elem, className) {
 
     <script>
         $('.recBtn').click(function(e) {
-        let artist_ids = [];
-        $.each($("input[name='artist_check']:checked"), function() {
-            artist_ids.push($(this).val());
+            let artist_ids = [];
+            $.each($("input[name='artist_check']:checked"), function() {
+                artist_ids.push($(this).val());
+            });
+            let track_id = [];
+            $.each($("input[name='track_check']:checked"), function() {
+                track_id.push($(this).val());
+            });
+            let features = [];
+            $.each($("input[name='feature']"), function() {
+                features.push($(this).val());
+            });
+            let genre = [];
+            genre.push($('#genre').val());
+            if (artist_ids.length >= 1 && track_id.length == 1) {
+                console.log(artist_ids);
+                console.log(track_id);
+                console.log(genre)
+                console.log(features);
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "recommender:cust_rec_results" %}',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        artist_id_list: artist_ids,
+                        track_id_list: track_id,
+                        genre_list: genre,
+                        feature_list: features,
+                    },
+                    success: function(response) {
+                        let url = response.redirect;
+                        let s = "/"
+                        window.location.href = s.concat(url);
+                    },
+                }); 
+            }
+            else {
+                alert("Please make at least one selection for an artist and a song!");
+                e.preventDefault();
+            }
         });
-        let track_id = [];
-        $.each($("input[name='track_check']:checked"), function() {
-            track_id.push($(this).val());
-        });
-        let features = [];
-        $.each($("input[name='feature']"), function() {
-            features.push($(this).val());
-        });
-        let genre = [];
-        genre.push($('#genre').val());
-        if (artist_ids.length >= 1 && track_id.length == 1) {
-            console.log(artist_ids);
-            console.log(track_id);
-            console.log(genre)
-           console.log(features);
-           $.ajax({
-                type: 'POST',
-                url: '{% url "recommender:cust_rec_results" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    artist_id_list: artist_ids,
-                    track_id_list: track_id,
-                    genre_list: genre,
-                    feature_list: features,
-                },
-                success: function(response) {
-                    console.log(response.context);
-                    let url = response.url;
-                  let s = "/";
-                  let s2 = s.concat(url);
-                  let s3 = s2.concat(response.context);
-                  window.location.href = s3;
-                  
-                },
-            }); 
-        }
-        else {
-            alert("Please make at least one selection for an artist and a song!");
-            e.preventDefault();
-        }
-    });
     </script>
 {% endblock %}
