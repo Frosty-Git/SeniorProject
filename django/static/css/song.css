@@ -1,10 +1,11 @@
 h1 {
     text-align: center;
+    text-shadow: 0rem .15rem .2rem #1F2933;
 }
 
-h2 {
+h3 {
     text-align: center;
-    text-shadow: 1rem 1rem 2.5px #1F2933;
+    text-shadow: 0rem .15rem .2rem #1F2933;
 }
 
 .carousel {
