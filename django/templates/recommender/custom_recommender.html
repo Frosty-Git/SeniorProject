@@ -203,9 +203,7 @@ function hasClass(elem, className) {
       if(document.recForm.artist_check){
           for(var i=0; i < document.recForm.artist_check.length; i++){
               if(document.recForm.artist_check[i].checked){
-                  console.log("true");
                   total = total + 1;
-                  console.log(total);
               }
               if(total > 3){
                   alert("Please select only three artists");
@@ -225,9 +223,7 @@ function hasClass(elem, className) {
         if(typeof document.recForm.track_check !== 'undefined'){
           for(var i=0; i < document.recForm.track_check.length; i++){
               if(document.recForm.track_check[i].checked){
-              console.log("true");
               total = total + 1;
-              console.log(total);
               }
               if(total > 1){
               alert("Please select only one song");
