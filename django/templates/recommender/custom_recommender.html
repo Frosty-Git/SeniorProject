@@ -74,12 +74,171 @@
 <script>
     let tracks = [];
     let artists = [];
-    function createCheckbox(id, name, type) {
+    function createCheckbox(id, name, type, new_class) {
         if (type == 'artist') {
-
+            var hold = document.getElementById("final_artists");
         }
+        if (type == 'track') {
+            var hold = document.getElementById("final_tracks");
+        }
+        if(document.getElementById(id) == null && checkMaxArtists() & checkMaxTrack()){
+                var checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.name = name;
+                checkbox.value = id;
+                checkbox.id = id;
+                checkbox.className = new_class;
+                checkbox.checked = true;
+                var label = document.createElement('label');
+                label.className = new_class;
+                label.className += " " + id;
+                var tn = document.createTextNode(name);
+                label.htmlFor=id;
+                label.appendChild(tn); 
+                hold.appendChild(label);
+                hold.appendChild(checkbox);
+            }
     }
 </script>
+
+
+<script>
+    document.addEventListener('click', function (e) {
+    if (hasClass(e.target, 'artist_check')) {
+        let x = document.getElementsByClassName("artist_check");
+        let arr = [];
+        // console.log(x.length);
+        // console.log("target")
+        // console.log(e.target)
+        let selected = e.target;
+        let selectedArr = selected.classList
+        // console.log("SELECTED'S Class")
+        // console.log(selectedArr);
+        // console.log("SELECTED LENGTH")
+        // console.log(selectedArr.length)
+        // console.log("SELECTED'S ID")
+        // console.log(selected.id);
+        for(let i = x.length-1; i >= 0; i--){
+            // console.log("element")
+            // console.log(x[i]);
+            // console.log("element class list")
+            // console.log(x[i].classList);
+            // console.log("element id")
+            // console.log(x[i].id);
+            if(x[i].classList == selectedArr){
+                // console.log("1 removed")
+                x[i].checked = false;
+                x[i].remove();
+            }
+            else if((x[i].id == selected.id) && selected.id !== "" && x[i].id !== ""){
+                // console.log(typeof(x[i]))
+                // console.log("2 removed")
+                x[i].checked = false;
+                x[i].remove();
+                
+            }
+            else if(x[i].classList == selectedArr){
+                // console.log("3 removed")
+                x[i].checked = false;
+                x[i].remove();
+                
+                // console.log(x.length);
+            }
+            else if(x[i].classList.contains(selected.id)){
+                // console.log("4 removed")
+                x[i].checked = false;
+                x[i].remove();
+                
+            }
+            else if(selectedArr.contains(x[i].id)){
+                // console.log("5 removed")
+                x[i].checked = false;
+                x[i].remove();
+            }
+            // console.log("selected length on pass " + i)  ;         
+            // console.log(x.length);
+        }
+        // console.log(x);
+    } else if (hasClass(e.target, 'track_check')) {
+        let y = document.getElementsByClassName("track_check");
+        let x = document.getElementsByClassName("artist_check");
+        let arr = [];
+        let selected = e.target;
+        let selectedArr = selected.classList
+        for(let i = y.length-1; i >= 0; i--){
+            if(y[i].classList == selectedArr){
+                y[i].checked = false;
+                y[i].remove();
+            }
+            else if((y[i].id == selected.id) && selected.id !== "" && y[i].id !== ""){
+                y[i].checked = false;
+                y[i].remove();
+                
+            }
+            else if(y[i].classList == selectedArr){
+                y[i].checked = false;
+                y[i].remove();
+            }
+            else if(y[i].classList.contains(selected.id)){
+                y[i].checked = false;
+                y[i].remove();
+            }
+            else if(selectedArr.contains(y[i].id)){
+                y[i].checked = false;
+                y[i].remove();
+            }
+        }
+    }
+}, false);
+
+function hasClass(elem, className) {
+    return elem.className.split(' ').indexOf(className) > -1;
+}
+</script>
+
+<script>
+    function checkMaxArtists() {
+      console.log("Check")
+      let total=0;
+      if(document.recForm.artist_check){
+          for(var i=0; i < document.recForm.artist_check.length; i++){
+              if(document.recForm.artist_check[i].checked){
+                  console.log("true");
+                  total = total + 1;
+                  console.log(total);
+              }
+              if(total > 3){
+                  alert("Please select only three artists");
+                  return false;
+              }
+          }
+      }
+      return true;
+    }
+  </script>
+  
+  <script>
+      function checkMaxTrack() {
+        console.log("Check")
+        let total=0;
+        console.log(document.recForm.track_check)
+        if(typeof document.recForm.track_check !== 'undefined'){
+          for(var i=0; i < document.recForm.track_check.length; i++){
+              if(document.recForm.track_check[i].checked){
+              console.log("true");
+              total = total + 1;
+              console.log(total);
+              }
+              if(total > 1){
+              alert("Please select only one song");
+              return false;
+              }
+          }
+        }
+        return true;
+      }
+    </script>
+
 
 
 {% endblock %}

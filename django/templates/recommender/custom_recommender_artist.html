@@ -8,10 +8,10 @@
         <tr>
             <td>
                 {% if artist_info.1 %}
-                    <img src="{{ artist_info.1 }}" class="img-fluid" alt="..." width="30" height="30" onclick="createCheckbox('{{ id }}', '{{ artist_info.0 }}', 'artist')">
+                    <img src="{{ artist_info.1 }}" class="img-fluid" alt="..." width="30" height="30" onclick="createCheckbox('{{ id }}', '{{ artist_info.0 }}', 'artist', 'artist_check')">
                 {% endif %}
             </td>
-            <td onclick="createCheckbox('{{ id }}', '{{ artist_info.0 }}', 'artist')">{{ artist_info.0 }}</td>
+            <td onclick="createCheckbox('{{ id }}', '{{ artist_info.0 }}', 'artist', 'artist_check')">{{ artist_info.0 }}</td>
         </tr>
     {% endfor %}
 </table>

@@ -303,14 +303,14 @@ def user_preference_recommender(request):
                 # loop = True
                 pass
 
-            print(len(track_ids))
-            print(issue)
-            print(track_ids)
+        #     print(len(track_ids))
+        #     print(issue)
+        #     print(track_ids)
 
-        print("-------------------------")
-        print(len(track_ids))
-        print(track_ids)
-        print("-------------------------")
+        # print("-------------------------")
+        # print(len(track_ids))
+        # print(track_ids)
+        # print("-------------------------")
 
         playlists = get_user_playlists(user_id)
         top_artists_ids = get_top_artists_by_id(request)

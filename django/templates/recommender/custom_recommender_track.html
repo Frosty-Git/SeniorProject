@@ -7,10 +7,10 @@
         <tr>
             <td> 
             {% if track_info.2 %}
-                <img src="{{ track_info.2 }}" class="img-fluid" alt="..." width="30" height="30" onclick="createCheckbox('{{ id }}', '{{ track_info.0 }}', 'track')">
+                <img src="{{ track_info.2 }}" class="img-fluid" alt="..." width="30" height="30" onclick="createCheckbox('{{ id }}', '{{ track_info.0 }}', 'track', 'track_check')">
             {% endif %}
             </td>
-            <td onclick="createCheckbox('{{ id }}', '{{ track_info.0 }}', 'track')">{{ track_info.0 }} - {{ track_info.1 }}</td>
+            <td onclick="createCheckbox('{{ id }}', '{{ track_info.0 }}', 'track', 'track_check')">{{ track_info.0 }} - {{ track_info.1 }}</td>
         </tr>
     {% endfor %}
 </table>
