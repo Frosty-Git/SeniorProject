@@ -8,6 +8,21 @@
 <center><h1>My Recommendations</h1></center>
 <br>
 
+<!-- Refresh Page Button (to get new songs) -->
+<div>
+    <button type="button" class="btn btn-dark refreshBtn" style="height: 50px; width: 110px">Refresh Options</button>
+</div>
+<script>
+    $('.refreshBtn').click(function(e) {
+      $('input[name="art"]').each(function() {
+        this.checked = false;
+      });
+      location.reload(true);
+    })
+</script>
+<!-- End Refresh Page Button -->
+
+
 {% if min_likes_met and profile.survey_taken %}
 
 <table class="center"><tr>
