@@ -112,6 +112,10 @@ def search_artist_features(query, feature, high_or_low):
         return low_song
 
 def get_top_tracks(artist_id):
+    """
+    Gets an artists top tracks from spotify.
+    Last updated: 4/21/21 by Jacelynn Duranceau
+    """
     tracks = sp.artist_top_tracks('spotify:artist:'+artist_id)['tracks']
     all_tracks = []
     for track in tracks:
@@ -120,6 +124,10 @@ def get_top_tracks(artist_id):
     return all_tracks
         
 def get_recommendation(request, limit, user_id, **kwargs):
+    """
+    Gets recommendations for a user based on their top songs and artists.
+    Last updated: 4/20/21 by Jacelynn Duranceau
+    """
     seed_artists = get_top_artists_by_id(request)
     profile = UserProfile.objects.get(pk=user_id)
     prefs = Preferences.objects.get(user_profile_fk=profile)
@@ -138,6 +146,26 @@ def get_recommendation(request, limit, user_id, **kwargs):
                                         **kwargs)
     top_artist_name = get_artist_name(seed_artists[0])
     results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
+    return results
+
+def get_custom_recommendation(request, limit, user_id, artists, track, genre, **kwargs):
+    """
+    Gets a user custom recommendations based on input from the custom
+    recommender page. Artists, track, genre, and features (**kwargs)
+    must be sent in as a list.
+    Last updated: 4/21/21 by Jacelynn Duranceau
+    """
+    profile = UserProfile.objects.get(pk=user_id)
+    # related_artists_ids = get_related_artists(seed_artists[0], 6)
+    recommendations = sp.recommendations(seed_artists=artists,
+                                        seed_genres=genre, 
+                                        seed_tracks=track, 
+                                        limit=limit,
+                                        country=None,
+                                        **kwargs)
+    # top_artist_name = get_artist_name(seed_artists[0])
+    # results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
+    results = {'recommendations': recommendations}
     return results
 
 def get_top_artists_by_id(request):

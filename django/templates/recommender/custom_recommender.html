@@ -66,7 +66,62 @@
         </tr>
         <tr>
             <td>
-                <button type="button" id="submit" class="btn btn-dark genreBtn">Get Recommendations!</button>
+                <h2>Track Features</h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            Acousticness
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="aco" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                        <td>
+                            Danceability
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="dan" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                        <td>
+                            Energy
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ene" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                        <td>
+                            Instrumentalness
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ins" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Speechiness
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="spe" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                        <td>
+                            Loudness
+                            <input type="range" name="feature" min="-60.0" max="0.0" step="1.0" value="-30.0" id="lou" oninput="this.nextElementSibling.value = this.value">
+                            <output>-30</output>
+                        </td>
+                        <td>
+                            Tempo
+                            <input type="range" name="feature" min="50" max="150" step="1" value="100" id="tem" oninput="this.nextElementSibling.value = this.value">
+                            <output>100</output>
+                        </td>
+                        <td>
+                            Valence
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="val" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" id="submit" class="btn btn-dark recBtn">Get Recommendations!</button>
             </td>
         </tr>   
     </table>
@@ -79,11 +134,13 @@
     function createCheckbox(id, name, type, new_class) {
         if (type == 'artist') {
             var hold = document.getElementById("final_artists");
+            var satisfied = checkMaxArtists()
         }
         if (type == 'track') {
             var hold = document.getElementById("final_tracks");
+            var satisfied = checkMaxTrack()
         }
-        if(document.getElementById(id) == null && checkMaxArtists() && checkMaxTrack()){
+        if(document.getElementById(id) == null && satisfied){
             let checkbox = document.createElement('input');
             checkbox.type = "checkbox";
             checkbox.name = new_class;
@@ -199,11 +256,8 @@ function hasClass(elem, className) {
 
 <script>
     function checkMaxArtists() {
-        console.log("MAX ARTISTS")
       let total=0;
       let type = typeof document.recForm.artist_check
-      console.log(document.recForm.artist_check)
-      console.log("type is " + type)
       if(type == "undefined"){
           // This is the first time we are trying to add.
           return true;
@@ -246,5 +300,60 @@ function hasClass(elem, className) {
             return false;
         }
       }
+    </script>
+
+    <script>
+        function updateTextInput(val) {
+            document.getElementById('textInput').value=val; 
+        }
+    </script>
+
+    <script>
+        $('.recBtn').click(function(e) {
+        let artist_ids = [];
+        $.each($("input[name='artist_check']:checked"), function() {
+            artist_ids.push($(this).val());
+        });
+        let track_id = [];
+        $.each($("input[name='track_check']:checked"), function() {
+            track_id.push($(this).val());
+        });
+        let features = [];
+        $.each($("input[name='feature']"), function() {
+            features.push($(this).val());
+        });
+        let genre = [];
+        genre.push($('#genre').val());
+        if (artist_ids.length >= 1 && track_id.length == 1) {
+            console.log(artist_ids);
+            console.log(track_id);
+            console.log(genre)
+           console.log(features);
+           $.ajax({
+                type: 'POST',
+                url: '{% url "recommender:cust_rec_results" %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    artist_id_list: artist_ids,
+                    track_id_list: track_id,
+                    genre_list: genre,
+                    feature_list: features,
+                },
+                success: function(response) {
+                    console.log(response.context);
+                    let url = response.url;
+                  let s = "/";
+                  let s2 = s.concat(url);
+                  let s3 = s2.concat(response.context);
+                  window.location.href = s3;
+                  
+                },
+            }); 
+        }
+        else {
+            alert("Please make at least one selection for an artist and a song!");
+            e.preventDefault();
+        }
+    });
     </script>
 {% endblock %}
