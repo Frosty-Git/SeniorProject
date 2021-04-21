@@ -64,7 +64,7 @@
 <h3>Pick up to 3 artists you like for the genre {{ genre }}.</h3>
 <form name="artistForm" method="post">
   {% csrf_token %}
-  <table>
+  <table id = "table1">
     <tr>
       <td>
         <iframe src="https://open.spotify.com/embed/artist/{{ artist_ids.0 }}" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
@@ -174,21 +174,22 @@
       </td>
     </tr>
   </table>
-  <div style="margin-left: 10%;">
-    <button type="button" id="submit" class="btn btn-dark artistBtn" style="height: 50px; width: 110px">Submit</button>
-  </div>
-  <div>
-    <button type="button" class="btn btn-dark refreshBtn" style="height: 50px; width: 110px">Refresh Options</button>
-  </div>
+
+<div id = 'button_format'>
+  <button type="button" class="btn btn-outline-light" id = "songBtn" >Submit</button>
+
+
+  <button type="button" class="btn btn-outline-light" id = "refreshBtn" >Refresh</button>
+</div>
   <script>
-    $('.refreshBtn').click(function(e) {
+    $("#refreshBtn").click(function(e) {
       $('input[name="art"]').each(function() {
         this.checked = false;
       });
       location.reload(true);
     })
 
-    $('.artistBtn').click(function(e) {
+    $('#songBtn').click(function(e) {
         let artist_ids = [];
         $.each($("input[name='art']:checked"), function() {
             artist_ids.push($(this).val());

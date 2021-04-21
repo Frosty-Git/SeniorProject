@@ -200,21 +200,21 @@
     </tr>
     {% endif %}
   </table>
-  <div style="margin-left: 10%;">
-    <button type="button" id="submit" class="btn btn-dark songBtn" style="height: 50px; width: 110px">Submit</button>
-  </div>
-  <div>
-    <button type="button" class="btn btn-dark refreshBtn" style="height: 50px; width: 110px">Refresh Options</button>
+  <div id = 'button_format'>
+    <button type="button" class="btn btn-outline-light" id = "songBtn" >Submit</button>
+  
+  
+    <button type="button" class="btn btn-outline-light" id = "refreshBtn" >Refresh</button>
   </div>
   <script>
-    $('.refreshBtn').click(function(e) {
+    $('#refreshBtn').click(function(e) {
       $('input[name="song"]').each(function() {
         this.checked = false;
       });
       location.reload(true);
     })
 
-    $('.songBtn').click(function(e) {
+    $('#songBtn').click(function(e) {
         let song_ids = [];
         $.each($("input[name='song']:checked"), function() {
             song_ids.push($(this).val());

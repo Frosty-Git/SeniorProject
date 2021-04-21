@@ -1,0 +1,21 @@
+.btn btn-outline-light{
+    background-color: transparent;
+
+}
+tr{
+    background-color: #2e3842;
+    border: black solid 1px;
+    margin-bottom: 10px;
+}
+td{
+    background-color: #2e3842;
+    border: black solid 1px;
+   
+}
+
+#button_format{
+    margin-top:10px;
+}
+#refreshBtn{
+ margin-left:5px;
+}

@@ -195,11 +195,11 @@
       </td>
     </tr>
   </table>
-  <div style="margin-left: 10%;">
-    <button type="button" id="submit" class="btn btn-dark genreBtn" style="height: 50px; width: 110px">Submit</button>
+  <div >
+    <button type="button" id="submit" class="btn btn-outline-light" >Submit</button>
   </div>
   <script>
-    $('.genreBtn').click(function(e) {
+    $('.btn-outline-light').click(function(e) {
         let checked = [];
         $.each($("input[name='gen']:checked"), function() {
             checked.push($(this).val());
