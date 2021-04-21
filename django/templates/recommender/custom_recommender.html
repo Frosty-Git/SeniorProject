@@ -13,6 +13,7 @@
         <tr>
             <td>
                 <h2>Artists</h2>
+                <p>Select up to three.</p>
                 <input type="text" class="form-control" id="artistterm" placeholder="Search artists...">
                 <div id="search_artists" style="text-align: left;">
                     {% include 'recommender/custom_recommender_artist.html' %}
@@ -55,6 +56,7 @@
         <tr>
             <td>
                 <h2>Track</h2>
+                <p>Select one.</p>
                 <input type="text" class="form-control" id="trackterm" placeholder="Search tracks...">
                 <div id="search_tracks" style="text-align: left;">
                     {% include 'recommender/custom_recommender_track.html' %}
@@ -81,23 +83,23 @@
         if (type == 'track') {
             var hold = document.getElementById("final_tracks");
         }
-        if(document.getElementById(id) == null && checkMaxArtists() & checkMaxTrack()){
-                var checkbox = document.createElement('input');
-                checkbox.type = "checkbox";
-                checkbox.name = name;
-                checkbox.value = id;
-                checkbox.id = id;
-                checkbox.className = new_class;
-                checkbox.checked = true;
-                var label = document.createElement('label');
-                label.className = new_class;
-                label.className += " " + id;
-                var tn = document.createTextNode(name);
-                label.htmlFor=id;
-                label.appendChild(tn); 
-                hold.appendChild(label);
-                hold.appendChild(checkbox);
-            }
+        if(document.getElementById(id) == null && checkMaxArtists() && checkMaxTrack()){
+            let checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = new_class;
+            checkbox.value = id;
+            checkbox.id = id;
+            checkbox.className = new_class;
+            checkbox.checked = true;
+            let label = document.createElement('label');
+            label.className = new_class;
+            label.className += " " + id;
+            let tn = document.createTextNode(name);
+            label.htmlFor=id;
+            label.appendChild(tn); 
+            hold.appendChild(label);
+            hold.appendChild(checkbox);
+        }
     }
 </script>
 
@@ -161,7 +163,6 @@
         // console.log(x);
     } else if (hasClass(e.target, 'track_check')) {
         let y = document.getElementsByClassName("track_check");
-        let x = document.getElementsByClassName("artist_check");
         let arr = [];
         let selected = e.target;
         let selectedArr = selected.classList
@@ -198,43 +199,52 @@ function hasClass(elem, className) {
 
 <script>
     function checkMaxArtists() {
-      console.log("Check")
+        console.log("MAX ARTISTS")
       let total=0;
-      if(document.recForm.artist_check){
-          for(var i=0; i < document.recForm.artist_check.length; i++){
-              if(document.recForm.artist_check[i].checked){
-                  total = total + 1;
-              }
-              if(total > 3){
-                  alert("Please select only three artists");
-                  return false;
-              }
-          }
+      let type = typeof document.recForm.artist_check
+      console.log(document.recForm.artist_check)
+      console.log("type is " + type)
+      if(type == "undefined"){
+          // This is the first time we are trying to add.
+          return true;
       }
-      return true;
+      else {
+        // After it adds the first time, it does not create a list. So this is
+        // the case where only one checkbox has been added since it would not
+        // have a length property
+        if(typeof document.recForm.artist_check.length == "undefined"){
+            return true;
+        }
+        // It needs to be <= 2 since it is checking the length before it adds the
+        // last item. So if it is 2 you are able to add the last one (to give a
+        // max of 3).
+        else if(document.recForm.artist_check.length <= 2)
+        {
+            return true;
+        }
+        // We have reached the max checkboxes.
+        else{
+            alert("Please select only three artists");
+            return false;
+        }
+      }
     }
   </script>
   
   <script>
       function checkMaxTrack() {
-        console.log("Check")
         let total=0;
-        console.log(document.recForm.track_check)
-        if(typeof document.recForm.track_check !== 'undefined'){
-          for(var i=0; i < document.recForm.track_check.length; i++){
-              if(document.recForm.track_check[i].checked){
-              total = total + 1;
-              }
-              if(total > 1){
-              alert("Please select only one song");
-              return false;
-              }
-          }
+        let type = typeof document.recForm.track_check
+        // If it is undefined, it means no such checkbox exists yet
+        if(type == "undefined"){
+            return true;
         }
-        return true;
+        // If it is not undefined, it means a checkbox exists already, so we
+        // have reached max tracks.
+        else{
+            alert("Please select only one song");
+            return false;
+        }
       }
     </script>
-
-
-
 {% endblock %}
