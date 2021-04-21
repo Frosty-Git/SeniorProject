@@ -62,7 +62,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Top
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
                       <li><a class="dropdown-item" href="{% url 'recommender:top_tracks' %}">Top Tracks</a></li>
                       <li><a class="dropdown-item" href="{% url 'recommender:top_playlists' %}">Top Playlists</a></li>
                     </ul>
@@ -75,7 +75,7 @@
                       <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownE" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Explore
                       </a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownE">
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownE">
                         <li><a class="dropdown-item" href="{% url 'recommender:user_preference_recommender' %}">My Recommendations</a></li>
                         <li><a class="dropdown-item" href="{% url 'recommender:custom_recommender' %}">Custom Recommender</a></li>
                         <li><hr class="dropdown-divider"></li>
@@ -105,7 +105,7 @@
                   <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ user.username }}
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
+                  <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
                     <li><a class="dropdown-item" href="{% url 'user:profile' user.id %}">Profile</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:follow_page' user.id %}">Following</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:update_profile' %}">Settings</a></li>
