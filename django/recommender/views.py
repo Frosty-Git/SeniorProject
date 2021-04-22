@@ -1127,17 +1127,24 @@ def custom_recommender(request):
             artist_searches = livesearch_artists(url_parameter)
             # Replace the apostrophes because it breaks the custom recommender
             for artist in artist_searches.items():
+                print(artist)
                 s_id = artist[0]
                 value = artist[1]
+                name = value[0]
+                value.append(name)  # artist[3] becomes the original name, to be
+                                    # used for displaying in HTML (so that \ does
+                                    # not show up)
                 if "'" in value[0]:
-                    name = value[0]
                     value[0] = name.replace("'", "\\'")
+
         else: # it's for a track
             track_searches = livesearch_tracks(url_parameter)
             # Replace the apostrophes because it breaks the custom recommender
             for track in track_searches.items():
                 s_id = track[0]
                 value = track[1]
+                track.append(value) # the last item in the array becomes the
+                                    # original song name for HTML display
                 if "'" in value[0]:
                     name = value[0]
                     value[0] = name.replace("'", "\\'")
