@@ -1143,7 +1143,8 @@ def custom_recommender(request):
             for track in track_searches.items():
                 s_id = track[0]
                 value = track[1]
-                track.append(value) # the last item in the array becomes the
+                name = value[0]
+                value.append(name) # the last item in the array becomes the
                                     # original song name for HTML display
                 if "'" in value[0]:
                     name = value[0]
@@ -1297,3 +1298,42 @@ def generate_results(request, track_string):
         # 'top_artist_name': results['top_artist']
     }
     return render(request, 'recommender/custom_recommender_results.html', context)
+
+def spotify_stats(request):
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+
+    artist_ids = []
+    track_ids = []
+
+    artist_error = False
+    track_error = False
+
+    if user.linked_to_spotify:
+        spotify_manager = SpotifyManager()
+        spotify_manager.token_check(request)
+        spotify = spotipy.Spotify(auth=user.access_token)
+        try:
+            artist_ids = spotify.current_user_top_artists(limit=9, offset=0, time_range='long_term')['items']['id']
+        except: # A user doesn't even have 9 top artists to choose from
+            artist_error = True
+        try:
+            track_ids = spotify.current_user_top_tracks(limit=15, offset=0, time_range='long_term')['items']['id']
+        except: # A user doesn't even have 15 top songs to choose from
+            track_error = True
+    else:
+        # This view function should not 
+        pass
+
+    playlists = get_user_playlists(user_id)
+    songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+    song_list = song_vote_dictionary(songs_votes, track_ids)
+
+    context = {
+        'profile': user,
+        'track_ids': song_list,
+        'playlists': playlists,
+    }
+
+    return render(request, 'recommender/spotify_stats.html', context)
+

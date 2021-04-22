@@ -78,6 +78,9 @@
                       <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownE">
                         <li><a class="dropdown-item" href="{% url 'recommender:user_preference_recommender' %}">My Recommendations</a></li>
                         <li><a class="dropdown-item" href="{% url 'recommender:custom_recommender' %}">Custom Recommender</a></li>
+                        {% if profile.linked_to_spotify %}
+                        <li><a class="dropdown-item" href="{% url 'recommender:spotify_stats' %}">My Spotify Statistics</a></li>
+                        {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="">Artist Analyzer</a></li>
                         <li><a class="dropdown-item" href="">Song Analyzer</a></li>
