@@ -13,6 +13,7 @@
         <tr>
             <td>
                 <h2>Artists</h2>
+                <p>Select up to three.</p>
                 <input type="text" class="form-control" id="artistterm" placeholder="Search artists...">
                 <div id="search_artists" style="text-align: left;">
                     {% include 'recommender/custom_recommender_artist.html' %}
@@ -55,6 +56,7 @@
         <tr>
             <td>
                 <h2>Track</h2>
+                <p>Select one.</p>
                 <input type="text" class="form-control" id="trackterm" placeholder="Search tracks...">
                 <div id="search_tracks" style="text-align: left;">
                     {% include 'recommender/custom_recommender_track.html' %}
@@ -64,7 +66,62 @@
         </tr>
         <tr>
             <td>
-                <button type="button" id="submit" class="btn btn-dark genreBtn">Get Recommendations!</button>
+                <h2>Track Features</h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            Acousticness
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="aco" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                        <td>
+                            Danceability
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="dan" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                        <td>
+                            Energy
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ene" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                        <td>
+                            Instrumentalness
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ins" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Speechiness
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="spe" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                        <td>
+                            Loudness
+                            <input type="range" name="feature" min="-60.0" max="0.0" step="1.0" value="-30.0" id="lou" oninput="this.nextElementSibling.value = this.value">
+                            <output>-30</output>
+                        </td>
+                        <td>
+                            Tempo
+                            <input type="range" name="feature" min="50" max="150" step="1" value="100" id="tem" oninput="this.nextElementSibling.value = this.value">
+                            <output>100</output>
+                        </td>
+                        <td>
+                            Valence
+                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="val" oninput="this.nextElementSibling.value = this.value">
+                            <output>0.5</output>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" id="submit" class="btn btn-dark recBtn">Get Recommendations!</button>
             </td>
         </tr>   
     </table>
@@ -74,12 +131,225 @@
 <script>
     let tracks = [];
     let artists = [];
-    function createCheckbox(id, name, type) {
+    function createCheckbox(id, name, type, new_class) {
         if (type == 'artist') {
-
+            var hold = document.getElementById("final_artists");
+            var satisfied = checkMaxArtists()
+        }
+        if (type == 'track') {
+            var hold = document.getElementById("final_tracks");
+            var satisfied = checkMaxTrack()
+        }
+        if(document.getElementById(id) == null && satisfied){
+            let checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = new_class;
+            checkbox.value = id;
+            checkbox.id = id;
+            checkbox.className = new_class;
+            checkbox.checked = true;
+            let label = document.createElement('label');
+            label.className = new_class;
+            label.className += " " + id;
+            let tn = document.createTextNode(name);
+            label.htmlFor=id;
+            label.appendChild(tn); 
+            hold.appendChild(label);
+            hold.appendChild(checkbox);
         }
     }
 </script>
 
 
+<script>
+    document.addEventListener('click', function (e) {
+    if (hasClass(e.target, 'artist_check')) {
+        let x = document.getElementsByClassName("artist_check");
+        let arr = [];
+        // console.log(x.length);
+        // console.log("target")
+        // console.log(e.target)
+        let selected = e.target;
+        let selectedArr = selected.classList
+        // console.log("SELECTED'S Class")
+        // console.log(selectedArr);
+        // console.log("SELECTED LENGTH")
+        // console.log(selectedArr.length)
+        // console.log("SELECTED'S ID")
+        // console.log(selected.id);
+        for(let i = x.length-1; i >= 0; i--){
+            // console.log("element")
+            // console.log(x[i]);
+            // console.log("element class list")
+            // console.log(x[i].classList);
+            // console.log("element id")
+            // console.log(x[i].id);
+            if(x[i].classList == selectedArr){
+                // console.log("1 removed")
+                x[i].checked = false;
+                x[i].remove();
+            }
+            else if((x[i].id == selected.id) && selected.id !== "" && x[i].id !== ""){
+                // console.log(typeof(x[i]))
+                // console.log("2 removed")
+                x[i].checked = false;
+                x[i].remove();
+                
+            }
+            else if(x[i].classList == selectedArr){
+                // console.log("3 removed")
+                x[i].checked = false;
+                x[i].remove();
+                
+                // console.log(x.length);
+            }
+            else if(x[i].classList.contains(selected.id)){
+                // console.log("4 removed")
+                x[i].checked = false;
+                x[i].remove();
+                
+            }
+            else if(selectedArr.contains(x[i].id)){
+                // console.log("5 removed")
+                x[i].checked = false;
+                x[i].remove();
+            }
+            // console.log("selected length on pass " + i)  ;         
+            // console.log(x.length);
+        }
+        // console.log(x);
+    } else if (hasClass(e.target, 'track_check')) {
+        let y = document.getElementsByClassName("track_check");
+        let arr = [];
+        let selected = e.target;
+        let selectedArr = selected.classList
+        for(let i = y.length-1; i >= 0; i--){
+            if(y[i].classList == selectedArr){
+                y[i].checked = false;
+                y[i].remove();
+            }
+            else if((y[i].id == selected.id) && selected.id !== "" && y[i].id !== ""){
+                y[i].checked = false;
+                y[i].remove();
+                
+            }
+            else if(y[i].classList == selectedArr){
+                y[i].checked = false;
+                y[i].remove();
+            }
+            else if(y[i].classList.contains(selected.id)){
+                y[i].checked = false;
+                y[i].remove();
+            }
+            else if(selectedArr.contains(y[i].id)){
+                y[i].checked = false;
+                y[i].remove();
+            }
+        }
+    }
+}, false);
+
+function hasClass(elem, className) {
+    return elem.className.split(' ').indexOf(className) > -1;
+}
+</script>
+
+<script>
+    function checkMaxArtists() {
+      let total=0;
+      let type = typeof document.recForm.artist_check
+      if(type == "undefined"){
+          // This is the first time we are trying to add.
+          return true;
+      }
+      else {
+        // After it adds the first time, it does not create a list. So this is
+        // the case where only one checkbox has been added since it would not
+        // have a length property
+        if(typeof document.recForm.artist_check.length == "undefined"){
+            return true;
+        }
+        // It needs to be <= 2 since it is checking the length before it adds the
+        // last item. So if it is 2 you are able to add the last one (to give a
+        // max of 3).
+        else if(document.recForm.artist_check.length <= 2)
+        {
+            return true;
+        }
+        // We have reached the max checkboxes.
+        else{
+            alert("Please select only three artists");
+            return false;
+        }
+      }
+    }
+  </script>
+  
+  <script>
+      function checkMaxTrack() {
+        let total=0;
+        let type = typeof document.recForm.track_check
+        // If it is undefined, it means no such checkbox exists yet
+        if(type == "undefined"){
+            return true;
+        }
+        // If it is not undefined, it means a checkbox exists already, so we
+        // have reached max tracks.
+        else{
+            alert("Please select only one song");
+            return false;
+        }
+      }
+    </script>
+
+    <script>
+        function updateTextInput(val) {
+            document.getElementById('textInput').value=val; 
+        }
+    </script>
+
+    <script>
+        $('.recBtn').click(function(e) {
+            let artist_ids = [];
+            $.each($("input[name='artist_check']:checked"), function() {
+                artist_ids.push($(this).val());
+            });
+            let track_id = [];
+            $.each($("input[name='track_check']:checked"), function() {
+                track_id.push($(this).val());
+            });
+            let features = [];
+            $.each($("input[name='feature']"), function() {
+                features.push($(this).val());
+            });
+            let genre = [];
+            genre.push($('#genre').val());
+            if (artist_ids.length >= 1 && track_id.length == 1) {
+                console.log(artist_ids);
+                console.log(track_id);
+                console.log(genre)
+                console.log(features);
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "recommender:cust_rec_results" %}',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        artist_id_list: artist_ids,
+                        track_id_list: track_id,
+                        genre_list: genre,
+                        feature_list: features,
+                    },
+                    success: function(response) {
+                        let url = response.redirect;
+                        let s = "/"
+                        window.location.href = s.concat(url);
+                    },
+                }); 
+            }
+            else {
+                alert("Please make at least one selection for an artist and a song!");
+                e.preventDefault();
+            }
+        });
+    </script>
 {% endblock %}

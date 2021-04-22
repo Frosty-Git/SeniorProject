@@ -303,14 +303,14 @@ def user_preference_recommender(request):
                 # loop = True
                 pass
 
-            print(len(track_ids))
-            print(issue)
-            print(track_ids)
+        #     print(len(track_ids))
+        #     print(issue)
+        #     print(track_ids)
 
-        print("-------------------------")
-        print(len(track_ids))
-        print(track_ids)
-        print("-------------------------")
+        # print("-------------------------")
+        # print(len(track_ids))
+        # print(track_ids)
+        # print("-------------------------")
 
         playlists = get_user_playlists(user_id)
         top_artists_ids = get_top_artists_by_id(request)
@@ -1125,8 +1125,22 @@ def custom_recommender(request):
     if url_parameter:
         if action == 'artist':
             artist_searches = livesearch_artists(url_parameter)
+            # Replace the apostrophes because it breaks the custom recommender
+            for artist in artist_searches.items():
+                s_id = artist[0]
+                value = artist[1]
+                if "'" in value[0]:
+                    name = value[0]
+                    value[0] = name.replace("'", "\\'")
         else: # it's for a track
             track_searches = livesearch_tracks(url_parameter)
+            # Replace the apostrophes because it breaks the custom recommender
+            for track in track_searches.items():
+                s_id = track[0]
+                value = track[1]
+                if "'" in value[0]:
+                    name = value[0]
+                    value[0] = name.replace("'", "\\'")
         
     if request.is_ajax():
         if action == 'artist':
@@ -1153,3 +1167,126 @@ def custom_recommender(request):
         'track_searches': track_searches
     }
     return render(request, 'recommender/custom_recommender.html', context)
+
+def cust_rec_results(request):
+    """
+    Generates the results for user selection on the custom recommender.
+    Last updated 4/21/21 by Jacelynn Duranceau
+    """
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    input_artist_ids = request.POST.getlist('artist_id_list[]')
+    print(input_artist_ids)
+    print("-----------------------------------")
+    input_track_ids = request.POST.getlist('track_id_list[]')
+    genre = request.POST.getlist('genre_list[]')
+    features = request.POST.getlist('feature_list[]')
+    limit = 9
+    pref_dict = {
+        'target_acousticness'     : features[0],
+        'target_danceability'     : features[1],
+        'target_energy'           : features[2],
+        'target_instrumentalness' : features[3],
+        'target_speechiness'      : features[4],
+        'target_loudness'         : features[5],
+        'target_tempo'            : features[6],
+        'target_valence'          : features[7],
+    }
+    
+    liked_songs = user.liked_songs_playlist_fk
+    sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs)
+
+    loop = True
+    issue = False
+    num_songs = limit
+    track_ids = []
+    while loop:
+        issue = False
+        results = get_custom_recommendation(request, num_songs, user_id, input_artist_ids, input_track_ids, genre, **pref_dict)
+        recommendations = results['recommendations']
+        for x in range(num_songs):
+            if len(track_ids) < 9:
+                if x+1 > len(recommendations['tracks']):
+                    break
+                track_id = recommendations['tracks'][x]['id']
+                save_songs([track_id])
+                match = SongToUser.objects.filter(user_from=user, songid_to=track_id).first()
+                if match is not None:
+                    if match.vote == 'Like' or match.vote == 'Dislike':
+                        # The user has already expressed a like or dislike for this
+                        # song, so don't recommend it
+                        issue = True
+                        # break
+                settings = Settings.objects.get(user_profile_fk=user)
+                if settings.explicit_music is False:
+                    track = SongId.objects.get(spotify_id=track_id)
+                    if track.explicit:
+                        # The user does not want songs recommended that are explicit
+                        # so don't recommend it
+                        issue = True
+                        # break
+                if track_id in track_ids:
+                    # Don't put a song in the track_ids list if it's already there
+                    issue = True
+                    # break
+                if not issue:
+                    track_ids.append(track_id)
+            else:
+                break
+        if not issue:
+            # No need to get more recommendations because we do not have explicit
+            # songs when we don't want them, and it is not returning songs that
+            # have been liked or disliked.
+            loop = False
+        else:
+            # Get more recommendations equivalent to the number of songs left
+            # needed in our list limit (of 9); we will loop again
+            pass
+
+    # playlists = get_user_playlists(user_id)
+    # top_artists_ids = get_top_artists_by_id(request)
+
+    # songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+    # song_list = song_vote_dictionary(songs_votes, track_ids)
+
+    # context = {
+    #     'track_ids' : song_list,
+    #     # 'playlists': playlists,
+    #     # 'profile': user,
+    #     # # 'top_artists_ids': top_artists_ids,
+    #     # 'location': 'recommender',
+    #     # 'related_artists': results['related_artists_ids'],
+    #     # 'top_artist_name': results['top_artist']
+    # }
+
+    ugly_string = ""
+    for track in track_ids:
+        ugly_string += (track + "*")
+
+    print(ugly_string)
+
+    link = 'custom_results/' + ugly_string
+    response = {'redirect' : link}
+    return JsonResponse(response)
+    # return render(request, 'recommender/custom_recommender_results.html', context)
+
+def generate_results(request, track_string):
+    track_ids = track_string.split("*")
+    track_ids.pop() # Remove the empty string from the decoded fake 
+                    # query string :) 
+                    # PS: Stop using ajax to redirect please.
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    playlists = get_user_playlists(user_id)
+    songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+    song_list = song_vote_dictionary(songs_votes, track_ids)
+    context = {
+        'track_ids' : song_list,
+        'playlists': playlists,
+        'profile': user,
+        # 'top_artists_ids': top_artists_ids,
+        'location': 'recommender',
+        # 'related_artists': results['related_artists_ids'],
+        # 'top_artist_name': results['top_artist']
+    }
+    return render(request, 'recommender/custom_recommender_results.html', context)
