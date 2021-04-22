@@ -4,9 +4,9 @@
     border:white;
     border-width: 5 px;
 }
-td{
+tr{
     background-color: #2e3842;;
     opacity:80%;
-    outline-color:white;
+    border:black solid 1px;
 
 }
