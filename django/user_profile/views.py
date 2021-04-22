@@ -316,6 +316,9 @@ def following_helper(url_parameter, user, request_id):
 @require_GET
 def following_page(request, user_id):
     """
+    Displays followers and following for a user. 
+    A search feature will dynamically change the followers/following/others.
+    Last updated: 4/10/21 by Katie Lee
     """
     if request.user == User.objects.get(pk=user_id):
         you = UserProfile.objects.get(pk=user_id)
