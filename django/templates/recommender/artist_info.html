@@ -87,6 +87,24 @@
 </table>
 {% endif %}
 
+<center><h2>{{ name }}'s Albums:</h2></center>
+{% if album_ids %}
+    <table class="center"><tr>
+        {% for album in album_ids %}
+            <td><iframe src='https://open.spotify.com/embed/album/{{ album }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' height="300"></iframe></td>
+            {% if forloop.last %}
+                </tr>
+            {% else %}
+                {% if forloop.counter|divisibleby:"4" %}
+                </tr><tr>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </table>
+{% else %}
+<center><p>{{ name }} has no albums!</p></center>
+{% endif %}
+
 <center><h2>Artists Like {{ name }}:</h2></center>
 {% if related_artists %}
 <table class="center"><tr>

@@ -1092,6 +1092,7 @@ def artist_info(request, artist_id):
     top_tracks = get_top_tracks(artist_id)
     name = get_artist_name(artist_id)
     artist_image = get_artist_image(artist_id)
+    all_album_ids = get_artist_albums(artist_id)
     user_id = request.user.id
     if user_id is not None:
         playlists = get_user_playlists(user_id)
@@ -1101,6 +1102,7 @@ def artist_info(request, artist_id):
         context = {
             'related_artists': related_artists,
             'top_tracks': song_list,
+            'album_ids': all_album_ids,
             'name': name,
             'artist_image': artist_image,
             'playlists': playlists,
@@ -1111,6 +1113,7 @@ def artist_info(request, artist_id):
         context = {
             'related_artists': related_artists,
             'top_tracks': top_tracks,
+            'album_ids': all_album_ids,
             'name': name,
             'artist_image': artist_image,
         }
@@ -1127,17 +1130,25 @@ def custom_recommender(request):
             artist_searches = livesearch_artists(url_parameter)
             # Replace the apostrophes because it breaks the custom recommender
             for artist in artist_searches.items():
+                print(artist)
                 s_id = artist[0]
                 value = artist[1]
+                name = value[0]
+                value.append(name)  # artist[3] becomes the original name, to be
+                                    # used for displaying in HTML (so that \ does
+                                    # not show up)
                 if "'" in value[0]:
-                    name = value[0]
                     value[0] = name.replace("'", "\\'")
+
         else: # it's for a track
             track_searches = livesearch_tracks(url_parameter)
             # Replace the apostrophes because it breaks the custom recommender
             for track in track_searches.items():
                 s_id = track[0]
                 value = track[1]
+                name = value[0]
+                value.append(name) # the last item in the array becomes the
+                                    # original song name for HTML display
                 if "'" in value[0]:
                     name = value[0]
                     value[0] = name.replace("'", "\\'")
@@ -1290,3 +1301,51 @@ def generate_results(request, track_string):
         # 'top_artist_name': results['top_artist']
     }
     return render(request, 'recommender/custom_recommender_results.html', context)
+
+def spotify_stats(request):
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+
+    artist_ids = []
+    track_ids = []
+
+    artist_error = False
+    track_error = False
+
+    if user.linked_to_spotify:
+        spotify_manager = SpotifyManager()
+        spotify_manager.token_check(request)
+        spotify = spotipy.Spotify(auth=user.access_token)
+        try:
+            artists = spotify.current_user_top_artists(limit=9, offset=0, time_range='long_term')['items']
+            for artist in artists:
+                artist_ids.append(artist['id'])
+        except Exception as e: # A user doesn't even have 9 top artists to choose from
+            print(e)
+            artist_error = True
+        try:
+            tracks = spotify.current_user_top_tracks(limit=9, offset=0, time_range='long_term')['items']
+            for track in tracks:
+                track_ids.append(track['id'])
+        except Exception as e: # A user doesn't even have 15 top songs to choose from
+            print(e)
+            track_error = True
+    else:
+        # This view function should not 
+        pass
+
+    save_songs(track_ids)
+
+    playlists = get_user_playlists(user_id)
+    songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+    song_list = song_vote_dictionary(songs_votes, track_ids)
+
+    context = {
+        'profile': user,
+        'track_ids': song_list,
+        'artist_ids': artist_ids,
+        'playlists': playlists,
+    }
+
+    return render(request, 'recommender/spotify_stats.html', context)
+

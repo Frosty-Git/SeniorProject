@@ -3,15 +3,17 @@
 
 <table>
     {% for id, artist_info in artist_searches.items %}
-    <!-- artist_info includes name of the artist (artist_info.0), 
-        and the artist image (artist_info.1) -->
+    <!-- artist_info includes name of the artist (artist_info.0) without apostrophes
+        so that the JavaScript function does not break, 
+        and the artist image (artist_info.1), (artist_info.2 is the original 
+        artist name with apostrophes) -->
         <tr>
             <td>
                 {% if artist_info.1 %}
                     <img src="{{ artist_info.1 }}" class="img-fluid" alt="..." width="30" height="30" onclick="createCheckbox('{{ id }}', '{{ artist_info.0 }}', 'artist', 'artist_check')">
                 {% endif %}
             </td>
-            <td onclick="createCheckbox('{{ id }}', '{{ artist_info.0 }}', 'artist', 'artist_check')">{{ artist_info.0 }}</td>
+            <td onclick="createCheckbox('{{ id }}', '{{ artist_info.0 }}', 'artist', 'artist_check')">{{ artist_info.2 }}</td>
         </tr>
     {% endfor %}
 </table>
