@@ -597,5 +597,7 @@ def percent_diff(a, b):
     Calculates the percent difference between two numbers
     Last updated: 3/29/21 by Marc Colin, Jacelynn Duranceau, Katie Lee
     """
+    if b == 0:
+        b = 0.00001
     percent_diff = ((a - b)/b) * 100
     return percent_diff
