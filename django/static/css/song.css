@@ -45,7 +45,7 @@ h3 {
     clear: both;
   }
 
-  /* Create two equal columns that floats next to each other */
+
 .column, .right_column, .left-column {
     float: right;
     width: 50%;
@@ -59,7 +59,7 @@ h3 {
 
 .left-column{
     padding-top: 20px;
-    padding-left: 200px;
+    padding-left: 280px;
 }
 
 
