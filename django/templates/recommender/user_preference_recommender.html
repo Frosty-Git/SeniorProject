@@ -8,7 +8,7 @@
 <center><h1>My Recommendations</h1></center>
 <br>
 
-{% if min_likes_met and profile.survey_taken %}
+{% if min_likes_met and profile.survey_taken and success %}
 
 <table class="center"><tr>
 
@@ -116,13 +116,17 @@
 {% endif %}
 
 {% if not min_likes_met %}
-    <center><p>You have not liked any songs! Go like some songs in order to get recommendations!</p></center>
+    <center><p>You have not liked any songs! Go like 10 songs in order to get recommendations!</p></center>
     <center><a href="{% url 'recommender:home' %}" style="color: #f5f7fa;">Home</a></center>
 {% endif %}
    
 {% if not profile.survey_taken %}
     <center><p>You have not yet taken the survey! Take it so that you can get better recommendations.</p></center>
     <center><a href="{% url 'recommender:survey_genres' %}" style="color: #f5f7fa;">Survey</a></center>
+{% endif %}
+
+{% if not sucess %}
+    <center><p>We were unable to get recommendations for you. Please like more songs by various artists.</p></center>
 {% endif %}
 
 {% endblock %}
