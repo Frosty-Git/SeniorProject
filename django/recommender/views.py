@@ -265,7 +265,6 @@ def user_preference_recommender(request):
             results = get_recommendation(request, num_songs, user_id, **pref_dict)
             recommendations = results['recommendations']
             if recommendations:
-                print("Getting recs")
                 for x in range(num_songs):
                     if len(track_ids) < 9:
                         if x+1 > len(recommendations['tracks']):
@@ -306,7 +305,6 @@ def user_preference_recommender(request):
                     # num_songs = (limit - len(track_ids))
                     # loop = True
                     pass
-                print(len(track_ids))
             else:
                 success = False
                 loop = False
@@ -943,6 +941,7 @@ def artist_info(request, artist_id):
     else:
         related_artists = all_related_artists
     top_tracks = get_top_tracks(artist_id)
+    save_songs(top_tracks)
     name = get_artist_name(artist_id)
     artist_image = get_artist_image(artist_id)
     all_album_ids = get_artist_albums(artist_id)
