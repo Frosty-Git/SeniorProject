@@ -135,7 +135,7 @@ def get_recommendation(request, limit, user_id, **kwargs):
     genres = genres_list[:-1]
     genre = random.sample(genres, 1)
     # top_genre = get_artists_genres(seed_artists)
-    track = get_top_track(request)
+    track = [get_top_track(request)]
     top_artist_name = ''
     related_artists_ids = []
     recommendations = []
@@ -144,7 +144,7 @@ def get_recommendation(request, limit, user_id, **kwargs):
         # 3 artists, 1 genre, 1 track
         recommendations = sp.recommendations(seed_artists=seed_artists,
                                             seed_genres=[genre[0]], 
-                                            seed_tracks=[track], 
+                                            seed_tracks=track, 
                                             limit=limit,
                                             country=None,
                                             **kwargs)
@@ -193,10 +193,8 @@ def get_top_artists_by_id(request):
                 return random_artists[0]['id']
             return random_artists
         except: # A user doesn't even have 8 top artists to choose from
-            print("first except")
             return get_top_pengbeats_artists(user)
     else:
-        print("else")
         return get_top_pengbeats_artists(user)
 
 def get_top_pengbeats_artists(user):
@@ -218,14 +216,12 @@ def get_top_pengbeats_artists(user):
         # if 'Various Artists' not in artist_names:
         artists = get_artists_ids_list(song)
         for artist_id in artists: 
-            print("Artist Name")
-            print(get_artist_name(artist_id))
             if not get_artist_name(artist_id) == 'Various Artists':
                 all_artists.append(artist_id)
 
     # Dictionary for frequency
     top_3_artists = []
-    if len(all_artists) >= 3:
+    if len(all_artists) >= 1:
         frequency = Counter(all_artists)
         most_common = frequency.most_common(3)
         top_3_artists = [key for key, val in most_common]

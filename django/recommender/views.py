@@ -238,12 +238,18 @@ def user_preference_recommender(request):
     
     min_likes_met = False
     survey_taken = False
+    min_artists_met = False
+
     liked_songs = user.liked_songs_playlist_fk
     sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs)
-    if sop:
+    top_artists_ids = get_top_artists_by_id(request)
+
+    if len(sop) >= 10:              # A user has liked at least 10 songs
         min_likes_met = True
-    if user.survey_taken:
+    if user.survey_taken:           # A user has taken the survey
         survey_taken = True
+    if len(top_artists_ids) == 3:   # A user has liked songs by at least 3 different artists
+        min_artists_met = True
 
     if min_likes_met and survey_taken:
         loop = True
@@ -252,7 +258,6 @@ def user_preference_recommender(request):
         num_songs = limit
         track_ids = []
         playlists = []
-        top_artists_ids = []
         songs_votes = []
         song_list = []
         while loop:
@@ -301,16 +306,15 @@ def user_preference_recommender(request):
                     # num_songs = (limit - len(track_ids))
                     # loop = True
                     pass
-
-                playlists = get_user_playlists(user_id)
-                top_artists_ids = get_top_artists_by_id(request)
-
-                songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
-                song_list = song_vote_dictionary(songs_votes, track_ids)
-
+                print(len(track_ids))
             else:
                 success = False
                 loop = False
+
+        if len(track_ids) == 9:
+            playlists = get_user_playlists(user_id)
+            songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+            song_list = song_vote_dictionary(songs_votes, track_ids)
 
         context = {
             'track_ids' : song_list,
@@ -318,6 +322,7 @@ def user_preference_recommender(request):
             'profile': user,
             'top_artists_ids': top_artists_ids,
             'min_likes_met': min_likes_met,
+            'min_artists_met': min_artists_met,
             'success': success,
             'location': 'recommender',
             'related_artists': results['related_artists_ids'],
@@ -327,6 +332,7 @@ def user_preference_recommender(request):
         context = {
             'profile': user,
             'min_likes_met': min_likes_met,
+            'min_artists_met': min_artists_met,
             'location': 'recommender',
     }
 
