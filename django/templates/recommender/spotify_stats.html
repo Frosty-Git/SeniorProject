@@ -72,8 +72,14 @@
         <table class="center"><tr>
             {% for artist in artist_ids %}
                 <td>
-                    <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
-                    <a class="btn btn-dark" href="{% url 'recommender:artist_info' artist %}" role="button" target="_blank">Artist Page</a>
+                    <ul>
+                        <li class="songItem">
+                            <iframe src='https://open.spotify.com/embed/artist/{{ artist }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
+                        </li>
+                        <li class="songItem">
+                            <a class="btn btn-dark" href="{% url 'recommender:artist_info' artist %}" role="button" target="_blank">Artist Page</a>
+                        </li>
+                    </ul>
                 </td>
                 {% if forloop.last %}
                     </tr>
