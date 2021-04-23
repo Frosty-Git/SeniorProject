@@ -333,7 +333,6 @@ def get_artist_name(artist_id):
     """
     Gets the name of an artist based on their id
     """
-    # print(sp.artist(artist_id))
     name = sp.artist(artist_id)['name']
     return name
 
@@ -515,7 +514,6 @@ def get_artist_albums(art_id):
     ids2 = list(album_ids2.values())
 
     ids.extend(ids2)
-    print(ids)
     if len(ids) > 12:
         ids = random.sample(ids, 12)
 

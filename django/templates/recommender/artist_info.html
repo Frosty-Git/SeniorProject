@@ -7,17 +7,20 @@
 <!-- <p>{{ track_ids }}</p> -->
 
 
-
 <br>
 <center>
     <img src="{{ artist_image }}" width="250px" height="250px" style="border-radius: 50%;"></img>
     <h2>{{ name }}'s Top Songs:</h2>
 </center>
 <br>
+
+
+<!-- class="center justify-content-center" -->
 {% if user.is_authenticated %}
-<table class="center" style="width: 80%;"><tr>
+<div class="row justify-content-center">
+<table><tr>
 {% for song, vote in top_tracks.items %}
-        <td style="padding-bottom: 50px; padding-right: 15px; padding-left: 15px;">
+        <td class="artist-song-col">
             <ul class="songItem">
                 <li>
                     <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px; width: 250px;"></iframe>                                
@@ -69,8 +72,10 @@
         {% endif %}
 {% endfor %}
 </table>
+</div>
 {% else %}
-<table class="center" style="width: 80%";>
+<div class="row justify-content-center"></div>
+<table style="width: 95%";>
     <tr>
     {% for song in top_tracks %}
         <td style="padding-bottom: 50px; padding-right: 15px; padding-left: 15px;">
@@ -85,13 +90,17 @@
             {% endif %}
     {% endfor %}
 </table>
+</div>
 {% endif %}
 
 <center><h2>{{ name }}'s Albums:</h2></center>
 {% if album_ids %}
-    <table class="center"><tr>
+<div class="row justify-content-center">
+    <table style="width: 80%;"><tr>
         {% for album in album_ids %}
-            <td><iframe src='https://open.spotify.com/embed/album/{{ album }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' height="300"></iframe></td>
+            <td class="artist-col">
+                <iframe src='https://open.spotify.com/embed/album/{{ album }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' height="300"></iframe>
+            </td>
             {% if forloop.last %}
                 </tr>
             {% else %}
@@ -101,15 +110,17 @@
             {% endif %}
         {% endfor %}
     </table>
+</div>
 {% else %}
-<center><p>{{ name }} has no albums!</p></center>
+<center><p style="font-size: 200%;">{{ name }} has no albums!</p></center>
 {% endif %}
 
 <center><h2>Artists Like {{ name }}:</h2></center>
 {% if related_artists %}
-<table class="center"><tr>
+<div class="row justify-content-center">
+<table><tr>
 {% for artist_id in related_artists %}
-        <td style="padding-bottom: 50px; padding-right: 15px; padding-left: 15px;">
+        <td class="artist-col">
             <ul class="songItem">
                 <li>
                     <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
@@ -128,6 +139,7 @@
     {% endif %}
 {% endfor %}
 </table>
+</div>
 {% else %}
 <p>No related artists!</p>
 {% endif %}

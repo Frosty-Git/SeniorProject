@@ -269,3 +269,19 @@ input:checked+.slider:before {
   .editCheckbox:checked + label:after {
     background-color: #595959;
   } */
+
+  /* Used on the artist page table columns */
+  .artist-col {
+    padding-bottom: 50px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .artist-song-col{
+    padding-bottom: 50px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+
+  /* End artist page */
