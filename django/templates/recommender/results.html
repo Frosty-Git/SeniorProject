@@ -7,9 +7,14 @@
 {% block content %}
 <!-- CSS -->
 <link rel="stylesheet" href="{% static 'css/results.css' %}">
-
-<h1>Results For: {{ term }}</h1>
-
+<div>
+    <span style="display:inline-block; padding-right: 10px; position: relative; background-color:blueviolet; ">
+        <img src="{% static 'images/SearchPengo.png' type='image/png' %}" width="70" height="70"
+    </span>
+    <span style="display:inline-block; background-color: crimson;">
+        <h1>Results For: {{ term }}</h1>
+    </span>
+</div>
 <!-- For the Like Buttons and Stuff -->
 {% if song_list_1 %}
 {% include 'recommender/logged_in_tracks.html' %}
