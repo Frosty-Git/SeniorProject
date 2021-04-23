@@ -57,14 +57,14 @@
             <br>
             <div class="row">
                 <div class="col">
-                    <div class="form-text">
+                    <div class="form-text" style="font-family: 'Montserrat', sans-serif;">
                         <ul>
-                            Your password <strong>MUST:</strong>
+                            Your password MUST:
                             <small>
-                            <li>Not be too similar to your other personal information.</li> 
-                            <li>Contain at least 8 characters.</li>
-                            <li>Not be a commonly used password.</li>
-                            <li>Not be entirely numeric.</li>
+                            <li class="pInfo">Not be too similar to your other personal information.</li> 
+                            <li class="pInfo">Contain at least 8 characters.</li>
+                            <li class="pInfo">Not be a commonly used password.</li>
+                            <li class="pInfo">Not be entirely numeric.</li>
                             </small>
                         </ul>
                     </div>
@@ -81,14 +81,14 @@
             <div class="row">
                 <div class="col">
                     <span id="image" class="form-text">
-                        (Optional) Upload a profile picture
+                        Upload a profile picture (Optional) 
                     </span>
                     {% render_field profile_form.profilepic class="form-control" type="file" id="image" style="min-width:250px" %}
                 </div>
             </div>
 
             <span id="birthdate" class="form-text">
-                Tell us a little bit about yourself!
+                Tell us a little bit about yourself! (Optional) 
             </span>
             {% render_field profile_form.description class="form-control" id="description" rows="3" placeholder="e.g. I am a Mongolian Rap enthusiast!" %}
 
@@ -96,13 +96,13 @@
             <div class="row">
                 <div class="col">
                     <span id="likes" class="form-text">
-                        What bands/genres do you like?
+                        What bands/genres do you like? (Optional) 
                     </span>
                     {% render_field profile_form.likes class="form-control" id="likes" rows="2" placeholder="e.g. I like The HU" %}
                 </div>
                 <div class="col">
                     <span id="dislikes" class="form-text">
-                        What bands/genres are you not fond of?
+                        What bands/genres are you not fond of? (Optional) 
                     </span>
                     {% render_field profile_form.dislikes class="form-control" id="dislikes" rows="2" placeholder="e.g. Not a fan of Alabama Disco" %}
                 </div>
