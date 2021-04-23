@@ -18,7 +18,13 @@
         The PengBeats Spotify Attribute Analyzer's Artist Page allows you to search for a specific artist and list their songs with the highest/lowest value in certain attribtues.
         The Analyzer Song Page allows you to search for a specific song and will display the attributes of that song and its unique Spotify Track ID.
     </p>
-
+    <br>
+    <p>
+        NOTE: If your search result is the incorrect song, you can search again with more information to narrow your result.
+    </p>
+    <p>
+        Example: A search for "Twist and Shout" returns the Beatles' version, while "Twist and Shout Isley" returns they Isley Brothers' version.
+    </p>
     <form method='post' action="/songp/">
         {% csrf_token %}
         <br>
