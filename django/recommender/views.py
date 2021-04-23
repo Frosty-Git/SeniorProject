@@ -953,6 +953,11 @@ def artist_info(request, artist_id):
         related_artists = random.sample(all_related_artists, k=12)
     else:
         related_artists = all_related_artists
+    
+    related_artists_dict = {}
+    for artist in related_artists:
+        related_artists_dict[artist] = get_artist_name(artist)
+        
     top_tracks = get_top_tracks(artist_id)
     save_songs(top_tracks)
     name = get_artist_name(artist_id)
@@ -965,7 +970,7 @@ def artist_info(request, artist_id):
         songs_votes = SongToUser.objects.filter(user_from=profile).values('songid_to_id', 'vote')
         song_list = song_vote_dictionary(songs_votes, top_tracks)
         context = {
-            'related_artists': related_artists,
+            'related_artists': related_artists_dict,
             'top_tracks': song_list,
             'album_ids': all_album_ids,
             'name': name,
@@ -976,7 +981,7 @@ def artist_info(request, artist_id):
         }
     else:
         context = {
-            'related_artists': related_artists,
+            'related_artists': related_artists_dict,
             'top_tracks': top_tracks,
             'album_ids': all_album_ids,
             'name': name,

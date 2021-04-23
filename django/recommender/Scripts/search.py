@@ -129,10 +129,6 @@ def get_recommendation(request, limit, seed_artists, genre, track, **kwargs):
     The first three parameters to the sp.recommendations function must be a list.
     Last updated: 4/20/21 by Jacelynn Duranceau
     """
-    for artist in seed_artists:
-        print(get_artist_name(artist))
-    print(genre)
-    print(get_song_name(track[0]))
     top_artist_name = ''
     related_artists_ids = []
     recommendations = []
