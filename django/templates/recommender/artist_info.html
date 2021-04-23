@@ -53,13 +53,13 @@
                         
                         {% if playlists.count > 1 %}
                         <div class="btn-group" role="group" style="margin-left:auto; margin-right: auto; display:flex;"></div>
-                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block; font-size: 81%" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
-                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block; font-size: 81%" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
+                            <button type="button" class="btn btn-outline-light rounded-start" style="margin:0 auto; display:block; font-size: 81%" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
+                            <button type="button" class="btn btn-outline-light rounded-end" style="margin:0 auto; display:block; font-size: 81%" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
                         </div>
                         {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location%}
 
                         {% else %}
-                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
+                            <button type="button" class="btn btn-outline-light rounded" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
                         {% endif %}
                         {% include 'social_feed/popup_songpost.html' with song=song %}
 
