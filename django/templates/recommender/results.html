@@ -258,7 +258,7 @@
     </tr>
   {% for userprofile in users%}
         <tr style="text-align: center; border-bottom: 1px solid white;">
-            {% if userprofile.image %}
+            {% if userprofile.profilepic %}
             <td style="padding-top:8px; padding-bottom: 8px;">
                 <a href="{% url 'user:profile' userprofile.user.id %}">
                     <img src="{{ userprofile.profilepic.url }}" width="80" height="80" class="d-inline-block align-top" style="border-radius: 50%;">
