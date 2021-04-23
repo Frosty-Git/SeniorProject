@@ -474,15 +474,52 @@ def get_song_album(track_id):
 def get_song_name(track):
     """
     Gets the name of a song based on its id
+    Last updated: 4/14/21 by Jacelynn Duranceau
     """
     info = get_track(track)
     name = info['name']
     return name
 
 def get_album_image(track):
+    """
+    Gets the album image associated with a track by its id
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
     info = get_track(track)
     album_image = info['album']['images'][0]['url']
     return album_image
+
+def get_artist_albums(art_id):
+    """
+    Gets the albums from an artist based on their id
+    """
+    album_ids = {}
+    albums = sp.artist_albums(artist_id=art_id,album_type=None, country=None, limit=12, offset=0)['items']
+    for album in albums:
+        # The name will serve as the key because spotipy is returning the same
+        # albums under a different id for some reason. So, if you encounter 
+        # the same album twice, override the previous id with the new one
+        album_ids[album['name']] = album['id']
+
+    ids = list(album_ids.values())
+
+    album_ids2 = {}
+    if len(ids) < 12:
+        albums = sp.artist_albums(artist_id=art_id,album_type=None, country=None, limit=12, offset=12)['items']
+        for album in albums:
+            album_id = album['id']
+            album_name = album['name']
+            if album_name not in album_ids.keys():
+                album_ids2[album_name] = album_id
+    
+    ids2 = list(album_ids2.values())
+
+    ids.extend(ids2)
+    print(ids)
+    if len(ids) > 12:
+        ids = random.sample(ids, 12)
+
+    return ids
 
 """
 FOR SHELL TESTING PURPOSES:

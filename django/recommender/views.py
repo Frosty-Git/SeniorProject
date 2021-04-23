@@ -1092,6 +1092,7 @@ def artist_info(request, artist_id):
     top_tracks = get_top_tracks(artist_id)
     name = get_artist_name(artist_id)
     artist_image = get_artist_image(artist_id)
+    all_album_ids = get_artist_albums(artist_id)
     user_id = request.user.id
     if user_id is not None:
         playlists = get_user_playlists(user_id)
@@ -1101,6 +1102,7 @@ def artist_info(request, artist_id):
         context = {
             'related_artists': related_artists,
             'top_tracks': song_list,
+            'album_ids': all_album_ids,
             'name': name,
             'artist_image': artist_image,
             'playlists': playlists,
@@ -1111,6 +1113,7 @@ def artist_info(request, artist_id):
         context = {
             'related_artists': related_artists,
             'top_tracks': top_tracks,
+            'album_ids': all_album_ids,
             'name': name,
             'artist_image': artist_image,
         }
@@ -1317,7 +1320,6 @@ def spotify_stats(request):
             artists = spotify.current_user_top_artists(limit=9, offset=0, time_range='long_term')['items']
             for artist in artists:
                 artist_ids.append(artist['id'])
-            print(artist_ids)
         except Exception as e: # A user doesn't even have 9 top artists to choose from
             print(e)
             artist_error = True
