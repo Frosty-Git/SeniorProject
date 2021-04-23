@@ -224,7 +224,8 @@ def user_preference_recommender(request):
     user_id = request.user.id
     user = UserProfile.objects.get(pk=user_id)
     preferences = Preferences.objects.get(user_profile_fk=user)
-    limit = 9
+    limit = 20 # Limit to the recommender
+    num_songs = 9 # Number of songs to send back to the recommender page
     pref_dict = {
         'target_acousticness'     : preferences.acousticness,
         'target_danceability'     : preferences.danceability,
@@ -255,18 +256,18 @@ def user_preference_recommender(request):
         loop = True
         issue = False
         success = True # Determines if any results were successfully found
-        num_songs = limit
         track_ids = []
         playlists = []
         songs_votes = []
         song_list = []
         while loop:
             issue = False
-            results = get_recommendation(request, num_songs, user_id, **pref_dict)
+            results = get_recommendation(request, limit, user_id, **pref_dict)
             recommendations = results['recommendations']
             if recommendations:
-                for x in range(num_songs):
-                    if len(track_ids) < 9:
+                for x in range(limit):
+                    issue = False
+                    if len(track_ids) < num_songs:
                         if x+1 > len(recommendations['tracks']):
                             break
                         track_id = recommendations['tracks'][x]['id']
@@ -294,22 +295,19 @@ def user_preference_recommender(request):
                             track_ids.append(track_id)
                     else:
                         break
-                if not issue:
+                if len(track_ids) == num_songs:
                     # No need to get more recommendations because we do not have explicit
                     # songs when we don't want them, and it is not returning songs that
                     # have been liked or disliked.
                     loop = False
                 else:
-                    # Get more recommendations equivalent to the number of songs left
-                    # needed in our list limit (of 9); we will loop again
-                    # num_songs = (limit - len(track_ids))
-                    # loop = True
+                    # Get more songs next time since we failed to get num_songs (9) songs
                     pass
             else:
                 success = False
                 loop = False
 
-        if len(track_ids) == 9:
+        if len(track_ids) == num_songs:
             playlists = get_user_playlists(user_id)
             songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
             song_list = song_vote_dictionary(songs_votes, track_ids)
