@@ -112,6 +112,10 @@ def search_artist_features(query, feature, high_or_low):
         return low_song
 
 def get_top_tracks(artist_id):
+    """
+    Gets an artists top tracks from spotify.
+    Last updated: 4/21/21 by Jacelynn Duranceau
+    """
     tracks = sp.artist_top_tracks('spotify:artist:'+artist_id)['tracks']
     all_tracks = []
     for track in tracks:
@@ -120,6 +124,10 @@ def get_top_tracks(artist_id):
     return all_tracks
         
 def get_recommendation(request, limit, user_id, **kwargs):
+    """
+    Gets recommendations for a user based on their top songs and artists.
+    Last updated: 4/20/21 by Jacelynn Duranceau
+    """
     seed_artists = get_top_artists_by_id(request)
     profile = UserProfile.objects.get(pk=user_id)
     prefs = Preferences.objects.get(user_profile_fk=profile)
@@ -138,6 +146,26 @@ def get_recommendation(request, limit, user_id, **kwargs):
                                         **kwargs)
     top_artist_name = get_artist_name(seed_artists[0])
     results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
+    return results
+
+def get_custom_recommendation(request, limit, user_id, artists, track, genre, **kwargs):
+    """
+    Gets a user custom recommendations based on input from the custom
+    recommender page. Artists, track, genre, and features (**kwargs)
+    must be sent in as a list.
+    Last updated: 4/21/21 by Jacelynn Duranceau
+    """
+    profile = UserProfile.objects.get(pk=user_id)
+    # related_artists_ids = get_related_artists(seed_artists[0], 6)
+    recommendations = sp.recommendations(seed_artists=artists,
+                                        seed_genres=genre, 
+                                        seed_tracks=track, 
+                                        limit=limit,
+                                        country=None,
+                                        **kwargs)
+    # top_artist_name = get_artist_name(seed_artists[0])
+    # results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
+    results = {'recommendations': recommendations}
     return results
 
 def get_top_artists_by_id(request):
@@ -305,7 +333,6 @@ def get_artist_name(artist_id):
     """
     Gets the name of an artist based on their id
     """
-    # print(sp.artist(artist_id))
     name = sp.artist(artist_id)['name']
     return name
 
@@ -446,15 +473,51 @@ def get_song_album(track_id):
 def get_song_name(track):
     """
     Gets the name of a song based on its id
+    Last updated: 4/14/21 by Jacelynn Duranceau
     """
     info = get_track(track)
     name = info['name']
     return name
 
 def get_album_image(track):
+    """
+    Gets the album image associated with a track by its id
+    Last updated: 4/14/21 by Jacelynn Duranceau
+    """
     info = get_track(track)
     album_image = info['album']['images'][0]['url']
     return album_image
+
+def get_artist_albums(art_id):
+    """
+    Gets the albums from an artist based on their id
+    """
+    album_ids = {}
+    albums = sp.artist_albums(artist_id=art_id,album_type=None, country=None, limit=12, offset=0)['items']
+    for album in albums:
+        # The name will serve as the key because spotipy is returning the same
+        # albums under a different id for some reason. So, if you encounter 
+        # the same album twice, override the previous id with the new one
+        album_ids[album['name']] = album['id']
+
+    ids = list(album_ids.values())
+
+    album_ids2 = {}
+    if len(ids) < 12:
+        albums = sp.artist_albums(artist_id=art_id,album_type=None, country=None, limit=12, offset=12)['items']
+        for album in albums:
+            album_id = album['id']
+            album_name = album['name']
+            if album_name not in album_ids.keys():
+                album_ids2[album_name] = album_id
+    
+    ids2 = list(album_ids2.values())
+
+    ids.extend(ids2)
+    if len(ids) > 12:
+        ids = random.sample(ids, 12)
+
+    return ids
 
 """
 FOR SHELL TESTING PURPOSES:

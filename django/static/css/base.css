@@ -114,3 +114,31 @@ a {
     font-size: small;
 }
 
+.btn.btn-success.signup {
+    background-color: #f99108;
+    border-color: #f99108;
+    font-weight: bold;
+    color: #1F2933;
+}
+
+.btn.btn-success.signup:hover {
+    background-color: #f99108;
+    border-color: #f99108;
+    font-weight: bold;
+    color: #1F2933;
+}
+
+.btn.btn-success.signup:active {
+    background-color: #f99108 !important;
+    border-color: #f99108;
+    font-weight: bold;
+    outline: none !important;
+    color: #1F2933;
+    /* box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6); */
+}
+
+/* .btn.btn-success.signup:focus {
+    outline: none !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+} */
+
