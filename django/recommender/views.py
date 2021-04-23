@@ -1314,16 +1314,25 @@ def spotify_stats(request):
         spotify_manager.token_check(request)
         spotify = spotipy.Spotify(auth=user.access_token)
         try:
-            artist_ids = spotify.current_user_top_artists(limit=9, offset=0, time_range='long_term')['items']['id']
-        except: # A user doesn't even have 9 top artists to choose from
+            artists = spotify.current_user_top_artists(limit=9, offset=0, time_range='long_term')['items']
+            for artist in artists:
+                artist_ids.append(artist['id'])
+            print(artist_ids)
+        except Exception as e: # A user doesn't even have 9 top artists to choose from
+            print(e)
             artist_error = True
         try:
-            track_ids = spotify.current_user_top_tracks(limit=15, offset=0, time_range='long_term')['items']['id']
-        except: # A user doesn't even have 15 top songs to choose from
+            tracks = spotify.current_user_top_tracks(limit=9, offset=0, time_range='long_term')['items']
+            for track in tracks:
+                track_ids.append(track['id'])
+        except Exception as e: # A user doesn't even have 15 top songs to choose from
+            print(e)
             track_error = True
     else:
         # This view function should not 
         pass
+
+    save_songs(track_ids)
 
     playlists = get_user_playlists(user_id)
     songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
@@ -1332,6 +1341,7 @@ def spotify_stats(request):
     context = {
         'profile': user,
         'track_ids': song_list,
+        'artist_ids': artist_ids,
         'playlists': playlists,
     }
 
