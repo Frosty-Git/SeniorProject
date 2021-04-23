@@ -16,12 +16,17 @@
     <br>
         <h1>Spotify Attribute Analyzer</h1>
         <h2>Artist Search</h2>
+        <p style="width:750px;">
+            Spotify uses a variety of song attributes in order to determine the differences between songs, genres, etc.
+            The PengBeats Spotify Attribute Analyzer's Artist Page allows you to search for a specific artist and list their songs with the highest/lowest value in certain attribtues.
+            The Analyzer Song Page allows you to search for a specific song and will display the attributes of that song and its unique Spotify Track ID.
+        </p>
     <br>
     <div>
         Artist Name: {{ form.artist_name }}
     </div>
 
-    <button class="btn btn-outline-light btn-lg" type="submit">Analyze</button>
+    <button class="submit btn btn-outline-light btn-lg" type="submit">Analyze</button>
 </form>
 <br>
 </center>
@@ -30,8 +35,8 @@
 
 <h2> Results for: {{ artist }}</h2>
 <center>
-<a class="btn btn-outline-light" href="{% url 'recommender:artist_info' artist %}" role="button" target="_blank">Artist Page</a>
-</center>                        
+<a class=" submit btn btn-outline-light" href="{% url 'recommender:artist_info' id %}" role="button" target="_blank">Artist Page</a>
+</center>  
 
 <h3>High-Value Tracks:</h3>
     <div id="highTrackCarousel" class="carousel slide" data-bs-interval="false">
@@ -98,7 +103,7 @@
                             
                                 <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
                             
-                            <h4>{{ feature }}</h4>>
+                            <h4>{{ feature }}</h4>
                         </td>
                     {% endfor %}
                     </tr>

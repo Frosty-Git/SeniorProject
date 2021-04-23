@@ -8,7 +8,8 @@ h2,h3,h4 {
 }
 
 .carousel {
-    margin: 10vh 0vh 10vh 0vh;
+    border-radius: 1vh;
+    margin: 2vh 0vh 5vh 0vh;
     /* background-color: yellow; */
     width: 105%;
 }
@@ -30,7 +31,8 @@ h2,h3,h4 {
     padding-bottom: 120%;
     height: 0; 
     overflow: hidden; 
-    max-width: 100%; 
+    max-width: 100%;
+
 } 
 .embed-container iframe, .embed-container object, .embed-container embed { 
     position: relative; 
@@ -40,7 +42,7 @@ h2,h3,h4 {
     height: 100%; 
 }
 
-.btn, .btn-outline-light, .btn-lg{
+.submit{
     margin-top: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 5x;
 }

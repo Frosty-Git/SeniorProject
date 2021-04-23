@@ -472,32 +472,34 @@ def searchArtist_post(request):
             #results = sp.search(cd, 1, 0, "artist")
             #artist = results['artists']['items'][0]
             #id = artist['name']
-            id = cd['artist_name']
+            artist = cd['artist_name']
+
+            artistID = search_artists(artist, 1, 0)[0]
 
             # Get their songs with the highest/lowest Acousticness
-            highAcous = search_artist_features(id, features[0], True)
-            lowAcous = search_artist_features(id, features[0], False)
+            highAcous = search_artist_features(artist, features[0], True)
+            lowAcous = search_artist_features(artist, features[0], False)
             # Get their songs with the highest/lowest Danceability
-            highDance = search_artist_features(id, features[1], True)
-            lowDance = search_artist_features(id, features[1], False)
+            highDance = search_artist_features(artist, features[1], True)
+            lowDance = search_artist_features(artist, features[1], False)
             # Get their songs with the highest/lowest Energy
-            highLive = search_artist_features(id, features[2], True)
-            lowLive = search_artist_features(id, features[2], False)
+            highLive = search_artist_features(artist, features[2], True)
+            lowLive = search_artist_features(artist, features[2], False)
             # Get their songs with the highest/lowest Energy
-            highInst = search_artist_features(id, features[3], True)
-            lowInst = search_artist_features(id, features[3], False)
+            highInst = search_artist_features(artist, features[3], True)
+            lowInst = search_artist_features(artist, features[3], False)
             # Get their songs with the highest/lowest Energy
-            highSpeech = search_artist_features(id, features[4], True)
-            lowSpeech = search_artist_features(id, features[4], False)
+            highSpeech = search_artist_features(artist, features[4], True)
+            lowSpeech = search_artist_features(artist, features[4], False)
             # Get their songs with the highest/lowest Energy
-            highLoud = search_artist_features(id, features[5], True)
-            lowLoud = search_artist_features(id, features[5], False)
+            highLoud = search_artist_features(artist, features[5], True)
+            lowLoud = search_artist_features(artist, features[5], False)
             # Get their songs with the highest/lowest Energy
-            highTempo = search_artist_features(id, features[6], True)
-            lowTempo = search_artist_features(id, features[6], False)
+            highTempo = search_artist_features(artist, features[6], True)
+            lowTempo = search_artist_features(artist, features[6], False)
             # Get their songs with the highest/lowest Variance
-            highVal = search_artist_features(id, features[7], True)
-            lowVal = search_artist_features(id, features[7], False)
+            highVal = search_artist_features(artist, features[7], True)
+            lowVal = search_artist_features(artist, features[7], False)
             
             form = ArtistForm()
 
@@ -528,7 +530,8 @@ def searchArtist_post(request):
 
             context = {
                 'form': form,
-                'artist': id, 
+                'artist': artist,
+                'id' : artistID,
                 'highTracks1': highTracks1,
                 'highTracks2': highTracks2, 
                 'lowTracks1': lowTracks1,
