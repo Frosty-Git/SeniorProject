@@ -208,7 +208,7 @@
                 <td style="text-align: center;">{{playlist.7}}</td>
                 <td style="text-align: center;">{{playlist.8}}</td>
                 {% if user.is_authenticated %}
-                    {% if playlist.0 != profile.liked_songs_playlist_fk %}
+                    {% if playlist.0 != profile.liked_songs_playlist_fk.id %}
                         <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
                             <div class="btn-group" >
                                 <!-- style it margin-left 80px if you want it below the post text -->
