@@ -26,3 +26,6 @@ td{
 #refreshBtn{
     margin-left:5px;
    }
+.form-check-input:checked{
+    background-color: #f99108;
+}
