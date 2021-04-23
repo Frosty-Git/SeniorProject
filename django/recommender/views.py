@@ -223,19 +223,8 @@ def user_preference_recommender(request):
     """
     user_id = request.user.id
     user = UserProfile.objects.get(pk=user_id)
-    preferences = Preferences.objects.get(user_profile_fk=user)
     limit = 20 # Limit to the recommender
     num_songs = 9 # Number of songs to send back to the recommender page
-    pref_dict = {
-        'target_acousticness'     : preferences.acousticness,
-        'target_danceability'     : preferences.danceability,
-        'target_energy'           : preferences.energy,
-        'target_instrumentalness' : preferences.instrumentalness,
-        'target_speechiness'      : preferences.speechiness,
-        'target_loudness'         : preferences.loudness,
-        'target_tempo'            : preferences.tempo,
-        'target_valence'          : preferences.valence,
-    }
     
     min_likes_met = False
     survey_taken = False
@@ -260,9 +249,38 @@ def user_preference_recommender(request):
         playlists = []
         songs_votes = []
         song_list = []
+
+        artists_genre = get_artists_genres(seed_artists)
+        genre_to_use = []
+        if artists_genre:   # If there was a match of your artists to the recommendation seed genres
+            genre_to_use = [artists_genre]
+        else:   # Use a random genre from your survey genre results
+            prefs = Preferences.objects.get(user_profile_fk=profile)
+            genres_list = prefs.genres.split('*')
+            genres = genres_list[:-1]
+            genre = random.sample(genres, 1)
+            genre_to_use = [genre[0]]
+
+        track = [get_top_track(request)]
+
+        preferences = Preferences.objects.get(user_profile_fk=user)
+        pref_dict = {
+            'target_acousticness'     : preferences.acousticness,
+            'target_danceability'     : preferences.danceability,
+            'target_energy'           : preferences.energy,
+            'target_instrumentalness' : preferences.instrumentalness,
+            'target_speechiness'      : preferences.speechiness,
+            'target_loudness'         : preferences.loudness,
+            'target_tempo'            : preferences.tempo,
+            'target_valence'          : preferences.valence,
+        }
+
+        # print("PREFS")
+        # print(pref_dict)
+
         while loop:
             issue = False
-            results = get_recommendation(request, limit, user_id, **pref_dict)
+            results = get_recommendation(request, limit, top_artists_ids, genre_to_use, track, **pref_dict)
             recommendations = results['recommendations']
             if recommendations:
                 for x in range(limit):
@@ -278,7 +296,6 @@ def user_preference_recommender(request):
                                 # The user has already expressed a like or dislike for this
                                 # song, so don't recommend it
                                 issue = True
-                                # break
                         settings = Settings.objects.get(user_profile_fk=user)
                         if settings.explicit_music is False:
                             track = SongId.objects.get(spotify_id=track_id)
@@ -286,11 +303,9 @@ def user_preference_recommender(request):
                                 # The user does not want songs recommended that are explicit
                                 # so don't recommend it
                                 issue = True
-                                # break
                         if track_id in track_ids:
                             # Don't put a song in the track_ids list if it's already there
                             issue = True
-                            # break
                         if not issue:
                             track_ids.append(track_id)
                     else:
