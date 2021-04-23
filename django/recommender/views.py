@@ -250,7 +250,7 @@ def user_preference_recommender(request):
         songs_votes = []
         song_list = []
 
-        artists_genre = get_artists_genres(seed_artists)
+        artists_genre = get_artists_genres(top_artists_ids)
         genre_to_use = []
         if artists_genre:   # If there was a match of your artists to the recommendation seed genres
             genre_to_use = [artists_genre]
