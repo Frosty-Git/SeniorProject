@@ -211,15 +211,15 @@ input:checked+.slider:before {
     width: 1.5vh;
 }
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
+    box-shadow: inset 0 0 5px #1F2933;
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb {
-    background: #a3a3a3;
+    background: #1F2933;
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #727272;
+    background: #171e25;
 }
 /* End Custom Scrollbar */
 
