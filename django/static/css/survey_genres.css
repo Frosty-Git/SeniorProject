@@ -6,14 +6,24 @@
 }
 tr{
     /* background-color: #2e3842; */
-    opacity:80%;
+    height: 75px;
     padding-bottom: 10px;
+    
+}
+td{
+    font-size: 125%;
 }
 .form-check-input:checked{
     background-color: #f99108;
+    border-color: #f99108;
 }
 .form-check-input{
     background-color:#d9dadc;
+}
+
+.form-check-input:active, .form-check-input:focus{
+    -webkit-box-shadow: inset 0 1px 1px rgb(224,130,7),0 0 8px rgb(224,130,7);
+    box-shadow: inset 0 1px 1px rgb(224,130,7),0 0 8px rgb(224,130,7);
 }
 
 #genretable {
