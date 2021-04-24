@@ -10,3 +10,9 @@ tr{
     border:black solid 1px;
 
 }
+.form-check-input:checked{
+    background-color: #f99108;
+}
+.form-check-input{
+    background-color:#d9dadc;
+}
