@@ -5,6 +5,7 @@
 {% block title %}PengBeats | Survey{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/survey_genres.css' %}">
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -61,144 +62,144 @@
   <table>
     <tr>
       <td>
-        <input type="checkbox" id="g1" name="gen" value="blues" onclick="checkMax()">
+        <input type="checkbox" id="g1" name="gen" class="form-check-input" value="blues" onclick="checkMax()">
         <label for="g1">Blues</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g2" name="gen" value="alternative" onclick="checkMax()">
+        <input type="checkbox" id="g2" name="gen" class="form-check-input" value="alternative" onclick="checkMax()">
         <label for="g2">Alternative</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g3" name="gen" value="anime" onclick="checkMax()">
+        <input type="checkbox" id="g3" name="gen" class="form-check-input" value="anime" onclick="checkMax()">
         <label for="g3">Anime</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g4" name="gen" value="classical" onclick="checkMax()">
+        <input type="checkbox" id="g4" name="gen" class="form-check-input" value="classical" onclick="checkMax()">
         <label for="g4">Classical</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g5" name="gen" value="country" onclick="checkMax()">
+        <input type="checkbox" id="g5" name="gen" class="form-check-input" value="country" onclick="checkMax()">
         <label for="g5">Country</label><br>
       </td>
     </tr>
 
     <tr>
       <td>
-        <input type="checkbox" id="g6" name="gen" value="disco" onclick="checkMax()">
+        <input type="checkbox" id="g6" name="gen" class="form-check-input" value="disco" onclick="checkMax()">
         <label for="g6">Disco</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g7" name="gen" value="electronic" onclick="checkMax()">
+        <input type="checkbox" id="g7" name="gen" class="form-check-input" value="electronic" onclick="checkMax()">
         <label for="g7">Electronic</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g8" name="gen" value="emo" onclick="checkMax()">
+        <input type="checkbox" id="g8" name="gen" class="form-check-input" value="emo" onclick="checkMax()">
         <label for="g8">Emo</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g9" name="gen" value="folk" onclick="checkMax()">
+        <input type="checkbox" id="g9" name="gen" class="form-check-input" value="folk" onclick="checkMax()">
         <label for="g9">Folk</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g10" name="gen" value="opera" onclick="checkMax()">
+        <input type="checkbox" id="g10" name="gen" class="form-check-input" value="opera" onclick="checkMax()">
         <label for="g10">Opera</label><br>
       </td>
     </tr>
 
     <tr>
       <td>
-        <input type="checkbox" id="g11" name="gen" value="gospel" onclick="checkMax()">
+        <input type="checkbox" id="g11" name="gen" class="form-check-input" value="gospel" onclick="checkMax()">
         <label for="g11">Gospel</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g12" name="gen" value="grunge" onclick="checkMax()">
+        <input type="checkbox" id="g12" name="gen" class="form-check-input" value="grunge" onclick="checkMax()">
         <label for="g12">Grunge</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g13" name="gen" value="hard-rock" onclick="checkMax()">
+        <input type="checkbox" id="g13" name="gen" class="form-check-input" value="hard-rock" onclick="checkMax()">
         <label for="g13">Hard Rock</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g14" name="gen" value="hip-hop" onclick="checkMax()">
+        <input type="checkbox" id="g14" name="gen" class="form-check-input" value="hip-hop" onclick="checkMax()">
         <label for="g14">Hip Hop</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g15" name="gen" value="indie" onclick="checkMax()">
+        <input type="checkbox" id="g15" name="gen" class="form-check-input" value="indie" onclick="checkMax()">
         <label for="g15">Indie</label><br>
       </td>
     </tr>
 
     <tr>
       <td>
-        <input type="checkbox" id="g16" name="gen" value="jazz" onclick="checkMax()">
+        <input type="checkbox" id="g16" name="gen" value="jazz" class="form-check-input" onclick="checkMax()">
         <label for="g16">Jazz</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g17" name="gen" value="k-pop" onclick="checkMax()">
+        <input type="checkbox" id="g17" name="gen" value="k-pop" class="form-check-input" onclick="checkMax()">
         <label for="g17">K-pop</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g18" name="gen" value="latin" onclick="checkMax()">
+        <input type="checkbox" id="g18" name="gen" value="latin" class="form-check-input" onclick="checkMax()">
         <label for="g18">Latin</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g19" name="gen" value="metal" onclick="checkMax()">
+        <input type="checkbox" id="g19" name="gen" value="metal" class="form-check-input" onclick="checkMax()">
         <label for="g19">Metal </label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g20" name="gen" value="pop" onclick="checkMax()">
+        <input type="checkbox" id="g20" name="gen" value="pop" class="form-check-input" onclick="checkMax()">
         <label for="g20">Pop</label><br>
       </td>
     </tr>
 
     <tr>
       <td>
-        <input type="checkbox" id="g21" name="gen" value="punk" onclick="checkMax()">
+        <input type="checkbox" id="g21" name="gen" value="punk" class="form-check-input" onclick="checkMax()">
         <label for="g21">Punk</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g22" name="gen" value="r-n-b" onclick="checkMax()">
+        <input type="checkbox" id="g22" name="gen" value="r-n-b" class="form-check-input" onclick="checkMax()">
         <label for="g22">R&B</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g23" name="gen" value="reggae" onclick="checkMax()">
+        <input type="checkbox" id="g23" name="gen" value="reggae" class="form-check-input" onclick="checkMax()">
         <label for="g23">Reggae</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g24" name="gen" value="rock" onclick="checkMax()">
+        <input type="checkbox" id="g24" name="gen" value="rock" class="form-check-input" onclick="checkMax()">
         <label for="g24">Classic Rock</label><br>
       </td>
 
       <td>
-        <input type="checkbox" id="g25" name="gen" value="soul" onclick="checkMax()">
+        <input type="checkbox" id="g25" name="gen" value="soul" class="form-check-input" onclick="checkMax()">
         <label for="g25">Soul</label><br>
       </td>
     </tr>
   </table>
-  <div style="margin-left: 10%;">
-    <button type="button" id="submit" class="btn btn-dark genreBtn" style="height: 50px; width: 110px">Submit</button>
+  <div >
+    <button type="button" id="submit" class="btn btn-outline-light" >Submit</button>
   </div>
   <script>
-    $('.genreBtn').click(function(e) {
+    $('.btn-outline-light').click(function(e) {
         let checked = [];
         $.each($("input[name='gen']:checked"), function() {
             checked.push($(this).val());

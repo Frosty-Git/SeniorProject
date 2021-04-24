@@ -7,7 +7,16 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block setting %}
-    <center><h1 style="margin-top: 2%">Edit Profile</h1></center>
+    <div style="display: flex; align-items: center; padding-top: 5px;">
+        <span style="display:inline-block; padding-left:32.5%; padding-right: 10px; position: relative;">
+            <img src="{% static 'images/ConstructionPengo.png' type='image/png' %}" width="70" height="70">
+        </span>
+        <span style="display:inline-block;">
+            <h1>Edit Profile</h1>
+        </span>
+    </div>
+    <br>
+    
     <div>
         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#resetprefsmodal">Reset Preferences</button>
     </div>

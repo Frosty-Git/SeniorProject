@@ -14,14 +14,25 @@
         </div>
     {% endfor %}
 {% endif %}
+<div style="display: flex; align-items: center; padding-top: 5px;">
+    <span style="display:inline-block; margin-left: auto; padding-right: 1%; position: relative;">
+        <img src="{% static 'images/HeadphonePengo.png' type='image/png' %}" width="70" height="80">
+    </span>
+    <span style="display:inline-block;">
+        <h1>
+            {% if profile.user.id == user.id %}
+                My Playlists
+            {% else %}
+                <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlists:
+            {% endif %}
+        </h1>
+    </span>
+    <span style="display:inline-block; padding-left: 1%; margin-right: auto; position: relative;">
+        <img src="{% static 'images/PinkHeadphonePengo.png' type='image/png' %}" width="70" height="80">
+    </span>
+</div>
+<br>
 
-<h1 style="text-align: center; margin-top: 2%;">
-    {% if profile.user.id == user.id %}
-        My Playlists
-    {% else %}
-        <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlists:
-    {% endif %}
-</h1>
 
 {% if profile.user.id == user.id %}
 <div class="center" style="width:150px; text-align:center;">
