@@ -6,125 +6,195 @@
 
 {% block content %}
 
-<h1>Custom Recommender</h1>
+<center><h1>Custom Recommender</h1></center>
 <form name="recForm" method="post">
     {% csrf_token %}
-    <table>
-        <tr>
-            <td>
-                <h2>Artists</h2>
-                <p>Select up to three.</p>
-                <input type="text" class="form-control" id="artistterm" placeholder="Search artists...">
-                <div id="search_artists" style="text-align: left;">
-                    {% include 'recommender/custom_recommender_artist.html' %}
-                </div>
-                <div id="final_artists"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>Genre</h2>
-                <select class="form-select" name="genre" id="genre">
-                    <option value="blues">Blues</option>
-                    <option value="alternative">Alternative</option>
-                    <option value="anime">Anime</option>
-                    <option value="classical">Classical</option>
-                    <option value="country">Country</option>
-                    <option value="disco">Disco</option>
-                    <option value="electronic">Electronic</option>
-                    <option value="emo">Emo</option>
-                    <option value="folk">Folk</option>
-                    <option value="opera">Opera</option>
-                    <option value="gospel">Gospel</option>
-                    <option value="grunge">Grunge</option>
-                    <option value="hard-rock">Hard Rock</option>
-                    <option value="hip-hop">Hip Hop</option>
-                    <option value="indie">Indie</option>
-                    <option value="jazz">Jazz</option>
-                    <option value="k-pop">K-pop</option>
-                    <option value="latin">Latin</option>
-                    <option value="metal">Metal</option>
-                    <option value="pop">Pop</option>
-                    <option value="punk">Punk</option>
-                    <option value="r-n-b">R&B</option>
-                    <option value="reggae">Reggae</option>
-                    <option value="rock">Rock</option>
-                    <option value="soul">Soul</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>Track</h2>
-                <p>Select one.</p>
-                <input type="text" class="form-control" id="trackterm" placeholder="Search tracks...">
-                <div id="search_tracks" style="text-align: left;">
-                    {% include 'recommender/custom_recommender_track.html' %}
-                </div>
-                <div id="final_tracks"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h2>Track Features</h2>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table>
-                    <tr>
-                        <td>
-                            Acousticness
-                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="aco" oninput="this.nextElementSibling.value = this.value">
-                            <output>0.5</output>
-                        </td>
-                        <td>
-                            Danceability
-                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="dan" oninput="this.nextElementSibling.value = this.value">
-                            <output>0.5</output>
-                        </td>
-                        <td>
-                            Energy
-                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ene" oninput="this.nextElementSibling.value = this.value">
-                            <output>0.5</output>
-                        </td>
-                        <td>
-                            Instrumentalness
-                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ins" oninput="this.nextElementSibling.value = this.value">
-                            <output>0.5</output>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Speechiness
-                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="spe" oninput="this.nextElementSibling.value = this.value">
-                            <output>0.5</output>
-                        </td>
-                        <td>
-                            Loudness
-                            <input type="range" name="feature" min="-60.0" max="0.0" step="1.0" value="-30.0" id="lou" oninput="this.nextElementSibling.value = this.value">
-                            <output>-30</output>
-                        </td>
-                        <td>
-                            Tempo
-                            <input type="range" name="feature" min="50" max="150" step="1" value="100" id="tem" oninput="this.nextElementSibling.value = this.value">
-                            <output>100</output>
-                        </td>
-                        <td>
-                            Valence
-                            <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="val" oninput="this.nextElementSibling.value = this.value">
-                            <output>0.5</output>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button type="button" id="submit" class="btn btn-dark recBtn">Get Recommendations!</button>
-            </td>
-        </tr>   
+    <div class="row justify-content-center">
+        <table style="table-layout: fixed; width: 35%">
+            <tr>
+                <td>
+                    <center>
+                        <h2>Artists</h2>
+                        <p>Select up to three.</p>
+                    </center>
+                    <input type="text" class="form-control" id="artistterm" placeholder="Search artists...">
+                    <div id="search_artists" style="text-align: left;">
+                        {% include 'recommender/custom_recommender_artist.html' %}
+                    </div>
+                    <div id="final_artists"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <center><h2>Genre</h2></center>
+                    <select class="form-select" name="genre" id="genre">
+                        <option value="blues">Blues</option>
+                        <option value="alternative">Alternative</option>
+                        <option value="anime">Anime</option>
+                        <option value="classical">Classical</option>
+                        <option value="country">Country</option>
+                        <option value="disco">Disco</option>
+                        <option value="electronic">Electronic</option>
+                        <option value="emo">Emo</option>
+                        <option value="folk">Folk</option>
+                        <option value="opera">Opera</option>
+                        <option value="gospel">Gospel</option>
+                        <option value="grunge">Grunge</option>
+                        <option value="hard-rock">Hard Rock</option>
+                        <option value="hip-hop">Hip Hop</option>
+                        <option value="indie">Indie</option>
+                        <option value="jazz">Jazz</option>
+                        <option value="k-pop">K-pop</option>
+                        <option value="latin">Latin</option>
+                        <option value="metal">Metal</option>
+                        <option value="pop">Pop</option>
+                        <option value="punk">Punk</option>
+                        <option value="r-n-b">R&B</option>
+                        <option value="reggae">Reggae</option>
+                        <option value="rock">Rock</option>
+                        <option value="soul">Soul</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <center>
+                        <h2>Track</h2>
+                        <p>Select one.</p>
+                    </center>
+                    <input type="text" class="form-control" id="trackterm" placeholder="Search tracks...">
+                    <div id="search_tracks" style="text-align: left;">
+                        {% include 'recommender/custom_recommender_track.html' %}
+                    </div>
+                    <div id="final_tracks"></div>
+                </td>
+            </tr>
     </table>
+    </div>
+    <div class="row justify-content-center">
+        <table style="table-layout: fixed; width: 95%">
+            <tr>
+                <td colspan="4">
+                    <center><h2>Track Features</h2></center>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                        <tr>
+                            <td>
+                                Acousticness
+                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="aco" oninput="this.nextElementSibling.value = this.value">
+                                <output>0.5</output>
+                            </td>
+                            <td>
+                                Danceability
+                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="dan" oninput="this.nextElementSibling.value = this.value">
+                                <output>0.5</output>
+                            </td>
+                            <td>
+                                Energy
+                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ene" oninput="this.nextElementSibling.value = this.value">
+                                <output>0.5</output>
+                            </td>
+                            <td>
+                                Instrumentalness
+                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ins" oninput="this.nextElementSibling.value = this.value">
+                                <output>0.5</output>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Speechiness
+                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="spe" oninput="this.nextElementSibling.value = this.value">
+                                <output>0.5</output>
+                            </td>
+                            <td>
+                                Loudness
+                                <input type="range" name="feature" min="-60.0" max="0.0" step="1.0" value="-30.0" id="lou" oninput="this.nextElementSibling.value = this.value">
+                                <output>-30</output>
+                            </td>
+                            <td>
+                                Tempo
+                                <input type="range" name="feature" min="50" max="150" step="1" value="100" id="tem" oninput="this.nextElementSibling.value = this.value">
+                                <output>100</output>
+                            </td>
+                            <td>
+                                Valence
+                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="val" oninput="this.nextElementSibling.value = this.value">
+                                <output>0.5</output>
+                            </td>
+                        </tr>
+                    </td>
+            <tr>
+                <td colspan="4">
+                    <center><button type="button" id="submit" class="btn btn-outline-light recBtn">Get Recommendations!</button></center>
+                </td>
+            </tr>   
+        </table>
+
+
+
+        <table style="table-layout: fixed; width: 95%">
+            <tr>
+                <td colspan="4">
+                    <center><h2>Track Features</h2></center>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 50px;">
+                    <tr>
+                        <td>
+                            <tr>
+                                <td style="text-align: left;">
+                                    Acousticness
+                                </td>
+                                <td style="text-align: right;">
+                                    <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="aco" oninput="this.nextElementSibling.value = this.value">
+                                    <output>0.5</output>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">
+                                    Speechiness
+                                </td>
+                                <td style="text-align: right;">
+                                    <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="spe" oninput="this.nextElementSibling.value = this.value">
+                                    <output>0.5</output>
+                                </td>
+                            </tr>                          
+                        </td>
+                    </tr>
+                </td>
+                <td style="width: 50px;">
+                    <tr>
+                        <td>
+                            <tr>
+                                <td style="text-align: left;">
+                                    Danceability
+                                </td>
+                                <td style="text-align: right;">
+                                    <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="dan" oninput="this.nextElementSibling.value = this.value">
+                                    <output>0.5</output>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">
+                                    Loudness
+                                </td>
+                                <td style="text-align: right;">
+                                    <input type="range" name="feature" min="-60.0" max="0.0" step="1.0" value="-30.0" id="lou" oninput="this.nextElementSibling.value = this.value">
+                                    <output>-30</output>
+                                </td>
+                            </tr>                          
+                        </td>
+                    </tr>
+                </td>
+            </tr>
+        </table>
+                        
+
+
+    </div>
 </form>
 <script src="{% static 'js/custom_recommender_artist.js' %}"></script>
 <script src="{% static 'js/custom_recommender_track.js' %}"></script>

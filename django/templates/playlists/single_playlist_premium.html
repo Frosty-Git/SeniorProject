@@ -105,13 +105,11 @@
                                 <a class="btn btn-outline-light" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
                             </li>
                         {% endif %}
-                        {% if profile.user.id == user.id %}
-                            {% if not playlist.is_private %}
-                                <li class="playlistDropdownItem">
-                                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
-                                </li>
-                                {% include 'social_feed/popup_playlistpost_single.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
-                            {% endif %}
+                        {% if not playlist.is_private %}
+                            <li class="playlistDropdownItem">
+                                <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                            </li>
+                            {% include 'social_feed/popup_playlistpost_single.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
                         {% endif %}
                     </ul>
                 </div>
