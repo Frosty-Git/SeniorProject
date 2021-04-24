@@ -144,7 +144,7 @@
 #songprogress::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;
-    background-color: goldenrod;
+    background-color: #f99108;;
     border-radius: 50%;
     margin-top: -8px;
     height: 16px;

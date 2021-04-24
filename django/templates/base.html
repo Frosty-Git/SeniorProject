@@ -71,28 +71,29 @@
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'recommender:survey_genres' %}">Survey</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownE" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Explore
                       </a>
                       <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownE">
+                        {% if user.is_authenticated %}
                         <li><a class="dropdown-item" href="{% url 'recommender:user_preference_recommender' %}">My Recommendations</a></li>
-                        <li><a class="dropdown-item" href="{% url 'recommender:custom_recommender' %}">Custom Recommender</a></li>
-                        {% if profile.linked_to_spotify %}
-                        <li><a class="dropdown-item" href="{% url 'recommender:spotify_stats' %}">My Spotify Statistics</a></li>
                         {% endif %}
+                        <li><a class="dropdown-item" href="{% url 'recommender:custom_recommender' %}">Custom Recommender</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="">Artist Analyzer</a></li>
-                        <li><a class="dropdown-item" href="">Song Analyzer</a></li>
+                        <li><a class="dropdown-item" href="{% url 'recommender:artist' %}">Artist Analyzer</a></li>
+                        <li><a class="dropdown-item" href="{% url 'recommender:song' %}">Song Analyzer</a></li>
                       </ul>
                     </li>
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'user:get_playlists' user.id %}">Playlists</a>
                     </li>
-                  {% endif %}
+                    {% endif %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'recommender:about' %}">About</a>
                   </li>

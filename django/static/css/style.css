@@ -284,3 +284,25 @@ input:checked+.slider:before {
 
 
   /* End artist page */
+
+  /* Checkboxes */
+  .form-check-input.playlistPop {
+    border-color: #1F2933;
+  }
+ .form-check-input.playlistPop:checked{
+    background-color: #1F2933;
+ }
+ .form-check-input.playlistPop{
+    background-color:#d9dadc;
+}
+
+
+.form-check-input.custRec {
+    border-color: #f99108;
+  }
+ .form-check-input.custRec:checked{
+    background-color: #f99108;
+ }
+ .form-check-input.custRec{
+    background-color:#d9dadc;
+}

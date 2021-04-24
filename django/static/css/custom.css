@@ -1,0 +1,60 @@
+.sliderRec {
+    -webkit-appearance: none;
+    background-color: #323F4B;
+    width:45%;
+    /* padding-left:5%; padding-right: 1%; */
+}
+
+.sliderRec::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background-color: lightgray;
+    border: none;
+    width: 100%;
+    height:10%;
+}
+
+.sliderRec::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    background-color: #f99108;
+    border-radius: 50%;
+    margin-top: -8px;
+    height: 16px;
+    width: 16px;
+}
+
+.sliderRec::-webkit-slider-thumb::before {
+    background-color: black;
+    width: 100%;
+    height:10%;
+}
+
+
+.sliderRec::-moz-range-track {
+    width: 80%;
+    background-color: lightgray;
+}
+
+.sliderRec::-moz-range-thumb {
+    border-radius: 100%;
+    background-color: lightgray;
+}
+
+.sliderRec::-moz-range-progress  {
+    background-color: #a0bed9;
+    border: 1px solid #a0bed9;
+}
+
+
+
+
+table.playlistTab {
+    background-color: #425363;
+    box-shadow: .6rem .6rem .5rem .4rem #1F2933;
+    border-radius: 0.5rem;
+    width: 100%;
+}
+.table-text.playlistTab {
+    font-family: 'Montserrat', sans-serif;
+    color: #d9dadc; /* Baby Penguin White */
+}

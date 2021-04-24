@@ -126,11 +126,11 @@
 <div class="row justify-content-center">
     <table><tr>
         {% for artist_id, name in related_artists.items %}
-            <td class="artist-col">
-                    <div style="text-align: center;">
-                        <h6>{{ name }}</h6>
+            <td class="artist-col" style="text-align: center;">
+                    <div style="text-align: left;">
+                        <h6>{{ name }}:</h6>
                     </div>
-                    <div>
+                    <div style="text-align: center;">
                         <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
                     </div>
                     <div style="text-align: center;">
