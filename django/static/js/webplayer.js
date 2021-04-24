@@ -5,7 +5,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     const player = new Spotify.Player({
         name: 'PengBeats Player',
         getOAuthToken: cb => { cb(token); },
-        volume: 0.5
+        volume: 0.1
     });
     
 
@@ -33,8 +33,24 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                         + '<path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"/>'
                         + '</svg>');
         }
-        $('#songprogress').attr('max', state['duration']);
-        $('#totalTime').text(millisToMinutesAndSeconds(state['duration']));
+        let next_tracks = state['track_window']['next_tracks']['length'];
+        if(next_tracks != 0) {
+            $('#emptyqueue').hide();
+            $('#divider').show();
+            $('#showqueue').show();
+            $('#song1').show().html(state['track_window']['next_tracks'][0]['name'] + '<small style="font-size:x-small"> ' + state['track_window']['next_tracks'][0]['artists'][0]['name'] + '</small>');
+            if(next_tracks == 2) {
+                $('#song2').show().html(state['track_window']['next_tracks'][1]['name'] + '<small style="font-size:x-small"> ' + state['track_window']['next_tracks'][0]['artists'][0]['name'] + '</small>');
+            }
+        }
+        else {
+            $('#emptyqueue').show();
+            $('#divider').hide();
+            $('#showqueue').hide();
+            $('#song1').hide();
+            $('#song2').hide();
+        }
+        
     });
 
     setInterval(function() {
@@ -43,6 +59,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                 $('#songprogress').attr('value', state['position']);
                 $('#currentTime').text(millisToMinutesAndSeconds(state['position']));
                 $('#songprogress').text(state['position']);
+                $('#songprogress').attr('max', state['duration']);
+                $('#totalTime').text(millisToMinutesAndSeconds(state['duration']));
+                document.getElementById('dummysong').reset();
             }
         })
     }, 500);
@@ -52,6 +71,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         console.log('Ready with Device ID', device_id);
         device = device_id;
         console.log('GOD I HOPE THIS WORKS' + device);
+
+        player.getVolume().then(volume => {
+            let volume_percentage = volume * 100;
+            $('#volume').val(volume_percentage);
+            console.log(`The volume of the player is ${volume_percentage}%`);
+        });
     
     });
 
@@ -150,6 +175,64 @@ window.onSpotifyWebPlaybackSDKReady = () => {
             });
         });
     });
+
+    $('#volume').mouseup(function() {
+        let volume_value = $(this).val();
+        if (volume_value == 0) {
+            player.setVolume(0.00001);
+            $('#volumeBtn').html('<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-volume-mute-fill" viewBox="0 0 16 16">'
+                            + '<path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>'
+                            + '</svg>')
+        }
+        else {
+            player.setVolume(volume_value/100);
+            $('#volumeBtn').html('<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-volume-down-fill" viewBox="0 0 16 16">'
+                            + '<path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>'
+                            + '</svg>');
+        }
+       
+        console.log(`The volume of the player is ${volume_value}%`);
+    });
+
+    $('#songprogress').mouseup(function() {
+        let seek_value = $(this).val();
+        player.seek(seek_value);
+        console.log(`The player is now at ${seek_value} seconds`);
+        document.getElementById('dummysong').reset();
+    });
+
+    let prev_volume;
+    $('#volumeBtn').click(function() {
+        player.getVolume().then(volume => {
+            if (volume != 0.00001) {
+                prev_volume = volume;
+                player.setVolume(0.00001);
+                $('#volume').val(0);
+                $(this).html('<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-volume-mute-fill" viewBox="0 0 16 16">'
+                            + '<path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>'
+                            + '</svg>');
+                console.log('Muted');
+            }
+            else {
+                player.setVolume(prev_volume);
+                $('#volume').val(prev_volume*100);
+                $(this).html('<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-volume-down-fill" viewBox="0 0 16 16">'
+                            + '<path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/>'
+                            + '</svg>');
+                console.log('Sound on');
+                console.log(`The volume of the player is ${prev_volume}%`);
+            }
+        })
+    });
+
+    $('#song1').click(function() {
+        player.nextTrack();
+    });
+    $('#song2').click(function() {
+        player.nextTrack();
+        player.nextTrack();
+    });
+
 
 };
 

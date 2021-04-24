@@ -12,6 +12,7 @@ import numpy as np
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 import datetime
+from django.template.loader import render_to_string
 
 # Create your views here.
 # def share_song(request, id):
@@ -26,20 +27,51 @@ def display_posts(request):
     yourself.
     Last updated: 3/30/21 by Jacelynn Duranceau, Katie Lee, Marc Colin, Joe Frost
     """
+    url_parameter = request.GET.get("q")
     all_post_list = Post.objects.order_by('-date_last_updated')
     you = UserProfile.objects.get(pk=request.user.id)
+
+    if url_parameter:
+        if url_parameter == 'socialFilter':
+            all_post_list = Post.objects.filter(type_post='Post').order_by('-date_last_updated')
+        elif url_parameter == 'songFilter':
+            all_post_list = Post.objects.filter(type_post='SongPost').order_by('-date_last_updated')
+        elif url_parameter == 'playlistFilter':
+            all_post_list = Post.objects.filter(type_post='PlaylistPost').order_by('-date_last_updated')
+        else: # popularity filter
+            all_post_list = Post.objects.order_by('-upvotes')
+
     following = you.users_followed.all()
     votes = PostUserVote.objects.filter(user_from=you).values()
-
     post_list = feed_vote_dictionary(votes, all_post_list, you, following)
-    comment_list = Comment.objects.order_by('date_last_updated')
+    # comment_list = Comment.objects.order_by('date_last_updated')
     postform = PostForm()
+
+    if request.is_ajax():
+        feed_html = render_to_string(
+            template_name="social_feed/feed_partial.html", 
+            context={'post_list': post_list,
+                    'userid': you.user_id,
+                    'loggedin_username': you.user.username,
+                    'loggedin_fname': you.user.first_name,
+                    'loggedin_lname': you.user.last_name})
+
+        data_dict = {
+            "feed_h": feed_html,
+        }
+        return JsonResponse(data=data_dict, safe=False)
+
+
 
     context = {
         'post_list': post_list,
-        'comment_list': comment_list,
+        # 'comment_list': comment_list,
         'postform': postform,
         'image': you.profilepic,
+        'userid': you.user_id,
+        'loggedin_username': you.user.username,
+        'loggedin_fname': you.user.first_name,
+        'loggedin_lname': you.user.last_name
     }  
     return render(request, 'social_feed/feed.html', context)
 
@@ -211,6 +243,8 @@ def update_post(request):
             post.text = text
             post.date_last_updated = timezone.now()
             post.save()
+        if request.is_ajax():
+            return JsonResponse({'status': 'ok'})
         return redirect('/user/profile/' + str(request.user.id))
     else:
         return render(request, 'social_feed/edit_post.html')
@@ -277,6 +311,9 @@ def popup_playlistpost(request):
         if text is not None:
             post = PlaylistPost(playlist=playlist_object, text=text, user_profile_fk=user, type_post="PlaylistPost")
             post.save()
+            if request.is_ajax():
+                return JsonResponse({'status': 'ok'})
+
             return redirect('/feed/')
     else:
         return render(request, 'social_feed/popup_playlistpost.html')
@@ -304,9 +341,10 @@ def check_posts(profile, song, vote):
                     last_post = songpost
                     last_post_vote = dicti.get('vote')
 
-        if song == last_post.song:
-            if last_post_vote == vote: # vote equals one another
-                return True
+        if last_post is not None:
+            if song == last_post.song:
+                if last_post_vote == vote: # vote equals one another
+                    return True
         
     return False
 
@@ -597,5 +635,7 @@ def percent_diff(a, b):
     Calculates the percent difference between two numbers
     Last updated: 3/29/21 by Marc Colin, Jacelynn Duranceau, Katie Lee
     """
+    if b == 0:
+        b = 0.00001
     percent_diff = ((a - b)/b) * 100
     return percent_diff

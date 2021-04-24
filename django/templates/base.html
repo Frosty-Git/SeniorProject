@@ -47,7 +47,7 @@
           <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
               <a class="navbar-brand pengbeatslogo" href="{% url 'recommender:home' %}" style="color: #f99108;">
-                <img src="{% static 'images/penguin.png' type='image/png' %}" alt="" width="30" height="30" class="d-inline-block align-top">
+                <img src="{% static 'images/HeadphonePengo.png' type='image/png' %}" alt="" width="20" height="28" class="d-inline-block align-top">
                 PengBeats
               </a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Top
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
                       <li><a class="dropdown-item" href="{% url 'recommender:top_tracks' %}">Top Tracks</a></li>
                       <li><a class="dropdown-item" href="{% url 'recommender:top_playlists' %}">Top Playlists</a></li>
                     </ul>
@@ -71,8 +71,20 @@
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'recommender:survey_genres' %}">Survey</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'recommender:user_preference_recommender' %}">Explore</a>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownE" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Explore
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownE">
+                        <li><a class="dropdown-item" href="{% url 'recommender:user_preference_recommender' %}">My Recommendations</a></li>
+                        <li><a class="dropdown-item" href="{% url 'recommender:custom_recommender' %}">Custom Recommender</a></li>
+                        {% if profile.linked_to_spotify %}
+                        <li><a class="dropdown-item" href="{% url 'recommender:spotify_stats' %}">My Spotify Statistics</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="">Artist Analyzer</a></li>
+                        <li><a class="dropdown-item" href="">Song Analyzer</a></li>
+                      </ul>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'feed:feed' %}">Feed</a>
@@ -96,7 +108,7 @@
                   <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ user.username }}
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
+                  <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
                     <li><a class="dropdown-item" href="{% url 'user:profile' user.id %}">Profile</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:follow_page' user.id %}">Following</a></li>
                     <li><a class="dropdown-item" href="{% url 'user:update_profile' %}">Settings</a></li>
@@ -104,8 +116,8 @@
                     <li><a class="dropdown-item" href="{% url 'user:logout' %}">Log Out</a></li>
                   </ul>
                 {% else %}
-                  <a class="btn btn-light" href="{% url 'user:login' %}" role="button">Login</a> &nbsp;&nbsp;
-                  <a class="btn btn-success" href="{% url 'user:signup' %}" role="button">Sign Up</a>
+                  <a class="btn btn-light" style="font-weight: bold;" href="{% url 'user:login' %}" role="button">Login</a> &nbsp;&nbsp;
+                  <a class="btn btn-success signup" href="{% url 'user:signup' %}" role="button">Sign Up</a>
                 {% endif %}
               </div>
             </div>
@@ -119,41 +131,6 @@
         </div>
         <br><br>
         <br><br>
-       
-        {% if profile %}
-          {% if profile.linked_to_spotify and profile.is_premium %}
-            {% include 'webplayer_footer.html' with profile=profile %}
-          {% endif %}
-        {% endif %}
-        <!-- <script>
-          let previousURL;
-          let data = '/static/js/livesearch.js';
-            // profile: '/static/js/profile.js',
-            // top_countries: '/static/js/top-countries.js',
-          
-          function pageClick(url) {
-            previousURL = location.pathname;
-            console.log('URL ' + url);
-            console.log('PREVURL ' + previousURL);
-            history.pushState($('form').serialize(), document.title, url);
-
-            $('#basecontainer').load(url + ' #basecontainer', function (responseText) {
-              var title = responseText.match(/<title>([^<]*)/)[1];
-              document.title = title; 
-            })
-
-
-          }
-
-          window.addEventListener("popstate", function(event) {
-            if(event) {
-              console.log(event);
-              // location.reload();
-              pageClick(previousURL);
-            }
-          });
-
-        </script> -->
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
       </body>

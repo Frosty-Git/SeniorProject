@@ -17,9 +17,12 @@
             
                 <div class="modal-body">
                     {% if not private_profile %}
-                        <input type="hidden" id="playlist_id" name="playlist_id" value="{{ playlist.id }}">
+                        <div class="alert{{ playlist.id }} alert alert-success" role="alert" style="display: none">
+                            Post has been created!
+                        </div>
+                        <input type="hidden" id="playlist_id{{ playlist.id }}" name="playlist_id" value="{{ playlist.id }}">
                         Say something:
-                        <textarea required class="form-control" aria-label="With textarea" id="post_text" name="post_text"></textarea>
+                        <textarea required class="form-control" aria-label="With textarea" id="post_text{{ playlist.id }}" name="post_text"></textarea>
                         Playlist to share: <a href="{% url 'user:get_songs_playlist' user_id playlist.id %}" target="_blank">{{ playlist.name }}</a>
                     {% elif private_profile %}
                     You cannot share this playlist because your profile is currently private. Your profile's privacy takes precedence, so your playlist
@@ -30,7 +33,10 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                     {% if not private_profile %}
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn modalBtn popupplaylistbtn{{ playlist.id }}">Submit</button>
+                        <button id="load{{ playlist.id }}" class="btn btn-dark" type="button" disabled style="display: none">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        </button>
                     {% endif %}
                 </div>
                 
@@ -40,5 +46,36 @@
 </div>
   
 <script>
-    document.getElementById("post_text").value = "";
+        $('.popupplaylistbtn{{ playlist.id }}').click(function(e) {
+        $('#load{{ playlist.id }}').show();
+        $('.popupplaylistbtn{{ playlist.id }}').hide();
+        e.preventDefault();
+        var playlist = $('#playlist_id{{ playlist.id }}').val();
+        var text = $('#post_text{{ playlist.id }}').val();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'feed:playlistpost' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                playlist_id: playlist,
+                post_text: text,
+            },
+            success: function(json){
+                if (json['status'] == 'ok') {
+                    setTimeout(function() {
+                        $('#load{{ playlist.id }}').hide();
+                        $('.popupplaylistbtn{{ playlist.id }}').show();
+                        $('.alert{{ playlist.id }}').show();
+                        $('#post_text{{ playlist.id }}').hide();
+                    }, 2000);
+                }
+
+            },
+            error: function(xhr, errmsg, err) {}
+        })
+        return false;
+    })
+    window.onload = function() {
+        document.getElementById("post_text{{ playlist.id }}").value = "";
+    }
 </script>

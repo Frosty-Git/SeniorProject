@@ -56,11 +56,8 @@ class Settings(models.Model):
     """
     user_profile_fk = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
     private_profile = models.BooleanField(default=False)
-    private_playlists = models.BooleanField(default=False)  # will be removes
     private_preferences = models.BooleanField(default=False)
-    light_mode = models.BooleanField(default=False)
-    explicit_music = models.BooleanField(default=False)
-    live_music = models.BooleanField(default=False)
+    explicit_music = models.BooleanField(default=True)
     objects = models.Manager()
 
     def __str__(self):
@@ -115,7 +112,7 @@ class Playlist(models.Model):
     is_shareable = models.BooleanField(default=True)
     is_imported = models.BooleanField(default=False) # Is imported to the linked Spotify account.
     spotify_playlist_id = models.CharField(default='No Link', max_length=255)
-    description = models.TextField(blank=True, null=True, max_length=299)
+    description = models.TextField(blank=False, null=False, max_length=299)
     # theme = models.TextField(null=True, blank=True)  # Genres
     # this_weeks_upvotes = models.IntegerField()
     # length = # Derived

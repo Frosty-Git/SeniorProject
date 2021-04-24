@@ -20,7 +20,7 @@
                     </p>
                     <p style="word-break: break-all; text-align: left; font-size: 13px;" class='post_text{{post.id}}'>{{ post.text }}</p>
                     {% if post.type_post == "SongPost" %}
-                        <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                        <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" class="spRound" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                     {% endif %}
                     {% if post.type_post == "PlaylistPost" %}
                         <a href="{% url 'user:profile' post.playlist.user_profile_fk.user.id %}">@{{ post.playlist.user_profile_fk.user.username }}</a>'s playlist: <a href="{% url 'user:get_songs_playlist' post.playlist.user_profile_fk.user.id post.playlist.id %}">{{ post.playlist.name }}</a>
@@ -97,7 +97,7 @@
                     </p>
                     <p style="word-break: break-all; text-align: left; font-size: 13px;" class='feed_post_text{{post.id}}'>{{ post.text }}</p>
                     {% if post.type_post == "SongPost" %}
-                        <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                        <iframe src="https://open.spotify.com/embed/track/{{ post.song }}" class="spRound" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                     {% endif %}
                     {% if post.type_post == "PlaylistPost" %}
                         <a href="{% url 'user:profile' post.playlist.user_profile_fk.user.id %}">@{{ post.playlist.user_profile_fk.user.username }}</a>'s playlist: <a href="{% url 'user:get_songs_playlist' post.playlist.user_profile_fk.user.id post.playlist.id %}">{{ post.playlist.name }}</a>
