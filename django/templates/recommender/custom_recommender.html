@@ -6,6 +6,8 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
 <center><h1>Custom Recommender</h1></center>
 <form name="recForm" method="post">
     {% csrf_token %}
@@ -83,115 +85,55 @@
                         <tr>
                             <td>
                                 Acousticness
-                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="aco" oninput="this.nextElementSibling.value = this.value">
+                                <input class="sliderRec" type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="aco" oninput="this.nextElementSibling.value = this.value">
                                 <output>0.5</output>
                             </td>
                             <td>
                                 Danceability
-                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="dan" oninput="this.nextElementSibling.value = this.value">
+                                <input class="sliderRec" type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="dan" oninput="this.nextElementSibling.value = this.value">
                                 <output>0.5</output>
                             </td>
                             <td>
                                 Energy
-                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ene" oninput="this.nextElementSibling.value = this.value">
+                                <input class="sliderRec" type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ene" oninput="this.nextElementSibling.value = this.value">
                                 <output>0.5</output>
                             </td>
                             <td>
                                 Instrumentalness
-                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ins" oninput="this.nextElementSibling.value = this.value">
+                                <input class="sliderRec" type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="ins" oninput="this.nextElementSibling.value = this.value">
                                 <output>0.5</output>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 Speechiness
-                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="spe" oninput="this.nextElementSibling.value = this.value">
+                                <input class="sliderRec" type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="spe" oninput="this.nextElementSibling.value = this.value">
                                 <output>0.5</output>
                             </td>
                             <td>
                                 Loudness
-                                <input type="range" name="feature" min="-60.0" max="0.0" step="1.0" value="-30.0" id="lou" oninput="this.nextElementSibling.value = this.value">
+                                <input class="sliderRec" type="range" name="feature" min="-60.0" max="0.0" step="1.0" value="-30.0" id="lou" oninput="this.nextElementSibling.value = this.value">
                                 <output>-30</output>
                             </td>
                             <td>
                                 Tempo
-                                <input type="range" name="feature" min="50" max="150" step="1" value="100" id="tem" oninput="this.nextElementSibling.value = this.value">
+                                <input class="sliderRec" type="range" name="feature" min="50" max="150" step="1" value="100" id="tem" oninput="this.nextElementSibling.value = this.value">
                                 <output>100</output>
                             </td>
                             <td>
                                 Valence
-                                <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="val" oninput="this.nextElementSibling.value = this.value">
+                                <input class="sliderRec" type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="val" oninput="this.nextElementSibling.value = this.value">
                                 <output>0.5</output>
                             </td>
                         </tr>
                     </td>
+            <tr><td>&nbsp;</td></tr>
             <tr>
                 <td colspan="4">
                     <center><button type="button" id="submit" class="btn btn-outline-light recBtn">Get Recommendations!</button></center>
                 </td>
             </tr>   
         </table>
-
-
-
-        <table style="table-layout: fixed; width: 95%">
-            <tr>
-                <td colspan="4">
-                    <center><h2>Track Features</h2></center>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 50px;">
-                    <tr>
-                        <td>
-                            <tr>
-                                <td style="text-align: left;">
-                                    Acousticness
-                                </td>
-                                <td style="text-align: right;">
-                                    <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="aco" oninput="this.nextElementSibling.value = this.value">
-                                    <output>0.5</output>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: left;">
-                                    Speechiness
-                                </td>
-                                <td style="text-align: right;">
-                                    <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="spe" oninput="this.nextElementSibling.value = this.value">
-                                    <output>0.5</output>
-                                </td>
-                            </tr>                          
-                        </td>
-                    </tr>
-                </td>
-                <td style="width: 50px;">
-                    <tr>
-                        <td>
-                            <tr>
-                                <td style="text-align: left;">
-                                    Danceability
-                                </td>
-                                <td style="text-align: right;">
-                                    <input type="range" name="feature" min="0.0" max="1.0" step="0.1" value="0.5" id="dan" oninput="this.nextElementSibling.value = this.value">
-                                    <output>0.5</output>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: left;">
-                                    Loudness
-                                </td>
-                                <td style="text-align: right;">
-                                    <input type="range" name="feature" min="-60.0" max="0.0" step="1.0" value="-30.0" id="lou" oninput="this.nextElementSibling.value = this.value">
-                                    <output>-30</output>
-                                </td>
-                            </tr>                          
-                        </td>
-                    </tr>
-                </td>
-            </tr>
-        </table>
-                        
 
 
     </div>

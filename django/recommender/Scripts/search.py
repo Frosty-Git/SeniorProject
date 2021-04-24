@@ -145,14 +145,13 @@ def get_recommendation(request, limit, seed_artists, genre, track, **kwargs):
     results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
     return results
 
-def get_custom_recommendation(request, limit, user_id, artists, track, genre, **kwargs):
+def get_custom_recommendation(request, limit, artists, track, genre, **kwargs):
     """
     Gets a user custom recommendations based on input from the custom
     recommender page. Artists, track, genre, and features (**kwargs)
     must be sent in as a list.
     Last updated: 4/21/21 by Jacelynn Duranceau
     """
-    profile = UserProfile.objects.get(pk=user_id)
     # related_artists_ids = get_related_artists(seed_artists[0], 6)
     recommendations = sp.recommendations(seed_artists=artists,
                                         seed_genres=genre, 

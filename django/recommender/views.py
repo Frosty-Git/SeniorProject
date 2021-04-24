@@ -1081,13 +1081,12 @@ def cust_rec_results(request):
 
     loop = True
     issue = False
-    num_songs = limit
     track_ids = []
     while loop:
         issue = False
-        results = get_custom_recommendation(request, num_songs, user_id, input_artist_ids, input_track_ids, genre, **pref_dict)
+        results = get_custom_recommendation(request, limit, input_artist_ids, input_track_ids, genre, **pref_dict)
         recommendations = results['recommendations']
-        for x in range(num_songs):
+        for x in range(limit):
             if len(track_ids) < 9:
                 if x+1 > len(recommendations['tracks']):
                     break
@@ -1113,7 +1112,7 @@ def cust_rec_results(request):
                     track_ids.append(track_id)
             else:
                 break
-        if not issue:
+        if len(track_ids) == 9:
             # No need to get more recommendations because we do not have explicit
             # songs when we don't want them, and it is not returning songs that
             # have been liked or disliked.
