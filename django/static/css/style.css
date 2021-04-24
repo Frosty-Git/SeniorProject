@@ -285,3 +285,14 @@ input:checked+.slider:before {
 
 
   /* End artist page */
+
+  /* Checkboxes */
+  .form-check-input.playlistPop {
+    border-color: #1F2933;
+  }
+ .form-check-input.playlistPop:checked{
+    background-color: #1F2933;
+ }
+ .form-check-input.playlistPop{
+    background-color:#d9dadc;
+}
