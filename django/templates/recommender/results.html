@@ -7,11 +7,11 @@
 {% block content %}
 <!-- CSS -->
 <link rel="stylesheet" href="{% static 'css/results.css' %}">
-<div>
-    <span style="display:inline-block; padding-right: 10px; position: relative; background-color:blueviolet; ">
-        <img src="{% static 'images/SearchPengo.png' type='image/png' %}" width="70" height="70"
+<div style="display: flex; align-items: center; padding-top: 5px;">
+    <span style="display:inline-block; padding-right: 10px; position: relative;">
+        <img src="{% static 'images/SearchPengo.png' type='image/png' %}" width="70" height="70">
     </span>
-    <span style="display:inline-block; background-color: crimson;">
+    <span style="display:inline-block;">
         <h1>Results For: {{ term }}</h1>
     </span>
 </div>

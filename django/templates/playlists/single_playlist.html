@@ -19,25 +19,36 @@
     {% include 'playlists/single_playlist_premium.html' with songs=songs playlist=playlist private_profile=private_profile following_status=following_status loggedin=loggedin playlists=playlists %}
 
 {% else %}
+<div style="display: flex; align-items: center; padding-top: 5px;">
+    <span style="display:inline-block; margin-left: auto; padding-right: 2%; position: relative;">
+        <img src="{% static 'images/HeadphonePengo.png' type='image/png' %}" width="70" height="80">
+    </span>
+    <span style="display:inline-block;">
+        <h1 style="text-align: center; margin-top: 2%;">
+            {% if profile.user.id == you.user.id %}
+                My Playlist:
+            {% else %}
+                <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
+            {% endif %}
+            <input type="hidden" id="location" name="location" value="playlists">
+            <br>
+            {% if playlist.image %}
+                <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>
+            {% else %}
+                <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="50px" height="50px" style="border-radius: 50%;">
+            {% endif %}
+            {{ playlist.name }}
+            {% if playlist.is_private %}
+                <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
+            {% endif %}
+        </h1>
+    </span>
+    <span style="display:inline-block; padding-left: 2%; margin-right: auto; position: relative;">
+        <img src="{% static 'images/PinkHeadphonePengo.png' type='image/png' %}" width="70" height="80">
+    </span>
+</div>
+<br>
 
-<h1 style="text-align: center; margin-top: 2%;">
-    {% if profile.user.id == you.user.id %}
-        My Playlist:
-    {% else %}
-        <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
-    {% endif %}
-    <input type="hidden" id="location" name="location" value="playlists">
-    <br>
-    {% if playlist.image %}
-        <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>
-    {% else %}
-        <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="50px" height="50px" style="border-radius: 50%;">
-    {% endif %}
-    {{ playlist.name }}
-    {% if playlist.is_private %}
-        <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
-    {% endif %}
-</h1>
 
 {% if profile.user.id == user.id %}
     <table class="center">
