@@ -311,6 +311,9 @@ def popup_playlistpost(request):
         if text is not None:
             post = PlaylistPost(playlist=playlist_object, text=text, user_profile_fk=user, type_post="PlaylistPost")
             post.save()
+            if request.is_ajax():
+                return JsonResponse({'status': 'ok'})
+
             return redirect('/feed/')
     else:
         return render(request, 'social_feed/popup_playlistpost.html')
