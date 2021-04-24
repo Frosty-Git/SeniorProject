@@ -5,6 +5,14 @@
 
 {% block content %}
 <br>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
     {% if form.errors %}
         {% for field in form %}
             {% for error in field.errors %}
@@ -20,13 +28,13 @@
         {% endfor %}
     {% endif %}
 
-    <div class="sidenav" style="width: 105px; padding-top: 100px;">
+    <div class="sidenav" style="width: 115px; padding-top: 100px; border-radius: 5px;">
         <ul class="list-group list-group-flush">
             <center>
-            <li class="list-group-item disabled" aria-disabled="true" style="color:  #f99108;"><center><b>Settings</b></center></li>
-            <li class="list-group-item" aria-current="true"><a href="{% url 'user:update_profile' %}">Profile</a></li>
-            <li class="list-group-item"><a href="{% url 'user:settings' user.id %}">Privacy</a></li>
-            <li class="list-group-item"><a href="{% url 'user:account_setting' %}">Account</a></li>
+            <li class="list-group-item disabled settingsSideNav" aria-disabled="true" style="color: #f99108;"><center><b>Settings</b></center></li>
+            <li class="list-group-item settingsSideNav" aria-current="true"><a href="{% url 'user:update_profile' %}">Profile</a></li>
+            <li class="list-group-item settingsSideNav"><a href="{% url 'user:settings'%}">Preferences</a></li>
+            <li class="list-group-item settingsSideNav"><a href="{% url 'user:account_setting' %}">Account</a></li>
             </center>
         </ul>
     </div>

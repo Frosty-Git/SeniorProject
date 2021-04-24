@@ -7,37 +7,56 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/top-playlists.css' %}">
-
-<center><h1>Top Playlists</h1></center>
+<div style="display: flex; align-items: center; padding-top: 5px;">
+    <span style="display:inline-block; padding-left:35%; padding-right: 10px; position: relative;">
+        <img src="{% static 'images/CrownPengo.png' type='image/png' %}" width="70" height="80">
+    </span>
+    <span style="display:inline-block;">
+        <h1>Top Playlists</h1>
+    </span>
+</div>
+<br>
 <center><p>Listen to the top playlists for the past week by users like you</p></center>
 
-<ol>
-    {% for playlist, total in top_playlists.items %}
-        <li>
-            <table>
-                <tr>
-                    <td>
-                        {% if playlist.image %}
-                            <a href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
-                                <img src="{{ playlist.image.url }}" width="30px" height="30px" style="border-radius: 50%;">
-                            </a>
-                        {% else %}
-                            <a href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
-                                <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="30px" height="30px" style="border-radius: 50%;">
-                            </a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href='{% url "user:get_songs_playlist" playlist.user_profile_fk.user.id playlist.id %}'><b>{{ playlist.name }}</b></a> - 
-                    </td>
-                    <td>
-                        <a href='{% url "user:profile" playlist.user_profile_fk.user.id %}'>{{ playlist.user_profile_fk.user.username }}</a>'s Playlist - ({{ total }})
-                    </td>
-                </tr>
-            </table>
-        </li>
 
+<table class="table table-striped">
+    <thead>
+        <th scope="col" class="table-text"></th>
+        <th scope="col" class="table-text"><h6>Playlist</h6></th>
+        <th scope="col" class="table-text"><h6>User Profile</h6></th>
+        <th scope="col" class="table-text"><h6>Likes This Week</h6></th>
+    </thead>
+    <tbody>
+    {% for playlist, total in top_playlists.items %}
+            <tr>
+                <!-- Playlist Image -->
+                <td>
+                    {% if playlist.image %}
+                        <a class="table-text" href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
+                            <img src="{{ playlist.image.url }}" width="30px" height="30px" style="border-radius: 50%;">
+                        </a>
+                    {% else %}
+                        <a class="table-text" href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
+                            <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="30px" height="30px" style="border-radius: 50%;">
+                        </a>
+                    {% endif %}
+                </td>
+                <!-- Link to Playlist Name -->
+                <td>
+                    <a class="table-text" href='{% url "user:get_songs_playlist" playlist.user_profile_fk.user.id playlist.id %}'><b>{{ playlist.name }}</b></a>
+                </td>
+                <!-- Link to User Profile -->
+                <td>
+                    <a class="table-text" href='{% url "user:profile" playlist.user_profile_fk.user.id %}'>{{ playlist.user_profile_fk.user.username }}'s Playlist</a>
+                </td>
+                <!-- Total of Likes this Week -->
+                <td class="table-text">
+                    {{ total }}
+                </td>
+            </tr>
     {% endfor %}
-</ol>
+    </tbody>    
+</table>
+
 
 {% endblock %}

@@ -2,21 +2,22 @@ h1 {
     text-align: center;
 }
 
-h2 {
+h2,h3,h4 {
     text-align: center;
+    text-shadow: 1px 1px 2.5px #1F2933;
 }
 
 .carousel {
-    margin: 10vh 0vh 10vh 0vh;
-    /* background-color: yellow; */
+    border-radius: 1vh;
+    margin: 2vh 0vh 5vh 0vh;
     width: 105%;
+    background-color: #425363;
+    box-shadow: .6rem .6rem .5rem .4rem #1F2933;
 }
 .carousel-control-prev {
-    /* background-color: red; */
     width: 5%;
 }
 .carousel-control-next {
-    /* background-color: green; */
     width: 5%;
 }
 
@@ -29,13 +30,28 @@ h2 {
     padding-bottom: 120%;
     height: 0; 
     overflow: hidden; 
-    max-width: 100%; 
-} 
+    max-width: 100%;
+    box-shadow: 0rem 0.3rem 0.1rem 0.01rem #1F2933;
+    border-radius: 0.5rem;
+}  
 .embed-container iframe, .embed-container object, .embed-container embed { 
-    position: relative; 
+    position: absolute; 
     top: 0; 
     left: 0; 
     width: 100%; 
     height: 100%; 
 }
 
+.submit{
+    margin-top: 15px;
+    margin-bottom: 5x;
+}
+
+.artist-page{
+    margin-top: 5px;
+    margin-bottom: 5x;
+}
+
+.hide{
+    display: none;
+}

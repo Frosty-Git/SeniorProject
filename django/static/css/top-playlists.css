@@ -1,0 +1,9 @@
+table {
+    background-color: #425363;
+    box-shadow: .6rem .6rem .5rem .4rem #1F2933;
+    border-radius: 0.5rem;
+}
+.table-text {
+    font-family: 'Montserrat', sans-serif;
+    color: #d9dadc; /* Baby Penguin White */
+}

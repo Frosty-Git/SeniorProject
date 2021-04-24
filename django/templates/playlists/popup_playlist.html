@@ -1,7 +1,7 @@
 {% load static %}
 <!-- Included in Playlists.html -->
     <div class="modal fade" id="createplaylistmodal" tabindex="-1" aria-labelledby="myPlaylistModalLabel" aria-hidden="true"  style="color:black;">
-        <div class="modal-dialog modal-lg modal-dialog-centered" >
+        <div class="modal-dialog modal-lg modal-dialog-centered" style="width:25%; min-width: 375px;">
           <div class="modal-content">
             <form method="post" action='{% url "user:create_playlist_popup" %}' enctype="multipart/form-data">
                 {% csrf_token %}
@@ -11,9 +11,57 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>           
 
-                <div class="modal-body">
+                <!-- <div class="modal-body">
                   {{ playlistform.as_p }}
                   Note: Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible.
+                </div> -->
+
+                <div class="modal-body">
+                  <table class="center">
+                    <tr>
+                      <td class="epc" colspan="2" style="text-align: center;">
+                          <h6 class="modal-headings">Playlist Name:</h6>
+                          {{ playlistform.name}}
+                          <br>
+                          <h6 class="modal-headings">Playlist Image:</h6>
+                          {{ playlistform.image }}
+                          <br>
+                      </td>
+                    </tr>
+      
+                    <tr>
+                      <td class="epc" colspan="2">
+                        <h6 class="modal-headings">Description:</h6>
+                            {{ playlistform.description }}
+                      </td>
+                    </tr>
+      
+                    <tr>
+                      <td colspan="2"><h6 class="modal-headings">Privacy:</h6></td>
+                    </tr>
+                    <tr>
+                      <td class="epc" style="width: 50%;">
+                        <div class="tooltip-custom" data-toggle="tooltip" data-placement="top" title="If you make your playlist private, it will not be viewable or shareable by other users.">
+                          {{ playlistform.is_private }} Private
+                        </div>
+                      </td>
+      
+                      <td class="epc" style="width: 50%;">
+                        <div class="tooltip-custom" data-toggle="tooltip" data-placement="top" title="Shareable refers to whether or not other users can share your playlists. You can still share your own playlist regardless of this setting.">
+                          {{ playlistform.is_shareable }} Shareable
+                        </div>
+                      </td>
+                    </tr>
+      
+                    <tr style="width:50%;">
+                      <td class="epc" style="text-align: justify;" colspan="2">
+                        <div>
+                          <b>Note:</b> Your profile privacy status takes precedence. If your playlist is not private but your profile is, then your playlists will still not be visible.
+                        </div>
+                      </td>
+                    </tr>
+
+                </table>
                 </div>
                 
     
@@ -26,3 +74,8 @@
         </div>
     </div>
 
+    <script>
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+      })
+  </script>

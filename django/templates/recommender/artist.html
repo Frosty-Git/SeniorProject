@@ -9,77 +9,88 @@
 <!-- CSS -->
 <link rel="stylesheet" href="{% static 'css/artist.css' %}">
 
-<form method='post' action="/artistp/">
-    {% csrf_token %}
-    <br>
+<center>
+
+    <form method='post' action="/artistp/">
+        {% csrf_token %}
+        <br>
         <h1>Spotify Attribute Analyzer</h1>
         <h2>Artist Search</h2>
+        <p style="width:750px;">
+            Spotify uses a variety of song attributes in order to determine the differences between songs, genres, etc.
+            The PengBeats Spotify Attribute Analyzer's Artist Page allows you to search for a specific artist and list
+            their songs with the highest/lowest value in certain attribtues.
+            The Analyzer Song Page allows you to search for a specific song and will display the attributes of that song
+            and its unique Spotify Track ID.
+        </p>
+        <br>
+        <div>
+            Artist Name: {{ form.artist_name }}
+        </div>
+
+        <button class="submit btn btn-outline-light btn-lg" type="submit">Analyze</button>
+    </form>
     <br>
-    <div>
-        Artist Name: {{ form.artist_name }}
-    </div>
-
-    <button class="btn btn-outline-light btn-lg" type="submit">Analyze</button>
-</form>
-<br>
-
+</center>
 
 {% if highTracks1 %}
 
 <h2> Results for: {{ artist }}</h2>
 <center>
-<a class="btn btn-outline-light" href="{% url 'recommender:artist_info' artist %}" role="button" target="_blank">Artist Page</a>
-</center>                        
+    <a class="artist-page btn btn-outline-light" href="{% url 'recommender:artist_info' id %}" role="button"
+        target="_blank">Artist Page</a>
+</center>
 
 <h3>High-Value Tracks:</h3>
-    <div id="highTrackCarousel" class="carousel slide" data-bs-interval="false">
-        <div class="carousel-inner">
-          <div class="carousel-item active" data-bs-interval="false">
+<div id="highTrackCarousel" class="carousel slide" data-bs-interval="false">
+    <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="false">
             <div class="table">
                 <table class="table">
                     <tbody>
                         <tr>
                             {% for track, feature in highTracks1.items %}
                             <td>
-                                
-                                    <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
-                                
-                                <h4>{{ feature }}</h4>>
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' width="290" height="380"
+                                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                                <h4>{{ feature }}</h4>
                             </td>
-                        {% endfor %}
+                            {% endfor %}
                         </tr>
                     </tbody>
                 </table>
             </div>
-          </div>
-          <div class="carousel-item">
+        </div>
+        <div class="carousel-item">
             <div class="table">
                 <table class="table">
                     <tbody>
                         <tr>
                             {% for track, feature in highTracks2.items %}
-                        <td>
-                            
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
-                            
-                            <h4>{{ feature }}</h4>>
-                        </td>
-                    {% endfor %}
+                            <td>
+
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' width="290" height="380"
+                                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+                                <h4>{{ feature }}</h4>
+                            </td>
+                            {% endfor %}
                         </tr>
                     </tbody>
                 </table>
             </div>
-          </div>
-         
-        <button class="carousel-control-prev" type="button" data-bs-target="#highTrackCarousel"  data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#highTrackCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#highTrackCarousel"  data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
+        <button class="carousel-control-next" type="button" data-bs-target="#highTrackCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
         </button>
-      </div>
+    </div>
+</div>
 
 {% endif %}
 
@@ -88,53 +99,55 @@
 <h3>Lowest-Value Tracks:</h3>
 <div id="lowTrackCarousel" class="carousel slide" data-bs-interval="false">
     <div class="carousel-inner">
-      <div class="carousel-item active" data-bs-interval="false">
-        <div class="table">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        {% for track, feature in lowTracks1.items %}
-                        <td>
-                            
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
-                            
-                            <h4>{{ feature }}</h4>>
-                        </td>
-                    {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-      </div>
-      <div class="carousel-item" >
-        <div class="table">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        {% for track, feature in lowTracks2.items %}
-                        <td>
-                            
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}'  width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>                                
-                            
-                            <h4>{{ feature }}</h4>>
-                        </td>
-                    {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-      </div>
+        <div class="carousel-item active" data-bs-interval="false">
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            {% for track, feature in lowTracks1.items %}
+                            <td>
 
-      <button class="carousel-control-prev" type="button" data-bs-target="#lowTrackCarousel"  data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#lowTrackCarousel"  data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' width="290" height="380"
+                                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+                                <h4>{{ feature }}</h4>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="table">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            {% for track, feature in lowTracks2.items %}
+                            <td>
+
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' width="290" height="380"
+                                    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+                                <h4>{{ feature }}</h4>>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#lowTrackCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#lowTrackCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 
-{% endif %}
+    {% endif %}
 
-{% endblock %}
+    {% endblock %}
