@@ -21,9 +21,10 @@
                             Post has been created!
                         </div>
                         <input type="hidden" id="playlist_id{{ playlist.id }}" name="playlist_id" value="{{ playlist.id }}">
+                        <center>
                         Say something:
                         <textarea required class="form-control" aria-label="With textarea" id="post_text{{ playlist.id }}" name="post_text"></textarea>
-                        Playlist to share: <a href="{% url 'user:get_songs_playlist' user_id playlist.id %}" target="_blank">{{ playlist.name }}</a>
+                        Playlist to share: <a href="{% url 'user:get_songs_playlist' user_id playlist.id %}" target="_blank">{{ playlist.name }}</a></center>
                     {% elif private_profile %}
                     You cannot share this playlist because your profile is currently private. Your profile's privacy takes precedence, so your playlist
                     cannot be shared even though it is not set to private itself.

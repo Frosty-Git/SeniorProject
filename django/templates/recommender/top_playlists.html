@@ -24,7 +24,7 @@
         <th scope="col" class="table-text"></th>
         <th scope="col" class="table-text"><h6>Playlist</h6></th>
         <th scope="col" class="table-text"><h6>User Profile</h6></th>
-        <th scope="col" class="table-text"><h6>Likes This Week</h6></th>
+        <th scope="col" class="table-text"><center><h6>Likes This Week</h6></center></th>
     </thead>
     <tbody>
     {% for playlist, total in top_playlists.items %}
@@ -51,7 +51,7 @@
                 </td>
                 <!-- Total of Likes this Week -->
                 <td class="table-text">
-                    {{ total }}
+                    <center>{{ total }}</center>
                 </td>
             </tr>
     {% endfor %}

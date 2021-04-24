@@ -59,7 +59,7 @@
 <h3>Pick up to 3 genres you like.</h3>
 <form name="genreForm" method="post">
   {% csrf_token %}
-  <table>
+  <table id="genretable">
     <tr>
       <td>
         <input type="checkbox" id="g1" name="gen" class="form-check-input" value="blues" onclick="checkMax()">

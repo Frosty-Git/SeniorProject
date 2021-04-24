@@ -184,7 +184,7 @@ input:checked+.slider:before {
 }
 .user {
     text-decoration: none;
-    color: black;
+    color: #d9dadc;
 }
 .followBtn {
     color: #d9dadc;

@@ -1,24 +1,28 @@
+#table1 {
+    width: 80%;
+    /* table-layout: fixed; */
+}
+iframe {
+    height: 80px;
+    width: 250px;
+}
 .btn btn-outline-light{
     background-color: transparent;
-
 }
 tr{
-    background-color: #2e3842;
+    /* background-color: #2e3842; */
     border:black solid 1px;
     border-spacing: 15px;
     padding:15px;
 
 }
 td{
-    background-color: #2e3842;
+    /* background-color: #2e3842; */
     border: black solid 1px;
     margin-right:20px;
     margin-bottom:20px;
     border-spacing: 15px;
     padding:15px;
-
-
-   
 }
 #button_format{
     margin-top:10px;
@@ -29,6 +33,7 @@ td{
    }
 .form-check-input:checked{
     background-color: #f99108;
+    
 }
 .form-check-input{
     background-color:#d9dadc;

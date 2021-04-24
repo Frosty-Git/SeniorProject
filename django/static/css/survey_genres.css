@@ -5,7 +5,7 @@
     border-width: 5 px;
 }
 tr{
-    background-color: #2e3842;;
+    /* background-color: #2e3842;; */
     opacity:80%;
     border:black solid 1px;
 
@@ -15,4 +15,8 @@ tr{
 }
 .form-check-input{
     background-color:#d9dadc;
+}
+
+#genretable {
+    width:100%;
 }
