@@ -15,13 +15,15 @@ td{
 }
 .form-check-input:checked{
     background-color: #f99108;
-    border-color: #f99108;
+    border-color:#324353;
 }
 .form-check-input{
     background-color:#d9dadc;
+    border-color:#324353;
 }
 
 .form-check-input:active, .form-check-input:focus{
+    border-color:#d9dadc;
     -webkit-box-shadow: inset 0 1px 1px rgb(224,130,7),0 0 8px rgb(224,130,7);
     box-shadow: inset 0 1px 1px rgb(224,130,7),0 0 8px rgb(224,130,7);
 }
