@@ -447,23 +447,6 @@ def search_users(term, requesting_user):
 
 #The Analyzer
 
-def find_track(artist, attribute, high):
-    # query = Musicdata.objects.filter(artists__contains = artist)
-    # results = sp.artist_(artistID)
-    if high == True:
-        #album = list(results.order_by(-attribute)[0].values('id','name','year'))
-        #album = sp.search(q='artist:' + artist, limit=1, offset=0, type="track")
-
-        # album = sp.recommendations(seed_artists=artistID, limit=1, max=attribute) --- Use this one with Spotipy
-        album = Musicdata.objects.filter(
-            artists__contains=artist).order_by(attribute).last()
-    else:
-        #album = list(results.order_by(+attribute)[0].values('id','name','year'))
-        # album = sp.recommendations(seed_artists=artistID, limit=1, min=attribute) --- Use this one with Spotipy
-        album = Musicdata.objects.filter(
-            artists__contains=artist).order_by(attribute).first()
-    return album
-
 @require_POST
 def searchArtist_post(request):
 
@@ -483,45 +466,47 @@ def searchArtist_post(request):
         # create a form instance and populate it
         form = ArtistForm(request.POST)
         if form.is_valid():
+            # Retrieve the queried artist from the cleaned data and get their artistID.
             cd = form.cleaned_data
+            artist = cd['artist_name']
+            artistID = search_artists(artist, 1, 0)[0]
 
-            # Get the artist
-            #results = sp.search(cd, 1, 0, "artist")
-            #artist = results['artists']['items'][0]
-            #id = artist['name']
-            id = cd['artist_name']
-
-            # Get their songs with the highest/lowest Acousticness
-            highAcous = search_artist_features(id, features[0], True)
-            lowAcous = search_artist_features(id, features[0], False)
-            # Get their songs with the highest/lowest Danceability
-            highDance = search_artist_features(id, features[1], True)
-            lowDance = search_artist_features(id, features[1], False)
-            # Get their songs with the highest/lowest Energy
-            highLive = search_artist_features(id, features[2], True)
-            lowLive = search_artist_features(id, features[2], False)
-            # Get their songs with the highest/lowest Energy
-            highInst = search_artist_features(id, features[3], True)
-            lowInst = search_artist_features(id, features[3], False)
-            # Get their songs with the highest/lowest Energy
-            highSpeech = search_artist_features(id, features[4], True)
-            lowSpeech = search_artist_features(id, features[4], False)
-            # Get their songs with the highest/lowest Energy
-            highLoud = search_artist_features(id, features[5], True)
-            lowLoud = search_artist_features(id, features[5], False)
-            # Get their songs with the highest/lowest Energy
-            highTempo = search_artist_features(id, features[6], True)
-            lowTempo = search_artist_features(id, features[6], False)
-            # Get their songs with the highest/lowest Variance
-            highVal = search_artist_features(id, features[7], True)
-            lowVal = search_artist_features(id, features[7], False)
+            # Get their songs with the highest/lowest:
+            
+            #  Acousticness
+            highAcous = search_artist_features(artist, features[0], True)
+            lowAcous = search_artist_features(artist, features[0], False)
+            #  Danceability
+            highDance = search_artist_features(artist, features[1], True)
+            lowDance = search_artist_features(artist, features[1], False)
+            #  Energy
+            highEnergy = search_artist_features(artist, features[2], True)
+            lowEnergy = search_artist_features(artist, features[2], False)
+            #  Instrumentalness
+            highInst = search_artist_features(artist, features[3], True)
+            lowInst = search_artist_features(artist, features[3], False)
+            #  Speechiness
+            highSpeech = search_artist_features(artist, features[4], True)
+            lowSpeech = search_artist_features(artist, features[4], False)
+            #  Loudness
+            highLoud = search_artist_features(artist, features[5], True)
+            lowLoud = search_artist_features(artist, features[5], False)
+            #  Tempo
+            highTempo = search_artist_features(artist, features[6], True)
+            lowTempo = search_artist_features(artist, features[6], False)
+            #  Valence
+            highVal = search_artist_features(artist, features[7], True)
+            lowVal = search_artist_features(artist, features[7], False)
             
             form = ArtistForm()
+
+            # Dictionaries to organize the data for the carousels
+            # Assigns the track variables to their extreme feature
 
             highTracks1 = {
                 highDance: features[1], 
                 highAcous: features[0],
-                highLive: features[2], 
+                highEnergy: features[2], 
                 highInst: features[3]
             }
             highTracks2 = {
@@ -533,7 +518,7 @@ def searchArtist_post(request):
             lowTracks1 = {
                 lowDance: features[1], 
                 lowAcous: features[0], 
-                lowLive: features[2], 
+                lowEnergy: features[2], 
                 lowInst: features[3]
             }
             lowTracks2 = {
@@ -545,7 +530,8 @@ def searchArtist_post(request):
 
             context = {
                 'form': form,
-                'artist': id, 
+                'artist': artist,
+                'id' : artistID,
                 'highTracks1': highTracks1,
                 'highTracks2': highTracks2, 
                 'lowTracks1': lowTracks1,
@@ -570,24 +556,11 @@ def searchSong_post(request):
         if form.is_valid():
             cd = form.cleaned_data
 
+            #Get the queried song and its features
             name = cd['song_title']
             features = search_audio_features(name)
 
-            # # Get their songs with the highest/lowest Acousticness
-            # #highAcous = find_track(id, 'acousticness', True)
-            # highAcous = search_artist_features(id, 'acousticness')[1]
-            # lowAcous = search_artist_features(id, 'acousticness')[0]
-            # # Get their songs with the highest/lowest Variance
-            # highVal = search_artist_features(id, 'valence')[1]
-            # lowVal = search_artist_features(id, 'valence')[0]
-            # # Get their songs with the highest/lowest Danceability
-            # highDance = search_artist_features(id, 'danceability')[1]
-            # lowDance = search_artist_features(id, 'danceability')[0]
-            # # Get their songs with the highest/lowest Liveness
-            # highLive = search_artist_features(id, 'liveness')[1]
-            # lowLive = search_artist_features(id, 'liveness')[0]
-            # form = ArtistForm()
-
+            # Seperate the track features into their own variables
             track_id = features[0]['id']
             danceability = features[0]['danceability']
             acousticness = features[0]['acousticness']
@@ -597,7 +570,6 @@ def searchSong_post(request):
             loudness = features[0]['loudness']
             tempo = features[0]['tempo']
             valence = features[0]['valence']
-
             context = {
                 'form': form,
                 'id': track_id,
@@ -832,9 +804,6 @@ def survey_songs(request, genre_stack, artists_string, songs_list):
 
     track_ids = []
     track_names = []
-
-    # if genre_stack has next - Joe|| I'm checking if it's empty, same difference but it'll work if we need to pop for some reason. - James
-    # if not genre_stack.isEmpty: || On second thought, does it not make more sense to only check if artists isn't empty?
     if len(artists) != 0:
         # for each around the artists
         for artist in artists:

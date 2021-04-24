@@ -76,9 +76,10 @@ def get_audio_features(track):
 
 def search_artist_features(query, feature, high_or_low):
     """
-    Enter in an artist name. Returns the audio features of that song.
-    Make sure to be very specific with your query to get the correct
-    song. These are the same audio features for the Kaggle data.
+    Enter in an artist name. 
+    Returns the song with the highest or lowest value for that feature.
+    These are the same audio features for the Kaggle data.
+    Last Updated: 4/23/21 by James Cino
     """
     current_max = None
     current_min = None
@@ -86,8 +87,11 @@ def search_artist_features(query, feature, high_or_low):
     high_song = None
     low_song = None
 
+    #Find every track on Spotify featuring the queried artist
     songs = sp.search(q='artist:' + query, type='track')['tracks']['items']
     num_songs = len(songs)
+
+    #Compare each song to determine which has the highest and lowest value.
     for X in range(num_songs):
         song_feats = sp.audio_features(songs[X]['id'])
         level = song_feats[0].get(feature)

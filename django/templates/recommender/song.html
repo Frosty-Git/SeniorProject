@@ -1,43 +1,69 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %} Song Search {% endblock %}
 
 {% block content %}
-<form method='post' action="/songp/">
-    {% csrf_token %}
-    <br>
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/song.css' %}">
+
+<div class="row">
+    <h1>Spotify Attribute Analyzer</h1>
     <center>
-        <h2>Song Search</h2>
-    </center>
+    <h2>Song Search</h2>
+    <p style="width:750px;">
+        Spotify uses a variety of song attributes in order to determine the differences between songs, genres, etc.
+        The PengBeats Spotify Attribute Analyzer's Artist Page allows you to search for a specific artist and list their songs with the highest/lowest value in certain attribtues.
+        The Analyzer Song Page allows you to search for a specific song and will display the attributes of that song and its unique Spotify Track ID.
+    </p>
     <br>
-    <div>
-        Song Title: {{ form.song_title }}
-    </div>
-
-    <button class="btn btn-success btn-lg" type="submit">Analyze</button>
-</form>
-<br>
-
-
-{% if danceability %}
-
-<td>
-    <iframe src="https://open.spotify.com/embed/track/{{ id }}" width="300" height="380" 
-    frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-    </td>
+    <p>
+        NOTE: If your search result is the incorrect song, you can search again with more information to narrow your result.
+    </p>
+    <p>
+        Example: A search for "Twist and Shout" returns the Beatles' version, while "Twist and Shout Isley" returns they Isley Brothers' version.
+    </p>
+    <form method='post' action="/songp/">
+        {% csrf_token %}
+        <br>
+        <br>
+        <div>
+            Song Title: {{ form.song_title }}
+        </div>
     
+        <button class="submit btn btn-outline-light btn-lg" type="submit">Analyze</button>
+    </form>
+</center>
+</div>
 
-<p>Track ID: {{ id }}</p>
-<p>Danceability: {{ danceability }}</p>
-<p>Acousticness: {{ acousticness }}</p>
-<p>Energy: {{ energy }}</p>
-<p>Instrumentalness: {{ instrumentalness }}</p>
-<p>Speechiness: {{ speechiness }}</p>
-<p>Loudness: {{ loudness }}</p>
-<p>Tempo: {{ tempo }}</p>
-<p>Valence: {{ valence }}</p>
+<div class="row">
 
-
-{% endif %}
+    <div class="left-column">
+        
+        {% if danceability or acousticness or energy or instrumentalness or speechiness or loudness or tempo or valence %}
+        <td>
+            <iframe class="sample-player" src="https://open.spotify.com/embed/track/{{ id }}" width="300" height="380" 
+            frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        </td>
+    </div>
+    
+    <div class="right_column">
+        <h3>Spotify Attributes:</h3>
+        <br>
+        <h3>Track ID: {{ id }}</h3>
+        <h3>Danceability: {{ danceability }}</h3>
+        <h3>Acousticness: {{ acousticness }}</h3>
+        <h3>Energy: {{ energy }}</h3>
+        <h3>Instrumentalness: {{ instrumentalness }}</h3>
+        <h3>Speechiness: {{ speechiness }}</h3>
+        <h3>Loudness: {{ loudness }}</h3>
+        <h3>Tempo: {{ tempo }}</h3>
+        <h3>Valence: {{ valence }}</h3>
+    </div>
+    {% endif %}
+</div>
+<br>
 
 {% endblock %}
