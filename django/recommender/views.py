@@ -78,12 +78,14 @@ def home(request):
     artist_searches = []
     album_searches = []
     profile = None
+    is_premium = False
 
     if request.user.id is not None:
         user_id = request.user.id
         profile = UserProfile.objects.get(pk=user_id)
         if profile.linked_to_spotify:
             spotify_manager.token_check(request)
+            is_premium = profile.is_premium
     
     if url_parameter:
         track_searches = livesearch_tracks(url_parameter)
@@ -95,7 +97,8 @@ def home(request):
         template_name="recommender/livesearch.html", 
         context={"track_searches": track_searches,
                 "artist_searches": artist_searches,
-                "album_searches": album_searches})
+                "album_searches": album_searches,
+                "is_premium": is_premium})
 
         data_dict = {
             "livesearch_h": livesearch_html,
@@ -108,7 +111,8 @@ def home(request):
         'track_searches': track_searches,
         'artist_searches': artist_searches,
         'album_searches': album_searches,
-        'profile': profile
+        'profile': profile, 
+        'is_premium': is_premium
     }
     return render(request, 'home.html', context)
 
