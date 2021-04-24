@@ -4,6 +4,7 @@
 {% block title %}Playlists{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
 {% if messages %}
     {% for message in messages %}
@@ -33,14 +34,18 @@
 
 <br>
 
-<table class="center" style="width:95%;">
-    <tr>        
-        <th></th>
-        <th style="text-align: center;"><h6>Title</h6></th>
-        <th style="text-align: center;"><h6>Date Last Updated</h6></th>
-        <th style="text-align: center;"><h6>Duration</h6></th>
-        <th style="text-align: center;"><h6># of Songs</h6></th>
-    </tr>
+<table class="center table-striped playlistTab">
+    <thead>
+        <tr style="border-bottom: 1px solid #d9dadc;">        
+            <th></th>
+            <th style="text-align: center;"><h6>Title</h6></th>
+            <th style="text-align: center;"><h6>Date Last Updated</h6></th>
+            <th style="text-align: center;"><h6>Duration</h6></th>
+            <th style="text-align: center;"><h6># of Songs</h6></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
     <!-- You are viewing your own playlists -->
     {% if profile.user.id == user.id %}
         {% for playlist in playlists %}
@@ -56,7 +61,8 @@
         <!-- playlist.8 is the number of songs on the playlist -->
         <!-- playlist.9 is True if exported, False if not -->
         <!-- playlist.10 is the playlist's spotify ID if exported -->
-            <tr style="border-bottom: 1px solid #1F2933;">
+        </tbody>
+            <tr style="border-bottom: 1px solid #d9dadc;">
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
                     {% if profile.is_premium and profile.linked_to_spotify %}
                         {% if playlist.9 %}
@@ -180,13 +186,14 @@
                 </td>
         {% endfor %}
     </tr>
+    </tbody>    
  
     <!-- You are viewing someone elses playlists -->
     {% else %}
     {% for playlist in playlists %}
 
         {% if not playlist.3 %}
-            <tr style="border-bottom: 1px solid black;">
+            <tr style="border-bottom: 1px solid #d9dadc;">
                 <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
                     {% if playlist.2 %}
                         <a href="{% url 'user:get_songs_playlist' profile.user.id playlist.0 %}">

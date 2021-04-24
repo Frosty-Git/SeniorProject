@@ -44,3 +44,17 @@
     background-color: #a0bed9;
     border: 1px solid #a0bed9;
 }
+
+
+
+
+table.playlistTab {
+    background-color: #425363;
+    box-shadow: .6rem .6rem .5rem .4rem #1F2933;
+    border-radius: 0.5rem;
+    width: 100%;
+}
+.table-text.playlistTab {
+    font-family: 'Montserrat', sans-serif;
+    color: #d9dadc; /* Baby Penguin White */
+}
