@@ -52,7 +52,7 @@
 {% if profile.user.id == user.id %}
     <table class="center" style="table-layout: fixed;">
         <tr>
-            {% if playlist.id != profile.liked_songs_playlist_fk %}
+            {% if playlist.id != profile.liked_songs_playlist_fk.id %}
             <td style="width: 25px;">
                 <div class="btn-group" >
                     <button style="background-color: transparent; border:transparent" class="love{{ playlist.id }} btn btn-secondary" id="love{{ playlist.id }}" data-id='{{ playlist.id }}' data-action='like'>
@@ -69,6 +69,9 @@
                     {% include 'playlists/playlist_love_script_single.html' %}
                 </div>
             </td>
+            {% else %}
+                <!-- Sorry for this, I can't get it to move over if there's nothing in it -->
+                <td style="width: 25px;">&emsp;&emsp;&emsp;&emsp;</td>
             {% endif%}
             <td style="width: 30px;">
                 <div class="center" style="width:175px; text-align:center;">
@@ -125,7 +128,7 @@
         {% if not playlist.is_private %}
             <table class="center">
                 <tr>
-                    {% if playlist != profile.liked_songs_playlist_fk %}
+                    {% if playlist.id != profile.liked_songs_playlist_fk.id %}
                     <td style="padding-top: 6%;">
                         <div class="btn-group" >
                             <button style="background-color: transparent; border:transparent" class="love{{ playlist.id }} btn btn-secondary" id="love{{ playlist.id }}" data-id='{{ playlist.id }}' data-action='like'>
