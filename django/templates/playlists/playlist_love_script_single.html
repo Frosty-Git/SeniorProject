@@ -6,8 +6,8 @@
                     + '<path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>'
                     + '</svg>';
     
-    $('.love{{ playlist.0 }}').click(function(e) {
-        var playlist = document.getElementById('love{{ playlist.0 }}').getAttribute('data-id');
+    $('.love{{ playlist.id }}').click(function(e) {
+        var playlist = document.getElementById('love{{ playlist.id }}').getAttribute('data-id');
         e.preventDefault();
         $.ajax({
             type: 'POST',
@@ -18,10 +18,10 @@
             },
             success: function(json){
                 if (json['status'] == 'ok') {
-                    $('#love{{ playlist.0 }}').html(love_fill);
+                    $('#love{{ playlist.id }}').html(love_fill);
                 }
                 if (json['status'] == 'undo_upvote') {
-                    $('#love{{ playlist.0 }}').html(love_nofill);      
+                    $('#love{{ playlist.id }}').html(love_nofill);      
                 }
             },
             error: function(xhr, errmsg, err) {}

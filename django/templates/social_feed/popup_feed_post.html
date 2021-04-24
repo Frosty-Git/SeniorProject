@@ -10,6 +10,10 @@
     }
 </style>
 
+<input hidden id="loggedin_user_id" value="{{ userid }}">
+<input hidden id="loggedin_username" value="{{ loggedin_username }}">
+<input hidden id="loggedin_firstname" value="{{ loggedin_fname }}">
+<input hidden id="loggedin_lastname" value="{{ loggedin_lname }}">
 {% if image %}
     <input hidden id="user_profile" value="{{ image.url }}">
 {% else %}
@@ -51,7 +55,7 @@
                                                 type: 'POST',
                                                 url: '{% url "feed:pop_update_post" post.id %}',
                                                 data: {
-                                                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                                                    csrfmiddlewaretoken: getCookie("csrftoken"),
                                                     post_text: post_text,
                                                 },
                                                 success: function(json){
@@ -62,7 +66,7 @@
                                                         $('#post_date{{post.id}}').text(date);
                                                         $('.feed_post_text{{post.id}}').text(post_text);
                                                         $('#feed_date{{post.id}}').text(date);
-
+                                                        $('#new_text{{ post.id }}').text(post_text);
                                                     }
                                                 }
                                             })
@@ -111,7 +115,7 @@
                                                     </button>
                                                 </div>
                                             </td>
-                                            {% if post.user_profile_fk.user.id == user.id %}
+                                            {% if post.user_profile_fk.user.id == userid %}
                                             <tr>
                                                 <td>
                                                     <div class="btn-group" role="group">
@@ -172,17 +176,19 @@
                                             </div>
                                         </div>
                                         <div class="row" style="border-bottom: 1px lightgray solid;">
-                                            <table>
-                                                <tr>
-                                                    <td class="buttons">
-                                                        <a style="float:right" href="#">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                                                            </svg>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                            {% if comment.user_profile_fk.user.id == userid %}
+                                                <table>
+                                                    <tr>
+                                                        <td class="buttons">
+                                                            <a style="float:right" href="#">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                                                </svg>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            {% endif %}
                                         </div>
                                     {% empty %}
                                         <div id="no_comment{{ post.id }}"><p>There are no comments.</p></div>
@@ -217,13 +223,17 @@
                             type: 'POST',
                             url: '{% url "feed:popup_post" post.id %}',
                             data: {
-                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                csrfmiddlewaretoken: getCookie("csrftoken"),
                                 comment_text: comment_text,
                             },
                             success: function(json){
                                 if (json['status'] == 'ok') {
                                     var date = moment().fromNow();
                                     var previous_comment_count = parseInt($('#comment_count{{ post.id }}').text());
+                                    var user_id = $('#loggedin_user_id').val();
+                                    var username = $('#loggedin_username').val();
+                                    var firstname = $('#loggedin_firstname').val();
+                                    var lastname = $('#loggedin_lastname').val();
                                     $('#comment_text{{ post.id }}').val("");
                                     setTimeout(function() {
                                         $('#load{{ post.id }}').hide();
@@ -233,12 +243,12 @@
                                         }
                                         $('#comment_list{{ post.id }}').append('<div class="row" style="margin-right: auto; margin-left: auto; margin-bottom: -10px; z-index: -1; padding-top:10px">'
                                                                                 + '<div class="col-2 post_image">'
-                                                                                + '<a href="{% url "user:profile" user.id %}">'
+                                                                                + '<a href="/user/profile/' + user_id + '">'
                                                                                 + '<img src=' + pic_url + ' width="40" height="40" class="d-inline-block align-top">'
                                                                                 + "</a><br></div>"
                                                                                 + '<div class="col-7">'
-                                                                                + '<p style="text-align: left; font-size: medium;">{{ user.first_name }} {{ user.last_name }} '
-                                                                                + '<span style="font-size: small; color:darkslategray">@{{ user.username }}</span></p>'
+                                                                                + '<p style="text-align: left; font-size: medium;">' + firstname + ' ' + lastname
+                                                                                + '<span style="font-size: small; color:darkslategray">@' + username + '</span></p>'
                                                                                 + '<p style="word-break: break-all; text-align: left; font-size: 13px;">'
                                                                                 + comment_text + '</p></div>'
                                                                                 + '<div class="col-3">'

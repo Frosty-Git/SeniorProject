@@ -1,10 +1,9 @@
 
-<!-- Included in Profile Feed -->
+<!-- Included in Feed and Profile Feed -->
 <div class="modal" id="editmodal{{ post.id}}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"  style="color:black">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form method="post" action="{% url 'feed:update_post' %}">
-          {% csrf_token %}
+      <form method="post">
         
           <div class="modal-header">
             <h5 class="modal-title" id="myModalLabel">Edit Post</h5>
@@ -12,12 +11,53 @@
           </div>
         
           <div class="modal-body">
-            <input type="hidden" id="post_id" name="post_id" value="{{ post.id }}">
-            <textarea required class="form-control" aria-label="With textarea" name="new_text">{{ post.text }}</textarea>
+            <div class="alert{{ post.id }} alert alert-success" role="alert" style="display: none">
+              Post has been updated!
+            </div>
+            <input type="hidden" id="post_id{{ post.id }}" name="post_id" value="{{ post.id }}">
+            <textarea required class="form-control" aria-label="With textarea" name="new_text" id="new_text{{post.id}}">{{ post.text }}</textarea>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn modalBtn editBtn{{ post.id }}">Update</button>
+            <button id="loadEdit{{ post.id }}" class="btn btn-dark" type="button" disabled style="display: none">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
+            <script>
+              $('.editBtn{{post.id}}').click(function(e){
+                  $('#loadEdit{{ post.id }}').show();
+                  $('.editBtn{{post.id}}').hide();
+                  var post_id = $('#post_id{{ post.id }}').val();
+                  var post_text = $('#new_text{{ post.id }}').val();
+                  if (checkText(post_text)) {
+                      $.ajax({
+                          type: 'POST',
+                          url: '{% url "feed:update_post" %}',
+                          data: {
+                              post_id: post_id,
+                              csrfmiddlewaretoken: getCookie("csrftoken"),
+                              new_text: post_text,
+                          },
+                          success: function(json){
+                              if (json['status'] == 'ok') {
+                                  setTimeout(function() {
+                                    var date = moment().fromNow();
+                                    $('#loadEdit{{ post.id }}').hide();
+                                    $('.editBtn{{post.id}}').show();
+                                    $('.alert{{ post.id }}').show();
+                                    $('#new_text{{ post.id }}').hide();
+                                    $('.feed_post_text{{post.id}}').text(post_text);
+                                    $('.poppost_text{{post.id}}').text(post_text);
+                                    $('#post_date{{post.id}}').text(date);
+                                    $('#feed_date{{post.id}}').text(date);
+                                    $('#formpop_text{{ post.id }}').text(post_text);
+                                  }, 2000);
+                              }
+                          },
+                      });
+                  }
+              })
+            </script>
           </div>
         </div>
       </form>

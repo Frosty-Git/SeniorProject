@@ -167,10 +167,9 @@ input:checked+.slider:before {
    Source: https://stackoverflow.com/questions/54241934/changing-button-text-on-hover
 */
 .unfollowBtn {
-    /* width: 55%; */
-    color: white;
-    background-color: #343a40;
-    border: 1px solid black;
+    color: #d9dadc;
+    background-color:#1F2933;
+    border: 1px solid #1F2933;
     border-radius: 4px;
 }
 .unfollowBtn::after {
@@ -180,23 +179,23 @@ input:checked+.slider:before {
     content: "Unfollow";
 }
 .unfollowBtn:hover {
-    color: black;
-    background-color: darkgrey;
+    color: #d9dadc;
+    background-color:#7496b8;
 }
 .user {
     text-decoration: none;
     color: black;
 }
 .followBtn {
-    color: black;
-    background-color: darkgrey;
-    /* width: 55%; */
-    border: 1px solid black;
+    color: #d9dadc;
+    background-color: #7496b8;
+    border: 1px solid #1F2933;
     border-radius: 4px;
 }
 .followBtn::after {
     content: "Follow"
 }
+
 /* End Following page follow/unfollow buttons */
 
 
@@ -233,7 +232,7 @@ input:checked+.slider:before {
 }
 
 .playlistDropdownMenu {
-    background-color: rgba(160, 190, 217, 0.25);
+    background-color: #425363;
     width: 10vh;
 }
 
@@ -269,3 +268,19 @@ input:checked+.slider:before {
   .editCheckbox:checked + label:after {
     background-color: #595959;
   } */
+
+  /* Used on the artist page table columns */
+  .artist-col {
+    padding-bottom: 2%;
+    padding-right: 2%;
+    padding-left: 2%;
+  }
+
+  .artist-song-col{
+    padding-bottom: 2%;
+    padding-right: 2%;
+    padding-left: 2%;
+  }
+
+
+  /* End artist page */

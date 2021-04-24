@@ -5,6 +5,7 @@
 {% block title %}PengBeats | Survey{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/survey_songs.css' %}">
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -58,7 +59,7 @@
   <h1 style="font-size: 400%;">Survey</h1>
 </center>
 <br>
-
+<center>
 <h3>Pick up to 5 songs from {{ artist_names.0 }} 
     {% if artist_names.1 %}
     or {{ artist_names.1 }}
@@ -67,56 +68,40 @@
     or {{ artist_names.2 }}
     {% endif %}
 </h3>
-
-<!-- <table>
-{% for track in track_ids %}
-  <tr>
-    <td>
-      {{track}}
-      <iframe src="https://open.spotify.com/embed/track/{{ track }}" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-    </td>
-  </tr>
-{% endfor %}
-</table> -->
-
-
-
-
+</center>
 
 <form name="songForm" method="post">
   {% csrf_token %}
+  <div class="row justify-content-center">
   <table>
     <tr>
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.0 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        <input type="checkbox" id="g1" name="song" value="{{ track_ids.0 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.0 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g1" name="song" value="{{ track_ids.0 }}" class="form-check-input" onclick="checkMax()">
         <label for="g1">{{ track_names.0 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.1 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        <input type="checkbox" id="g2" name="song" value="{{ track_ids.1 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.1 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g2" name="song" value="{{ track_ids.1 }}" class="form-check-input" onclick="checkMax()">
         <label for="g2">{{ track_names.1 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.2 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g3" name="song" value="{{ track_ids.2 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.2 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g3" name="song" value="{{ track_ids.2 }}" class="form-check-input" onclick="checkMax()">
         <label for="g3">{{ track_names.2 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.3 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g4" name="song" value="{{ track_ids.3 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.3 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g4" name="song" value="{{ track_ids.3 }}" class="form-check-input" onclick="checkMax()">
         <label for="g4">{{ track_names.3 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.4 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g5" name="song" value="{{ track_ids.4 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.4 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g5" name="song" value="{{ track_ids.4 }}" class="form-check-input" onclick="checkMax()">
         <label for="g5">{{ track_names.4 }}</label><br>
       </td>
     </tr>
@@ -124,37 +109,32 @@
     {% if track_ids.5 %}    
     <tr>
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.5 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g6" name="song" value="{{ track_ids.5 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.5 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g6" name="song" value="{{ track_ids.5 }}" class="form-check-input" onclick="checkMax()">
         <label for="g6">{{ track_names.5 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.6 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        
-        <input type="checkbox" id="g7" name="song" value="{{ track_ids.6 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.6 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>    
+        <input type="checkbox" id="g7" name="song" value="{{ track_ids.6 }}" class="form-check-input" onclick="checkMax()">
         <label for="g7">{{ track_names.6 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.7 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g8" name="song" value="{{ track_ids.7 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.7 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g8" name="song" value="{{ track_ids.7 }}" class="form-check-input" onclick="checkMax()">
         <label for="g8">{{ track_names.7 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.8 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g9" name="song" value="{{ track_ids.8 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.8 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g9" name="song" value="{{ track_ids.8 }}" class="form-check-input" onclick="checkMax()">
         <label for="g9">{{ track_names.8 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.9 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g10" name="song" value="{{ track_ids.9 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.9 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g10" name="song" value="{{ track_ids.9 }}" class="form-check-input" onclick="checkMax()">
         <label for="g10">{{ track_names.9 }}</label><br>
       </td>
     </tr>
@@ -163,57 +143,53 @@
     {% if track_ids.10 %}
     <tr>
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.10 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        
-        <input type="checkbox" id="g11" name="song" value="{{ track_ids.10 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.10 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>     
+        <input type="checkbox" id="g11" name="song" value="{{ track_ids.10 }}" class="form-check-input" onclick="checkMax()">
         <label for="g11">{{ track_names.10 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.11 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g12" name="song" value="{{ track_ids.11 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.11 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g12" name="song" value="{{ track_ids.11 }}" class="form-check-input" onclick="checkMax()">
         <label for="g12">{{ track_names.11 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.12 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g13" name="song" value="{{ track_ids.12 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.12 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g13" name="song" value="{{ track_ids.12 }}" class="form-check-input" onclick="checkMax()">
         <label for="g13">{{ track_names.12 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.13 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g14" name="song" value="{{ track_ids.13 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.13 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g14" name="song" value="{{ track_ids.13 }}" class="form-check-input" onclick="checkMax()">
         <label for="g14">{{ track_names.13 }}</label><br>
       </td>
 
       <td>
-        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.14 }}" class="spRound" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <input type="checkbox" id="g15" name="song" value="{{ track_ids.14 }}" onclick="checkMax()">
+        <iframe src="https://open.spotify.com/embed/track/{{ track_ids.14 }}" frameborder="0" class="wp-block-embed-spotify spRound" allowtransparency="true" allow="encrypted-media"></iframe>
+        <input type="checkbox" id="g15" name="song" value="{{ track_ids.14 }}" class="form-check-input" onclick="checkMax()">
         <label for="g15">{{ track_names.14 }}</label><br>
       </td>
     </tr>
     {% endif %}
   </table>
-  <div style="margin-left: 10%;">
-    <button type="button" id="submit" class="btn btn-dark songBtn" style="height: 50px; width: 110px">Submit</button>
-  </div>
-  <div>
-    <button type="button" class="btn btn-dark refreshBtn" style="height: 50px; width: 110px">Refresh Options</button>
+</div>
+  <div id = 'button_format' class="pull-left bottom-left" >
+    <button type="button" class="btn btn-outline-light" id = "songBtn" >Submit</button>
+  
+  
+    <button type="button" class="btn btn-outline-light" id = "refreshBtn" >Refresh</button>
   </div>
   <script>
-    $('.refreshBtn').click(function(e) {
+    $('#refreshBtn').click(function(e) {
       $('input[name="song"]').each(function() {
         this.checked = false;
       });
       location.reload(true);
     })
 
-    $('.songBtn').click(function(e) {
+    $('#songBtn').click(function(e) {
         let song_ids = [];
         $.each($("input[name='song']:checked"), function() {
             song_ids.push($(this).val());
@@ -228,16 +204,13 @@
                 },
                 success: function(response) {
                   let url = response.redirect;
-                  //console.log(genre_stack)
-                  // let string = '{% url "recommender:survey_artists" '
                   let s = "/"
                   window.location.href = s.concat(url);
-                  // string = "http://localhost:8000/survey_artists/"
-                  // window.location.href = string.concat(genre_stack)
                 }
             });
         }
         else {
+            alert("Please select at least one song")
             e.preventDefault();
         }
     });

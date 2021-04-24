@@ -1,30 +1,22 @@
 {% extends 'base.html' %}
 
-{% block title %} {{name}}'s Top Songs {% endblock %}
+{% block title %} Custom Recommendations {% endblock %}
 
 {% block content %}
 
 <!-- <p>{{ track_ids }}</p> -->
-
-
-<br>
-<center>
-    <img src="{{ artist_image }}" width="250px" height="250px" style="border-radius: 50%;"></img>
-    <h2>{{ name }}'s Top Songs:</h2>
-</center>
+<center><h1>Custom Recommendations</h1></center>
 <br>
 
+<table class="center"><tr>
 
-<!-- class="center justify-content-center" -->
-{% if user.is_authenticated %}
-<div class="row justify-content-center">
-    <table><tr>
-    {% for song, vote in top_tracks.items %}
-            <td class="artist-song-col">
-                <div style="text-align: center;">
-                    <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px; width: 250px;"></iframe>                                
-                </div>
-                <div style="text-align: center;">
+{% for song, vote in track_ids.items %}
+        <td class="recCol"> 
+            <ul class="songItem">
+                <li>
+                    <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="wp-block-embed-spotify spRound" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
+                </li>
+                <li>
                     <div class="btn-group" >
                         <!-- style it margin-left 80px if you want it below the post text -->
                         <button style="background-color: transparent; border:transparent" class="upvoteBtn{{ song }} btn btn-secondary" id="upvote{{ song }}" data-id='{{ song }}' data-action='like'>
@@ -50,106 +42,23 @@
                             {% endif %}
                         </button>
                         {% include 'recommender/song_vote_script.html' %}
-                        
-                        {% if playlists.count > 1 %}
-                        <div class="btn-group" role="group" style="margin-left:auto; margin-right: auto; display:flex;"></div>
-                            <button type="button" class="btn btn-outline-light rounded-start" style="margin:0 auto; display:block; font-size: 81%" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
-                            <button type="button" class="btn btn-outline-light rounded-end" style="margin:0 auto; display:block; font-size: 81%" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
-                        </div>
-                        {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location%}
-
-                        {% else %}
-                            <button type="button" class="btn btn-outline-light rounded" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
-                        {% endif %}
-                        {% include 'social_feed/popup_songpost.html' with song=song %}
-
-                    </div>
+                    {% if playlists.count > 1 %}
+                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
+                        {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location song=song %}
+                    {% endif %}
+                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
+                    {% include 'social_feed/popup_songpost.html' with song=song %}
                 </div>
-            </td>     
-            {% if forloop.last %}
-                </tr>
-            {% else %}
-                {% if forloop.counter|divisibleby:"5" %}
-                </tr><tr>
-                {% endif %}
+                </li>
+            </ul>
+        </td>
+        {% if forloop.last %}
+        </tr>
+        {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+            </tr><tr>
             {% endif %}
-    {% endfor %}
-    </table>
-</div>
-
-{% else %}
-<div class="row justify-content-center">
-    <table style="width: 95%";>
-        <tr>
-        {% for song in top_tracks %}
-            <td class="artist-song-col">
-                <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px; width: 250px;"></iframe>                                
-            </td>
-            {% if forloop.last %}
-                    </tr>
-                {% else %}
-                    {% if forloop.counter|divisibleby:"5" %}
-                    </tr><tr>
-                    {% endif %}
-                {% endif %}
-        {% endfor %}
-    </table>
-</div>
-{% endif %}
-<br>
-
-<center><h2>{{ name }}'s Albums:</h2></center>
-{% if album_ids %}
-    <div class="row justify-content-center">
-        <table><tr>
-            {% for album in album_ids %}
-                <td class="artist-col">
-                    <iframe src='https://open.spotify.com/embed/album/{{ album }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' height="300"></iframe>
-                </td>
-                {% if forloop.last %}
-                    </tr>
-                {% else %}
-                    {% if forloop.counter|divisibleby:"4" %}
-                    </tr><tr>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </table>
-    </div>
-{% else %}
-    <center><p style="font-size: 200%;">{{ name }} has no albums!</p></center>
-{% endif %}
-<br>
-
-<center><h2>Artists Like {{ name }}:</h2></center>
-{% if related_artists %}
-<div class="row justify-content-center">
-    <table><tr>
-        {% for artist_id, name in related_artists.items %}
-            <td class="artist-col">
-                    <div style="text-align: center;">
-                        <h6>{{ name }}</h6>
-                    </div>
-                    <div>
-                        <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}' class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
-                    </div>
-                    <div style="text-align: center;">
-                        <a class="btn btn-outline-light" href="{% url 'recommender:artist_info' artist_id %}" role="button" target="_blank">Artist Page</a>
-                    </div>
-            </td>
-            {% if forloop.last %}
-            </tr>
-            {% else %}
-                {% if forloop.counter|divisibleby:"4" %}
-                </tr><tr>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-    </table>
-</div>
-{% else %}
-<p>No related artists!</p>
-{% endif %}
-
-
+        {% endif %}
+{% endfor %}
+</table>
 {% endblock %}

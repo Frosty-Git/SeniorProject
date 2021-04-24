@@ -4,21 +4,43 @@
 
 {% block content %}
 
+<style>
+    h3 {
+        padding: 0em 0em 0em 0em;
+    }
+    .more-artists-heading {
+        margin: 1.7em 0em .5em 0em;
+    }
+    .artists-like-top-heading {
+        margin: .5em 0em 1.5em 0em;
+    }
+    .artists {
+        margin: 1em .75em 0em .75em;
+        height: 300px;
+        width: 300px;
+    }
+    .artists-like-top {
+        margin: 1em 2em 0em 2em;
+    }
+    .artists-btn {
+        margin: .5em 0em 1em 0em;
+    }
+</style>
+
 <!-- <p>{{ track_ids }}</p> -->
 <center><h1>My Recommendations</h1></center>
 <br>
 
-{% if min_likes_met and profile.survey_taken %}
+{% if min_likes_met and profile.survey_taken and success and min_artists_met %}
 
 <table class="center"><tr>
 
 {% for song, vote in track_ids.items %}
         <td class="recCol"> 
-            <ul class="songItem">
-                <li>
+                <div>
                     <iframe src='https://open.spotify.com/embed/track/{{ song }}' class="wp-block-embed-spotify spRound" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe> 
-                </li>
-                <li>
+                </div>
+                <div>
                     <div class="btn-group" >
                         <!-- style it margin-left 80px if you want it below the post text -->
                         <button style="background-color: transparent; border:transparent" class="upvoteBtn{{ song }} btn btn-secondary" id="upvote{{ song }}" data-id='{{ song }}' data-action='like'>
@@ -45,14 +67,13 @@
                         </button>
                         {% include 'recommender/song_vote_script.html' %}
                     {% if playlists.count > 1 %}
-                        <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
+                        <button type="button" class="btn btn-outline-light rounded" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song }}">Add to Playlist</button>
                         {% include 'recommender/addsong_popup_results.html' with playlists=playlists loggedin=profile location=location song=song %}
                     {% endif %}
-                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
+                    <button type="button" class="btn btn-outline-light rounded" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song }}">Share</button>
                     {% include 'social_feed/popup_songpost.html' with song=song %}
                 </div>
-                </li>
-            </ul>
+            </div>
         </td>
         {% if forloop.last %}
         </tr>
@@ -64,45 +85,68 @@
 {% endfor %}
 </table>
 
+<!-- Refresh Page Button (to get new songs) -->
+<center><div>
+    <button type="button" class="btn btn-outline-light refreshBtn" style="height: 50px; width: 1000px">Refresh Songs</button>
+</div></center>
+<script>
+    $('.refreshBtn').click(function(e) {
+      $('input[name="art"]').each(function() {
+        this.checked = false;
+      });
+      location.reload(true);
+    })
+</script>
+<!-- End Refresh Page Button -->
+
 <br>
-<center><h3>More From Artists You Like:</h3></center>
-<!-- {% for artist_id in top_artists_ids %}
-    <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
-{% endfor %} -->
+<center><h3 class="more-artists-heading">More From Artists You Like:</h3></center>
 <table class="center">
-    <tr >
-        <td class="recCol" style="text-align: center;">
-            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.0 }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
-            <a class="btn btn-dark" href="{% url 'recommender:artist_info' top_artists_ids.0 %}" role="button" target="_blank">Artist Page</a>
+    <tr>
+        <td class="recCol">
+            <div>
+                <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.0 }}'  class="spRound artists" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+            </div>
+            <div>
+                <center>
+                    <a class="btn btn-outline-light artists-btn" href="{% url 'recommender:artist_info' top_artists_ids.0 %}" role="button" target="_blank">Artist Page</a>
+                </center>
+            </div>
         </td>
         {% if top_artists_ids.1 %}
-        <td class="recCol" style="text-align: center;">
-            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.1 }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
-            <a class="btn btn-dark" href="{% url 'recommender:artist_info' top_artists_ids.1 %}" role="button" target="_blank">Artist Page</a>
+        <td class="recCol">
+            <div>
+                <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.1 }}'  class="spRound artists" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+            </div>
+            <div>
+                <center>
+                    <a class="btn btn-outline-light artists-btn" href="{% url 'recommender:artist_info' top_artists_ids.1 %}" role="button" target="_blank">Artist Page</a>
+                </center>
+            </div>
         </td>
         {% endif %}
         {% if top_artists_ids.2 %}
-        <td class="recCol" style="text-align: center;">
-            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.2 }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
-            <a class="btn btn-dark" href="{% url 'recommender:artist_info' top_artists_ids.2 %}" role="button" target="_blank">Artist Page</a>
+        <td class="recCol">
+            <iframe src='https://open.spotify.com/embed/artist/{{ top_artists_ids.2 }}'  class="spRound artists" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+            <center>
+            <a class="btn btn-outline-light artists-btn" href="{% url 'recommender:artist_info' top_artists_ids.2 %}" role="button" target="_blank">Artist Page</a>
+            </center>
         </td>
         {% endif %}
     </tr>
 </table>
-
+<!-- padding-bottom: 50px; padding-right: 15px; padding-left: 15px; -->
 <br>
-<center><h3>Artists Like Your Top Artist {{ top_artist_name }}:</h3></center>
+<center><h3 class="artists-like-top-heading">Artists Like Your Top Artist {{ top_artist_name }}:</h3></center>
 <table class="center"><tr>
 {% for artist_id in related_artists %}
-        <td style="text-align: center; padding-bottom: 50px; padding-right: 15px; padding-left: 15px;">
-            <ul class="songItem">
-                <li>
-                    <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  class="spRound" frameborder='0' allowtransparency='true' allow='encrypted-media' style="height:300px;"></iframe>                                
-                </li>
-                <li>
-                    <a class="btn btn-dark" href="{% url 'recommender:artist_info' artist_id %}" role="button" target="_blank">Artist Page</a>
-                </li>
-            </ul>
+        <td style="text-align: center;">
+            <div>
+                <iframe src='https://open.spotify.com/embed/artist/{{ artist_id }}'  class="spRound artists artists-like-top" frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>                                
+            </div>
+            <div>
+                <a class="btn btn-outline-light artists-btn" href="{% url 'recommender:artist_info' artist_id %}" role="button" target="_blank">Artist Page</a>
+            </div>
         </td>
     {% if forloop.last %}
         </tr>
@@ -113,16 +157,27 @@
     {% endif %}
 {% endfor %}
 </table>
-{% endif %}
 
-{% if not min_likes_met %}
-    <center><p>You have not liked any songs! Go like some songs in order to get recommendations!</p></center>
+{% else %}
+
+    {% if not min_likes_met %}
+        <center><p>You have not liked enough songs. Please like at least 10 songs in order to get recommendations!</p></center>
+    {% endif %}
+    
+    {% if not profile.survey_taken %}
+        <center><p>You have not yet taken the survey! Take it so that you can get better recommendations.</p></center>
+        <center><a href="{% url 'recommender:survey_genres' %}" style="color: #f5f7fa;">Survey</a></center>
+    {% endif %}
+
+    {% if not success and min_likes_met and min_artists_met %}
+        <center><p>We were unable to get recommendations for you. Please like more songs!</p></center>
+    {% endif %}
+
+    {% if not min_artists_met %}
+        <center><p>Please like songs by at least 3 different artists in order to get recommendations!</p></center>
+    {% endif %}
     <center><a href="{% url 'recommender:home' %}" style="color: #f5f7fa;">Home</a></center>
-{% endif %}
-   
-{% if not profile.survey_taken %}
-    <center><p>You have not yet taken the survey! Take it so that you can get better recommendations.</p></center>
-    <center><a href="{% url 'recommender:survey_genres' %}" style="color: #f5f7fa;">Survey</a></center>
+
 {% endif %}
 
 {% endblock %}

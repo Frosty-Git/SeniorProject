@@ -140,9 +140,14 @@ def results(request):
             artist3_ids = search_artists(term, 5, 9)
             
             features = search_audio_features(term)
-            artists = get_artists(track1_ids[0])
-            track_info = get_track(track1_ids[0])
-            name = get_song_name(track1_ids[0])
+            if track1_ids:
+                artists = get_artists(track1_ids[0])
+                track_info = get_track(track1_ids[0])
+                name = get_song_name(track1_ids[0])
+            else:
+                artists = None
+                track_info = None
+                name = None
 
             user_id = request.user.id
             users = search_users(term, user_id)
@@ -223,100 +228,109 @@ def user_preference_recommender(request):
     """
     user_id = request.user.id
     user = UserProfile.objects.get(pk=user_id)
-    preferences = Preferences.objects.get(user_profile_fk=user)
-    limit = 9
-    pref_dict = {
-        'target_acousticness'     : preferences.acousticness,
-        'target_danceability'     : preferences.danceability,
-        'target_energy'           : preferences.energy,
-        'target_instrumentalness' : preferences.instrumentalness,
-        'target_speechiness'      : preferences.speechiness,
-        'target_loudness'         : preferences.loudness,
-        'target_tempo'            : preferences.tempo,
-        'target_valence'          : preferences.valence,
-    }
+    limit = 20 # Limit to the recommender
+    num_songs = 9 # Number of songs to send back to the recommender page
     
     min_likes_met = False
     survey_taken = False
+    min_artists_met = False
+
     liked_songs = user.liked_songs_playlist_fk
     sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs)
-    if sop:
+    top_artists_ids = get_top_artists_by_id(request)
+
+    if len(sop) >= 10:              # A user has liked at least 10 songs
         min_likes_met = True
-    if user.survey_taken:
+    if user.survey_taken:           # A user has taken the survey
         survey_taken = True
+    if len(top_artists_ids) == 3:   # A user has liked songs by at least 3 different artists
+        min_artists_met = True
 
     if min_likes_met and survey_taken:
         loop = True
         issue = False
-        num_songs = limit
+        success = True # Determines if any results were successfully found
         track_ids = []
+        playlists = []
+        songs_votes = []
+        song_list = []
+
+        artists_genre = get_artists_genres(top_artists_ids)
+        genre_to_use = []
+        if artists_genre:   # If there was a match of your artists to the recommendation seed genres
+            genre_to_use = [artists_genre]
+        else:   # Use a random genre from your survey genre results
+            prefs = Preferences.objects.get(user_profile_fk=profile)
+            genres_list = prefs.genres.split('*')
+            genres = genres_list[:-1]
+            genre = random.sample(genres, 1)
+            genre_to_use = [genre[0]]
+
+        track = [get_top_track(request)]
+
+        preferences = Preferences.objects.get(user_profile_fk=user)
+        pref_dict = {
+            'target_acousticness'     : preferences.acousticness,
+            'target_danceability'     : preferences.danceability,
+            'target_energy'           : preferences.energy,
+            'target_instrumentalness' : preferences.instrumentalness,
+            'target_speechiness'      : preferences.speechiness,
+            'target_loudness'         : preferences.loudness,
+            'target_tempo'            : preferences.tempo,
+            'target_valence'          : preferences.valence,
+        }
+
+        # print("PREFS")
+        # print(pref_dict)
+
         while loop:
             issue = False
-            results = get_recommendation(request, num_songs, user_id, **pref_dict)
+            results = get_recommendation(request, limit, top_artists_ids, genre_to_use, track, **pref_dict)
             recommendations = results['recommendations']
-            for x in range(num_songs):
-                if len(track_ids) < 9:
-                    # print("HERE")
-                    if x+1 > len(recommendations['tracks']):
+            if recommendations:
+                for x in range(limit):
+                    issue = False
+                    if len(track_ids) < num_songs:
+                        if x+1 > len(recommendations['tracks']):
+                            break
+                        track_id = recommendations['tracks'][x]['id']
+                        save_songs([track_id])
+                        match = SongToUser.objects.filter(user_from=user, songid_to=track_id).first()
+                        if match is not None:
+                            if match.vote == 'Like' or match.vote == 'Dislike':
+                                # The user has already expressed a like or dislike for this
+                                # song, so don't recommend it
+                                issue = True
+                        settings = Settings.objects.get(user_profile_fk=user)
+                        if settings.explicit_music is False:
+                            track = SongId.objects.get(spotify_id=track_id)
+                            if track.explicit:
+                                # The user does not want songs recommended that are explicit
+                                # so don't recommend it
+                                issue = True
+                        if track_id in track_ids:
+                            # Don't put a song in the track_ids list if it's already there
+                            issue = True
+                        if not issue:
+                            track_ids.append(track_id)
+                    else:
                         break
-                    track_id = recommendations['tracks'][x]['id']
-                    save_songs([track_id])
-                    match = SongToUser.objects.filter(user_from=user, songid_to=track_id).first()
-                    if match is not None:
-                        # print("match")
-                        if match.vote == 'Like' or match.vote == 'Dislike':
-                            # The user has already expressed a like or dislike for this
-                            # song, so don't recommend it
-                            issue = True
-                            # break
-                    settings = Settings.objects.get(user_profile_fk=user)
-                    if settings.explicit_music is False:
-                        # print("explicit")
-                        track = SongId.objects.get(spotify_id=track_id)
-                        if track.explicit:
-                            # print("track is explicit")
-                            # The user does not want songs recommended that are explicit
-                            # so don't recommend it
-                            issue = True
-                            # break
-                    if track_id in track_ids:
-                        # print("already there")
-                        # Don't put a song in the track_ids list if it's already there
-                        issue = True
-                        # break
-                    if not issue:
-                        # print("appended!")
-                        track_ids.append(track_id)
+                if len(track_ids) == num_songs:
+                    # No need to get more recommendations because we do not have explicit
+                    # songs when we don't want them, and it is not returning songs that
+                    # have been liked or disliked.
+                    loop = False
                 else:
-                    # print("HERE")
-                    break
-                # print("len" + str(len(track_ids)))
-            if not issue:
-                # No need to get more recommendations because we do not have explicit
-                # songs when we don't want them, and it is not returning songs that
-                # have been liked or disliked.
-                loop = False
+                    # Get more songs next time since we failed to get num_songs (9) songs
+                    pass
             else:
-                # Get more recommendations equivalent to the number of songs left
-                # needed in our list limit (of 9); we will loop again
-                # num_songs = (limit - len(track_ids))
-                # loop = True
-                pass
+                success = False
+                loop = False
 
-            print(len(track_ids))
-            print(issue)
-            print(track_ids)
-
-        print("-------------------------")
-        print(len(track_ids))
-        print(track_ids)
-        print("-------------------------")
-
-        playlists = get_user_playlists(user_id)
-        top_artists_ids = get_top_artists_by_id(request)
-
-        songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
-        song_list = song_vote_dictionary(songs_votes, track_ids)
+        if len(track_ids) == num_songs:
+            playlists = get_user_playlists(user_id)
+            songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+            song_list = song_vote_dictionary(songs_votes, track_ids)
 
         context = {
             'track_ids' : song_list,
@@ -324,6 +338,8 @@ def user_preference_recommender(request):
             'profile': user,
             'top_artists_ids': top_artists_ids,
             'min_likes_met': min_likes_met,
+            'min_artists_met': min_artists_met,
+            'success': success,
             'location': 'recommender',
             'related_artists': results['related_artists_ids'],
             'top_artist_name': results['top_artist']
@@ -332,6 +348,7 @@ def user_preference_recommender(request):
         context = {
             'profile': user,
             'min_likes_met': min_likes_met,
+            'min_artists_met': min_artists_met,
             'location': 'recommender',
     }
 
@@ -553,7 +570,6 @@ def searchSong_post(request):
             loudness = features[0]['loudness']
             tempo = features[0]['tempo']
             valence = features[0]['valence']
-            
             context = {
                 'form': form,
                 'id': track_id,
@@ -767,9 +783,10 @@ def survey_artists(request, genre_stack, songs_list):
     else:
         # Change to recommender
         return HttpResponseRedirect('/')
-        # return render(request, "Survey/survey_artists.html", {})
 
 def send_artists(request, genre_stack, songs_list):
+    """
+    """
     artists = request.POST.getlist('artist_id_list[]')
     new_genre_stack = GenresStack(genre_stack, artists, songs_list)
     artists_string = new_genre_stack.artistsToString()
@@ -787,7 +804,6 @@ def survey_songs(request, genre_stack, artists_string, songs_list):
 
     track_ids = []
     track_names = []
-    
     if len(artists) != 0:
         # for each around the artists
         for artist in artists:
@@ -816,15 +832,8 @@ def survey_songs(request, genre_stack, artists_string, songs_list):
 def check_remaining(request, genre_stack, songs_list):
     new_songs = request.POST.getlist('song_id_list[]')
     artist_list = ""
-    # Convert the list of song ids into a string
-    # songs_string = ""
-    # if len(songs_list) > 0:
-    #     for song in songs_list:
-    #         songs_string = songs_string + (song + "*")
-    # else: 
-    #     songs_string = "*"
+
     new_genre_stack = GenresStack(genre_stack, artist_list, songs_list)
-    
     new_genre_stack.extendSongList(new_songs)
 
 
@@ -840,9 +849,7 @@ def survey_final(request, songs_list):
     genre_stack = ""
     artist_list = ""
     new_genre_stack = GenresStack(genre_stack, artist_list, songs_list)
-    # print(new_genre_stack.songs_list)
     tracks = new_genre_stack.songsToList()
-    # print(tracks)
     NUM_TRACKS = len(tracks)
     save_songs(tracks)
 
@@ -887,98 +894,7 @@ def survey_final(request, songs_list):
     prefs.valence = valence / NUM_TRACKS
     prefs.save()
 
-
     return redirect('/recommendations')
-
-    #return render(request, "Survey/test.html")
-
-# Alt-rock → alternative rock
-# Alternative
-# Anime
-# Classical
-# Country
-# Disco
-# Electronic
-# Emo
-# Folk
-# Funk
-# Gospel
-# Grunge
-# Hard-rock → hard rock
-# Hip-hop → hip hop
-# Indie
-# Jazz
-# K-pop
-# Latin
-# Metal
-# Pop
-# Punk
-# R-n-b → r&b
-# Reggae
-# Rock
-# Soul
-
-
-
-
-
-# def update_database_with_preferences(danceability, acousticness, energy, instrumentalness, 
-#                                         speechiness, loudness, tempo, valence):
-#     if request.method = 'POST':
-        
-
-# def get_top_artists_by_id(user_id):
-#     """
-#     Gets the top 5 artists ids from a user's liked songs
-#     Last updated: 4/1/21 by Jacelynn Duranceau 
-#     """
-#     user = UserProfile.objects.get(pk=user_id)
-#     liked_songs = user.liked_songs_playlist_fk
-#     matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
-#     songs = []
-
-#     for match in matches:
-#         song_id = match.get('spotify_id_id')
-#         songs.append(song_id)
-
-#     all_artists = []
-#     for song in songs:
-#         artists = get_artists_ids_list(song)
-#         for artist_id in artists: 
-#             all_artists.append(artist_id)
-
-#     # Dictionary for frequency
-#     frequency = Counter(all_artists)
-#     most_common = frequency.most_common(5)
-#     top_5_artists = [key for key, val in most_common]
-
-#     return top_5_artists
-
-# def get_artists_features(artist_id_list):
-#     """
-#     Gets a long list of features about artists
-#     Last updated: 4/1/21 by Jacelynn Duranceau
-#     """
-#     artists_features = get_artists_features_sp(artist_id_list)
-#     return artists_features
-
-# def get_artists_genres(artist_id_list):
-#     """
-#     Gets the top 5 genres from your top 5 artists
-#     Last updated: 4/1/21 by Jacelynn Duranceau
-#     """
-#     artists_features = get_artists_features(artist_id_list)['artists']
-#     all_genres = []
-#     for artist in artists_features:
-#         genres = artist['genres']
-#         for genre in genres:
-#             all_genres.append(genre)
-
-#     frequency = Counter(all_genres)
-#     most_common = frequency.most_common(5)
-#     top_5_genres = [key for key, val in most_common]
-
-#     return top_5_genres
 
 def top_playlists(request):
     days_to_subtract = 7
@@ -1011,9 +927,16 @@ def artist_info(request, artist_id):
         related_artists = random.sample(all_related_artists, k=12)
     else:
         related_artists = all_related_artists
+    
+    related_artists_dict = {}
+    for artist in related_artists:
+        related_artists_dict[artist] = get_artist_name(artist)
+        
     top_tracks = get_top_tracks(artist_id)
+    save_songs(top_tracks)
     name = get_artist_name(artist_id)
     artist_image = get_artist_image(artist_id)
+    all_album_ids = get_artist_albums(artist_id)
     user_id = request.user.id
     if user_id is not None:
         playlists = get_user_playlists(user_id)
@@ -1021,8 +944,9 @@ def artist_info(request, artist_id):
         songs_votes = SongToUser.objects.filter(user_from=profile).values('songid_to_id', 'vote')
         song_list = song_vote_dictionary(songs_votes, top_tracks)
         context = {
-            'related_artists': related_artists,
+            'related_artists': related_artists_dict,
             'top_tracks': song_list,
+            'album_ids': all_album_ids,
             'name': name,
             'artist_image': artist_image,
             'playlists': playlists,
@@ -1031,14 +955,20 @@ def artist_info(request, artist_id):
         }
     else:
         context = {
-            'related_artists': related_artists,
+            'related_artists': related_artists_dict,
             'top_tracks': top_tracks,
+            'album_ids': all_album_ids,
             'name': name,
             'artist_image': artist_image,
         }
     return render(request, 'recommender/artist_info.html', context)
 
 def custom_recommender(request):
+    """
+    Gets custom recommendations based on user input for up to 3 artists, 1 genre,
+    and 1 track.
+    Last updated: 4/23/21 by Jacelynn Duranceau
+    """
     url_parameter = request.GET.get("q")
     action = request.GET.get('action')
     artist_searches = []
@@ -1047,8 +977,29 @@ def custom_recommender(request):
     if url_parameter:
         if action == 'artist':
             artist_searches = livesearch_artists(url_parameter)
+            # Replace the apostrophes because it breaks the custom recommender
+            for artist in artist_searches.items():
+                s_id = artist[0]
+                value = artist[1]
+                name = value[0]
+                value.append(name)  # artist[3] becomes the original name, to be
+                                    # used for displaying in HTML (so that \ does
+                                    # not show up)
+                if "'" in value[0]:
+                    value[0] = name.replace("'", "\\'")
+
         else: # it's for a track
             track_searches = livesearch_tracks(url_parameter)
+            # Replace the apostrophes because it breaks the custom recommender
+            for track in track_searches.items():
+                s_id = track[0]
+                value = track[1]
+                name = value[0]
+                value.append(name) # the last item in the array becomes the
+                                    # original song name for HTML display
+                if "'" in value[0]:
+                    name = value[0]
+                    value[0] = name.replace("'", "\\'")
         
     if request.is_ajax():
         if action == 'artist':
@@ -1075,3 +1026,148 @@ def custom_recommender(request):
         'track_searches': track_searches
     }
     return render(request, 'recommender/custom_recommender.html', context)
+
+def cust_rec_results(request):
+    """
+    Generates the results for user selection on the custom recommender.
+    Last updated 4/21/21 by Jacelynn Duranceau
+    """
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    input_artist_ids = request.POST.getlist('artist_id_list[]')
+    input_track_ids = request.POST.getlist('track_id_list[]')
+    genre = request.POST.getlist('genre_list[]')
+    features = request.POST.getlist('feature_list[]')
+    limit = 9
+    pref_dict = {
+        'target_acousticness'     : features[0],
+        'target_danceability'     : features[1],
+        'target_energy'           : features[2],
+        'target_instrumentalness' : features[3],
+        'target_speechiness'      : features[4],
+        'target_loudness'         : features[5],
+        'target_tempo'            : features[6],
+        'target_valence'          : features[7],
+    }
+    
+    liked_songs = user.liked_songs_playlist_fk
+    sop = SongOnPlaylist.objects.filter(playlist_from=liked_songs)
+
+    loop = True
+    issue = False
+    num_songs = limit
+    track_ids = []
+    while loop:
+        issue = False
+        results = get_custom_recommendation(request, num_songs, user_id, input_artist_ids, input_track_ids, genre, **pref_dict)
+        recommendations = results['recommendations']
+        for x in range(num_songs):
+            if len(track_ids) < 9:
+                if x+1 > len(recommendations['tracks']):
+                    break
+                track_id = recommendations['tracks'][x]['id']
+                save_songs([track_id])
+                match = SongToUser.objects.filter(user_from=user, songid_to=track_id).first()
+                if match is not None:
+                    if match.vote == 'Like' or match.vote == 'Dislike':
+                        # The user has already expressed a like or dislike for this
+                        # song, so don't recommend it
+                        issue = True
+                settings = Settings.objects.get(user_profile_fk=user)
+                if settings.explicit_music is False:
+                    track = SongId.objects.get(spotify_id=track_id)
+                    if track.explicit:
+                        # The user does not want songs recommended that are explicit
+                        # so don't recommend it
+                        issue = True
+                if track_id in track_ids:
+                    # Don't put a song in the track_ids list if it's already there
+                    issue = True
+                if not issue:
+                    track_ids.append(track_id)
+            else:
+                break
+        if not issue:
+            # No need to get more recommendations because we do not have explicit
+            # songs when we don't want them, and it is not returning songs that
+            # have been liked or disliked.
+            loop = False
+        else:
+            # Get more recommendations equivalent to the number of songs left
+            # needed in our list limit (of 9); we will loop again
+            pass
+
+    ugly_string = ""
+    for track in track_ids:
+        ugly_string += (track + "*")
+
+    link = 'custom_results/' + ugly_string
+    response = {'redirect' : link}
+    return JsonResponse(response)
+    # return render(request, 'recommender/custom_recommender_results.html', context)
+
+def generate_results(request, track_string):
+    track_ids = track_string.split("*")
+    track_ids.pop() # Remove the empty string from the decoded fake 
+                    # query string :) 
+                    # PS: Stop using ajax to redirect please.
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+    playlists = get_user_playlists(user_id)
+    songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+    song_list = song_vote_dictionary(songs_votes, track_ids)
+    context = {
+        'track_ids' : song_list,
+        'playlists': playlists,
+        'profile': user,
+        'location': 'recommender',
+    }
+    return render(request, 'recommender/custom_recommender_results.html', context)
+
+def spotify_stats(request):
+    user_id = request.user.id
+    user = UserProfile.objects.get(pk=user_id)
+
+    artist_ids = []
+    track_ids = []
+
+    artist_error = False
+    track_error = False
+
+    if user.linked_to_spotify:
+        spotify_manager = SpotifyManager()
+        spotify_manager.token_check(request)
+        spotify = spotipy.Spotify(auth=user.access_token)
+        try:
+            artists = spotify.current_user_top_artists(limit=9, offset=0, time_range='long_term')['items']
+            for artist in artists:
+                artist_ids.append(artist['id'])
+        except Exception as e: # A user doesn't even have 9 top artists to choose from
+            print(e)
+            artist_error = True
+        try:
+            tracks = spotify.current_user_top_tracks(limit=9, offset=0, time_range='long_term')['items']
+            for track in tracks:
+                track_ids.append(track['id'])
+        except Exception as e: # A user doesn't even have 15 top songs to choose from
+            print(e)
+            track_error = True
+    else:
+        # This view function should not 
+        pass
+
+    save_songs(track_ids)
+
+    playlists = get_user_playlists(user_id)
+    songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+    song_list = song_vote_dictionary(songs_votes, track_ids)
+
+    context = {
+        'profile': user,
+        'track_ids': song_list,
+        'artist_ids': artist_ids,
+        'playlists': playlists,
+    }
+
+    return render(request, 'recommender/spotify_stats.html', context)
+
