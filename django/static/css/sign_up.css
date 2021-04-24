@@ -1,13 +1,15 @@
 .container2 {
-    background-color: #456583;
+    background-color: #617991;
     padding:20px;
     margin-left: auto;
     margin-right: auto;
     color:white;
     width:600px;
+    box-shadow: 0rem 0.3rem 0.1rem 0.01rem #1F2933;
+    border-radius: 0.5rem;
 }
 .btn btn-outline-light{
-    background-color: #456583;
+    background-color: #617991;
     color: white;
     border-color: white
 }
@@ -22,5 +24,10 @@ li{
     -webkit-text-stroke-width: 0.09px;
     -webkit-text-stroke-color: #323F4B;
     
+}
+
+/* Password Information List Items */
+.pInfo {
+    margin-left: 5%;
 }
 /* style="padding-top:10px"*/

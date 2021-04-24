@@ -123,28 +123,25 @@ def get_top_tracks(artist_id):
 
     return all_tracks
         
-def get_recommendation(request, limit, user_id, **kwargs):
+def get_recommendation(request, limit, seed_artists, genre, track, **kwargs):
     """
     Gets recommendations for a user based on their top songs and artists.
+    The first three parameters to the sp.recommendations function must be a list.
     Last updated: 4/20/21 by Jacelynn Duranceau
     """
-    seed_artists = get_top_artists_by_id(request)
-    profile = UserProfile.objects.get(pk=user_id)
-    prefs = Preferences.objects.get(user_profile_fk=profile)
-    genres_list = prefs.genres.split('*')
-    genres = genres_list[:-1]
-    genre = random.sample(genres, 1)
-    related_artists_ids = get_related_artists(seed_artists[0], 6)
-    # top_genre = get_artists_genres(seed_artists)
-    track = get_top_track(request)
-    # 3 artists, 1 genre, 1 track
-    recommendations = sp.recommendations(seed_artists=seed_artists,
-                                        seed_genres=[genre[0]], 
-                                        seed_tracks=[track], 
-                                        limit=limit,
-                                        country=None,
-                                        **kwargs)
-    top_artist_name = get_artist_name(seed_artists[0])
+    top_artist_name = ''
+    related_artists_ids = []
+    recommendations = []
+    if len(seed_artists) >= 1 and len(track) == 1:
+        related_artists_ids = get_related_artists(seed_artists[0], 6)
+        # 3 artists, 1 genre, 1 track
+        recommendations = sp.recommendations(seed_artists=seed_artists,
+                                            seed_genres=genre, 
+                                            seed_tracks=track, 
+                                            limit=limit,
+                                            country=None,
+                                            **kwargs)
+        top_artist_name = get_artist_name(seed_artists[0])
     results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
     return results
 
@@ -208,20 +205,26 @@ def get_top_pengbeats_artists(user):
 
     all_artists = []
     for song in songs:
+        # artist_names = get_artists_names_list(song) # List of the artists for the song
+        # if 'Various Artists' not in artist_names:
         artists = get_artists_ids_list(song)
         for artist_id in artists: 
-            all_artists.append(artist_id)
+            if not get_artist_name(artist_id) == 'Various Artists':
+                all_artists.append(artist_id)
 
     # Dictionary for frequency
-    frequency = Counter(all_artists)
-    most_common = frequency.most_common(3)
-    top_3_artists = [key for key, val in most_common]
+    top_3_artists = []
+    if len(all_artists) >= 1:
+        frequency = Counter(all_artists)
+        most_common = frequency.most_common(3)
+        top_3_artists = [key for key, val in most_common]
 
     return top_3_artists
 
 def get_artists_genres(artist_id_list):
     """
-    Gets the top 1 genres from your top 3 artists
+    Gets the most common genre among your top 3 artists if it appears in the 
+    genre seeds
     Last updated: 4/1/21 by Jacelynn Duranceau
     """
     artists_features = get_artists_features(artist_id_list)['artists']
@@ -231,21 +234,19 @@ def get_artists_genres(artist_id_list):
         for genre in genres:
             all_genres.append(genre)
 
-    frequency = Counter(all_genres)
-    most_common = frequency.most_common(1)
-    top_genre = most_common[0][0]
-
     genre_seeds = sp.recommendation_genre_seeds()['genres']
 
-    appears = False
-    for genre in genre_seeds:
-        if top_genre == genre:
-            appears = True
-            return top_genre
+    matching_genres = []
+    for genre in all_genres:
+        if genre in genre_seeds:
+            matching_genres.append(genre)
 
-    if not appears:
-        matches = re.findall(r"(?=("+'|'.join(genre_seeds)+r"))", top_genre)
-        return matches[0]
+    if matching_genres:
+        frequency = Counter(matching_genres)
+        most_common = frequency.most_common() # [(genre, frequency)]
+        return most_common[0][0]
+    else:
+        return []
 
 # def match(input_string, string_list):
 #     words = re.findall(r'\w+', input_string)

@@ -895,6 +895,8 @@ def get_songs_playlist(request, user_id, playlist_id):
 
         songs = sop_song_vote_array(matches, songs_votes)
         
+        vote = get_playlist_vote(you, playlist)
+
         for song in songs:
             track_id = song[1]
             album_image = get_album_image(track_id)
@@ -920,6 +922,7 @@ def get_songs_playlist(request, user_id, playlist_id):
             'playlist': playlist,
             'profile': you,
             'you': you,
+            'vote': vote,
             'private_profile': private_profile,
             'following_status': following_status,
             'loggedin': you,
@@ -937,6 +940,7 @@ def get_songs_playlist(request, user_id, playlist_id):
             # see their playlists
             if not private_profile or following_status:
                 playlist = Playlist.objects.get(pk=playlist_id, user_profile_fk=other_user)
+                vote = get_playlist_vote(you, playlist)
                 if not playlist.is_private:
                     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values()
                     songs_votes = SongToUser.objects.filter(user_from=you).values('songid_to_id', 'vote')
@@ -966,6 +970,7 @@ def get_songs_playlist(request, user_id, playlist_id):
                         'playlist': playlist,
                         'profile': other_user,
                         'you': you,
+                        'vote': vote,
                         'private_profile': private_profile,
                         'following_status': following_status,
                         'playlists': playlists,
