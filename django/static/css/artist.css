@@ -10,15 +10,14 @@ h2,h3,h4 {
 .carousel {
     border-radius: 1vh;
     margin: 2vh 0vh 5vh 0vh;
-    /* background-color: yellow; */
     width: 105%;
+    background-color: #425363;
+    box-shadow: .6rem .6rem .5rem .4rem #1F2933;
 }
 .carousel-control-prev {
-    /* background-color: red; */
     width: 5%;
 }
 .carousel-control-next {
-    /* background-color: green; */
     width: 5%;
 }
 
@@ -32,10 +31,11 @@ h2,h3,h4 {
     height: 0; 
     overflow: hidden; 
     max-width: 100%;
-
-} 
+    box-shadow: 0rem 0.3rem 0.1rem 0.01rem #1F2933;
+    border-radius: 0.5rem;
+}  
 .embed-container iframe, .embed-container object, .embed-container embed { 
-    position: relative; 
+    position: absolute; 
     top: 0; 
     left: 0; 
     width: 100%; 
@@ -45,4 +45,13 @@ h2,h3,h4 {
 .submit{
     margin-top: 15px;
     margin-bottom: 5x;
+}
+
+.artist-page{
+    margin-top: 5px;
+    margin-bottom: 5x;
+}
+
+.hide{
+    display: none;
 }
