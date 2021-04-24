@@ -74,7 +74,7 @@
         <tr>
             <td>
                 <div class="center" style="width:175px; text-align:center;">
-                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
+                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
                         Edit Playlist
                     </button>
                     {% include 'playlists/editplaylist_popup.html' %}
@@ -105,7 +105,6 @@
         </tr>
         {% endif %}
 
-    {% if profile.user.id == user.id %}
         {% if not playlist.is_private %}
         <tr>
             <td colspan="2">
@@ -116,7 +115,6 @@
             </td>
         </tr>
         {% endif %}
-    {% endif %}
 </table>
 {% endif %}
 

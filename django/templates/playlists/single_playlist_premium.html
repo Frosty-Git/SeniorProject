@@ -2,50 +2,27 @@
 
 <h1 style="text-align: center; margin-top: 2%;">
 
-    {% if user.is_authenticated%}
-    <table>
-        <tr>
-    {% if playlist.id != profile.liked_songs_playlist_fk %}
-        <td class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-            <div class="btn-group" >
-                <!-- style it margin-left 80px if you want it below the post text -->
-                <button style="background-color: transparent; border:transparent" class="love{{ playlist.id }} btn btn-secondary" id="love{{ playlist.id }}" data-id='{{ playlist.id }}' data-action='like'>
-                    {% if vote %}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                        </svg>
-                    {% else %}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                        </svg>
-                    {% endif %}
-                </button>                           
-                {% include 'playlists/playlist_love_script_single.html' %}
-            </div>
-        </td>
-    {% else %}
-        <td></td>
-    {% endif%}
-        </tr>
-    </table>
-    {% endif %}
-
     {% if profile.user.id == user.id %}
         My Playlist:
     {% else %}
         <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
     {% endif %}
+
     <input type="hidden" id="location" name="location" value="playlists">
     <br>
+
     {% if playlist.image %}
         <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>
     {% else %}
         <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="50px" height="50px" style="border-radius: 50%;">
     {% endif %}
+
     {{ playlist.name }}
+
     {% if playlist.is_private %}
         <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
     {% endif %}
+    
     {% if playlist.is_imported %}
         <button id="playlist{{ playlist.spotify_playlist_id }}" value='{{ playlist.spotify_playlist_id }}' type="button" class="btn" style="color:#d9dadc">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
@@ -72,58 +49,77 @@
 </h1>
 
 {% if profile.user.id == user.id %}
-    <table class="center">
+    <table class="center" style="table-layout: fixed;">
         <tr>
-            <td>
+            {% if playlist.id != profile.liked_songs_playlist_fk %}
+            <td style="width: 25px;">
+                <div class="btn-group" >
+                    <button style="background-color: transparent; border:transparent" class="love{{ playlist.id }} btn btn-secondary" id="love{{ playlist.id }}" data-id='{{ playlist.id }}' data-action='like'>
+                        {% if vote %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                        {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                            </svg>
+                        {% endif %}
+                    </button>                           
+                    {% include 'playlists/playlist_love_script_single.html' %}
+                </div>
+            </td>
+            {% endif%}
+            <td style="width: 30px;">
                 <div class="center" style="width:175px; text-align:center;">
-                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
+                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#editplaylistmodal{{ playlist.id }}">
                         Edit Playlist
                     </button>
                     {% include 'playlists/editplaylist_popup.html' %}
                 </div>
             </td>
-            {% if profile.linked_to_spotify %}
-                <!-- If the playlist has not been exported, the button will say export -->
-                {% if not playlist.is_imported %}
-                    <td>
-                        <div class="center" style="width:150px; text-align:center;">
-                            <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
-                        </div>
-                    </td>
-                <!-- The playlist has been exported, so the button will say update -->
-                {% else %}
-                    <div class="center" style="width:150px; text-align:center;">
-                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Update</span></a>
-                    </div>
-                {% endif %}
-            {% endif %}
-        </tr>
-
-        {% if playlist != profile.liked_songs_playlist_fk %}
-        <tr>
-            <td colspan="2" class="centered-column" style="padding-top:6px; padding-bottom: 6px; padding-right: 10px;">
-                <a class="btn btn-dark" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete Playlist</a>
-            </td>
-        </tr>
-        {% endif %}
-
-    {% if profile.user.id == user.id %}
-        {% if not playlist.is_private %}
-        <tr>
-            <td colspan="2">
-                <div class="center" style="width:100px; text-align:center; margin-top:10px;">
-                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
-                    {% include 'social_feed/popup_playlistpost_single.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
+            <td style="width: 30px;">
+                <div class="btn-group dropend" style="float:right;">
+                    <a class="nav-link link-light" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                        </svg>
+                    </a>
+                    <ul class="dropdown-menu playlistDropdownMenu" aria-labelledby="dropdownMenuButton" style="text-align: center;">
+                        {% if profile.linked_to_spotify %}
+                                <!-- If the playlist has not been exported, the button will say export -->
+                                {% if not playlist.is_imported %}
+                                <li class="playlistDropdownItem">
+                                        <div class="center" style="width:150px; text-align:center;">
+                                            <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
+                                        </div>
+                                    </li>
+                                <!-- The playlist has been exported, so the button will say update -->
+                                {% else %}
+                                    <li class="center" style="width:150px; text-align:center;">
+                                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Update</span></a>
+                                    </li>
+                                {% endif %}
+                        {% endif %}
+                        {% if playlist != profile.liked_songs_playlist_fk %}
+                            <li class="playlistDropdownItem">
+                                <a class="btn btn-outline-light" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
+                            </li>
+                        {% endif %}
+                        {% if profile.user.id == user.id %}
+                            {% if not playlist.is_private %}
+                                <li class="playlistDropdownItem">
+                                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                                </li>
+                                {% include 'social_feed/popup_playlistpost_single.html' with user_id=profile.user.id private_profile=private_profile profile=profile %}
+                            {% endif %}
+                        {% endif %}
+                    </ul>
                 </div>
             </td>
         </tr>
-        {% endif %}
-    {% endif %}
 </table>
 
 {% endif %}
-
-
 
 {% if profile.user.id != user.id and playlist.is_shareable %}
     {% if user.is_authenticated %}
@@ -136,14 +132,29 @@
                             {% include 'social_feed/popup_playlistpost_single.html' with user_id=profile.user.id private_profile=private_profile %}
                         </div>
                     </td>
+                    <td style="padding-top: 6%;">
+                        <div class="btn-group" >
+                            <button style="background-color: transparent; border:transparent" class="love{{ playlist.id }} btn btn-secondary" id="love{{ playlist.id }}" data-id='{{ playlist.id }}' data-action='like'>
+                                {% if vote %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                    </svg>
+                                {% else %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                    </svg>
+                                {% endif %}
+                            </button>                           
+                            {% include 'playlists/playlist_love_script_single.html' %}
+                        </div>
+                    </td>
                 </tr>
             </table>
         {% endif %}
     {% endif %}
-
 {% endif %}
 
-<table class="center" style="width:90%;">
+<table class="center">
     <tr>
         <th></th>
         <th style="text-align: center;"><h6>Title</h6></th>
@@ -223,6 +234,7 @@
                     {% include 'playlists/playlist_vote_script.html' %}
                 </div>
             </td>
+            
             {% if playlists.count > 1 %}
                 <td>
                     <div class="btn-group" role="group" onclick="addModalClick('{{ song.0 }}')" style="margin-left:auto; margin-right: auto; display:flex">
@@ -242,7 +254,6 @@
                     })
                 </script>
             {% endif %}
-
                     <td>
                         <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song.1 }}">Share</button>
                         {% include 'social_feed/popup_songpost.html' with song=song.1 %}
@@ -251,7 +262,7 @@
             <!-- This playlist is yours, so you can delete songs from it -->
             {% if profile.user.id == user.id and playlist != profile.liked_songs_playlist_fk %}
                 <td class="centered-column" style="padding-top:8px; padding-bottom: 8px;">
-                    <a class="btn btn-dark" href="{% url 'user:delete_song' playlist.id song.0 %}" role="button">Delete Song</a>
+                    <a class="btn btn-outline-light" href="{% url 'user:delete_song' playlist.id song.0 %}" role="button">Delete Song</a>
                 </td>
             {% endif %}
         </tr>
