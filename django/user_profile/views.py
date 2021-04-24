@@ -302,8 +302,9 @@ def following_helper(url_parameter, user, request_id):
             followers_arr.append([person, determination])
     
     for user_profile in other_users:
-        determination = is_following(request_id, user_profile.user.id)
-        others_arr.append([user_profile, determination])
+        if user_profile.user.id != user.user.id:
+            determination = is_following(request_id, user_profile.user.id)
+            others_arr.append([user_profile, determination])
     
     all_arrs = {
         'others_arr': others_arr,
@@ -316,6 +317,9 @@ def following_helper(url_parameter, user, request_id):
 @require_GET
 def following_page(request, user_id):
     """
+    Displays followers and following for a user. 
+    A search feature will dynamically change the followers/following/others.
+    Last updated: 4/10/21 by Katie Lee
     """
     if request.user == User.objects.get(pk=user_id):
         you = UserProfile.objects.get(pk=user_id)
