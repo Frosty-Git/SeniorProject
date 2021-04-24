@@ -32,6 +32,7 @@
 
 .sliderRec::-moz-range-track {
     width: 80%;
+    height: 2px;
     background-color: lightgray;
 }
 
@@ -40,7 +41,6 @@
     background-color: #f99108;
     border-color: #f99108;
 }
-
 
 
 
