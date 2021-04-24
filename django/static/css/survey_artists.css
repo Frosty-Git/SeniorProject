@@ -22,10 +22,14 @@ td{
 }
 #button_format{
     margin-top:10px;
+    
 }
 #refreshBtn{
     margin-left:5px;
    }
 .form-check-input:checked{
     background-color: #f99108;
+}
+.form-check-input{
+    background-color:#d9dadc;
 }

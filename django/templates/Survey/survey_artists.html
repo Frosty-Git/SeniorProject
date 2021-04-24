@@ -60,10 +60,12 @@
 </center>
 <br>
 
-
+<center>
 <h3>Pick up to 3 artists you like for the genre {{ genre }}.</h3>
+</center>
 <form name="artistForm" method="post">
   {% csrf_token %}
+  <div class="row justify-content-center">
   <table id = "table1">
     <tr>
       <td>
@@ -174,8 +176,8 @@
       </td>
     </tr>
   </table>
-
-<div id = 'button_format'>
+</div>
+<div id = 'button_format' class="pull-left bottom-left">
   <button type="button" class="btn btn-outline-light" id = "songBtn" >Submit</button>
 
 

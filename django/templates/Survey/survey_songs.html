@@ -59,7 +59,7 @@
   <h1 style="font-size: 400%;">Survey</h1>
 </center>
 <br>
-
+<center>
 <h3>Pick up to 5 songs from {{ artist_names.0 }} 
     {% if artist_names.1 %}
     or {{ artist_names.1 }}
@@ -68,7 +68,7 @@
     or {{ artist_names.2 }}
     {% endif %}
 </h3>
-
+</center>>
 <!-- <table>
 {% for track in track_ids %}
   <tr>
@@ -86,6 +86,7 @@
 
 <form name="songForm" method="post">
   {% csrf_token %}
+  <div class="row justify-content-center">
   <table>
     <tr>
       <td>
@@ -200,7 +201,8 @@
     </tr>
     {% endif %}
   </table>
-  <div id = 'button_format'>
+</div>
+  <div id = 'button_format' class="pull-left bottom-left" >
     <button type="button" class="btn btn-outline-light" id = "songBtn" >Submit</button>
   
   
