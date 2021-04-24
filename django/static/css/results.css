@@ -40,3 +40,9 @@ h1, h3 {
     width: 100%; 
     height: 100%; 
 }
+.user-table {
+    background-color: #425363;
+    border-radius: 0.5rem;
+    padding: 10rem 10rem 10rem 10rem;
+    box-shadow: .6rem .6rem .5rem .4rem #1F2933;
+}
