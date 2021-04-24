@@ -188,12 +188,16 @@ input:checked+.slider:before {
 }
 .followBtn {
     color: #d9dadc;
-    background-color: #7496b8;
+    background-color: #1F2933;
     border: 1px solid #1F2933;
     border-radius: 4px;
 }
 .followBtn::after {
     content: "Follow"
+}
+
+.followBtn:hover {
+    color: #d9dadc;
 }
 
 /* End Following page follow/unfollow buttons */
