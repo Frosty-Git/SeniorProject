@@ -140,9 +140,14 @@ def results(request):
             artist3_ids = search_artists(term, 5, 9)
             
             features = search_audio_features(term)
-            artists = get_artists(track1_ids[0])
-            track_info = get_track(track1_ids[0])
-            name = get_song_name(track1_ids[0])
+            if track1_ids:
+                artists = get_artists(track1_ids[0])
+                track_info = get_track(track1_ids[0])
+                name = get_song_name(track1_ids[0])
+            else:
+                artists = None
+                track_info = None
+                name = None
 
             user_id = request.user.id
             users = search_users(term, user_id)

@@ -167,10 +167,9 @@ input:checked+.slider:before {
    Source: https://stackoverflow.com/questions/54241934/changing-button-text-on-hover
 */
 .unfollowBtn {
-    /* width: 55%; */
-    color: white;
-    background-color: #343a40;
-    border: 1px solid black;
+    color: #d9dadc;
+    background-color:#1F2933;
+    border: 1px solid #1F2933;
     border-radius: 4px;
 }
 .unfollowBtn::after {
@@ -180,23 +179,23 @@ input:checked+.slider:before {
     content: "Unfollow";
 }
 .unfollowBtn:hover {
-    color: black;
-    background-color: darkgrey;
+    color: #d9dadc;
+    background-color:#7496b8;
 }
 .user {
     text-decoration: none;
     color: black;
 }
 .followBtn {
-    color: black;
-    background-color: darkgrey;
-    /* width: 55%; */
-    border: 1px solid black;
+    color: #d9dadc;
+    background-color: #7496b8;
+    border: 1px solid #1F2933;
     border-radius: 4px;
 }
 .followBtn::after {
     content: "Follow"
 }
+
 /* End Following page follow/unfollow buttons */
 
 
