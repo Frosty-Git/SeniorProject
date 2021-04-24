@@ -2,13 +2,12 @@
     margin-left:100px;
     background-color: transparent;
     border:white;
-    border-width: 5 px;
+    border-width: 5px;
 }
 tr{
-    /* background-color: #2e3842;; */
+    /* background-color: #2e3842; */
     opacity:80%;
-    border:black solid 1px;
-
+    padding-bottom: 10px;
 }
 .form-check-input:checked{
     background-color: #f99108;

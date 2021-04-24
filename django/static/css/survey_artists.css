@@ -11,14 +11,12 @@ iframe {
 }
 tr{
     /* background-color: #2e3842; */
-    border:black solid 1px;
     border-spacing: 15px;
     padding:15px;
 
 }
 td{
     /* background-color: #2e3842; */
-    border: black solid 1px;
     margin-right:20px;
     margin-bottom:20px;
     border-spacing: 15px;
