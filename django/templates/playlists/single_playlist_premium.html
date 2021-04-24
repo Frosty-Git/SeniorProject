@@ -1,53 +1,63 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
-<h1 style="text-align: center; margin-top: 2%;">
+<div style="display: flex; align-items: center; padding-top: 5px;">
+    <span style="display:inline-block; margin-left: auto; padding-right: 2%; position: relative;">
+        <img src="{% static 'images/HeadphonePengo.png' type='image/png' %}" width="70" height="80">
+    </span>
+    <span style="display:inline-block;">
+    <h1 style="text-align: center; margin-top: 2%;">
 
-    {% if profile.user.id == user.id %}
-        My Playlist:
-    {% else %}
-        <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
-    {% endif %}
+        {% if profile.user.id == user.id %}
+            My Playlist:
+        {% else %}
+            <a href="{% url 'user:profile' profile.user.id %}">{{ profile.user.username }}</a>'s Playlist:
+        {% endif %}
 
-    <input type="hidden" id="location" name="location" value="playlists">
-    <br>
+        <input type="hidden" id="location" name="location" value="playlists">
+        <br>
 
-    {% if playlist.image %}
-        <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>
-    {% else %}
-        <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="50px" height="50px" style="border-radius: 50%;">
-    {% endif %}
+        {% if playlist.image %}
+            <img src="{{ playlist.image.url }}" width="50px" height="50px" style="border-radius: 50%;"></img>
+        {% else %}
+            <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="50px" height="50px" style="border-radius: 50%;">
+        {% endif %}
 
-    {{ playlist.name }}
+        {{ playlist.name }}
 
-    {% if playlist.is_private %}
-        <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
-    {% endif %}
-    
-    {% if playlist.is_imported %}
-        <button id="playlist{{ playlist.spotify_playlist_id }}" value='{{ playlist.spotify_playlist_id }}' type="button" class="btn" style="color:#d9dadc">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
-            </svg>
-        </button>
-        <script>
-            $('#playlist{{ playlist.spotify_playlist_id }}').click(function(e) {
-                let playlist_id = $(this).val();
-                $.ajax({
-                    url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
-                    type: "PUT",
-                    data: '{"context_uri": "spotify:playlist:'+ playlist_id +'"}',
-                    beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + profile_token );},
-                    success: function(data) { 
-                        console.log('is this the data ' + data);
-                        $('.fixed-bottom').show();
-                    }
+        {% if playlist.is_private %}
+            <img src="{% static 'images/private.png' type='image/png' %}" width="30px" height="30px">
+        {% endif %}
+        
+        {% if playlist.is_imported %}
+            <button id="playlist{{ playlist.spotify_playlist_id }}" value='{{ playlist.spotify_playlist_id }}' type="button" class="btn" style="color:#d9dadc">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                </svg>
+            </button>
+            <script>
+                $('#playlist{{ playlist.spotify_playlist_id }}').click(function(e) {
+                    let playlist_id = $(this).val();
+                    $.ajax({
+                        url: "https://api.spotify.com/v1/me/player/play?device_id=" + device,
+                        type: "PUT",
+                        data: '{"context_uri": "spotify:playlist:'+ playlist_id +'"}',
+                        beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer ' + profile_token );},
+                        success: function(data) { 
+                            console.log('is this the data ' + data);
+                            $('.fixed-bottom').show();
+                        }
+                    });
                 });
-            });
-        </script> 
-    {% endif %}
-</h1>
+            </script> 
+        {% endif %}
+    </h1>
+    </span>
+    <span style="display:inline-block; padding-left: 2%; margin-right: auto; position: relative;">
+        <img src="{% static 'images/PinkHeadphonePengo.png' type='image/png' %}" width="70" height="80">
+    </span>
+</div>
 
 {% if profile.user.id == user.id %}
     <table class="center" style="table-layout: fixed;">
