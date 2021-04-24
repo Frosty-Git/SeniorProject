@@ -37,13 +37,11 @@
 
 .sliderRec::-moz-range-thumb {
     border-radius: 100%;
-    background-color: lightgray;
+    background-color: #f99108;
+    border-color: #f99108;
 }
 
-.sliderRec::-moz-range-progress  {
-    background-color: #a0bed9;
-    border: 1px solid #a0bed9;
-}
+
 
 
 
