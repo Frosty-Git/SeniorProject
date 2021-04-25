@@ -145,7 +145,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{% url 'user:profile' follower.user.id %}">{{ follower.user.username }}</a>
+                    <a href="{% url 'user:profile' follower.user.id %}" style="word-break: break-all;">{{ follower.user.username }}</a>
                 </td>
             </tr>
         {% empty %}
