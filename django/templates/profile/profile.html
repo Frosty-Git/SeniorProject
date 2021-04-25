@@ -139,9 +139,9 @@
             <tr>
                 <td>
                     {% if follower.profilepic %}
-                        <img src="{{ follower.profilepic.url }}" width="30" height="30" class="d-inline-block align-top">
+                        <img src="{{ follower.profilepic.url }}" width="30" height="30" class="d-inline-block align-top" style="border-radius: 50%;">
                     {% else %}
-                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="...">
+                        <img src="{% static 'images/noprofilepic.jpg' type='image/jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="..." style="border-radius: 50%;">
                     {% endif %}
                 </td>
                 <td>
