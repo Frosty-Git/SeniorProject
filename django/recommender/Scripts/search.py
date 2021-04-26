@@ -11,7 +11,6 @@ client_cred.setup()
 auth_manager = SpotifyClientCredentials()
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-#RESULTS_RETURNED = 5
 
 def search_tracks(query, RESULTS_RETURNED, offset):
     """
@@ -27,6 +26,7 @@ def search_tracks(query, RESULTS_RETURNED, offset):
         track_ids.append(result['tracks']['items'][x]['id'])
     return track_ids
 
+
 def search_albums(query, RESULTS_RETURNED, offset):
     """
     Searches Spotify for albums that match the query.
@@ -40,6 +40,7 @@ def search_albums(query, RESULTS_RETURNED, offset):
             break
         album_ids.append(result['albums']['items'][y]['id'])
     return album_ids
+
 
 def search_artists(query, RESULTS_RETURNED, offset):
     """
@@ -55,6 +56,7 @@ def search_artists(query, RESULTS_RETURNED, offset):
         artist_ids.append(result['artists']['items'][z]['id'])
     return artist_ids
 
+
 def search_audio_features(query):
     """
     Enter in a song name. Returns the audio features of that song.
@@ -65,6 +67,7 @@ def search_audio_features(query):
     features = sp.audio_features(tracks=track)
     return features
 
+
 def get_audio_features(track):
     """
     Track should be a single song's id in an array. Returns the features of
@@ -73,6 +76,7 @@ def get_audio_features(track):
     """
     features = sp.audio_features(tracks=track)
     return features
+
 
 def search_artist_features(query, feature, high_or_low):
     """
@@ -87,11 +91,11 @@ def search_artist_features(query, feature, high_or_low):
     high_song = None
     low_song = None
 
-    #Find every track on Spotify featuring the queried artist
+    # Find every track on Spotify featuring the queried artist
     songs = sp.search(q='artist:' + query, type='track')['tracks']['items']
     num_songs = len(songs)
 
-    #Compare each song to determine which has the highest and lowest value.
+    # Compare each song to determine which has the highest and lowest value.
     for X in range(num_songs):
         song_feats = sp.audio_features(songs[X]['id'])
         level = song_feats[0].get(feature)
@@ -115,9 +119,10 @@ def search_artist_features(query, feature, high_or_low):
     else:
         return low_song
 
+
 def get_top_tracks(artist_id):
     """
-    Gets an artists top tracks from spotify.
+    Gets an artist's top tracks from spotify.
     Last updated: 4/21/21 by Jacelynn Duranceau
     """
     tracks = sp.artist_top_tracks('spotify:artist:'+artist_id)['tracks']
@@ -127,6 +132,7 @@ def get_top_tracks(artist_id):
 
     return all_tracks
         
+
 def get_recommendation(request, limit, seed_artists, genre, track, **kwargs):
     """
     Gets recommendations for a user based on their top songs and artists.
@@ -149,6 +155,7 @@ def get_recommendation(request, limit, seed_artists, genre, track, **kwargs):
     results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
     return results
 
+
 def get_custom_recommendation(request, limit, artists, track, genre, **kwargs):
     """
     Gets a user custom recommendations based on input from the custom
@@ -156,17 +163,15 @@ def get_custom_recommendation(request, limit, artists, track, genre, **kwargs):
     must be sent in as a list.
     Last updated: 4/21/21 by Jacelynn Duranceau
     """
-    # related_artists_ids = get_related_artists(seed_artists[0], 6)
     recommendations = sp.recommendations(seed_artists=artists,
                                         seed_genres=genre, 
                                         seed_tracks=track, 
                                         limit=limit,
                                         country=None,
                                         **kwargs)
-    # top_artist_name = get_artist_name(seed_artists[0])
-    # results = {'related_artists_ids': related_artists_ids, 'recommendations': recommendations, 'top_artist': top_artist_name}
     results = {'recommendations': recommendations}
     return results
+
 
 def get_top_artists_by_id(request):
     """
@@ -193,6 +198,7 @@ def get_top_artists_by_id(request):
     else:
         return get_top_pengbeats_artists(user)
 
+
 def get_top_pengbeats_artists(user):
     """
     Gets the top 3 artists for a user on Pengbeats
@@ -208,8 +214,6 @@ def get_top_pengbeats_artists(user):
 
     all_artists = []
     for song in songs:
-        # artist_names = get_artists_names_list(song) # List of the artists for the song
-        # if 'Various Artists' not in artist_names:
         artists = get_artists_ids_list(song)
         for artist_id in artists: 
             if not get_artist_name(artist_id) == 'Various Artists':
@@ -223,6 +227,7 @@ def get_top_pengbeats_artists(user):
         top_3_artists = [key for key, val in most_common]
 
     return top_3_artists
+
 
 def get_artists_genres(artist_id_list):
     """
@@ -251,9 +256,6 @@ def get_artists_genres(artist_id_list):
     else:
         return []
 
-# def match(input_string, string_list):
-#     words = re.findall(r'\w+', input_string)
-#     return [word for word in words if word in string_list]
 
 def get_related_artists(artist_id, num):
     """
@@ -270,6 +272,7 @@ def get_related_artists(artist_id, num):
         random_artists = all_artists
     return random_artists
 
+
 def get_all_related_artists(artist_id):
     """
     Returns all artists related to an artist.
@@ -281,6 +284,7 @@ def get_all_related_artists(artist_id):
         all_artists.append(artist['id'])
     return all_artists
     
+
 def get_artists(track):
     """
     Gets the artists of a song as a string list
@@ -301,17 +305,19 @@ def get_artists(track):
 
     return string_artists
 
-def get_artists_names_list(track):
-    """
-    Gets the artists of a song in a list / array
-    Last updated: 4/1/21 by Jacelynn Duranceau
-    """
-    artist_names = []
-    artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
-    for dicti in artists:
-        artist_names.append(dicti['name'])
 
-    return artist_names
+# def get_artists_names_list(track):
+#     """
+#     Gets the artists of a song in a list / array
+#     Last updated: 4/1/21 by Jacelynn Duranceau
+#     """
+#     artist_names = []
+#     artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
+#     for dicti in artists:
+#         artist_names.append(dicti['name'])
+
+#     return artist_names
+
 
 def get_artists_features(artists_ids):
     """
@@ -320,6 +326,7 @@ def get_artists_features(artists_ids):
     """
     artists_features = sp.artists(artists_ids)
     return artists_features
+
 
 def get_artists_ids_list(track):
     """
@@ -333,6 +340,7 @@ def get_artists_ids_list(track):
 
     return artist_names
 
+
 def get_artist_name(artist_id):
     """
     Gets the name of an artist based on their id
@@ -340,9 +348,14 @@ def get_artist_name(artist_id):
     name = sp.artist(artist_id)['name']
     return name
 
+
 def get_artist_image(artist_id):
+    """
+    Gets the image associated with an artist.
+    """
     image = sp.artist(artist_id)['images'][0]['url']
     return image
+
 
 def get_track(track):
     """
@@ -351,17 +364,23 @@ def get_track(track):
     info = sp.track(track)
     return info
 
+
 def get_explicit(track):
     """
     Tells whether a song is explicit or not.
-    Last updated:
     """
     explicit = sp.track(track)['explicit']
     return explicit
 
+
 def genre_seeds():
+    """
+    Gets all the genre seeds that can be used in the spotipy recommender
+    function.
+    """
     seeds = sp.recommendation_genre_seeds()
     return seeds
+
 
 def get_top_track(request):
     """
@@ -382,6 +401,7 @@ def get_top_track(request):
     else:
         return get_random_liked_pengbeats_song(user)
 
+
 def get_random_liked_pengbeats_song(user):
     """
     Select a random track from a user's liked songs to be used as a parameter
@@ -394,13 +414,20 @@ def get_random_liked_pengbeats_song(user):
     spotify_id = random_song.spotify_id.spotify_id
     return spotify_id
 
+
 def get_playlist_items(playlist_id):
+    """
+    Gets the data associated with a Spotify playlist based on its id. Is used
+    by the survey to pull out tracks from Spotify playlists.
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau
+    """
     return sp.playlist_items(playlist_id, fields=None, limit=50, offset=0, market=None, additional_types=('track', 'episode'))['items']
 
 
 def livesearch_tracks(query):
     """
-    Just testing stuff - Katie
+    Live searches the tracks based on user input on home
+    Last updated: 4/20/21 by Katie Lee
     """
     searches={}
     limit = 5
@@ -415,9 +442,11 @@ def livesearch_tracks(query):
         searches[result['tracks']['items'][x]['id']] = new_list
     return searches
 
+
 def livesearch_artists(query):
     """
-    Just testing stuff - Katie
+    Live searches the artists based on user input on home
+    Last updated: 4/20/21 by Katie Lee
     """
     searches={}
     limit = 3
@@ -435,9 +464,11 @@ def livesearch_artists(query):
         searches[result['artists']['items'][x]['id']] = new_list
     return searches
 
+
 def livesearch_albums(query):
     """
-    Just testing stuff - Katie
+    Live searches the albums based on user input on home
+    Last updated: 4/20/21 by Katie Lee
     """
     searches={}
     limit = 3
@@ -456,6 +487,7 @@ def livesearch_albums(query):
         searches[result['albums']['items'][x]['id']] = new_list
     return searches
 
+
 def get_song_duration(track_id):
     """
     Gets the length of a song in ms.
@@ -464,6 +496,7 @@ def get_song_duration(track_id):
     info = get_track(track_id)
     duration = info['duration_ms']
     return duration
+
 
 def get_song_album(track_id):
     """
@@ -474,6 +507,7 @@ def get_song_album(track_id):
     album = info['album']['name']
     return album
 
+
 def get_song_name(track):
     """
     Gets the name of a song based on its id
@@ -482,6 +516,7 @@ def get_song_name(track):
     info = get_track(track)
     name = info['name']
     return name
+
 
 def get_album_image(track):
     """
@@ -492,9 +527,11 @@ def get_album_image(track):
     album_image = info['album']['images'][0]['url']
     return album_image
 
+
 def get_artist_albums(art_id):
     """
-    Gets the albums from an artist based on their id
+    Gets the albums from an artist based on their id. Gets up to 12 total.
+    Last updated: 4/14/21 by Jacelynn Duranceau
     """
     album_ids = {}
     albums = sp.artist_albums(artist_id=art_id,album_type=None, country=None, limit=12, offset=0)['items']
@@ -522,14 +559,3 @@ def get_artist_albums(art_id):
         ids = random.sample(ids, 12)
 
     return ids
-
-"""
-FOR SHELL TESTING PURPOSES:
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
-import recommender.Scripts.client_credentials as client_cred
-client_cred.setup()
-auth_manager = SpotifyClientCredentials()
-sp = spotipy.Spotify(auth_manager=auth_manager)
-from recommender.views import *
-"""

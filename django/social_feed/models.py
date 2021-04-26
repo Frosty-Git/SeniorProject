@@ -28,10 +28,10 @@ class Post(models.Model):
 # SongPost
 class SongPost(Post):
     """
-    SongPost PlaylistPost
+    SongPost 
     Tucker Elliott 3/6/2021
-    Created models for Posts including a song or a playlist
-    SongPost and PlaylistPost models inherit from Post
+    Created models for Posts including a song
+    SongPost model inherit from Post
     """
     song = models.TextField(max_length=30)
     
@@ -40,6 +40,12 @@ class SongPost(Post):
 
 # PlaylistPost
 class PlaylistPost(Post):
+    """
+    PlaylistPost
+    Tucker Elliott 3/6/2021
+    Created models for Posts including a playlist
+    PlaylistPost model inherit from Post
+    """
     playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -63,7 +69,7 @@ class Comment(models.Model):
     def __str__(self):
         return self.text
 
-
+# PostUserVote
 class PostUserVote(models.Model):
     """
     Bridging table for Post and User. Keeps track of all votes

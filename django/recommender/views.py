@@ -1,27 +1,30 @@
 from django.shortcuts import render
 from django.http import Http404
-from .models import *
-from .forms import *
 from django.views.decorators.http import require_POST, require_GET
-import numpy as np
-from recommender.Scripts.search import *
 from django.contrib.auth.models import User
-from user_profile.models import *
-import re
 from django.conf import settings
-from django.contrib.sessions.models import Session
-from django.contrib.sessions.backends.db import SessionStore
-from social_feed.models import *
-from social_feed.views import *
 from django.contrib import messages
-from collections import Counter
-import random
-from random import sample
-from recommender.Scripts.survey import GenresStack
-from datetime import datetime, timedelta
-import pytz
 from django.db.models import Count, Q
 from django.template.loader import render_to_string
+
+from datetime import datetime, timedelta
+import pytz
+import numpy as np
+import re
+import random
+from random import sample
+from collections import Counter
+
+from .models import *
+from .forms import *
+from user_profile.models import *
+from social_feed.models import *
+from social_feed.views import *
+from recommender.Scripts.search import *
+from recommender.Scripts.survey import GenresStack
+
+# from django.contrib.sessions.models import Session
+# from django.contrib.sessions.backends.db import SessionStore
 
 
 # global variables for spotify manager
@@ -388,6 +391,7 @@ def get_user_playlists(user_id):
     you = UserProfile.objects.get(pk=user_id)
     playlists = Playlist.objects.filter(user_profile_fk=you)
     return playlists
+
 
 def search_users(term, requesting_user):
     """
@@ -797,7 +801,7 @@ def survey_songs(request, genre_stack, artists_string, songs_list):
     """
     Generates songs for the user to pick in the survey corresponding to the 
     genre/artists they picked.
-    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau, James Cino
     """
     if '*' in artists_string:
         artists = artists_string.split('*')

@@ -1,35 +1,33 @@
-import time
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
+from django.core.cache import cache
+# from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.utils.safestring import mark_safe
+from django.views.decorators.http import require_POST, require_GET
 from requests.sessions import Session
 from user_profile.models import *
 from user_profile.forms import *
 from social_feed.models import *
 from social_feed.views import *
+from recommender.Scripts.spotify_manager import SpotifyManager
+from recommender.Scripts.search import *
+import recommender.Scripts.client_credentials as client_cred
 from recommender.views import get_user_playlists, song_vote_dictionary
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, authenticate, logout
-from django.contrib import messages
-from django.utils.safestring import mark_safe
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST, require_GET
-from django.contrib.auth.models import User
-from django.utils import timezone
-import json
-from datetime import datetime
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
-import recommender.Scripts.client_credentials as client_cred
-from recommender.Scripts.spotify_manager import SpotifyManager
 import os
-from django.core.cache import cache
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Q
-from django.template.loader import render_to_string
-from recommender.Scripts.search import *
+import json
+from datetime import datetime
+import time
 
-# Create your views here.
-
-# global variables for spotify manager
+# Global variables for spotify manager
 spotify_manager = SpotifyManager()
 
 def sign_up(request):
@@ -67,6 +65,7 @@ def sign_up(request):
         form = ExtendedUserCreationForm()
         profile_form = UserProfileForm()
     return render(request, 'registration/sign_up.html', {'form': form, 'profile_form': profile_form})
+
 
 def logout_request(request):
     """
@@ -221,6 +220,7 @@ def profile(request, user_id):
             }
     return render(request, 'profile/profile.html', context)
 
+
 def vote_dictionary(votes, posts):
     """
     Creates a dictionary that makes the post the key
@@ -255,6 +255,7 @@ def display_settings(request):
     settings_form = SettingsForm(instance=settings)
     return render(request, 'settings/settings.html', {'settings_form': settings_form, 'userobj': userobj})
 
+
 @require_POST
 def settings_save(request, user_id):
     """
@@ -276,6 +277,8 @@ def settings_save(request, user_id):
 
 def following_helper(url_parameter, user, request_id):
     """
+    Creates the all the arrays for the following page.
+    This is dependent on if there is a live search parameter or not.
     """
     following_arr = []
     followers_arr = []
@@ -313,6 +316,7 @@ def following_helper(url_parameter, user, request_id):
     }
 
     return all_arrs
+
 
 @require_GET
 def following_page(request, user_id):
@@ -493,155 +497,157 @@ def following_page(request, user_id):
                 # return redirect('/user/profile/' + str(user_id))
                 return redirect('/')
 
-@require_GET
-def display_following(request, user_id):
-    """
-    Used to display each user a particular user follows. It uses said user
-    as the primary key into the following bridging table and returns every
-    foreign key, which represents the users followed.
-    Last updated: 3/11/21 by Jacelynn Duranceau
-    """
-    # You are accessing your own following page
-    if request.user == User.objects.get(pk=user_id):
-        you = UserProfile.objects.get(pk=user_id)
-        following = you.users_followed.all()
-        following_arr = []
-        for user_profile in following:
-            determination = is_following(request.user.id, user_profile.user.id)
-            #following_dict[user_profile].append(determination)
-            following_arr.append([user_profile, determination])
-        # following = FollowedUser.objects.filter(user_from=user_id)
-        # get_list = FollowedUser.objects.get(user_from=user_id)
-        #following = get_list.user_to
-        context = {
-            'profile': you,
-            'following': following_arr,
-        }
-        return render(request, 'profile/following.html', context)
-    else:
-        # You are accessing someone else's following page while logged in
-        if request.user.id is not None:
-            other_user = UserProfile.objects.get(pk=user_id)
-            private_profile = profile_privacy(user_id)
-            following_status = is_following(request.user.id, other_user.user.id)
-            if following_status or not private_profile:
-                following = other_user.users_followed.all()
-                following_arr = []
-                for user_profile in following:
-                    determination = is_following(request.user.id, user_profile.user.id)
-                    #following_dict[user_profile].append(determination)
-                    following_arr.append([user_profile, determination])
-                # following = FollowedUser.objects.filter(user_from=user_id)
-                # get_list = FollowedUser.objects.get(user_from=user_id)
-                #following = get_list.user_to
 
-                your_id = request.user.id
-                your_profile = UserProfile.objects.get(pk=your_id)
+# @require_GET
+# def display_following(request, user_id):
+#     """
+#     Used to display each user a particular user follows. It uses said user
+#     as the primary key into the following bridging table and returns every
+#     foreign key, which represents the users followed.
+#     Last updated: 3/11/21 by Jacelynn Duranceau
+#     """
+#     # You are accessing your own following page
+#     if request.user == User.objects.get(pk=user_id):
+#         you = UserProfile.objects.get(pk=user_id)
+#         following = you.users_followed.all()
+#         following_arr = []
+#         for user_profile in following:
+#             determination = is_following(request.user.id, user_profile.user.id)
+#             #following_dict[user_profile].append(determination)
+#             following_arr.append([user_profile, determination])
+#         # following = FollowedUser.objects.filter(user_from=user_id)
+#         # get_list = FollowedUser.objects.get(user_from=user_id)
+#         # following = get_list.user_to
+#         context = {
+#             'profile': you,
+#             'following': following_arr,
+#         }
+#         return render(request, 'profile/following.html', context)
+#     else:
+#         # You are accessing someone else's following page while logged in
+#         if request.user.id is not None:
+#             other_user = UserProfile.objects.get(pk=user_id)
+#             private_profile = profile_privacy(user_id)
+#             following_status = is_following(request.user.id, other_user.user.id)
+#             if following_status or not private_profile:
+#                 following = other_user.users_followed.all()
+#                 following_arr = []
+#                 for user_profile in following:
+#                     determination = is_following(request.user.id, user_profile.user.id)
+#                     #following_dict[user_profile].append(determination)
+#                     following_arr.append([user_profile, determination])
+#                 # following = FollowedUser.objects.filter(user_from=user_id)
+#                 # get_list = FollowedUser.objects.get(user_from=user_id)
+#                 #following = get_list.user_to
 
-                context = {
-                    'following': following_arr,
-                    'profile': other_user,
-                    'private_profile': private_profile,
-                    'following_status': following_status,
-                    'your_profile': your_profile,
-                }
-                return render(request, 'profile/following.html', context)
-            else:
-                return redirect('/user/following/' + str(request.user.id))
-        # You are accessing someone else's following page while not logged in
-        else:
-            other_user = UserProfile.objects.get(pk=user_id)
-            private_profile = profile_privacy(user_id)
-            if not private_profile:
-                following = other_user.users_followed.all()
-                following_arr = []
-                for user_profile in following:
-                    following_arr.append([user_profile, determination])
-                # Don't return your_profile since you aren't logged in
-                context = {
-                    'following': following_arr,
-                    'profile': other_user,
-                    'private_profile': private_profile,
-                }
-                return render(request, 'profile/following.html', context)
-            else:
-                # Redirect to the user's profile of whom you were trying to view the 
-                # following list for. Not currently working
-                # return redirect('/user/profile/' + str(user_id))
-                return redirect('/')
+#                 your_id = request.user.id
+#                 your_profile = UserProfile.objects.get(pk=your_id)
+
+#                 context = {
+#                     'following': following_arr,
+#                     'profile': other_user,
+#                     'private_profile': private_profile,
+#                     'following_status': following_status,
+#                     'your_profile': your_profile,
+#                 }
+#                 return render(request, 'profile/following.html', context)
+#             else:
+#                 return redirect('/user/following/' + str(request.user.id))
+#         # You are accessing someone else's following page while not logged in
+#         else:
+#             other_user = UserProfile.objects.get(pk=user_id)
+#             private_profile = profile_privacy(user_id)
+#             if not private_profile:
+#                 following = other_user.users_followed.all()
+#                 following_arr = []
+#                 for user_profile in following:
+#                     following_arr.append([user_profile, determination])
+#                 # Don't return your_profile since you aren't logged in
+#                 context = {
+#                     'following': following_arr,
+#                     'profile': other_user,
+#                     'private_profile': private_profile,
+#                 }
+#                 return render(request, 'profile/following.html', context)
+#             else:
+#                 # Redirect to the user's profile of whom you were trying to view the 
+#                 # following list for. Not currently working
+#                 # return redirect('/user/profile/' + str(user_id))
+#                 return redirect('/')
 
 
-@require_GET
-def display_followers(request, user_id):
-    """
-    Used to display the followers of a particular user. It uses said user as
-    the primary key into the following bridging table and returns every user
-    that is the user_from match in said table.
-    Last updated: 3/11/21 by Jacelynn Duranceau
-    """
-    if request.user == User.objects.get(pk=user_id):
-        you = UserProfile.objects.get(pk=user_id)
-        follower_ids = FollowedUser.objects.filter(user_to=you).values('user_from') # Returns dictionary of ids
-        followers_arr = []
-        for user in follower_ids:
-            for id in user.values():
-                person = UserProfile.objects.get(pk=id)
-                determination = is_following(request.user.id, id)
-                followers_arr.append([person, determination])
-        context = {
-            'profile': you,
-            'followers': followers_arr,
-        }
-        return render(request, 'profile/followers.html', context)
-    else:
-        # You are accessing someone else's followers page while logged in
-        if request.user.id is not None:
-            other_user = UserProfile.objects.get(pk=user_id)
-            private_profile = profile_privacy(user_id)
-            following_status = is_following(request.user.id, other_user.user.id)
-            if following_status or not private_profile:
-                follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
-                followers_arr = []
-                for user in follower_ids:
-                    for id in user.values():
-                        person = UserProfile.objects.get(pk=id)
-                        determination = is_following(request.user.id, id)
-                        followers_arr.append([person, determination])
+# @require_GET
+# def display_followers(request, user_id):
+#     """
+#     Used to display the followers of a particular user. It uses said user as
+#     the primary key into the following bridging table and returns every user
+#     that is the user_from match in said table.
+#     Last updated: 3/11/21 by Jacelynn Duranceau
+#     """
+#     if request.user == User.objects.get(pk=user_id):
+#         you = UserProfile.objects.get(pk=user_id)
+#         follower_ids = FollowedUser.objects.filter(user_to=you).values('user_from') # Returns dictionary of ids
+#         followers_arr = []
+#         for user in follower_ids:
+#             for id in user.values():
+#                 person = UserProfile.objects.get(pk=id)
+#                 determination = is_following(request.user.id, id)
+#                 followers_arr.append([person, determination])
+#         context = {
+#             'profile': you,
+#             'followers': followers_arr,
+#         }
+#         return render(request, 'profile/followers.html', context)
+#     else:
+#         # You are accessing someone else's followers page while logged in
+#         if request.user.id is not None:
+#             other_user = UserProfile.objects.get(pk=user_id)
+#             private_profile = profile_privacy(user_id)
+#             following_status = is_following(request.user.id, other_user.user.id)
+#             if following_status or not private_profile:
+#                 follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
+#                 followers_arr = []
+#                 for user in follower_ids:
+#                     for id in user.values():
+#                         person = UserProfile.objects.get(pk=id)
+#                         determination = is_following(request.user.id, id)
+#                         followers_arr.append([person, determination])
 
-                your_id = request.user.id
-                your_profile = UserProfile.objects.get(pk=your_id)
+#                 your_id = request.user.id
+#                 your_profile = UserProfile.objects.get(pk=your_id)
 
-                context = {
-                    'profile': other_user,
-                    'followers': followers_arr,
-                    'your_profile': your_profile,
-                }
-                return render(request, 'profile/followers.html', context)
-            else:
-                return redirect('/user/followers/' + str(request.user.id))
-        # You are accessing someone else's following page while not logged in
-        else:
-            other_user = UserProfile.objects.get(pk=user_id)
-            private_profile = profile_privacy(user_id)
-            if not private_profile:
-                follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
-                followers_arr = []
-                for user in follower_ids:
-                    for id in user.values():
-                        person = UserProfile.objects.get(pk=id)
-                        determination = is_following(request.user.id, id)
-                        followers_arr.append([person, determination])
-                # You are not logged in so don't return your_profile
-                context = {
-                    'profile': other_user,
-                    'followers': followers_arr,
-                }
-                return render(request, 'profile/followers.html', context)
-            else:
-                # Redirect to the user's profile of whom you were trying to view the 
-                # following list for. Not currently working
-                # return redirect('/user/profile/' + str(user_id))
-                return redirect('/')
+#                 context = {
+#                     'profile': other_user,
+#                     'followers': followers_arr,
+#                     'your_profile': your_profile,
+#                 }
+#                 return render(request, 'profile/followers.html', context)
+#             else:
+#                 return redirect('/user/followers/' + str(request.user.id))
+#         # You are accessing someone else's following page while not logged in
+#         else:
+#             other_user = UserProfile.objects.get(pk=user_id)
+#             private_profile = profile_privacy(user_id)
+#             if not private_profile:
+#                 follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
+#                 followers_arr = []
+#                 for user in follower_ids:
+#                     for id in user.values():
+#                         person = UserProfile.objects.get(pk=id)
+#                         determination = is_following(request.user.id, id)
+#                         followers_arr.append([person, determination])
+#                 # You are not logged in so don't return your_profile
+#                 context = {
+#                     'profile': other_user,
+#                     'followers': followers_arr,
+#                 }
+#                 return render(request, 'profile/followers.html', context)
+#             else:
+#                 # Redirect to the user's profile of whom you were trying to view the 
+#                 # following list for. Not currently working
+#                 # return redirect('/user/profile/' + str(user_id))
+#                 return redirect('/')
+
 
 def unfollow(request, who):
     """
@@ -660,6 +666,7 @@ def unfollow(request, who):
     user_to_unfollow.delete()
     url = '/user/follow_page/' + str(user_id)
     return redirect(url)
+
 
 def follow(request, who):
     """
@@ -682,10 +689,6 @@ def follow(request, who):
     url = '/user/follow_page/' + str(user_id)
     return redirect(url)
 
-
-# def num_followers(user_id):
-#     followers = FollowedUser.objects.get(user_to = user_id).len()
-#     return {'followers': followers}
 
 @login_required
 def update_profile(request):
@@ -714,6 +717,7 @@ def update_profile(request):
         form = ExtendedUserChangeForm(instance=obj.user)
         profile_form = UserProfileForm(instance=obj)
     return render(request, 'settings/update_profile.html', {'form': form, 'profile_form': profile_form})
+
 
 def get_playlists(request, user_id):
     """
@@ -746,9 +750,7 @@ def get_playlists(request, user_id):
             playlist_info.extend([str(num_songs)])
             playlist_info.extend([playlist.is_imported])
             playlist_info.extend([playlist.spotify_playlist_id])
-            all_playlists.append(playlist_info)
-
-        # print(all_playlists)    
+            all_playlists.append(playlist_info)  
 
         playlists = playlist_vote_dict(matches, orig_playlists)
         context = {
@@ -839,8 +841,12 @@ def get_playlists(request, user_id):
             else:
                 return redirect('/')
 
+
 def playlist_vote_dict(matches, orig_playlists):
     """
+    Returns the playlist object and a boolean of
+    if the logged in user liked it or not
+    in a dictionary called playlists.
     """
     playlists = {}
     for playlist in orig_playlists:
@@ -851,6 +857,7 @@ def playlist_vote_dict(matches, orig_playlists):
                 break
         playlists[playlist] = love
     return playlists
+
 
 def get_playlist_vote(your_profile, playlist):
     """
@@ -865,8 +872,15 @@ def get_playlist_vote(your_profile, playlist):
             break
     return love
 
+
 def sop_song_vote_array(matches, songs_votes):
     """
+    Gets the votes for a list of SongOnPlaylist objects. Goes through each
+    song in those objects and determines if the vote is a Like or a Dislike based
+    on the songs_votes inputted. REsult is a list of lists where each individual
+    list is the SongOnPlaylist object, the track_id, and the vote. The vote is
+    another array that has True or False for the Upvote or Downvote, depending on
+    which vote the user had on the song.
     """
     songs = []
     for match in matches:
@@ -888,6 +902,7 @@ def sop_song_vote_array(matches, songs_votes):
         
         songs.append([sop_id, song_id, vote])
     return songs
+
 
 def get_songs_playlist(request, user_id, playlist_id):
     """
@@ -922,7 +937,6 @@ def get_songs_playlist(request, user_id, playlist_id):
         following_status = is_following(request.user.id, user_id)
 
         playlists = get_user_playlists(request.user.id)
-        
 
         context = {
             'songs': songs,
@@ -1034,7 +1048,7 @@ def get_songs_playlist(request, user_id, playlist_id):
 
 def create_playlist_popup(request):
     """
-    Creates a playlist
+    Creates a playlist. Uses a popup.
     Last updated: 3/24/21 by Joe Frost, Jacelynn Duranceau, Tucker Elliott
     """
     if request.method == 'POST':
@@ -1049,20 +1063,16 @@ def create_playlist_popup(request):
                                 description=playlist_form.cleaned_data.get('description'),
                                 )
             playlist.save()
-            # playlist = playlist_form.save(commit=False)
-            return redirect('/user/playlists/' + str(request.user.id))    #redirect to the playlist
+            return redirect('/user/playlists/' + str(request.user.id))    # Redirect to the playlist
+
 
 def add_song_to_playlist(request, location):
     """
-    Adds a song to a playlist
+    Adds a song to a playlist.
     Last updated: 3/24/21 by Jacelynn Duranceau
     """
     if request.method == 'POST':
-        # user_id = request.user.id
-        # user = UserProfile.objects.get(pk=user_id)
-        # print('is this working')
         track_term = request.POST.get('track_id')
-        # print('track_term')
         song = SongId.objects.get(pk=track_term)
         playlist_id = request.POST.get('playlist_id')
         playlist = Playlist.objects.get(pk=playlist_id)
@@ -1073,15 +1083,13 @@ def add_song_to_playlist(request, location):
             return JsonResponse({'status': 'reload'})
         else:
             return JsonResponse({'status': 'ok'})
-        # return redirect('/results/')
-        #return redirect('/user/playlists/' + str(request.user.id))
-        # return render(request, 'recommender/results.html')
     else:
         return render(request, 'playlists/addsong_popup.html')
 
+
 def edit_playlist_popup(request):
     """
-    Updates a user's playlist
+    Updates a user's playlist.
     Last updated: 3/31/21 by Jacelynn Duranceau, Joe Frost, Tucker Elliott
     """
     if request.method == 'POST':
@@ -1123,6 +1131,7 @@ def edit_playlist_popup(request):
     else:
         return render(request, 'playlists/editplaylist_popup.html')
 
+
 def delete_playlist(request, playlist_id):
     """
     Deletes a user's playlist.
@@ -1131,6 +1140,7 @@ def delete_playlist(request, playlist_id):
     playlist = Playlist.objects.get(pk=playlist_id)
     playlist.delete()
     return redirect('/user/playlists/' + str(request.user.id))
+
 
 def delete_song(request, playlist_id, sop_pk):
     """
@@ -1143,6 +1153,7 @@ def delete_song(request, playlist_id, sop_pk):
     song = SongOnPlaylist.objects.get(pk=sop_pk)
     song.delete()
     return redirect('/user/playlist/' + str(request.user.id) + '/' + str(playlist_id))
+
 
 def export_to_spotify(request, playlist_id, location):
     """
@@ -1176,7 +1187,6 @@ def export_to_spotify(request, playlist_id, location):
                                                 collaborative=False, 
                                                 description=playlist.description)
         except Exception as e:
-            # print("ERROR " + str(e))
             # Status 403: Not allowed (playlist does not exist)
             if "status: 403" in str(e):
                 # We have to make a new playlist
@@ -1221,10 +1231,11 @@ def export_to_spotify(request, playlist_id, location):
     elif location == "playlists":
         url = ('/user/playlists/' + str(request.user.id))
     else:
-        # Problem
+        # There is a problem
         url = '/'
 
     return redirect(url)
+
 
 def link_spotify(request):
     """
@@ -1236,6 +1247,7 @@ def link_spotify(request):
     spotify = spotify_manager.create_spotify()
     spotify.me()
     return redirect('/')
+
 
 def save_token_redirect(request):
     """
@@ -1260,6 +1272,7 @@ def save_token_redirect(request):
         user.save()
         os.remove(os.path.abspath(".cache"))
     return redirect('/')
+
 
 def get_preferences(user_id):
     """
@@ -1310,6 +1323,7 @@ def get_preferences(user_id):
     }
     return user_prefs
 
+
 def reset_preferences(request):
     """
     Reset the user's preferences back to the default value
@@ -1327,8 +1341,8 @@ def reset_preferences(request):
     prefs.valence = 0.5
     prefs.save()
     messages.success(request, mark_safe(f"Successfully reset all preferences! Retake the survey here: <a href='http://localhost:8000/survey_genres/'>Survey</a>."))
-    # return redirect('/survey/')
     return redirect('/user/update_profile/#/')
+
 
 def delete_account(request):
     """
@@ -1356,6 +1370,7 @@ def delete_account(request):
     messages.success(request, ('Account deletion successful!'))
     return redirect('/')
 
+
 def is_following(your_id, user_to_id):
     """
     Determines where or not you follow a particular user.
@@ -1368,15 +1383,10 @@ def is_following(your_id, user_to_id):
         if person.user.id == user_to_id:
             is_following = True
             break
-    # users_you_follow = FollowedUser.objects.filter(user_from=you).values('user_to')
-    # for result in users_you_follow:
-    #     for id in result.values():
-    #         if id == user_to_id:
-    #             is_following = True
-    #             break
     
     return is_following
-        
+
+
 def profile_privacy(user_id):
     """
     Tells you whether or not a user has set their profile to private
@@ -1407,6 +1417,7 @@ def playlist_vote(request):
             return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
 
+
 def get_playlist_duration(playlist_id):
     """
     Gets the total duration for a playlist based on each song in it.
@@ -1421,6 +1432,7 @@ def get_playlist_duration(playlist_id):
     convertedDuration = convertMs(duration)
     return convertedDuration
 
+
 def get_num_playlist_songs(playlist_id):
     """
     Gets the total number of songs in a playlist.
@@ -1430,6 +1442,7 @@ def get_num_playlist_songs(playlist_id):
     matches = SongOnPlaylist.objects.filter(playlist_from=playlist).values('spotify_id_id').values()
     num_songs = len(matches)
     return num_songs
+
 
 def convertMs(ms):
     """
@@ -1453,6 +1466,7 @@ def convertMs(ms):
         if ms == 0:
             result = "0:00"
     return result
+
 
 def convert_time(result):
     """

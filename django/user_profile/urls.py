@@ -11,8 +11,8 @@ urlpatterns = [
     path('profile/<user_id>', views.profile, name='profile'),
     path('settings/', views.display_settings, name='settings'),
     path('settings_save/<user_id>', views.settings_save, name='settings_save'),
-    path('following/<user_id>', views.display_following, name='following'),
-    path('followers/<user_id>', views.display_followers, name='followers'),
+#     path('following/<user_id>', views.display_following, name='following'),
+#     path('followers/<user_id>', views.display_followers, name='followers'),
     path('unfollow/<who>', views.unfollow, name='unfollow'),
     path('follow/<who>', views.follow, name='follow'),
     path('update_profile/', views.update_profile, name='update_profile'),
@@ -30,11 +30,6 @@ urlpatterns = [
     path('delete_account/', views.delete_account, name='delete_account'),
     path('playlist_vote/', views.playlist_vote, name='playlist_vote'),
     path('follow_page/<user_id>', views.following_page, name='follow_page'),
-
-    
-    #path('', views.save_token_redirect, name='save_token_redirect'),
-    #path('playlist/<playlist_id>', views.create_playlist, name='create_playlist'),
-    # path('num_followers/<user_id>', views.num_followers, name='num_followers')
 
     # Password related URLs
     path('account_setting/', auth_views.PasswordChangeView.as_view(

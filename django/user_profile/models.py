@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 # UserProfile
@@ -113,11 +112,6 @@ class Playlist(models.Model):
     is_imported = models.BooleanField(default=False) # Is imported to the linked Spotify account.
     spotify_playlist_id = models.CharField(default='No Link', max_length=255)
     description = models.TextField(blank=False, null=False, max_length=299)
-    # theme = models.TextField(null=True, blank=True)  # Genres
-    # this_weeks_upvotes = models.IntegerField()
-    # length = # Derived
-    # num_songs = # Derived
-    # num_followers = # Derived
     objects = models.Manager()
     class Meta:
         ordering = ('-date_last_updated',)
@@ -162,6 +156,7 @@ class FollowedPlaylist(models.Model):
     def __str__(self):
         return "Followed Playlist"
 
+# SongId
 class SongId(models.Model):
     """
     Model based on Spotify IDs and gets the attributes for the track.
@@ -183,6 +178,7 @@ class SongId(models.Model):
     def __str__(self):
         return self.name
 
+# SongOnPlaylist
 class SongOnPlaylist(models.Model):
     """
     Model representing a table between a song and a playlist.
@@ -196,6 +192,7 @@ class SongOnPlaylist(models.Model):
     def __str__(self):
         return "Song"
 
+# SongToUser
 class SongToUser(models.Model):
     """
     Model representing if a user has liked a song from the search.

@@ -16,16 +16,6 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('text',)
-
-# class SongPostForm(PostForm):
-#     """
-        # Form to share a song post to the social feed. Note this will be shared
-        # by way of a button next to songs from search results, playlists, etc.
-        # on the site. You will not explicitly click a button to make a song post
-        # and select a song to share.
-        # Last updated: 3/17/21 by Katie Lee, Jacelynn Duranceau, Marc Colin, Joe
-        # Frost
-        # """ 
     
 
 class CommentForm(forms.ModelForm):

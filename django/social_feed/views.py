@@ -1,26 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from django.db.models.functions import Cast
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.template.loader import render_to_string
+
 from social_feed.models import *
 from social_feed.forms import *
 from user_profile.models import *
-from django.utils import timezone
-from django.db.models.functions import Cast
-import json
-from django.http import HttpResponse, HttpResponseRedirect
-from django.http import JsonResponse
 from recommender.Scripts.search import get_audio_features
+
+import json
 import numpy as np
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.core.exceptions import ValidationError
 import datetime
-from django.template.loader import render_to_string
 
 # Create your views here.
-# def share_song(request, id):
-#     """
-#     """
-# comment to check if commit is working
-
-
 def display_posts(request):
     """
     Displays all posts in the database. Based only on users your follow and
@@ -44,7 +39,6 @@ def display_posts(request):
     following = you.users_followed.all()
     votes = PostUserVote.objects.filter(user_from=you).values()
     post_list = feed_vote_dictionary(votes, all_post_list, you, following)
-    # comment_list = Comment.objects.order_by('date_last_updated')
     postform = PostForm()
 
     if request.is_ajax():
@@ -61,11 +55,8 @@ def display_posts(request):
         }
         return JsonResponse(data=data_dict, safe=False)
 
-
-
     context = {
         'post_list': post_list,
-        # 'comment_list': comment_list,
         'postform': postform,
         'image': you.profilepic,
         'userid': you.user_id,
@@ -74,6 +65,7 @@ def display_posts(request):
         'loggedin_lname': you.user.last_name
     }  
     return render(request, 'social_feed/feed.html', context)
+
 
 def feed_vote_dictionary(votes, posts, you, following):
     """
@@ -112,7 +104,8 @@ def feed_vote_dictionary(votes, posts, you, following):
 
 def cast_subclass(post):
     """
-    Gets the SongPost instead of Post.
+    Gets the SongPost and PlaylistPost instead of Post. 
+    SongPost and PlaylistPost inherit from Post.
     Last updated: 3/21/21 by Marc Colin, Katie Lee
     """
     try:
@@ -122,6 +115,7 @@ def cast_subclass(post):
             return PlaylistPost.objects.get(id=post.id)
         except:
             return post
+
 
 def create_post(request):
     """
@@ -136,6 +130,7 @@ def create_post(request):
             post.user_profile_fk = UserProfile.objects.get(pk=request.user.id)
             post.save()
     return redirect('/feed/')
+
 
 def create_post_profile(request):
     """
@@ -152,7 +147,6 @@ def create_post_profile(request):
     return redirect('/user/profile/' + str(request.user.id))
 
 
-
 def delete_post(request, post_id, location):
     """
     Deletes a post and redirects back to profile.
@@ -167,49 +161,49 @@ def delete_post(request, post_id, location):
         return redirect('/feed/')
 
 
-def get_comments(post_id):
-    """
-    Gets all the comments on a particular post.
-    Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
-    """
-    post = cast_subclass(Post.objects.get(id=post_id))
-    comment_list = Comment.objects.filter(post_fk=post)
-    comment_form = CommentForm()
+# def get_comments(post_id):
+#     """
+#     Gets all the comments on a particular post.
+#     Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
+#     """
+#     post = cast_subclass(Post.objects.get(id=post_id))
+#     comment_list = Comment.objects.filter(post_fk=post)
+#     comment_form = CommentForm()
 
-    context = {
-        'post_id': post_id,
-        'post': post,
-        'comment_list': comment_list,
-        'comment_form': comment_form, 
-    }  
-    return context
+#     context = {
+#         'post_id': post_id,
+#         'post': post,
+#         'comment_list': comment_list,
+#         'comment_form': comment_form, 
+#     }  
+#     return context
  
 
-def delete_comment(request, comment_id):
-    """
-    """
-    comment = Comment.objects.get(pk=comment_id)
-    comment.delete()
-    return redirect('/feed/')
+# def delete_comment(request, comment_id):
+#     """
+#     """
+#     comment = Comment.objects.get(pk=comment_id)
+#     comment.delete()
+#     return redirect('/feed/')
 
 
-def update_comment(request):
-    """
-    Updates a comment on the feed.
-    Last updated: 3/20/21 by Katie Lee
-    """
-    if request.method == 'POST':
-        post_id = request.POST.get('post_id')
-        comment_id = request.POST.get('comment_id')
-        comment = Comment.objects.get(pk=comment_id)
-        text = request.POST.get('new_text')
-        if text is not None:
-            comment.text = text
-            comment.date_last_updated = timezone.now()
-            comment.save()
-        return redirect('/feed/' + str(post_id))
-    else:
-        return render(request, 'social_feed/edit_post.html')
+# def update_comment(request):
+#     """
+#     Updates a comment on the feed.
+#     Last updated: 3/20/21 by Katie Lee
+#     """
+#     if request.method == 'POST':
+#         post_id = request.POST.get('post_id')
+#         comment_id = request.POST.get('comment_id')
+#         comment = Comment.objects.get(pk=comment_id)
+#         text = request.POST.get('new_text')
+#         if text is not None:
+#             comment.text = text
+#             comment.date_last_updated = timezone.now()
+#             comment.save()
+#         return redirect('/feed/' + str(post_id))
+#     else:
+#         return render(request, 'social_feed/edit_post.html')
 
 def create_songpost(request, track_id):
     """
@@ -230,6 +224,7 @@ def create_songpost(request, track_id):
         postform = PostForm()
         return render(request, '', {'postform': postform})
 
+
 def update_post(request):
     """
     Updates a post on the profile. 
@@ -249,8 +244,10 @@ def update_post(request):
     else:
         return render(request, 'social_feed/edit_post.html')
 
+
 def pop_update_post(request, post_id):
     """
+    Popup for updating a post's text.
     """
     if request.method == 'POST':
         post = Post.objects.get(pk=post_id)
@@ -282,12 +279,13 @@ def popup_post(request, post_id):
 
 def popup_songpost(request):
     """
+    Popup for creating a SongPost. Includes the spotify widget and text about
+    the song.
     """
     if request.method == 'POST':
         user_id = request.user.id
         user = UserProfile.objects.get(pk=user_id)
         text = request.POST.get('post_text')
-        print(text)
         track = request.POST.get('track_id')
         if text is not None:
             song = SongPost(song=track, text=text, user_profile_fk=user, type_post="SongPost")
@@ -296,6 +294,7 @@ def popup_songpost(request):
         return JsonResponse({'status': 'ko'})
     else:
         return render(request, 'social_feed/popup_songpost.html')
+
 
 def popup_playlistpost(request):
     """
@@ -388,6 +387,7 @@ def upvote(request):
                     post.save()
                     return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
+
 
 def downvote(request):
     """
@@ -621,6 +621,7 @@ def validate_min(field):
     min = Preferences._meta.get_field(field).validators[0].limit_value
     return min
 
+
 def validate_max(field):
     """
     Will check the maximum allowed value for a field within the Preferences
@@ -629,6 +630,7 @@ def validate_max(field):
     """
     max = Preferences._meta.get_field(field).validators[1].limit_value
     return max
+
 
 def percent_diff(a, b):
     """
