@@ -40,7 +40,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
             $('#showqueue').show();
             $('#song1').show().html(state['track_window']['next_tracks'][0]['name'] + '<small style="font-size:x-small"> ' + state['track_window']['next_tracks'][0]['artists'][0]['name'] + '</small>');
             if(next_tracks == 2) {
-                $('#song2').show().html(state['track_window']['next_tracks'][1]['name'] + '<small style="font-size:x-small"> ' + state['track_window']['next_tracks'][0]['artists'][0]['name'] + '</small>');
+                $('#song2').show().html(state['track_window']['next_tracks'][1]['name'] + '<small style="font-size:x-small"> ' + state['track_window']['next_tracks'][1]['artists'][0]['name'] + '</small>');
             }
         }
         else {
