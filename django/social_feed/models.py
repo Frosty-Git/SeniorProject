@@ -38,6 +38,7 @@ class SongPost(Post):
     def __str__(self):
         return self.song
 
+
 # PlaylistPost
 class PlaylistPost(Post):
     """
@@ -50,6 +51,7 @@ class PlaylistPost(Post):
 
     def __str__(self):
         return self.playlist
+
 
 # Comment
 class Comment(models.Model):
