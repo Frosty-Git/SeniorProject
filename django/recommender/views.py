@@ -1,4 +1,3 @@
-from recommender.forms import SearchForm
 from django.shortcuts import render
 from django.http import Http404
 from .models import *
@@ -28,49 +27,13 @@ from django.template.loader import render_to_string
 # global variables for spotify manager
 spotify_manager = SpotifyManager()
 
-#----Dr Baliga's Code----
 
-def find_albums(artist, from_year = None, to_year = None):
-    query = Musicdata.objects.filter(artists__contains = artist)
-    if from_year is not None:
-        query = query.filter(year__gte = from_year)
-    if to_year is not None:
-        query = query.filter(year__lte = to_year)
-    return list(query.order_by('-popularity').values('id','name','year'))
-    
-
-@require_POST
-def searchform_post(request):
-    # create a form instance and populate it with data from the request:
-    form = SearchForm(request.POST)
-    # check whether it's valid:
-    if form.is_valid():
-        # process the data in form.cleaned_data as required
-        from_year = None if form.cleaned_data['from_year'] == None else int(form.cleaned_data['from_year'])
-        to_year = None if form.cleaned_data['to_year'] == None else int(form.cleaned_data['to_year'])
-        albums = find_albums(
-                form.cleaned_data['artist'],
-                from_year,
-                to_year
-            )
-            
-        # Random 3 of top 10 popular albums
-        albums = list(np.random.permutation(albums[:10]))[:3] 
-        return render(request, 'recommender/searchform.html', {'form': form, 'albums': albums })
-    else:
-        raise Http404('Something went wrong')
-
-
-@require_GET
-def searchform_get(request):
-    form = SearchForm()
-    return render(request, 'recommender/searchform.html', {'form': form})
-
-
-#----End Dr Baliga's Code----
-
-# Home Page
 def home(request):
+    """
+    Creates the home page. Includes a search bar for searching songs, artists,
+    albums, and users. Also allows for live searching with "autocompleted"
+    results based on your search.
+    """
     ourSearchForm = OurSearchForm()
     url_parameter = request.GET.get("q")
     action = request.GET.get('action')
@@ -117,10 +80,14 @@ def home(request):
     return render(request, 'home.html', context)
 
     
-
-# Search Results Page
 def results(request):
-
+    """
+    Generates the search results page. Sends up to 15 songs, artists, and albums
+    based on a search term. Also sends back matching users of Pengbeats.
+    Information about the searching user is sent back, too, since users can
+    make song posts, like/dislike songs, and add songs to playlists from this
+    page.
+    """
     if request.method == "POST":
         form = OurSearchForm(request.POST)
         if form.is_valid():
@@ -168,13 +135,6 @@ def results(request):
                 song_list_2 = song_vote_dictionary(songs_votes, track2_ids)
                 song_list_3 = song_vote_dictionary(songs_votes, track3_ids)
 
-                # These will only work if you have at least one liked song
-                # top_artists = get_top_artists_by_name(user_id)
-                # top_artists_ids = get_top_artists_by_id(user_id)
-                # top_artists_features = get_artists_features(top_artists_ids)
-                # top_artists_genres = get_artists_genres(top_artists_ids)
-                # genre_seeds_v = genre_seeds()
-
                 context = {
                     'term' : term,
                     'albums1' : album1_ids,
@@ -194,15 +154,8 @@ def results(request):
                     'song_list_2': song_list_2,
                     'song_list_3': song_list_3,
                     'location': 'results',
-                    # 'top_artists': top_artists,
-                    # 'top_artists_ids': top_artists_ids,
-                    # 'top_artists_features': top_artists_features,
-                    # 'top_artists_genres': top_artists_genres,
-                    # 'genre_seeds': genre_seeds_v,
                 }
                 return render(request, 'recommender/results.html', context)
-
-
 
             context = {
                 'term' : term,
@@ -227,8 +180,18 @@ def results(request):
 
 def user_preference_recommender(request):
     """
-    This is for providing recommendations based on the user's preferences.
-    Last updated: 4/1/21 by Tucker Elliott and Joe Frost
+    This is for providing recommendations based on the user's feature preferences,
+    top artists, top track, and genre. A user must have liked at least 10 songs,
+    have taken the survey, and have liked songs by at least 3 different artists.
+    If a user is linked to Spotify, their top track is pulled randomly from their
+    top 5. If not, their top track is a random song off of their Liked Songs
+    PengBeats playlist. If again the user is linked to Spotify, it pulls their
+    top 3 artists from their top 8. If not, it uses the top 3 most commonly
+    occurring artists in the user's PengBeats Liked Songs Playlist. This 
+    function will not recommend songs that a user has already liked or disliked.
+    In addition, it will not recommend explicit songs if the user has them
+    turned off.
+    Last updated: 4/24/21 by Jacelynn Duranceau, Tucker Elliott and Joe Frost
     """
     user_id = request.user.id
     user = UserProfile.objects.get(pk=user_id)
@@ -283,9 +246,6 @@ def user_preference_recommender(request):
             'target_tempo'            : preferences.tempo,
             'target_valence'          : preferences.valence,
         }
-
-        # print("PREFS")
-        # print(pref_dict)
 
         while loop:
             issue = False
@@ -358,6 +318,7 @@ def user_preference_recommender(request):
 
     return render(request, 'recommender/user_preference_recommender.html', context)
 
+
 def song_vote_dictionary(songs_votes, tracks):
     """
     Creates a dictionary that makes the post the key
@@ -376,6 +337,7 @@ def song_vote_dictionary(songs_votes, tracks):
                     down = True
         song_list[track] = [up, down]
     return song_list
+
 
 def save_songs(track_list):
     """
@@ -400,23 +362,22 @@ def save_songs(track_list):
                                         valence=features.get('valence'))
             new_song.save()
 
-#About Page
+
 def about(request):
+    """
+    Renders the About page.
+    """
     return render(request, 'about.html', {})
 
-#Survey Page
-def survey(request):   
-    return render(request, 'Survey/survey.html', {})
 
-# This Week's Top Tracks
 def top_tracks(request):
     """
-    The view for This Week's Top Songs Page
-    Author:  Joseph Frost
-    Version: 2021.03.18
+    Renders the This Week's Top Songs Page
+    Last updated: 3/18/21 by Joseph Frost
     """
     context = {}
     return render(request, 'recommender/top-tracks.html', context)
+
 
 def get_user_playlists(user_id):
     """
