@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.cache import cache
-# from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
@@ -95,7 +94,6 @@ def login_request(request):
     else:
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {"form": form})
-
 
 
 def profile(request, user_id):
@@ -499,157 +497,6 @@ def following_page(request, user_id):
                 # following list for. Not currently working
                 # return redirect('/user/profile/' + str(user_id))
                 return redirect('/')
-
-
-# @require_GET
-# def display_following(request, user_id):
-#     """
-#     Used to display each user a particular user follows. It uses said user
-#     as the primary key into the following bridging table and returns every
-#     foreign key, which represents the users followed.
-#     Last updated: 3/11/21 by Jacelynn Duranceau
-#     """
-#     # You are accessing your own following page
-#     if request.user == User.objects.get(pk=user_id):
-#         you = UserProfile.objects.get(pk=user_id)
-#         following = you.users_followed.all()
-#         following_arr = []
-#         for user_profile in following:
-#             determination = is_following(request.user.id, user_profile.user.id)
-#             #following_dict[user_profile].append(determination)
-#             following_arr.append([user_profile, determination])
-#         # following = FollowedUser.objects.filter(user_from=user_id)
-#         # get_list = FollowedUser.objects.get(user_from=user_id)
-#         # following = get_list.user_to
-#         context = {
-#             'profile': you,
-#             'following': following_arr,
-#         }
-#         return render(request, 'profile/following.html', context)
-#     else:
-#         # You are accessing someone else's following page while logged in
-#         if request.user.id is not None:
-#             other_user = UserProfile.objects.get(pk=user_id)
-#             private_profile = profile_privacy(user_id)
-#             following_status = is_following(request.user.id, other_user.user.id)
-#             if following_status or not private_profile:
-#                 following = other_user.users_followed.all()
-#                 following_arr = []
-#                 for user_profile in following:
-#                     determination = is_following(request.user.id, user_profile.user.id)
-#                     #following_dict[user_profile].append(determination)
-#                     following_arr.append([user_profile, determination])
-#                 # following = FollowedUser.objects.filter(user_from=user_id)
-#                 # get_list = FollowedUser.objects.get(user_from=user_id)
-#                 #following = get_list.user_to
-
-#                 your_id = request.user.id
-#                 your_profile = UserProfile.objects.get(pk=your_id)
-
-#                 context = {
-#                     'following': following_arr,
-#                     'profile': other_user,
-#                     'private_profile': private_profile,
-#                     'following_status': following_status,
-#                     'your_profile': your_profile,
-#                 }
-#                 return render(request, 'profile/following.html', context)
-#             else:
-#                 return redirect('/user/following/' + str(request.user.id))
-#         # You are accessing someone else's following page while not logged in
-#         else:
-#             other_user = UserProfile.objects.get(pk=user_id)
-#             private_profile = profile_privacy(user_id)
-#             if not private_profile:
-#                 following = other_user.users_followed.all()
-#                 following_arr = []
-#                 for user_profile in following:
-#                     following_arr.append([user_profile, determination])
-#                 # Don't return your_profile since you aren't logged in
-#                 context = {
-#                     'following': following_arr,
-#                     'profile': other_user,
-#                     'private_profile': private_profile,
-#                 }
-#                 return render(request, 'profile/following.html', context)
-#             else:
-#                 # Redirect to the user's profile of whom you were trying to view the 
-#                 # following list for. Not currently working
-#                 # return redirect('/user/profile/' + str(user_id))
-#                 return redirect('/')
-
-
-# @require_GET
-# def display_followers(request, user_id):
-#     """
-#     Used to display the followers of a particular user. It uses said user as
-#     the primary key into the following bridging table and returns every user
-#     that is the user_from match in said table.
-#     Last updated: 3/11/21 by Jacelynn Duranceau
-#     """
-#     if request.user == User.objects.get(pk=user_id):
-#         you = UserProfile.objects.get(pk=user_id)
-#         follower_ids = FollowedUser.objects.filter(user_to=you).values('user_from') # Returns dictionary of ids
-#         followers_arr = []
-#         for user in follower_ids:
-#             for id in user.values():
-#                 person = UserProfile.objects.get(pk=id)
-#                 determination = is_following(request.user.id, id)
-#                 followers_arr.append([person, determination])
-#         context = {
-#             'profile': you,
-#             'followers': followers_arr,
-#         }
-#         return render(request, 'profile/followers.html', context)
-#     else:
-#         # You are accessing someone else's followers page while logged in
-#         if request.user.id is not None:
-#             other_user = UserProfile.objects.get(pk=user_id)
-#             private_profile = profile_privacy(user_id)
-#             following_status = is_following(request.user.id, other_user.user.id)
-#             if following_status or not private_profile:
-#                 follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
-#                 followers_arr = []
-#                 for user in follower_ids:
-#                     for id in user.values():
-#                         person = UserProfile.objects.get(pk=id)
-#                         determination = is_following(request.user.id, id)
-#                         followers_arr.append([person, determination])
-
-#                 your_id = request.user.id
-#                 your_profile = UserProfile.objects.get(pk=your_id)
-
-#                 context = {
-#                     'profile': other_user,
-#                     'followers': followers_arr,
-#                     'your_profile': your_profile,
-#                 }
-#                 return render(request, 'profile/followers.html', context)
-#             else:
-#                 return redirect('/user/followers/' + str(request.user.id))
-#         # You are accessing someone else's following page while not logged in
-#         else:
-#             other_user = UserProfile.objects.get(pk=user_id)
-#             private_profile = profile_privacy(user_id)
-#             if not private_profile:
-#                 follower_ids = FollowedUser.objects.filter(user_to=other_user).values('user_from') # Returns dictionary of ids
-#                 followers_arr = []
-#                 for user in follower_ids:
-#                     for id in user.values():
-#                         person = UserProfile.objects.get(pk=id)
-#                         determination = is_following(request.user.id, id)
-#                         followers_arr.append([person, determination])
-#                 # You are not logged in so don't return your_profile
-#                 context = {
-#                     'profile': other_user,
-#                     'followers': followers_arr,
-#                 }
-#                 return render(request, 'profile/followers.html', context)
-#             else:
-#                 # Redirect to the user's profile of whom you were trying to view the 
-#                 # following list for. Not currently working
-#                 # return redirect('/user/profile/' + str(user_id))
-#                 return redirect('/')
 
 
 def unfollow(request, who):
