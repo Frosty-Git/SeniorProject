@@ -306,19 +306,6 @@ def get_artists(track):
     return string_artists
 
 
-# def get_artists_names_list(track):
-#     """
-#     Gets the artists of a song in a list / array
-#     Last updated: 4/1/21 by Jacelynn Duranceau
-#     """
-#     artist_names = []
-#     artists = sp.track(track)['album']['artists'] # --> [{'key':{}, 'key':string}, {'key':{}, 'key':string}, {for next artist}]
-#     for dicti in artists:
-#         artist_names.append(dicti['name'])
-
-#     return artist_names
-
-
 def get_artists_features(artists_ids):
     """
     Gets the names of artists from a list of artist ids

@@ -23,9 +23,6 @@ from social_feed.views import *
 from recommender.Scripts.search import *
 from recommender.Scripts.survey import GenresStack
 
-# from django.contrib.sessions.models import Session
-# from django.contrib.sessions.backends.db import SessionStore
-
 
 # global variables for spotify manager
 spotify_manager = SpotifyManager()
@@ -665,34 +662,6 @@ def rm_from_liked_songs(user_profile, track):
         sop.delete()
 
 
-# def get_top_artists_by_name(user_id):
-#     """
-#     Gets the top 3 artists from a user's liked songs
-#     Last updated: 4/1/21 by Jacelynn Duranceau 
-#     """
-#     user = UserProfile.objects.get(pk=user_id)
-#     liked_songs = user.liked_songs_playlist_fk
-#     matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
-#     songs = []
-
-#     for match in matches:
-#         song_id = match.get('spotify_id_id')
-#         songs.append(song_id)
-
-#     all_artists = []
-#     for song in songs:
-#         artists = get_artists_names_list(song)
-#         for artist_name in artists: 
-#             all_artists.append(artist_name)
-
-#     # Dictionary for frequency
-#     frequency = Counter(all_artists)
-#     most_common = frequency.most_common(3)
-#     top_3_artists = [key for key, val in most_common]
-
-#     return top_3_artists
-
-
 def survey_genres(request):
     """
     Renders the initial genres survey page.
@@ -1141,7 +1110,6 @@ def cust_rec_results(request):
     link = 'custom_results/' + ugly_string
     response = {'redirect' : link}
     return JsonResponse(response)
-    # return render(request, 'recommender/custom_recommender_results.html', context)
 
 
 def generate_results(request, track_string):
