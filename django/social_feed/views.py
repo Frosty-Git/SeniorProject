@@ -161,50 +161,6 @@ def delete_post(request, post_id, location):
         return redirect('/feed/')
 
 
-# def get_comments(post_id):
-#     """
-#     Gets all the comments on a particular post.
-#     Last updated: 3/19/21 by Katie Lee, Joseph Frost, Jacelynn Duranceau
-#     """
-#     post = cast_subclass(Post.objects.get(id=post_id))
-#     comment_list = Comment.objects.filter(post_fk=post)
-#     comment_form = CommentForm()
-
-#     context = {
-#         'post_id': post_id,
-#         'post': post,
-#         'comment_list': comment_list,
-#         'comment_form': comment_form, 
-#     }  
-#     return context
- 
-
-# def delete_comment(request, comment_id):
-#     """
-#     """
-#     comment = Comment.objects.get(pk=comment_id)
-#     comment.delete()
-#     return redirect('/feed/')
-
-
-# def update_comment(request):
-#     """
-#     Updates a comment on the feed.
-#     Last updated: 3/20/21 by Katie Lee
-#     """
-#     if request.method == 'POST':
-#         post_id = request.POST.get('post_id')
-#         comment_id = request.POST.get('comment_id')
-#         comment = Comment.objects.get(pk=comment_id)
-#         text = request.POST.get('new_text')
-#         if text is not None:
-#             comment.text = text
-#             comment.date_last_updated = timezone.now()
-#             comment.save()
-#         return redirect('/feed/' + str(post_id))
-#     else:
-#         return render(request, 'social_feed/edit_post.html')
-
 def create_songpost(request, track_id):
     """
     Called when a user clicks the share button on a song. Will create a song post

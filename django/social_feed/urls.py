@@ -14,7 +14,5 @@ urlpatterns = [
     path('share_playlistpost/', views.popup_playlistpost, name='playlistpost'),
     path('upvote/', views.upvote, name='upvote'),
     path('downvote/', views.downvote, name='downvote'),
-    # path('delete_comment/<comment_id>', views.delete_comment, name='delete_comment'),
-    # path('update_comment/', views.update_comment, name='update_comment'),
     path('pop_update_post/<post_id>', views.pop_update_post, name='pop_update_post'),
 ]
