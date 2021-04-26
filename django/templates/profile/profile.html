@@ -85,7 +85,8 @@
             </p>
             {% if profile.user.id == user.id and not profile.linked_to_spotify %}
                 <a class="btn spotify"  href="{% url 'user:link_spotify' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Link Spotify</span></a>
-            {% else %}
+            {% endif %}
+            {% if profile.user.id == user.id and profile.linked_to_spotify%}
                 {% if profile.linked_to_spotify %}
                 <a class="btn spotify" href="{% url 'recommender:spotify_stats' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">My Spotify Statistics</span></a>
                 {% endif %}
