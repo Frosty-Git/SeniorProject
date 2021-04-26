@@ -15,7 +15,6 @@ urlpatterns = [
     path('song_upvote/', views.song_upvote, name='song_upvote'),
     path('song_downvote/', views.song_downvote, name='song_downvote'),
     path('recommendations/', views.user_preference_recommender, name='user_preference_recommender'),
-    path('sample/', views.sample, name='sample'),
     path('survey_genres/', views.survey_genres, name='survey_genres'),
     path('survey_artists/<genre_stack>/<songs_list>', views.survey_artists, name='survey_artists'),
     path('survey_songs/<genre_stack>/<artists_string>/<songs_list>', views.survey_songs, name='survey_songs'),
