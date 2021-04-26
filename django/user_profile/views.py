@@ -647,7 +647,7 @@ def unfollow(request, who):
     """
     Deletes the link in the bridging table between yourself and the person you
     want to unfollow.
-    Last updated: 3/19/21 by Jacelynn Duranceau
+    Last updated: 4/25/21 by Jacelynn Duranceau, Katie Lee
     """
     user_id = request.user.id
     loggedin = UserProfile.objects.get(pk=user_id)
@@ -656,7 +656,7 @@ def unfollow(request, who):
     to_unfollow = UserProfile.objects.get(pk=who)
     to_unfollow.num_followers -= 1
     to_unfollow.save()
-    user_to_unfollow = FollowedUser.objects.get(user_from = user_id, user_to = who)
+    user_to_unfollow = FollowedUser.objects.filter(user_from = user_id, user_to = who).first()
     user_to_unfollow.delete()
     url = '/user/follow_page/' + str(user_id)
     return redirect(url)
@@ -665,7 +665,7 @@ def follow(request, who):
     """
     Creates the link in the bridging table between yourself and the person you
     want to follow.
-    Last updated: 3/19/21 by Katie Lee, Jacelynn Duranceau
+    Last updated: 4/25/21 by Katie Lee, Jacelynn Duranceau
     """
     user_id = request.user.id
     loggedin = UserProfile.objects.get(pk=user_id)
@@ -674,8 +674,11 @@ def follow(request, who):
     to_follow = UserProfile.objects.get(pk=who)
     to_follow.num_followers += 1
     to_follow.save()
-    user_to_follow = FollowedUser(user_from=loggedin, user_to=to_follow)
-    user_to_follow.save()
+    
+    check = FollowedUser.objects.filter(user_from=loggedin, user_to=to_follow).first()
+    if check is None:
+        user_to_follow = FollowedUser(user_from=loggedin, user_to=to_follow)
+        user_to_follow.save()
     url = '/user/follow_page/' + str(user_id)
     return redirect(url)
 

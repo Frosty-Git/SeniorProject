@@ -7,11 +7,13 @@
 tr{
     /* background-color: #2e3842; */
     height: 75px;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     
 }
 td{
     font-size: 125%;
+    width:50%;
+    padding-bottom: 20px;
 }
 .form-check-input:checked{
     background-color: #f99108;
@@ -29,5 +31,11 @@ td{
 }
 
 #genretable {
+    table-layout: fixed;
     width:100%;
+}
+
+.genrelabel {
+    text-align: center;
+    font-weight: bold;
 }
