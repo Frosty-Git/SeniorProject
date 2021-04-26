@@ -1,27 +1,27 @@
 from django.shortcuts import render
 from django.http import Http404
-from .models import *
-from .forms import *
 from django.views.decorators.http import require_POST, require_GET
-import numpy as np
-from recommender.Scripts.search import *
 from django.contrib.auth.models import User
-from user_profile.models import *
-import re
 from django.conf import settings
-from django.contrib.sessions.models import Session
-from django.contrib.sessions.backends.db import SessionStore
-from social_feed.models import *
-from social_feed.views import *
 from django.contrib import messages
-from collections import Counter
-import random
-from random import sample
-from recommender.Scripts.survey import GenresStack
-from datetime import datetime, timedelta
-import pytz
 from django.db.models import Count, Q
 from django.template.loader import render_to_string
+
+from datetime import datetime, timedelta
+import pytz
+import numpy as np
+import re
+import random
+from random import sample
+from collections import Counter
+
+from .models import *
+from .forms import *
+from user_profile.models import *
+from social_feed.models import *
+from social_feed.views import *
+from recommender.Scripts.search import *
+from recommender.Scripts.survey import GenresStack
 
 
 # global variables for spotify manager
@@ -381,27 +381,24 @@ def top_tracks(request):
 
 def get_user_playlists(user_id):
     """
-    Gets all playlists for a user. Used here so that a song can be added to
-    the playlists.
+    Gets all playlists for a user. Used so that a song can be added to the user's
+    playlists.
     Last updated: 3/24/21 by Jacelynn Duranceau
     """
     you = UserProfile.objects.get(pk=user_id)
     playlists = Playlist.objects.filter(user_profile_fk=you)
     return playlists
 
+
 def search_users(term, requesting_user):
     """
     Used to search for a user based on the term entered in the main search page.
     This function is called by the results function above so that it can be 
-    passed into the context and returned for display in HTML. 
-    It uses a very basic regex that will match the term with any username that
-    contains the string of characters in it. If I search 'ace' then users by the
-    name of 'jacelynn', 'ace', 'racecar', 'aceofspades', etc. will be returned,
-    too.
+    passed into the context and returned for display in HTML. Matches are deter-
+    mined by whether the search term is contained in a user's username, first
+    name, or last name.
     Last updated: 3/24/21 by Jacelynn Duranceau
     """
-    # regex = '.*'+term+'.*'
-    # users = User.objects.filter(username__iregex=regex)[:15]
     users = User.objects.filter(Q(username__icontains=term) | Q(first_name__icontains=term) | Q(last_name__icontains=term))[:15]
     user_profiles = []
     for user in users:
@@ -410,11 +407,14 @@ def search_users(term, requesting_user):
             user_profiles.append(UserProfile.objects.get(user=user.id))
     return user_profiles
 
-#The Analyzer
 
 @require_POST
 def searchArtist_post(request):
-
+    """
+    This is the artist analyzer. It gets the top and low tracks of artists for
+    music features like danceability, energy, etc.
+    Last updated: 4/20/21 by James Cino
+    """
     features = [
         'acousticness',
         'danceability',
@@ -507,13 +507,24 @@ def searchArtist_post(request):
         else:
             raise Http404('Something went wrong')
 
+
 @require_GET
 def searchArtist_get(request):
+    """
+    Used to search for an artist for the above artist analyzer.
+    Last updated: 4/20/21 by James Cino
+    """
     form = ArtistForm()
     return render(request, 'recommender/artist.html', {'form': form})
 
+
 @require_POST
 def searchSong_post(request):
+    """
+    This analyzers a song's music features values like the danceability, energy,
+    etc.
+    Last updated: 4/20/21 by James Cino
+    """
     # process the form data
     if request.method == 'POST':
         # create a form instance and populate it
@@ -551,21 +562,20 @@ def searchSong_post(request):
         else:
             raise Http404('Something went wrong')
 
+
 @require_GET
 def searchSong_get(request):
+    """
+    Used to search for a song for the above song analyer.
+    Last updated: 4/20/21 by James Cino
+    """
     form = SongForm()
     return render(request, 'recommender/song.html', {'form': form})
-    
-@require_GET
-def get_artist_from_passed_value(request):
-    artist = (request.GET['answer'])
-    artist_id = search_artists(artist , 3, 0)
-    form = ArtistForm()
-    return render(request, 'Survey/survey.html', {'form':form, 'artist_id':artist_id})
+
 
 def song_upvote(request):
     """
-    Upvotes a song
+    Upvotes a song.
     Last updated: 3/30/21 by Marc Colin, Katie Lee
     """
     track = request.POST.get('track')
@@ -595,9 +605,10 @@ def song_upvote(request):
                     return JsonResponse({'status':'undo_upvote'})
     return JsonResponse({'status':'ko'})
 
+
 def song_downvote(request):
     """
-    Downvotes a song
+    Downvotes a song.
     Last updated: 3/30/21 by Marc Colin, Katie Lee
     """
     track = request.POST.get('track')
@@ -625,9 +636,10 @@ def song_downvote(request):
                     return JsonResponse({'status':'undo_downvote'})
     return JsonResponse({'status':'ko'})
 
+
 def add_to_liked_songs(user_profile, track):
     """
-    Adds a song to a user's My Liked Songs playlist
+    Adds a song to a user's My Liked Songs playlist upon a like.
     Last updated: 4/1/21 by Jacelynn Duranceau
     """
     song = SongId.objects.get(pk=track)
@@ -635,9 +647,10 @@ def add_to_liked_songs(user_profile, track):
     new_song = SongOnPlaylist(playlist_from=liked_songs_playlist, spotify_id=song)
     new_song.save()
 
+
 def rm_from_liked_songs(user_profile, track):
     """
-    Removes a song from a user's My Liked Songs playlist
+    Removes a song from a user's My Liked Songs playlist upon a dislike.
     Last updated: 4/1/21 by Jacelynn Duranceau
     """
     song = SongId.objects.get(pk=track)
@@ -648,35 +661,11 @@ def rm_from_liked_songs(user_profile, track):
     if sop is not None:
         sop.delete()
 
-def get_top_artists_by_name(user_id):
-    """
-    Gets the top 3 artists from a user's liked songs
-    Last updated: 4/1/21 by Jacelynn Duranceau 
-    """
-    user = UserProfile.objects.get(pk=user_id)
-    liked_songs = user.liked_songs_playlist_fk
-    matches = SongOnPlaylist.objects.filter(playlist_from=liked_songs).values()
-    songs = []
-
-    for match in matches:
-        song_id = match.get('spotify_id_id')
-        songs.append(song_id)
-
-    all_artists = []
-    for song in songs:
-        artists = get_artists_names_list(song)
-        for artist_name in artists: 
-            all_artists.append(artist_name)
-
-    # Dictionary for frequency
-    frequency = Counter(all_artists)
-    most_common = frequency.most_common(3)
-    top_3_artists = [key for key, val in most_common]
-
-    return top_3_artists
 
 def survey_genres(request):
     """
+    Renders the initial genres survey page.
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau
     """
     user_id = request.user.id
     user = UserProfile.objects.get(pk=user_id)
@@ -684,8 +673,14 @@ def survey_genres(request):
         messages.warning(request, ('Warning: Taking the survey again will reset your preferences!'))
     return render(request, 'Survey/survey_genres.html', {})
 
+
 def create_genre_stack(request):
     """
+    Creates the stack for genres that the user selected. It is generated as a 
+    string so that it can be passed to the URL. These will be popped off when 
+    the user selects the artists and corresponding to that genre until they 
+    complete the survey.
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau
     """
     genres = request.POST.getlist('checked_list[]')
     genres_stack = ""
@@ -708,7 +703,14 @@ def create_genre_stack(request):
     response = {'stack' : link}
     return JsonResponse(response)
 
+
 def survey_artists(request, genre_stack, songs_list):
+    """
+    Gets the artists for the current genre in the stack the user is on for the
+    survey. Pulls the artists from a top Spotify playlist corresponding to said
+    genre. 
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau
+    """
     new_genre_stack = GenresStack(genre_stack, "", songs_list)
     genre = new_genre_stack.pop()
     
@@ -749,8 +751,12 @@ def survey_artists(request, genre_stack, songs_list):
         # Change to recommender
         return HttpResponseRedirect('/')
 
+
 def send_artists(request, genre_stack, songs_list):
     """
+    Sends the artists the user selected to the song page so that the survey will
+    generate songs for the user to pick by those artists.
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau
     """
     artists = request.POST.getlist('artist_id_list[]')
     new_genre_stack = GenresStack(genre_stack, artists, songs_list)
@@ -759,8 +765,12 @@ def send_artists(request, genre_stack, songs_list):
     response = {'redirect' : link}
     return JsonResponse(response)
 
+
 def survey_songs(request, genre_stack, artists_string, songs_list):
     """
+    Generates songs for the user to pick in the survey corresponding to the 
+    genre/artists they picked.
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau, James Cino
     """
     if '*' in artists_string:
         artists = artists_string.split('*')
@@ -794,7 +804,14 @@ def survey_songs(request, genre_stack, artists_string, songs_list):
     }
     return render(request, 'Survey/survey_songs.html', context)
 
+
 def check_remaining(request, genre_stack, songs_list):
+    """
+    Checks to see if there are any genres left in the stack. So, it determines
+    whether the survey is completed or if we need to move onto the artists for
+    the next genre in the stack.
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau
+    """
     new_songs = request.POST.getlist('song_id_list[]')
     artist_list = ""
 
@@ -810,7 +827,18 @@ def check_remaining(request, genre_stack, songs_list):
     response = {'redirect' : link}
     return JsonResponse(response)
         
+
 def survey_final(request, songs_list):
+    """
+    Saves all of the songs the user selected from the survey, and sets the user's
+    preferences to the average of all the music feauture values for those songs.
+    Redirects the user to get their recommendations. If they did not choose
+    enough songs and artists (up to 3 genres, up to 3 artists per genre, and 5 
+    songs per 3 artists), then they might not be able to get recommendations right
+    away. This also automatically makes the user like the songs they selected,
+    so they will be added to the Liked Songs playlist.
+    Last updated: 4/8/21 by Joseph Frost, Katie Lee, Jacelynn Duranceau
+    """
     genre_stack = ""
     artist_list = ""
     new_genre_stack = GenresStack(genre_stack, artist_list, songs_list)
@@ -861,13 +889,19 @@ def survey_final(request, songs_list):
 
     return redirect('/recommendations')
 
+
 def top_playlists(request):
+    """
+    Determines the top playlists from the past 7 days. It is based on the likes
+    said playlists have received in that time frame.
+    Last updated: 4/20/21 by Joseph Frost, Katie Lee
+    """
     days_to_subtract = 7
     num_top_playlists = 10
     top_playlists = {}
     
     # Get all of the likes for the playlists from the past week
-    d = datetime.now(pytz.utc)- timedelta(days=days_to_subtract)
+    d = datetime.datetime.now(pytz.utc)- timedelta(days=days_to_subtract)
     top_playlists_query = FollowedPlaylist.objects.filter(date_created__gte = d).values('playlist_to_id').annotate(total=Count('playlist_to_id')).order_by('-total')[:num_top_playlists]
     
     # The query results are a list of dicts.
@@ -882,9 +916,10 @@ def top_playlists(request):
 
     return render(request, 'recommender/top_playlists.html', context)
 
+
 def artist_info(request, artist_id):
     """
-    Gets artists related to an artist and his/her top songs. 
+    Gets artists related to an artist and his/her top songs and albums. 
     Last updated: 4/12/21 by Jacelynn Duranceau
     """
     all_related_artists = get_all_related_artists(artist_id)
@@ -927,6 +962,7 @@ def artist_info(request, artist_id):
             'artist_image': artist_image,
         }
     return render(request, 'recommender/artist_info.html', context)
+
 
 def custom_recommender(request):
     """
@@ -991,6 +1027,7 @@ def custom_recommender(request):
         'track_searches': track_searches
     }
     return render(request, 'recommender/custom_recommender.html', context)
+
 
 def cust_rec_results(request):
     """
@@ -1073,13 +1110,15 @@ def cust_rec_results(request):
     link = 'custom_results/' + ugly_string
     response = {'redirect' : link}
     return JsonResponse(response)
-    # return render(request, 'recommender/custom_recommender_results.html', context)
+
 
 def generate_results(request, track_string):
+    """
+    Generates the results for the custom recommender.
+    Last updated: 4/21/21 by Jacelynn Duranceau
+    """
     track_ids = track_string.split("*")
-    track_ids.pop() # Remove the empty string from the decoded fake 
-                    # query string :) 
-                    # PS: Stop using ajax to redirect please.
+    track_ids.pop() # Remove the empty string from the query string
     user_id = request.user.id
     song_list = track_ids
     if user_id is not None:
@@ -1100,7 +1139,13 @@ def generate_results(request, track_string):
         }
     return render(request, 'recommender/custom_recommender_results.html', context)
 
+
 def spotify_stats(request):
+    """
+    If the user is linked to Spotify, they can get their stats for the site.
+    Specifically, their top 9 songs and artists.
+    Last updated: 4/22/21 by Jacelynn Duranceau, Kevin Magill
+    """
     user_id = request.user.id
     user = UserProfile.objects.get(pk=user_id)
 
@@ -1125,25 +1170,30 @@ def spotify_stats(request):
             tracks = spotify.current_user_top_tracks(limit=9, offset=0, time_range='long_term')['items']
             for track in tracks:
                 track_ids.append(track['id'])
-        except Exception as e: # A user doesn't even have 15 top songs to choose from
+        except Exception as e: # A user doesn't even have 9 top songs to choose from
             print(e)
             track_error = True
     else:
-        # This view function should not 
+        # This view function should not be called for a user not linked! It is
+        # set up so that they can't, but just in case.
         pass
 
-    save_songs(track_ids)
+    if track_ids:
+        save_songs(track_ids)
+        playlists = get_user_playlists(user_id)
+        songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
+        song_list = song_vote_dictionary(songs_votes, track_ids)
 
-    playlists = get_user_playlists(user_id)
-    songs_votes = SongToUser.objects.filter(user_from=user).values('songid_to_id', 'vote')
-    song_list = song_vote_dictionary(songs_votes, track_ids)
-
-    context = {
-        'profile': user,
-        'track_ids': song_list,
-        'artist_ids': artist_ids,
-        'playlists': playlists,
-    }
+        context = {
+            'profile': user,
+            'track_ids': song_list,
+            'artist_ids': artist_ids,
+            'playlists': playlists,
+        }
+    else:
+        context = {
+            'profile': user,
+        }
 
     return render(request, 'recommender/spotify_stats.html', context)
 

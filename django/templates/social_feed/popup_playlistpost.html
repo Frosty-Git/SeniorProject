@@ -34,7 +34,7 @@
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                     {% if not private_profile %}
                         <button type="submit" class="btn modalBtn popupplaybtn{{ playlist.0 }}">Submit</button>
-                        <button id="load{{ playlist.0 }}" class="btn btn-dark" type="button" disabled style="display: none">
+                        <button id="loadplay{{ playlist.0 }}" class="btn btn-dark" type="button" disabled style="display: none">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         </button>
                     {% endif %}
@@ -47,7 +47,7 @@
   
 <script>
     $('.popupplaybtn{{ playlist.0 }}').click(function(e) {
-        $('#load{{ playlist.0 }}').show();
+        $('#loadplay{{ playlist.0 }}').show();
         $('.popupplaybtn{{ playlist.0 }}').hide();
         e.preventDefault();
         var playlist = $('#playlist_id{{ playlist.0 }}').val();
@@ -63,7 +63,7 @@
             success: function(json){
                 if (json['status'] == 'ok') {
                     setTimeout(function() {
-                        $('#load{{ playlist.0 }}').hide();
+                        $('#loadplay{{ playlist.0 }}').hide();
                         $('.popupplaybtn{{ playlist.0 }}').show();
                         $('.alert{{ playlist.0 }}').show();
                         $('#post_text{{ playlist.0 }}').hide();
