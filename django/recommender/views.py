@@ -932,7 +932,7 @@ def top_playlists(request):
     top_playlists = {}
     
     # Get all of the likes for the playlists from the past week
-    d = datetime.now(pytz.utc)- timedelta(days=days_to_subtract)
+    d = datetime.datetime.now(pytz.utc)- timedelta(days=days_to_subtract)
     top_playlists_query = FollowedPlaylist.objects.filter(date_created__gte = d).values('playlist_to_id').annotate(total=Count('playlist_to_id')).order_by('-total')[:num_top_playlists]
     
     # The query results are a list of dicts.
