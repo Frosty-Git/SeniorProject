@@ -37,7 +37,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default modalClose" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn popupbtn{{ song }} modalBtn" style="display: block">Submit</button>
-                    <button id="load{{ song }}" class="btn btn-primary" type="button" disabled style="display: none">
+                    <button id="loadsong{{ song }}" class="btn btn-primary" type="button" disabled style="display: none">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     </button>
                 </div>
@@ -49,7 +49,7 @@
 
 <script>
     $('.popupbtn{{ song }}').click(function(e) {
-        $('#load{{ song }}').show();
+        $('#loadsong{{ song }}').show();
         $('.popupbtn{{ song}}').hide();
         e.preventDefault();
         var song = $('#track_id{{ song }}').val();
@@ -65,7 +65,7 @@
             success: function(json){
                 if (json['status'] == 'ok') {
                     setTimeout(function() {
-                        $('#load{{ song }}').hide();
+                        $('#loadsong{{ song }}').hide();
                         $('.popupbtn{{ song }}').show();
                         $('.alert{{ song }}').show();
                     }, 2000);

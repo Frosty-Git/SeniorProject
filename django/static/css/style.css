@@ -187,8 +187,8 @@ input:checked+.slider:before {
     color: #d9dadc;
 }
 .followBtn {
-    color: #d9dadc;
-    background-color: #1F2933;
+    color: #1F2933;
+    background-color: #f99108;
     border: 1px solid #1F2933;
     border-radius: 4px;
 }
