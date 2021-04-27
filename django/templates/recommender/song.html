@@ -13,7 +13,7 @@
     <h1>Spotify Attribute Analyzer</h1>
     <center>
     <h2>Song Search</h2>
-    <p style="width:750px;">
+    <p style="width:770px; text-align: justify; text-align-last: center;">
         Spotify uses a variety of song attributes in order to determine the differences between songs, genres, etc.
         The PengBeats Spotify Attribute Analyzer's Artist Page allows you to search for a specific artist and list their songs with the highest/lowest value in certain attribtues.
         The Analyzer Song Page allows you to search for a specific song and will display the attributes of that song and its unique Spotify Track ID.
@@ -33,7 +33,7 @@
             Song Title: {{ form.song_title }}
         </div>
     
-        <button class="submit btn btn-outline-light btn-lg" type="submit">Analyze</button>
+        <button class="submit btn btn-outline-light" type="submit">Analyze</button>
     </form>
 </center>
 </div>
@@ -44,7 +44,7 @@
         
         {% if danceability or acousticness or energy or instrumentalness or speechiness or loudness or tempo or valence %}
         <td>
-            <iframe class="sample-player" src="https://open.spotify.com/embed/track/{{ id }}" width="300" height="380" 
+            <iframe class="sample-player spRound" src="https://open.spotify.com/embed/track/{{ id }}" width="300" height="380" 
             frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
         </td>
     </div>

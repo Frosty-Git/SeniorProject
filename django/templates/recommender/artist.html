@@ -16,7 +16,7 @@
         <br>
         <h1>Spotify Attribute Analyzer</h1>
         <h2>Artist Search</h2>
-        <p style="width:750px;">
+        <p style="width:770px; text-align: justify; text-align-last: center;">
             Spotify uses a variety of song attributes in order to determine the differences between songs, genres, etc.
             The PengBeats Spotify Attribute Analyzer's Artist Page allows you to search for a specific artist and list
             their songs with the highest/lowest value in certain attribtues.
@@ -28,7 +28,7 @@
             Artist Name: {{ form.artist_name }}
         </div>
 
-        <button class="submit btn btn-outline-light btn-lg" type="submit">Analyze</button>
+        <button class="submit btn btn-outline-light" type="submit">Analyze</button>
     </form>
     <br>
 </center>
@@ -51,7 +51,7 @@
                         <tr>
                             {% for track, feature in highTracks1.items %}
                             <td>
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' width="290" height="380"
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' class="spRound" width="290" height="380"
                                     frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                                 <h4>{{ feature }}</h4>
                             </td>
@@ -69,7 +69,7 @@
                             {% for track, feature in highTracks2.items %}
                             <td>
 
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' width="290" height="380"
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' class="spRound" width="290" height="380"
                                     frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
                                 <h4>{{ feature }}</h4>
@@ -107,7 +107,7 @@
                             {% for track, feature in lowTracks1.items %}
                             <td>
 
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' width="290" height="380"
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' class="spRound" width="290" height="380"
                                     frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
                                 <h4>{{ feature }}</h4>
@@ -126,7 +126,7 @@
                             {% for track, feature in lowTracks2.items %}
                             <td>
 
-                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' width="290" height="380"
+                                <iframe src='https://open.spotify.com/embed/track/{{ track }}' class="spRound" width="290" height="380"
                                     frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
                                 <h4>{{ feature }}</h4>>

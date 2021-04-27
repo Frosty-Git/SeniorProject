@@ -1308,24 +1308,39 @@ def convertMs(ms):
     if hours > 0:
         result = ("%d:%d:%d" % (hours, minutes, seconds))
         if seconds < 10:
-            result = convert_time(result)
+            result = convert_time_s(result)
+        if minutes < 10:
+            result = convert_time_m(result)
     else:
         result = ("%d:%d" % (minutes, seconds))
         if seconds < 10 and not (ms == 0):
-            result = convert_time(result)
+            result = convert_time_s(result)
+        if minutes < 10 and not (ms == 0) and hours > 0:
+            result = convert_time_m(result)
         if ms == 0:
             result = "0:00"
     return result
 
 
-def convert_time(result):
+def convert_time_s(result):
     """
     Convert a time whose seconds has a value < 10 back into the proper format
     Last updated: 4/19/21 by Jacelynn Duranceau
     """
     results = list(result)
-    position = len(results) - 2
     results.insert(-1, 0)
+    new_result = "" 
+    for c in results:
+        new_result += str(c) 
+    return new_result
+
+def convert_time_m(result):
+    """
+    Convert a time whose minutes has a value < 10 back into the proper format
+    Last updated: 4/27/21 by Jacelynn Duranceau
+    """
+    results = list(result)
+    results.insert(-4, 0)
     new_result = "" 
     for c in results:
         new_result += str(c) 
