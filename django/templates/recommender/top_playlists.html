@@ -27,7 +27,9 @@
         <th scope="col" class="table-text"><center><h6>Likes This Week</h6></center></th>
     </thead>
     <tbody>
+    {% if top_playlists %}
     {% for playlist, total in top_playlists.items %}
+            {% if not forloop.last %}
             <tr>
                 <!-- Playlist Image -->
                 <td>
@@ -54,7 +56,42 @@
                     <center>{{ total }}</center>
                 </td>
             </tr>
+            {% else %}
+            <tr style="border: none;">
+                <!-- Playlist Image -->
+                <td style="border: none;">
+                    {% if playlist.image %}
+                        <a class="table-text" href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
+                            <img src="{{ playlist.image.url }}" width="30px" height="30px" style="border-radius: 50%;">
+                        </a>
+                    {% else %}
+                        <a class="table-text" href="{% url 'user:get_songs_playlist' playlist.user_profile_fk.user.id playlist.id %}">
+                            <img src="{% static 'images/noplaylistimage.png' type='image/png' %}" width="30px" height="30px" style="border-radius: 50%;">
+                        </a>
+                    {% endif %}
+                </td>
+                <!-- Link to Playlist Name -->
+                <td style="border: none;">
+                    <a class="table-text" href='{% url "user:get_songs_playlist" playlist.user_profile_fk.user.id playlist.id %}'><b>{{ playlist.name }}</b></a>
+                </td>
+                <!-- Link to User Profile -->
+                <td style="border: none;">
+                    <a class="table-text" href='{% url "user:profile" playlist.user_profile_fk.user.id %}'>{{ playlist.user_profile_fk.user.username }}'s Playlist</a>
+                </td>
+                <!-- Total of Likes this Week -->
+                <td class="table-text" style="border: none;">
+                    <center>{{ total }}</center>
+                </td>
+            </tr>
+            {% endif %}
     {% endfor %}
+    {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center; border: none;" class="table-text">
+                    There are no top playlists for this week.
+                </td>
+            </tr>
+    {% endif %}
     </tbody>    
 </table>
 

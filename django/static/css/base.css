@@ -114,21 +114,21 @@ a {
     font-size: small;
 }
 
-.btn.btn-success.signup {
+.btn.btn-warning.signup {
     background-color: #f99108;
     border-color: #f99108;
     font-weight: bold;
     color: #1F2933;
 }
 
-.btn.btn-success.signup:hover {
+.btn.btn-warning.signup:hover {
     background-color: #f99108;
     border-color: #f99108;
     font-weight: bold;
     color: #1F2933;
 }
 
-.btn.btn-success.signup:active {
+.btn.btn-warning.signup:active {
     background-color: #f99108 !important;
     border-color: #f99108;
     font-weight: bold;
@@ -141,8 +141,6 @@ a {
     background-color: #d9dadc;
 }
 
-/* .btn.btn-success.signup:focus {
-    outline: none !important;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
-} */
-
+.dropdown-menu-dark {
+    background-color: #1F2933;
+}

@@ -95,25 +95,25 @@
                                 <!-- If the playlist has not been exported, the button will say export -->
                                 {% if not playlist.is_imported %}
                                 <li class="playlistDropdownItem">
-                                        <div class="center" style="width:150px; text-align:center;">
-                                            <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
+                                        <div class="center" style="text-align:center;">
+                                            <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" style="width:12vh" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Export</span></a>
                                         </div>
                                     </li>
                                 <!-- The playlist has been exported, so the button will say update -->
                                 {% else %}
-                                    <li class="center" style="width:150px; text-align:center;">
-                                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Update</span></a>
+                                    <li class="center" style="text-align:center;">
+                                        <a class="btn btn-success spotify" href="{% url 'user:export_to_spotify' playlist.id 'single' %}" style="width:12vh" role="button"><img src="{% static 'images/spotify.png' type='image/png' %}" style="float:left;margin-right:10px; height:25px; width:25px; border-radius: 50%;"><span class="spBtnText">Update</span></a>
                                     </li>
                                 {% endif %}
                         {% endif %}
                         {% if playlist != profile.liked_songs_playlist_fk %}
                             <li class="playlistDropdownItem">
-                                <a class="btn btn-outline-light" href="{% url 'user:delete_playlist' playlist.id%}" role="button">Delete</a>
+                                <a class="btn btn-outline-light" href="{% url 'user:delete_playlist' playlist.id%}" style="width:12vh" role="button">Delete</a>
                             </li>
                         {% endif %}
                         {% if not playlist.is_private %}
                             <li class="playlistDropdownItem">
-                                <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
+                                <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block; width:12vh" data-bs-toggle="modal" data-bs-target="#playlistpostmodal{{ playlist.id }}">Share</button>
                             </li>
                         {% endif %}
                     </ul>
@@ -227,7 +227,7 @@
                         {% if playlists.count > 1 %}
                             <li class="playlistDropdownItem">
                                 <div class="btn-group" role="group" onclick="addModalClick('{{ song.0 }}')" style="margin-left:auto; margin-right: auto; display:flex">
-                                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song.0 }}">Add to Playlist</button>
+                                    <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block; width:12vh" data-bs-toggle="modal" data-bs-target="#addtoplaylistmodal{{ song.0 }}">Add to Playlist</button>
                                 </div>
                             <script>
                                 var addPlaylistModal = document.getElementById('addtoplaylistmodal{{ song.0 }}');
@@ -245,11 +245,11 @@
                         <!-- This playlist is yours, so you can delete songs from it -->
                         {% if profile.user.id == user.id and playlist != profile.liked_songs_playlist_fk %}
                             <li class="playlistDropdownItem">
-                                <a class="btn btn-outline-light" href="{% url 'user:delete_song' playlist.id song.0 %}" role="button">Delete Song</a>
+                                <a class="btn btn-outline-light" href="{% url 'user:delete_song' playlist.id song.0 %}" style="width:100%" role="button">Delete Song</a>
                             </li>
                         {% endif %}
                         <li class="playlistDropdownItem">
-                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block;" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song.1 }}">Share</button>
+                            <button type="button" class="btn btn-outline-light" style="margin:0 auto; display:block; width:100%" data-bs-toggle="modal" data-bs-target="#songpostmodal{{ song.1 }}">Share</button>
                         </li>
                     </ul>
                     {% include 'playlists/addsong_popup.html' with playlists=playlists loggedin=loggedin %}

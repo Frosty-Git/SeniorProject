@@ -98,7 +98,7 @@ class PlaylistForm(forms.ModelForm):
         """
         super(PlaylistForm, self).__init__(*args, **kwargs)
         self.fields['description'].widget.attrs['style'] = 'width: 100%; height: 1.75rem; overflow: hidden; border-radius: 0.3rem; border: none'
-        self.fields['name'].widget.attrs['style'] = 'width: 100%; 1.75rem; border-radius: 0.3rem; border: none'
+        self.fields['name'].widget.attrs['style'] = 'width: 100%; height: 1.75rem; border-radius: 0.3rem; border: none'
         self.fields['image'].widget.attrs['style'] = 'width: 50%'
         self.fields['is_shareable'].widget.attrs['class'] = 'form-check-input playlistPop'
         self.fields['is_private'].widget.attrs['class'] = 'form-check-input playlistPop'

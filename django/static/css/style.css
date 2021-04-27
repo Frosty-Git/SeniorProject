@@ -1,7 +1,3 @@
-/* body {
-    background-color: darkgrey;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-} */
 
 /* Both of the 2 following classes are used to remove bullet points in lists */
 .post {
@@ -237,41 +233,8 @@ input:checked+.slider:before {
 
 .playlistDropdownMenu {
     background-color: #425363;
-    width: 10vh;
+    width: 12vh;
 }
-
-
-/* .checkbox {
-    margin: 0 0 1em 2em;
-  }
-  .checkbox .tag {
-    color: #595959;
-    display: block;
-    float: left;
-    font-weight: bold;
-    position: relative;
-    width: 120px;
-  }
-  .checkbox label {
-    display: inline;
-  }
-  .checkbox .editCheckbox {
-    display: none;
-  }
-  .editCheckbox + label:after {
-    background-color: #fafafa;
-    border: 1px solid #cacece;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
-    display: inline-block;
-    transition-duration: 0.3s;
-    width: 16px;
-    height: 16px;
-    content: '';
-    margin-left: 10px;
-  }
-  .editCheckbox:checked + label:after {
-    background-color: #595959;
-  } */
 
   /* Used on the artist page table columns */
   .artist-col {
@@ -289,7 +252,7 @@ input:checked+.slider:before {
 
   /* End artist page */
 
-  /* Checkboxes */
+  /* Checkboxes for popups */
   .form-check-input.playlistPop {
     border-color: #1F2933;
   }
@@ -299,8 +262,11 @@ input:checked+.slider:before {
  .form-check-input.playlistPop{
     background-color:#d9dadc;
 }
+/* End checkboxes for popups*/
 
 
+
+/* Checkboxes for custom recommender */
 .form-check-input.custRec {
     border-color: #f99108;
   }
@@ -310,3 +276,9 @@ input:checked+.slider:before {
  .form-check-input.custRec{
     background-color:#d9dadc;
 }
+.form-check-input.custRec:active, .form-check-input.custRec:focus{
+    border-color:#d9dadc;
+    -webkit-box-shadow: inset 0 1px 1px rgb(224,130,7),0 0 8px rgb(224,130,7);
+    box-shadow: inset 0 1px 1px rgb(224,130,7),0 0 8px rgb(224,130,7);
+}
+/* End checkboxes for custom recommender */
