@@ -179,58 +179,31 @@
     if (hasClass(e.target, 'artist_check')) {
         let x = document.getElementsByClassName("artist_check");
         let arr = [];
-        // console.log(x.length);
-        // console.log("target")
-        // console.log(e.target)
         let selected = e.target;
         let selectedArr = selected.classList
-        // console.log("SELECTED'S Class")
-        // console.log(selectedArr);
-        // console.log("SELECTED LENGTH")
-        // console.log(selectedArr.length)
-        // console.log("SELECTED'S ID")
-        // console.log(selected.id);
         for(let i = x.length-1; i >= 0; i--){
-            // console.log("element")
-            // console.log(x[i]);
-            // console.log("element class list")
-            // console.log(x[i].classList);
-            // console.log("element id")
-            // console.log(x[i].id);
             if(x[i].classList == selectedArr){
-                // console.log("1 removed")
                 x[i].checked = false;
                 x[i].remove();
             }
             else if((x[i].id == selected.id) && selected.id !== "" && x[i].id !== ""){
-                // console.log(typeof(x[i]))
-                // console.log("2 removed")
                 x[i].checked = false;
                 x[i].remove();
                 
             }
             else if(x[i].classList == selectedArr){
-                // console.log("3 removed")
                 x[i].checked = false;
                 x[i].remove();
-                
-                // console.log(x.length);
             }
             else if(x[i].classList.contains(selected.id)){
-                // console.log("4 removed")
                 x[i].checked = false;
                 x[i].remove();
-                
             }
             else if(selectedArr.contains(x[i].id)){
-                // console.log("5 removed")
                 x[i].checked = false;
                 x[i].remove();
             }
-            // console.log("selected length on pass " + i)  ;         
-            // console.log(x.length);
         }
-        // console.log(x);
     } else if (hasClass(e.target, 'track_check')) {
         let y = document.getElementsByClassName("track_check");
         let arr = [];

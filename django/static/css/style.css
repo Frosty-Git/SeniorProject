@@ -289,7 +289,7 @@ input:checked+.slider:before {
 
   /* End artist page */
 
-  /* Checkboxes */
+  /* Checkboxes for popups */
   .form-check-input.playlistPop {
     border-color: #1F2933;
   }
@@ -299,8 +299,11 @@ input:checked+.slider:before {
  .form-check-input.playlistPop{
     background-color:#d9dadc;
 }
+/* End checkboxes for popups*/
 
 
+
+/* Checkboxes for custom recommender */
 .form-check-input.custRec {
     border-color: #f99108;
   }
@@ -310,3 +313,9 @@ input:checked+.slider:before {
  .form-check-input.custRec{
     background-color:#d9dadc;
 }
+.form-check-input.custRec:active, .form-check-input.custRec:focus{
+    border-color:#d9dadc;
+    -webkit-box-shadow: inset 0 1px 1px rgb(224,130,7),0 0 8px rgb(224,130,7);
+    box-shadow: inset 0 1px 1px rgb(224,130,7),0 0 8px rgb(224,130,7);
+}
+/* End checkboxes for custom recommender */
